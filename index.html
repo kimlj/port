@@ -102,6 +102,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 201; padding: 1.25rem
 @keyframes scrollDown { 0% { top: -100%; } 100% { top: 100%; } }
 
 section { padding: 6rem 5vw; position: relative; overflow: hidden; }
+.hero { overflow: visible; }
 .section-label { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.25em; color: var(--text-dim); margin-bottom: 0.75rem; }
 .section-title { font-family: var(--serif); font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 400; margin-bottom: 3rem; letter-spacing: -0.01em; }
 .section-title em { font-family: var(--serif); font-style: italic; color: var(--accent); }
@@ -326,7 +327,7 @@ footer .footer-accent { color: var(--accent); }
 
 @media (max-width: 1024px) { .about-grid { grid-template-columns: 1fr; gap: 2.5rem; } .expertise-grid { grid-template-columns: 1fr 1fr; } .project-card { grid-template-columns: 1fr; } .project-visual { min-height: 200px; } }
 @media (max-width: 768px) { nav { padding: 1rem 1.5rem; } .nav-links { display: none; } .nav-hamburger { display: flex; } section { padding: 4rem 1.5rem; } .hero { padding: 7rem 1.5rem 3rem; } .expertise-grid { grid-template-columns: 1fr; } .about-stats { grid-template-columns: 1fr 1fr; } footer { flex-direction: column; gap: 0.75rem; text-align: center; } .contact-section { padding: 5rem 1.5rem; } .scroll-indicator { display: none; } }
-@media (max-width: 480px) { .nav-links { gap: 0.75rem; } .hero-cta { flex-direction: column; } .btn-primary, .btn-ghost, .cv-dropdown, .cv-dropdown-toggle { justify-content: center; width: 100%; } .cv-dropdown-menu { width: 100%; } }
+@media (max-width: 480px) { .nav-links { gap: 0.75rem; } .hero-cta { flex-direction: column; align-items: flex-start; } .btn-primary, .btn-ghost { justify-content: center; width: 100%; } .cv-dropdown-toggle { justify-content: center; width: 100%; } }
 </style>
 </head>
 <body>
