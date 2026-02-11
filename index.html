@@ -186,11 +186,6 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 .competency-text h4 { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.2rem; }
 .competency-text p { font-size: 0.72rem; color: var(--text-muted); line-height: 1.5; font-weight: 300; }
 
-/* Skill level bars */
-.competency-bar { height: 3px; background: var(--border); border-radius: 2px; margin-top: 0.5rem; overflow: hidden; }
-.competency-bar-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--gradient-1), var(--gradient-2)); width: 0%; transition: width 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
-.comp-visible .competency-bar-fill { width: var(--level); }
-
 /* Availability badge with shimmer */
 .availability-badge { display: flex; align-items: center; gap: 0.75rem; padding: 1.25rem 1.5rem; border: 1px solid rgba(200,255,0,0.15); border-radius: 16px; background: rgba(200,255,0,0.03); position: relative; overflow: hidden; opacity: 0; transform: translateY(10px); transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
 .availability-badge.comp-visible { opacity: 1; transform: translateY(0); }
@@ -628,7 +623,6 @@ footer .footer-accent { color: var(--accent); }
           <div class="competency-text">
             <h4>AI/LLM Proficiency</h4>
             <p>Prompt engineering, output evaluation, and AI tool integration</p>
-            <div class="competency-bar"><div class="competency-bar-fill" style="--level: 92%"></div></div>
           </div>
         </div>
         <div class="competency-item">
@@ -636,7 +630,6 @@ footer .footer-accent { color: var(--accent); }
           <div class="competency-text">
             <h4>DevOps & Cloud</h4>
             <p>Docker, VPS management, CI/CD workflows</p>
-            <div class="competency-bar"><div class="competency-bar-fill" style="--level: 85%"></div></div>
           </div>
         </div>
         <div class="competency-item">
@@ -644,7 +637,6 @@ footer .footer-accent { color: var(--accent); }
           <div class="competency-text">
             <h4>Attention to Detail</h4>
             <p>Meticulous in identifying bugs, edge cases, and quality issues</p>
-            <div class="competency-bar"><div class="competency-bar-fill" style="--level: 95%"></div></div>
           </div>
         </div>
         <div class="competency-item">
@@ -652,7 +644,6 @@ footer .footer-accent { color: var(--accent); }
           <div class="competency-text">
             <h4>Analytical Thinking</h4>
             <p>Strong ability to analyze code, data, and AI model behavior</p>
-            <div class="competency-bar"><div class="competency-bar-fill" style="--level: 88%"></div></div>
           </div>
         </div>
         <div class="competency-item">
@@ -660,7 +651,6 @@ footer .footer-accent { color: var(--accent); }
           <div class="competency-text">
             <h4>Technical Writing</h4>
             <p>Clear documentation of requirements and specifications</p>
-            <div class="competency-bar"><div class="competency-bar-fill" style="--level: 82%"></div></div>
           </div>
         </div>
         <div class="competency-item">
@@ -668,7 +658,6 @@ footer .footer-accent { color: var(--accent); }
           <div class="competency-text">
             <h4>English Proficiency</h4>
             <p>Excellent written and verbal communication skills</p>
-            <div class="competency-bar"><div class="competency-bar-fill" style="--level: 90%"></div></div>
           </div>
         </div>
       </div>
