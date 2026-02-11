@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Kim Julongbayan | Full Stack Developer & AI Hobbyist</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -26,8 +26,8 @@
   --mono: 'JetBrains Mono', monospace;
 }
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body { font-family: var(--sans); background: var(--bg); color: var(--text); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body { font-family: var(--sans); background: var(--bg); color: var(--text); overflow-x: hidden; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; }
 ::selection { background: var(--accent); color: var(--bg); }
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
@@ -53,7 +53,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.25rem
 .nav-hamburger.active span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); background: var(--accent); }
 
 /* Mobile menu overlay */
-.mobile-menu { position: fixed; inset: 0; z-index: 200; background: rgba(10,10,11,0.95); backdrop-filter: blur(30px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0; opacity: 0; pointer-events: none; transition: opacity 0.4s; }
+.mobile-menu { position: fixed; inset: 0; z-index: 200; background: rgba(10,10,11,0.95); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0; opacity: 0; pointer-events: none; transition: opacity 0.4s; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
 .mobile-menu.open { opacity: 1; pointer-events: all; }
 .mobile-menu a { color: var(--text-muted); text-decoration: none; font-family: var(--serif); font-size: clamp(1.8rem, 5vw, 2.5rem); font-weight: 400; padding: 0.75rem 0; opacity: 0; transform: translateY(20px); transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s; }
 .mobile-menu.open a { opacity: 1; transform: translateY(0); }
@@ -66,7 +66,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.25rem
 .mobile-menu-label { font-family: var(--mono); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.25em; color: var(--text-dim); margin-bottom: 2rem; opacity: 0; transform: translateY(10px); transition: all 0.4s 0s; }
 .mobile-menu.open .mobile-menu-label { opacity: 1; transform: translateY(0); transition-delay: 0s; }
 
-.hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 8rem 5vw 4rem; position: relative; }
+.hero { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; justify-content: center; padding: 8rem 5vw 4rem; position: relative; }
 .hero::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(200,255,0,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(200,255,0,0.02) 1px, transparent 1px); background-size: 80px 80px; mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black 20%, transparent 70%); -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black 20%, transparent 70%); animation: gridPulse 6s ease-in-out infinite; pointer-events: none; }
 @keyframes gridPulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
 
@@ -253,9 +253,14 @@ footer .footer-accent { color: var(--accent); }
 
 /* Mobile horizontal swipe projects */
 @media (max-width: 768px) {
-  .projects-grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 1rem; padding-bottom: 1.5rem; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .projects-grid { display: flex; overflow-x: auto; scroll-snap-type: x proximity; gap: 1rem; padding: 0 1rem 1.5rem; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
   .projects-grid::-webkit-scrollbar { display: none; }
-  .projects-grid .project-card { min-width: 85vw; flex-shrink: 0; scroll-snap-align: center; }
+  .projects-grid .project-card { min-width: 80vw; max-width: 80vw; flex-shrink: 0; scroll-snap-align: start; display: flex; flex-direction: column; grid-template-columns: none; }
+  .projects-grid .project-info { padding: 1.5rem; }
+  .projects-grid .project-info h3 { font-size: 1.3rem; }
+  .projects-grid .project-info p { font-size: 0.82rem; line-height: 1.6; }
+  .projects-grid .project-visual { min-height: 140px; }
+  .projects-grid .project-tech span { font-size: 0.6rem; padding: 0.25rem 0.5rem; }
   .swipe-hint { display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 0 0; }
   .swipe-hint span { font-family: var(--mono); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-dim); }
   .swipe-hint svg { width: 16px; height: 16px; stroke: var(--text-dim); fill: none; stroke-width: 1.5; animation: swipeHint 2s ease-in-out infinite; }
@@ -598,10 +603,28 @@ document.querySelectorAll('.nav-links a[href^="#"]').forEach(link => {
   const mobileMenu = document.getElementById('mobileMenu');
   const menuLinks = mobileMenu.querySelectorAll('a');
 
+  let scrollPos = 0;
+  function lockScroll() {
+    scrollPos = window.scrollY;
+    document.body.style.position = 'fixed';
+    document.body.style.top = '-' + scrollPos + 'px';
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.overflow = 'hidden';
+  }
+  function unlockScroll() {
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    document.body.style.overflow = '';
+    window.scrollTo(0, scrollPos);
+  }
+
   hamburger.addEventListener('click', () => {
     hamburger.classList.toggle('active');
     mobileMenu.classList.toggle('open');
-    document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+    if (mobileMenu.classList.contains('open')) { lockScroll(); } else { unlockScroll(); }
   });
 
   menuLinks.forEach(link => {
@@ -609,7 +632,7 @@ document.querySelectorAll('.nav-links a[href^="#"]').forEach(link => {
       e.preventDefault();
       hamburger.classList.remove('active');
       mobileMenu.classList.remove('open');
-      document.body.style.overflow = '';
+      unlockScroll();
       const target = document.querySelector(link.getAttribute('href'));
       if (target) {
         const navHeight = document.querySelector('nav').offsetHeight;
