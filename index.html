@@ -37,7 +37,7 @@ body::before { content: ''; position: fixed; inset: 0; z-index: 9999; pointer-ev
 
 .cursor-glow { position: fixed; width: 600px; height: 600px; border-radius: 50%; pointer-events: none; z-index: 0; background: radial-gradient(circle, rgba(200,255,0,0.04) 0%, transparent 70%); transform: translate(-50%, -50%); transition: left 0.3s ease, top 0.3s ease; }
 
-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.25rem 2.5rem; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(20px); background: rgba(10,10,11,0.7); border-bottom: 1px solid rgba(34,34,37,0.5); }
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 201; padding: 1.25rem 2.5rem; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(20px); background: rgba(10,10,11,0.7); border-bottom: 1px solid rgba(34,34,37,0.5); }
 .nav-logo { font-family: var(--mono); font-size: 0.85rem; letter-spacing: 0.05em; color: var(--accent); font-weight: 500; }
 .nav-links { display: flex; gap: 2rem; list-style: none; }
 .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 400; letter-spacing: 0.02em; transition: color 0.3s; position: relative; }
