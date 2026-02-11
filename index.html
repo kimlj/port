@@ -207,6 +207,17 @@ footer .footer-accent { color: var(--accent); }
 /* Magnetic button */
 .btn-magnetic { transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
 
+/* CV download dropdown */
+.cv-dropdown { position: relative; display: inline-flex; }
+.cv-dropdown-toggle { cursor: pointer; font-family: inherit; }
+.cv-chevron { transition: transform 0.3s; margin-left: 2px; }
+.cv-dropdown.open .cv-chevron { transform: rotate(180deg); }
+.cv-dropdown-menu { position: absolute; top: calc(100% + 8px); left: 0; min-width: 130px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 0.4rem; opacity: 0; pointer-events: none; transform: translateY(-8px); transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94); z-index: 50; }
+.cv-dropdown.open .cv-dropdown-menu { opacity: 1; pointer-events: all; transform: translateY(0); }
+.cv-dropdown-menu a { display: flex; align-items: center; gap: 0.5rem; padding: 0.55rem 0.85rem; border-radius: 8px; color: var(--text-muted); text-decoration: none; font-size: 0.82rem; font-weight: 500; transition: all 0.2s; }
+.cv-dropdown-menu a:hover { background: var(--accent-dim); color: var(--accent); }
+.cv-dropdown-menu a svg { flex-shrink: 0; }
+
 /* Logo scramble cursor */
 .nav-logo { cursor: default; }
 
@@ -345,10 +356,23 @@ footer .footer-accent { color: var(--accent); }
       <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
     </a>
     <a href="#contact" class="btn-ghost btn-magnetic">Get In Touch</a>
-    <a href="resume.pdf" download="Kim_Julongbayan_Resume.pdf" class="btn-ghost btn-magnetic">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Download CV
-    </a>
+    <div class="cv-dropdown">
+      <button class="btn-ghost btn-magnetic cv-dropdown-toggle">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download CV
+        <svg class="cv-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="cv-dropdown-menu">
+        <a href="Kim_Julongbayan_Resume.pdf" download>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          PDF
+        </a>
+        <a href="Kim_Julongbayan_Resume.docx" download>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          DOCX
+        </a>
+      </div>
+    </div>
   </div>
   <div class="hero-shapes">
     <div class="shape shape-1"></div>
@@ -560,9 +584,13 @@ footer .footer-accent { color: var(--accent); }
   <h2 class="section-title reveal">Let's build something <em>great</em></h2>
   <p class="contact-sub reveal">Open to collaborations, freelance work, and exciting opportunities.</p>
   <div class="contact-links reveal">
-    <a href="resume.pdf" download="Kim_Julongbayan_Resume.pdf" class="contact-pill">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Resume
+    <a href="Kim_Julongbayan_Resume.pdf" download class="contact-pill">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Resume PDF
+    </a>
+    <a href="Kim_Julongbayan_Resume.docx" download class="contact-pill">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Resume DOCX
     </a>
     <a href="mailto:kljulongbayan@gmail.com" class="contact-pill">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4l-10 8L2 4"/></svg>
@@ -797,7 +825,21 @@ if (window.innerWidth > 768) {
   });
 }
 
-// 5. Scroll progress bar
+// 5. CV dropdown
+(function() {
+  const dropdown = document.querySelector('.cv-dropdown');
+  const toggle = dropdown.querySelector('.cv-dropdown-toggle');
+  toggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    dropdown.classList.toggle('open');
+  });
+  document.addEventListener('click', () => dropdown.classList.remove('open'));
+  dropdown.querySelector('.cv-dropdown-menu').addEventListener('click', () => {
+    dropdown.classList.remove('open');
+  });
+})();
+
+// 6. Scroll progress bar
 const scrollProgress = document.getElementById('scrollProgress');
 window.addEventListener('scroll', () => {
   const docHeight = document.documentElement.scrollHeight - window.innerHeight;
