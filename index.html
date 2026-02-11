@@ -161,19 +161,41 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 .project-card:hover .project-link svg { transform: translateX(4px); }
 
 /* Experience layout */
-.experience-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 4rem; align-items: start; }
-.experience-sidebar { position: sticky; top: 6rem; display: flex; flex-direction: column; gap: 1.5rem; }
-.sidebar-card { padding: 1.5rem; border: 1px solid var(--border); border-radius: 16px; background: var(--bg-card); transition: all 0.4s; }
-.sidebar-card:hover { border-color: var(--border-hover); background: var(--bg-card-hover); }
-.sidebar-card-title { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent); margin-bottom: 1rem; }
-.competency-item { display: flex; gap: 0.75rem; padding: 0.6rem 0; border-bottom: 1px solid var(--border); }
-.competency-item:last-child { border-bottom: none; padding-bottom: 0; }
-.competency-item:first-child { padding-top: 0; }
-.competency-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--accent-dim); border: 1px solid rgba(200,255,0,0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.competency-icon svg { width: 14px; height: 14px; stroke: var(--accent); fill: none; stroke-width: 1.5; }
-.competency-text h4 { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.15rem; }
-.competency-text p { font-size: 0.75rem; color: var(--text-muted); line-height: 1.5; font-weight: 300; }
-.availability-badge { display: flex; align-items: center; gap: 0.6rem; padding: 1.25rem 1.5rem; border: 1px solid rgba(200,255,0,0.15); border-radius: 16px; background: rgba(200,255,0,0.03); }
+.experience-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 4rem; align-items: stretch; }
+.experience-sidebar { position: sticky; top: 6rem; display: flex; flex-direction: column; gap: 1.5rem; align-self: start; }
+
+/* Sidebar card with animated gradient border */
+.sidebar-card { padding: 1.75rem; border: 1px solid var(--border); border-radius: 20px; background: var(--bg-card); position: relative; overflow: hidden; transition: all 0.4s; }
+.sidebar-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--gradient-1), var(--gradient-2), var(--gradient-1)); background-size: 200% 100%; animation: shimmerBorder 3s linear infinite; }
+@keyframes shimmerBorder { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+.sidebar-card::after { content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity 0.3s; pointer-events: none; border-radius: inherit; background: radial-gradient(circle 300px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(200,255,0,0.04), transparent 70%); }
+.sidebar-card:hover::after { opacity: 1; }
+.sidebar-card-title { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem; }
+.sidebar-card-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(200,255,0,0.2), transparent); }
+
+/* Competency items with stagger */
+.competency-item { display: flex; gap: 0.85rem; padding: 0.85rem; border-radius: 12px; border: 1px solid transparent; transition: all 0.3s; opacity: 0; transform: translateX(20px); }
+.competency-item.comp-visible { opacity: 1; transform: translateX(0); }
+.competency-item:hover { border-color: var(--border); background: rgba(200,255,0,0.02); }
+.competency-item:hover .competency-icon { border-color: rgba(200,255,0,0.3); background: rgba(200,255,0,0.12); transform: scale(1.1); }
+.competency-item:hover .competency-icon svg { animation: iconBounce 0.5s ease; }
+@keyframes iconBounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+.competency-icon { width: 36px; height: 36px; border-radius: 10px; background: var(--accent-dim); border: 1px solid rgba(200,255,0,0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.3s; }
+.competency-icon svg { width: 16px; height: 16px; stroke: var(--accent); fill: none; stroke-width: 1.5; }
+.competency-text { flex: 1; }
+.competency-text h4 { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.2rem; }
+.competency-text p { font-size: 0.72rem; color: var(--text-muted); line-height: 1.5; font-weight: 300; }
+
+/* Skill level bars */
+.competency-bar { height: 3px; background: var(--border); border-radius: 2px; margin-top: 0.5rem; overflow: hidden; }
+.competency-bar-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--gradient-1), var(--gradient-2)); width: 0%; transition: width 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+.comp-visible .competency-bar-fill { width: var(--level); }
+
+/* Availability badge with shimmer */
+.availability-badge { display: flex; align-items: center; gap: 0.75rem; padding: 1.25rem 1.5rem; border: 1px solid rgba(200,255,0,0.15); border-radius: 16px; background: rgba(200,255,0,0.03); position: relative; overflow: hidden; opacity: 0; transform: translateY(10px); transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+.availability-badge.comp-visible { opacity: 1; transform: translateY(0); }
+.availability-badge::before { content: ''; position: absolute; top: 0; left: -100%; width: 60%; height: 100%; background: linear-gradient(90deg, transparent, rgba(200,255,0,0.06), transparent); animation: badgeShimmer 3s ease-in-out infinite 2s; }
+@keyframes badgeShimmer { 0% { left: -100%; } 100% { left: 200%; } }
 .availability-badge .status-dot { width: 8px; height: 8px; }
 .availability-badge span { font-size: 0.85rem; color: var(--text-muted); font-weight: 400; }
 .availability-badge strong { color: var(--accent); font-weight: 600; }
@@ -598,28 +620,56 @@ footer .footer-accent { color: var(--accent); }
         </div>
       </div>
     </div>
-    <div class="experience-sidebar reveal">
-      <div class="sidebar-card">
+    <div class="experience-sidebar">
+      <div class="sidebar-card spotlight-card">
         <div class="sidebar-card-title">Key Strengths</div>
         <div class="competency-item">
           <div class="competency-icon"><svg viewBox="0 0 24 24"><path d="M12 2a4 4 0 0 1 4 4c0 1.95-1.4 3.58-3.25 3.93L12 22l-.75-12.07A4.001 4.001 0 0 1 12 2z"/></svg></div>
-          <div class="competency-text"><h4>AI/LLM Proficiency</h4><p>Prompt engineering, output evaluation, and AI tool integration</p></div>
+          <div class="competency-text">
+            <h4>AI/LLM Proficiency</h4>
+            <p>Prompt engineering, output evaluation, and AI tool integration</p>
+            <div class="competency-bar"><div class="competency-bar-fill" style="--level: 92%"></div></div>
+          </div>
         </div>
         <div class="competency-item">
           <div class="competency-icon"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
-          <div class="competency-text"><h4>DevOps & Cloud</h4><p>Docker, VPS management, CI/CD workflows</p></div>
+          <div class="competency-text">
+            <h4>DevOps & Cloud</h4>
+            <p>Docker, VPS management, CI/CD workflows</p>
+            <div class="competency-bar"><div class="competency-bar-fill" style="--level: 85%"></div></div>
+          </div>
         </div>
         <div class="competency-item">
           <div class="competency-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
-          <div class="competency-text"><h4>Attention to Detail</h4><p>Meticulous in identifying bugs, edge cases, and quality issues</p></div>
+          <div class="competency-text">
+            <h4>Attention to Detail</h4>
+            <p>Meticulous in identifying bugs, edge cases, and quality issues</p>
+            <div class="competency-bar"><div class="competency-bar-fill" style="--level: 95%"></div></div>
+          </div>
         </div>
         <div class="competency-item">
           <div class="competency-icon"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
-          <div class="competency-text"><h4>Analytical Thinking</h4><p>Strong ability to analyze code, data, and AI model behavior</p></div>
+          <div class="competency-text">
+            <h4>Analytical Thinking</h4>
+            <p>Strong ability to analyze code, data, and AI model behavior</p>
+            <div class="competency-bar"><div class="competency-bar-fill" style="--level: 88%"></div></div>
+          </div>
         </div>
         <div class="competency-item">
           <div class="competency-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
-          <div class="competency-text"><h4>Technical Writing</h4><p>Clear documentation of requirements and specifications</p></div>
+          <div class="competency-text">
+            <h4>Technical Writing</h4>
+            <p>Clear documentation of requirements and specifications</p>
+            <div class="competency-bar"><div class="competency-bar-fill" style="--level: 82%"></div></div>
+          </div>
+        </div>
+        <div class="competency-item">
+          <div class="competency-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+          <div class="competency-text">
+            <h4>English Proficiency</h4>
+            <p>Excellent written and verbal communication skills</p>
+            <div class="competency-bar"><div class="competency-bar-fill" style="--level: 90%"></div></div>
+          </div>
         </div>
       </div>
       <div class="availability-badge">
@@ -878,7 +928,32 @@ if (window.innerWidth > 768) {
   });
 }
 
-// 5. CV dropdown
+// 5. Competency stagger reveal + skill bars
+(function() {
+  const items = document.querySelectorAll('.competency-item, .availability-badge');
+  const compObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const siblings = Array.from(items);
+        const idx = siblings.indexOf(entry.target);
+        setTimeout(() => entry.target.classList.add('comp-visible'), idx * 150);
+        compObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2, rootMargin: '0px 0px -50px 0px' });
+  items.forEach(item => compObserver.observe(item));
+
+  // Spotlight on sidebar card
+  document.querySelectorAll('.sidebar-card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty('--mouse-x', (e.clientX - rect.left) + 'px');
+      card.style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
+    });
+  });
+})();
+
+// 6. CV dropdown
 (function() {
   const dropdown = document.querySelector('.cv-dropdown');
   const toggle = dropdown.querySelector('.cv-dropdown-toggle');
