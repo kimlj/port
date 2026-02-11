@@ -80,7 +80,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 201; padding: 1.25rem
 .hero h1 em::after { content: ''; position: absolute; bottom: 0.05em; left: 0; width: 0; height: 2px; background: var(--accent); animation: underlineGrow 0.8s ease forwards 1.4s; }
 @keyframes underlineGrow { from { width: 0; } to { width: 100%; } }
 .hero-sub { margin-top: 2rem; font-size: 1.15rem; color: var(--text-muted); max-width: 550px; line-height: 1.7; font-weight: 300; opacity: 0; animation: fadeUp 0.8s ease forwards 0.8s; }
-.hero-cta { margin-top: 3rem; display: flex; gap: 1rem; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.8s ease forwards 1s; }
+.hero-cta { margin-top: 3rem; display: flex; gap: 1rem; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.8s ease forwards 1s; position: relative; z-index: 10; }
 
 .btn-primary { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.9rem 2rem; background: var(--accent); color: var(--bg); text-decoration: none; font-weight: 600; font-size: 0.9rem; border-radius: 100px; transition: all 0.3s; letter-spacing: 0.01em; }
 .btn-primary:hover { box-shadow: 0 0 30px var(--accent-glow), 0 0 60px rgba(200,255,0,0.08); transform: translateY(-2px); }
@@ -159,7 +159,27 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 .project-link svg { width: 16px; height: 16px; stroke: var(--accent); fill: none; stroke-width: 2; transition: transform 0.3s; }
 .project-card:hover .project-link svg { transform: translateX(4px); }
 
-.timeline { position: relative; max-width: 800px; margin: 0 auto; }
+/* Experience layout */
+.experience-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 4rem; align-items: start; }
+.experience-sidebar { position: sticky; top: 6rem; display: flex; flex-direction: column; gap: 1.5rem; }
+.sidebar-card { padding: 1.5rem; border: 1px solid var(--border); border-radius: 16px; background: var(--bg-card); transition: all 0.4s; }
+.sidebar-card:hover { border-color: var(--border-hover); background: var(--bg-card-hover); }
+.sidebar-card-title { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent); margin-bottom: 1rem; }
+.competency-item { display: flex; gap: 0.75rem; padding: 0.6rem 0; border-bottom: 1px solid var(--border); }
+.competency-item:last-child { border-bottom: none; padding-bottom: 0; }
+.competency-item:first-child { padding-top: 0; }
+.competency-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--accent-dim); border: 1px solid rgba(200,255,0,0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.competency-icon svg { width: 14px; height: 14px; stroke: var(--accent); fill: none; stroke-width: 1.5; }
+.competency-text h4 { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.15rem; }
+.competency-text p { font-size: 0.75rem; color: var(--text-muted); line-height: 1.5; font-weight: 300; }
+.availability-badge { display: flex; align-items: center; gap: 0.6rem; padding: 1.25rem 1.5rem; border: 1px solid rgba(200,255,0,0.15); border-radius: 16px; background: rgba(200,255,0,0.03); }
+.availability-badge .status-dot { width: 8px; height: 8px; }
+.availability-badge span { font-size: 0.85rem; color: var(--text-muted); font-weight: 400; }
+.availability-badge strong { color: var(--accent); font-weight: 600; }
+
+@media (max-width: 1024px) { .experience-grid { grid-template-columns: 1fr; gap: 2.5rem; } .experience-sidebar { position: static; } }
+
+.timeline { position: relative; max-width: 800px; }
 .timeline-date { font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
 .timeline-item h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.35rem; }
 .timeline-item h4 { font-size: 0.85rem; color: var(--accent); font-weight: 400; margin-bottom: 0.6rem; }
@@ -208,12 +228,12 @@ footer .footer-accent { color: var(--accent); }
 .btn-magnetic { transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
 
 /* CV download dropdown */
-.cv-dropdown { position: relative; display: inline-flex; }
+.cv-dropdown { position: relative; display: inline-flex; z-index: 10; }
 .cv-dropdown-toggle { cursor: pointer; font-family: inherit; color: var(--text); background: transparent; border: 1px solid var(--border); padding: 0.9rem 2rem; font-weight: 500; font-size: 0.9rem; border-radius: 100px; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.3s; }
 .cv-dropdown-toggle:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
 .cv-chevron { transition: transform 0.3s; margin-left: 2px; }
 .cv-dropdown.open .cv-chevron { transform: rotate(180deg); }
-.cv-dropdown-menu { position: absolute; top: calc(100% + 8px); left: 0; min-width: 130px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 0.4rem; opacity: 0; pointer-events: none; transform: translateY(-8px); transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94); z-index: 50; }
+.cv-dropdown-menu { position: absolute; top: calc(100% + 8px); left: 0; min-width: 130px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 0.4rem; opacity: 0; pointer-events: none; transform: translateY(-8px); transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94); z-index: 99; }
 .cv-dropdown.open .cv-dropdown-menu { opacity: 1; pointer-events: all; transform: translateY(0); }
 .cv-dropdown-menu a { display: flex; align-items: center; gap: 0.5rem; padding: 0.55rem 0.85rem; border-radius: 8px; color: var(--text-muted); text-decoration: none; font-size: 0.82rem; font-weight: 500; transition: all 0.2s; }
 .cv-dropdown-menu a:hover { background: var(--accent-dim); color: var(--accent); }
@@ -537,42 +557,73 @@ footer .footer-accent { color: var(--accent); }
 <section id="experience">
   <p class="section-label reveal">04 / Journey</p>
   <h2 class="section-title reveal">Experience</h2>
-  <div class="timeline" id="timeline">
-    <div class="timeline-progress" id="timelineProgress"></div>
-    <div class="timeline-item">
-      <div class="timeline-dot-ripple"></div>
-      <div class="timeline-item-inner">
-        <div class="timeline-date">2022 — Present</div>
-        <h3>Independent App Developer</h3>
-        <h4>Full Stack & Mobile</h4>
-        <p>Building and shipping mobile and web applications independently, including WordWarz.io, Casinore.io, and fitness apps. Full ownership of product lifecycle from ideation to deployment on iOS and Android.</p>
+  <div class="experience-grid">
+    <div class="timeline" id="timeline">
+      <div class="timeline-progress" id="timelineProgress"></div>
+      <div class="timeline-item">
+        <div class="timeline-dot-ripple"></div>
+        <div class="timeline-item-inner">
+          <div class="timeline-date">2022 — Present</div>
+          <h3>Independent App Developer</h3>
+          <h4>Full Stack & Mobile</h4>
+          <p>Building and shipping mobile and web applications independently, including WordWarz.io, Casinore.io, and fitness apps. Full ownership of product lifecycle from ideation to deployment on iOS and Android.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot-ripple"></div>
+        <div class="timeline-item-inner">
+          <div class="timeline-date">Capstone Project</div>
+          <h3>E-Commerce Developer</h3>
+          <h4>Online Retail Platform</h4>
+          <p>Built and maintained e-commerce platform features including product catalog and checkout flow. Managed version control with Git/GitLab for collaborative development. Conducted QA testing and debugged frontend/backend issues across devices.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot-ripple"></div>
+        <div class="timeline-item-inner">
+          <div class="timeline-date">OJT</div>
+          <h3>Dashboard Analytics Developer</h3>
+          <h4>Mining Company</h4>
+          <p>Developed real-time analytics dashboards for monitoring mining operations and production metrics. Created data visualization components with SQL queries for KPIs and operational data. Ensured data accuracy through validation, quality checks, and anomaly detection.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot-ripple"></div>
+        <div class="timeline-item-inner">
+          <div class="timeline-date">2018 — 2020</div>
+          <h3>Web Development</h3>
+          <h4>Frontend & Backend</h4>
+          <p>Started professional journey in web development, building responsive websites and learning core technologies including HTML, CSS, JavaScript, and backend fundamentals with Node.js and databases.</p>
+        </div>
       </div>
     </div>
-    <div class="timeline-item">
-      <div class="timeline-dot-ripple"></div>
-      <div class="timeline-item-inner">
-        <div class="timeline-date">Capstone Project</div>
-        <h3>E-Commerce Developer</h3>
-        <h4>Online Retail Platform</h4>
-        <p>Built and maintained e-commerce platform features including product catalog and checkout flow. Managed version control with Git/GitLab for collaborative development. Conducted QA testing and debugged frontend/backend issues across devices.</p>
+    <div class="experience-sidebar reveal">
+      <div class="sidebar-card">
+        <div class="sidebar-card-title">Key Strengths</div>
+        <div class="competency-item">
+          <div class="competency-icon"><svg viewBox="0 0 24 24"><path d="M12 2a4 4 0 0 1 4 4c0 1.95-1.4 3.58-3.25 3.93L12 22l-.75-12.07A4.001 4.001 0 0 1 12 2z"/></svg></div>
+          <div class="competency-text"><h4>AI/LLM Proficiency</h4><p>Prompt engineering, output evaluation, and AI tool integration</p></div>
+        </div>
+        <div class="competency-item">
+          <div class="competency-icon"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
+          <div class="competency-text"><h4>DevOps & Cloud</h4><p>Docker, VPS management, CI/CD workflows</p></div>
+        </div>
+        <div class="competency-item">
+          <div class="competency-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+          <div class="competency-text"><h4>Attention to Detail</h4><p>Meticulous in identifying bugs, edge cases, and quality issues</p></div>
+        </div>
+        <div class="competency-item">
+          <div class="competency-icon"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+          <div class="competency-text"><h4>Analytical Thinking</h4><p>Strong ability to analyze code, data, and AI model behavior</p></div>
+        </div>
+        <div class="competency-item">
+          <div class="competency-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+          <div class="competency-text"><h4>Technical Writing</h4><p>Clear documentation of requirements and specifications</p></div>
+        </div>
       </div>
-    </div>
-    <div class="timeline-item">
-      <div class="timeline-dot-ripple"></div>
-      <div class="timeline-item-inner">
-        <div class="timeline-date">OJT</div>
-        <h3>Dashboard Analytics Developer</h3>
-        <h4>Mining Company</h4>
-        <p>Developed real-time analytics dashboards for monitoring mining operations and production metrics. Created data visualization components with SQL queries for KPIs and operational data. Ensured data accuracy through validation, quality checks, and anomaly detection.</p>
-      </div>
-    </div>
-    <div class="timeline-item">
-      <div class="timeline-dot-ripple"></div>
-      <div class="timeline-item-inner">
-        <div class="timeline-date">2018 — 2020</div>
-        <h3>Web Development</h3>
-        <h4>Frontend & Backend</h4>
-        <p>Started professional journey in web development, building responsive websites and learning core technologies including HTML, CSS, JavaScript, and backend fundamentals with Node.js and databases.</p>
+      <div class="availability-badge">
+        <div class="status-dot"></div>
+        <span><strong>Open to remote work</strong> — flexible schedule, reliable setup</span>
       </div>
     </div>
   </div>
