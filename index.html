@@ -345,6 +345,63 @@ footer .footer-accent { color: var(--accent); }
 @media (max-width: 1024px) { .about-grid { grid-template-columns: 1fr; gap: 2.5rem; } .expertise-grid { grid-template-columns: 1fr 1fr; } .project-card { grid-template-columns: 1fr; } .project-visual { min-height: 200px; } }
 @media (max-width: 768px) { nav { padding: 1rem 1.5rem; } .nav-links { display: none; } .nav-hamburger { display: flex; } section { padding: 4rem 1.5rem; } .hero { padding: 7rem 1.5rem 3rem; } .expertise-grid { grid-template-columns: 1fr; } .about-stats { grid-template-columns: 1fr 1fr; } footer { flex-direction: column; gap: 0.75rem; text-align: center; } .contact-section { padding: 5rem 1.5rem; } .scroll-indicator { display: none; } }
 @media (max-width: 480px) { .nav-links { gap: 0.75rem; } .hero-cta { flex-direction: column; } .btn-primary, .btn-ghost { justify-content: center; width: 100%; } .cv-dropdown { width: 100%; } .cv-dropdown-toggle { justify-content: center; width: 100%; } }
+
+/* AI Showcase Section */
+.ai-showcase-intro { color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; font-weight: 300; max-width: 700px; margin-bottom: 3.5rem; }
+.ai-showcase-intro code { font-family: var(--mono); font-size: 0.82rem; color: var(--accent); background: var(--accent-dim); padding: 0.15rem 0.45rem; border-radius: 4px; }
+
+.showcase-block { margin-bottom: 4rem; }
+.showcase-header { margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.3rem; }
+.showcase-step { font-family: var(--mono); font-size: 0.7rem; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; display: flex; align-items: center; gap: 0.75rem; }
+.showcase-step::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(200,255,0,0.2), transparent); max-width: 200px; }
+.showcase-header h3 { font-family: var(--serif); font-size: 1.5rem; font-weight: 400; }
+.showcase-caption { font-size: 0.82rem; color: var(--text-muted); font-weight: 300; font-style: italic; line-height: 1.6; }
+
+.avatar-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 1.25rem; }
+.avatar-cell { position: relative; aspect-ratio: 1; border-radius: 50%; overflow: hidden; border: 2px solid var(--border); transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); background: var(--bg-card); cursor: pointer; }
+.avatar-grid-label { grid-column: 1 / -1; font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim); letter-spacing: 0.12em; text-transform: uppercase; padding-top: 0.25rem; }
+.avatar-cell:hover { border-color: var(--accent); transform: scale(1.1); box-shadow: 0 0 24px rgba(200,255,0,0.15); z-index: 2; }
+.avatar-cell img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.avatar-cell .prompt-overlay { position: absolute; inset: 0; background: rgba(10,10,11,0.88); display: flex; align-items: center; justify-content: center; text-align: center; padding: 0.5rem; opacity: 0; transition: opacity 0.3s; border-radius: 50%; pointer-events: none; }
+.avatar-cell:hover .prompt-overlay, .avatar-cell.show-prompt .prompt-overlay { opacity: 1; }
+.avatar-cell .prompt-overlay span { font-family: var(--mono); font-size: 0.52rem; color: var(--accent); line-height: 1.4; letter-spacing: 0.02em; word-break: break-word; }
+.base-prompt-block { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 2rem; max-width: 850px; }
+.base-prompt-block .prompt-label { font-family: var(--mono); font-size: 0.65rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.5rem; display: block; }
+.base-prompt-block code { font-family: var(--mono); font-size: 0.75rem; color: var(--text-muted); line-height: 1.6; word-break: break-word; }
+.prompt-hint { font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim); margin-bottom: 1.25rem; letter-spacing: 0.05em; }
+
+.showcase-placeholder { border: 1px dashed var(--border); border-radius: 20px; padding: 3rem 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; min-height: 200px; background: rgba(17,17,19,0.5); transition: all 0.4s; }
+.showcase-placeholder:hover { border-color: var(--border-hover); background: rgba(17,17,19,0.8); }
+.showcase-placeholder-icon { width: 52px; height: 52px; border-radius: 14px; background: var(--accent-dim); border: 1px solid rgba(200,255,0,0.12); display: flex; align-items: center; justify-content: center; }
+.showcase-placeholder-icon svg { width: 24px; height: 24px; stroke: var(--accent); fill: none; stroke-width: 1.5; opacity: 0.6; }
+.showcase-placeholder-label { font-family: var(--mono); font-size: 0.72rem; color: var(--text-muted); letter-spacing: 0.05em; }
+.showcase-placeholder p { font-size: 0.82rem; color: var(--text-dim); text-align: center; font-weight: 300; line-height: 1.6; max-width: 400px; }
+
+.showcase-flow { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 1rem; align-items: center; }
+.showcase-flow-step { border: 1px dashed var(--border); border-radius: 16px; padding: 2rem 1.5rem; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; text-align: center; background: rgba(17,17,19,0.5); transition: all 0.4s; min-height: 160px; justify-content: center; }
+.showcase-flow-step:hover { border-color: var(--border-hover); }
+.showcase-flow-arrow { color: var(--text-dim); font-size: 1.5rem; }
+.showcase-flow-step .showcase-placeholder-icon { margin-bottom: 0.25rem; }
+.showcase-flow-step .showcase-placeholder-label { font-size: 0.7rem; }
+.showcase-flow-step p { font-size: 0.75rem; color: var(--text-dim); font-weight: 300; }
+
+.showcase-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.showcase-compare-side { border: 1px dashed var(--border); border-radius: 20px; padding: 2rem; background: rgba(17,17,19,0.5); transition: all 0.4s; }
+.showcase-compare-side:hover { border-color: var(--border-hover); }
+.showcase-compare-label { font-family: var(--mono); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 1rem; display: inline-block; padding: 0.3rem 0.7rem; border-radius: 6px; }
+.showcase-compare-label.before { color: var(--text-dim); background: rgba(255,255,255,0.03); border: 1px solid var(--border); }
+.showcase-compare-label.after { color: var(--accent); background: var(--accent-dim); border: 1px solid rgba(200,255,0,0.15); }
+.showcase-compare-side .placeholder-img { width: 100%; aspect-ratio: 1; border-radius: 12px; background: var(--bg-card); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
+.showcase-compare-side .placeholder-img svg { width: 32px; height: 32px; stroke: var(--text-dim); fill: none; stroke-width: 1; opacity: 0.3; }
+.showcase-compare-side p { font-size: 0.78rem; color: var(--text-dim); font-weight: 300; font-style: italic; line-height: 1.5; }
+
+@media (max-width: 768px) {
+  .avatar-grid { grid-template-columns: repeat(4, 1fr); gap: 0.75rem; max-width: 100%; }
+  .avatar-cell .prompt-overlay span { font-size: 0.42rem; }
+  .showcase-flow { grid-template-columns: 1fr; gap: 0.75rem; }
+  .showcase-flow-arrow { transform: rotate(90deg); justify-self: center; }
+  .showcase-compare { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
@@ -568,6 +625,187 @@ footer .footer-accent { color: var(--accent); }
     <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
   </div>
   <div class="scroll-dots" id="scrollDots"></div>
+</section>
+
+<div class="divider"></div>
+
+<section id="ai-showcase">
+  <p class="section-label reveal">03.5 / AI Showcase</p>
+  <h2 class="section-title reveal">AI Content <em>Pipeline</em></h2>
+  <p class="ai-showcase-intro reveal">Not just claims — here's proof. These avatars were generated for <code>WordWarz.io</code> using a modular prompt system I built. Same base model, same style — different modifiers swapped programmatically through ComfyUI and Python scripts.</p>
+
+  <!-- PART 1: Character Consistency Grid -->
+  <div class="showcase-block reveal">
+    <div class="showcase-header">
+      <span class="showcase-step">01 — Style Consistency</span>
+      <h3>Character Avatar System</h3>
+      <p class="showcase-caption">Same base prompt, different modifiers — hair color, expression, accessories, archetype. All generated with one unified pipeline.</p>
+    </div>
+
+    <div class="base-prompt-block">
+      <span class="prompt-label">Base Prompt</span>
+      <code>1girl/1boy, chibi, bust portrait, sharp eye highlights, vibrant anime color palette, cel-shading, crisp lineart, white background, centered composition, high detail face</code>
+    </div>
+    <p class="prompt-hint">Hover over avatars to see the modifier prompt used for each variation</p>
+
+    <div class="avatar-grid">
+      <span class="avatar-grid-label">Hair &amp; expression modifiers</span>
+      <div class="avatar-cell"><img src="assets/ai-showcase/01-consistency-girl-redhair-peace.png" alt="Red hair chibi" loading="lazy"><div class="prompt-overlay"><span>red hair, peace sign, cheerful smile</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/02-consistency-girl-purplehair-peace.png" alt="Purple hair chibi" loading="lazy"><div class="prompt-overlay"><span>purple hair, peace sign, gentle expression</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/03-consistency-girl-pinkhair-wink.png" alt="Pink hair chibi" loading="lazy"><div class="prompt-overlay"><span>pink hair, winking, playful</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/04-expression-girl-blonde-smug.png" alt="Blonde smug chibi" loading="lazy"><div class="prompt-overlay"><span>blonde hair, smug expression, confident</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/05-expression-girl-gradient-starryeyes.png" alt="Starry-eyed chibi" loading="lazy"><div class="prompt-overlay"><span>gradient hair, starry eyes, sparkling</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/06-expression-girl-purple-excited.png" alt="Excited purple chibi" loading="lazy"><div class="prompt-overlay"><span>purple hair, excited, open mouth</span></div></div>
+
+      <div class="avatar-cell"><img src="assets/ai-showcase/45-expression-girl-pink-catears-lollipop.png" alt="Pink catears girl lollipop" loading="lazy"><div class="prompt-overlay"><span>pink hair, cat ears, lollipop, wink, green eyes</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/46-expression-girl-pink-catears-smirk.png" alt="Pink catears girl smirk" loading="lazy"><div class="prompt-overlay"><span>pink hair, cat ears, smirk, green eyes</span></div></div>
+
+      <span class="avatar-grid-label">Props &amp; accessories</span>
+      <div class="avatar-cell"><img src="assets/ai-showcase/11-prop-girl-redhair-bubblegum.png" alt="Red hair bubblegum girl" loading="lazy"><div class="prompt-overlay"><span>red hair, blowing bubblegum</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/12-prop-girl-blonde-cap-bubblegum.png" alt="Cap bubblegum girl" loading="lazy"><div class="prompt-overlay"><span>blonde, baseball cap, bubblegum</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/13-prop-girl-pink-catears-lollipop.png" alt="Cat ears lollipop girl" loading="lazy"><div class="prompt-overlay"><span>pink hair, cat ears, lollipop</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/14-prop-girl-brown-bobatea.png" alt="Boba tea girl" loading="lazy"><div class="prompt-overlay"><span>brown hair, sipping boba tea</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/29-catgirl-pink-boba.png" alt="Pink catgirl boba" loading="lazy"><div class="prompt-overlay"><span>pink hair, cat ears, sipping drink, wink</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/30-catgirl-orange-lollipop.png" alt="Orange catgirl lollipop" loading="lazy"><div class="prompt-overlay"><span>orange hair, cat ears, lollipop, puffed cheeks</span></div></div>
+
+      <div class="avatar-cell"><img src="assets/ai-showcase/47-prop-boy-leather-pocky-earring.png" alt="Leather boy pocky" loading="lazy"><div class="prompt-overlay"><span>leather jacket, pocky stick, earring, smirk</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/48-prop-boy-cap-coffee-shy.png" alt="Cap boy coffee" loading="lazy"><div class="prompt-overlay"><span>baseball cap, holding coffee, shy expression</span></div></div>
+
+      <span class="avatar-grid-label">Gamer variants</span>
+      <div class="avatar-cell"><img src="assets/ai-showcase/07-gamer-girl-headphones-jacket.png" alt="Gamer girl headphones" loading="lazy"><div class="prompt-overlay"><span>headphones, gaming jacket, confident</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/08-gamer-girl-catears-streamer.png" alt="Cat ears streamer" loading="lazy"><div class="prompt-overlay"><span>cat ear headphones, streamer setup</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/09-gamer-boy-energydrink-headphones.png" alt="Gamer boy energy drink" loading="lazy"><div class="prompt-overlay"><span>headphones, energy drink, intense gaze</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/10-gamer-boy-pocky-chillgamer.png" alt="Chill gamer boy" loading="lazy"><div class="prompt-overlay"><span>headphones, pocky stick, relaxed</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/34-gamer-girl-red-headphones.png" alt="Red hair gamer girl" loading="lazy"><div class="prompt-overlay"><span>red hair, gaming headset, devil horns, sipping</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/26-gamer-boy-headphones-shy.png" alt="Shy gamer boy" loading="lazy"><div class="prompt-overlay"><span>brown hair, red headphones, shy expression</span></div></div>
+
+      <div class="avatar-cell"><img src="assets/ai-showcase/49-gamer-girl-red-headphones-sipping.png" alt="Red gamer girl sipping" loading="lazy"><div class="prompt-overlay"><span>red hair, devil horn headphones, sipping drink</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/50-gamer-girl-purple-headphones-sipping.png" alt="Purple gamer girl sipping" loading="lazy"><div class="prompt-overlay"><span>purple hair, pink headphones, hoodie, sipping drink</span></div></div>
+
+      <span class="avatar-grid-label">Street style</span>
+      <div class="avatar-cell"><img src="assets/ai-showcase/21-street-girl-cap-bubblegum-chains.png" alt="Street girl chains" loading="lazy"><div class="prompt-overlay"><span>cap, bubblegum, chain necklace, streetwear</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/22-street-boy-sunglasses-bubblegum.png" alt="Street boy sunglasses" loading="lazy"><div class="prompt-overlay"><span>sunglasses, bubblegum, street fashion</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/32-street-girl-cap-bubblegum2.png" alt="Street girl cap bubblegum" loading="lazy"><div class="prompt-overlay"><span>blonde, baseball cap, bubblegum, jacket</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/44-street-girl-cap-bubblegum3.png" alt="Street girl cap bubblegum v2" loading="lazy"><div class="prompt-overlay"><span>blonde bob, cap, bubblegum, stud earrings</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/33-street-boy-cap-sunglasses-bubblegum.png" alt="Street boy cap chains" loading="lazy"><div class="prompt-overlay"><span>orange hair, cap, sunglasses on head, bubblegum, chains</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/38-street-boy-purple-bubblegum.png" alt="Purple street boy" loading="lazy"><div class="prompt-overlay"><span>purple hair, cap, sunglasses, bubblegum, chains, earbuds</span></div></div>
+
+      <span class="avatar-grid-label">Archetypes &amp; fantasy</span>
+      <div class="avatar-cell"><img src="assets/ai-showcase/15-archetype-boy-mysterious-hoodie-mask.png" alt="Mysterious hooded boy" loading="lazy"><div class="prompt-overlay"><span>hoodie, face mask, mysterious, glowing eyes</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/16-archetype-boy-edgelord-eyepatch.png" alt="Edgelord eyepatch boy" loading="lazy"><div class="prompt-overlay"><span>eyepatch, edgy expression, dark clothes</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/18-archetype-girl-witch-hat.png" alt="Witch girl" loading="lazy"><div class="prompt-overlay"><span>witch hat, magical girl, mystical</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/25-nerd-boy-beret-glasses.png" alt="Nerd boy beret" loading="lazy"><div class="prompt-overlay"><span>beret, round glasses, artistic, shy</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/28-cyber-boy-whitehair-glasses.png" alt="Cyber boy white hair" loading="lazy"><div class="prompt-overlay"><span>white hair, glasses, choker, cyberpunk</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/43-rebel-boy-leather-jacket.png" alt="Rebel leather jacket" loading="lazy"><div class="prompt-overlay"><span>leather jacket, pocky stick, earring, rebellious</span></div></div>
+
+      <span class="avatar-grid-label">Royalty &amp; explorers</span>
+      <div class="avatar-cell"><img src="assets/ai-showcase/17-archetype-boy-royalty-crown.png" alt="Royalty crown boy" loading="lazy"><div class="prompt-overlay"><span>crown, royal cape, proud expression</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/35-royalty-boy-crown-brown.png" alt="Royalty boy brown hair" loading="lazy"><div class="prompt-overlay"><span>small crown, gold earrings, red cape, charming</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/36-royalty-boy-crown-purple.png" alt="Royalty boy purple hair" loading="lazy"><div class="prompt-overlay"><span>purple hair, crown, gold earrings, military jacket</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/37-stylish-boy-earrings.png" alt="Stylish boy earrings" loading="lazy"><div class="prompt-overlay"><span>dark hair, gold hoop earrings, smirk, elegant</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/27-explorer-boy-goggles-adventurer.png" alt="Explorer boy goggles" loading="lazy"><div class="prompt-overlay"><span>aviator goggles, backpack, adventurer, curious</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/31-explorer-girl-goggles-aviator.png" alt="Explorer girl aviator" loading="lazy"><div class="prompt-overlay"><span>aviator goggles, orange hair, wink, explorer outfit</span></div></div>
+
+      <div class="avatar-cell"><img src="assets/ai-showcase/51-royalty-girl-red-tiara-pearls.png" alt="Royalty girl tiara pearls" loading="lazy"><div class="prompt-overlay"><span>red hair, tiara, pearl earrings, regal gaze</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/52-royalty-girl-red-tiara-golden.png" alt="Royalty girl tiara golden" loading="lazy"><div class="prompt-overlay"><span>red hair, golden tiara, cheerful, warm smile</span></div></div>
+
+      <span class="avatar-grid-label">Scientists &amp; tech</span>
+      <div class="avatar-cell"><img src="assets/ai-showcase/19-archetype-girl-scientist-labcoat.png" alt="Scientist girl labcoat" loading="lazy"><div class="prompt-overlay"><span>lab coat, safety goggles, test tubes</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/20-archetype-boy-techscientist-vrvisor.png" alt="Tech scientist VR" loading="lazy"><div class="prompt-overlay"><span>VR visor, tech gear, futuristic scientist</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/39-scientist-boy-labcoat-goggles.png" alt="Scientist boy lab goggles" loading="lazy"><div class="prompt-overlay"><span>lab coat, safety goggles, test tube, excited</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/40-scientist-girl-goggles-colorful.png" alt="Scientist girl colorful" loading="lazy"><div class="prompt-overlay"><span>lab goggles, colorful lab coat, sparkles, messy hair</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/41-scientist-boy-goggles-red.png" alt="Scientist boy red goggles" loading="lazy"><div class="prompt-overlay"><span>red tinted goggles, lab coat, gloves, confident smirk</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/42-athletic-boy-muscular-jersey.png" alt="Athletic muscular boy" loading="lazy"><div class="prompt-overlay"><span>muscular, athletic jersey, earbuds, energetic grin</span></div></div>
+
+      <div class="avatar-cell"><img src="assets/ai-showcase/53-scientist-boy-visor-labcoat-blue.png" alt="Scientist boy blue visor" loading="lazy"><div class="prompt-overlay"><span>blue visor, lab coat, serious, blue eyes</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/54-scientist-boy-glasses-beard.png" alt="Scientist boy glasses beard" loading="lazy"><div class="prompt-overlay"><span>glasses, goatee, lab coat, thinking pose</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/55-scientist-girl-purple-glasses-labcoat.png" alt="Scientist girl purple glasses" loading="lazy"><div class="prompt-overlay"><span>purple hair, glasses, lab coat, gentle smile</span></div></div>
+
+      <span class="avatar-grid-label">Athletic &amp; combat</span>
+      <div class="avatar-cell"><img src="assets/ai-showcase/23-athletic-boy-boxer-intense.png" alt="Boxer boy" loading="lazy"><div class="prompt-overlay"><span>boxing gloves, intense stare, fighter stance</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/24-athletic-girl-gym-wink.png" alt="Gym girl wink" loading="lazy"><div class="prompt-overlay"><span>sports top, wink, gym accessories, athletic</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/56-street-girl-cap-bubblegum-crop.png" alt="Street athletic girl" loading="lazy"><div class="prompt-overlay"><span>cap, bubblegum, crop top, chain necklace</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/57-athletic-boy-swimmer-towel.png" alt="Swimmer boy" loading="lazy"><div class="prompt-overlay"><span>swimmer, towel, goggles, muscular, friendly</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/58-athletic-boy-headband-basketball.png" alt="Basketball boy" loading="lazy"><div class="prompt-overlay"><span>red headband, basketball jersey, grin</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/59-athletic-girl-muscular-peace.png" alt="Muscular girl peace" loading="lazy"><div class="prompt-overlay"><span>tank top, muscular, peace sign, wink</span></div></div>
+      <div class="avatar-cell"><img src="assets/ai-showcase/60-athletic-girl-cap-bubblegum-muscular.png" alt="Athletic girl bubblegum" loading="lazy"><div class="prompt-overlay"><span>trucker cap, bubblegum, muscular, gold earrings</span></div></div>
+    </div>
+  </div>
+
+  <!-- PART 2: ComfyUI Workflow (Placeholder) -->
+  <div class="showcase-block reveal">
+    <div class="showcase-header">
+      <span class="showcase-step">02 — ComfyUI Pipeline</span>
+      <h3>Node-Based Workflow</h3>
+      <p class="showcase-caption">Custom ComfyUI node graph — not just typing prompts, but engineering visual pipelines with control over every generation parameter.</p>
+    </div>
+    <div class="showcase-placeholder">
+      <div class="showcase-placeholder-icon">
+        <svg viewBox="0 0 24 24"><path d="M4 5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5z"/><path d="M14 5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1V5z"/><path d="M4 15a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-4z"/><path d="M10 7h4M7 10v4M17 10v4"/></svg>
+      </div>
+      <span class="showcase-placeholder-label">ComfyUI workflow screenshot goes here</span>
+      <p>Annotated node graph showing the generation pipeline — model loading, prompt conditioning, sampling, and output stages.</p>
+    </div>
+  </div>
+
+  <!-- PART 3: Batch Generation Proof (Placeholder) -->
+  <div class="showcase-block reveal">
+    <div class="showcase-header">
+      <span class="showcase-step">03 — Batch Automation</span>
+      <h3>Script-Driven Generation</h3>
+      <p class="showcase-caption">Python script feeds different modifier combinations into ComfyUI via API — automating hundreds of unique avatars from a single prompt template.</p>
+    </div>
+    <div class="showcase-flow">
+      <div class="showcase-flow-step">
+        <div class="showcase-placeholder-icon">
+          <svg viewBox="0 0 24 24"><path d="M16 18l6-6-6-6"/><path d="M8 6l-6 6 6 6"/></svg>
+        </div>
+        <span class="showcase-placeholder-label">Python Script</span>
+        <p>Modifier combos, prompt templates, batch queue</p>
+      </div>
+      <span class="showcase-flow-arrow">&rarr;</span>
+      <div class="showcase-flow-step">
+        <div class="showcase-placeholder-icon">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        </div>
+        <span class="showcase-placeholder-label">ComfyUI API</span>
+        <p>Node pipeline processes each prompt automatically</p>
+      </div>
+      <span class="showcase-flow-arrow">&rarr;</span>
+      <div class="showcase-flow-step">
+        <div class="showcase-placeholder-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        </div>
+        <span class="showcase-placeholder-label">Output Grid</span>
+        <p>200+ consistent avatars, production-ready</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PART 4: Prompt Optimization (Placeholder) -->
+  <div class="showcase-block reveal">
+    <div class="showcase-header">
+      <span class="showcase-step">04 — Prompt Engineering</span>
+      <h3>Optimization Process</h3>
+      <p class="showcase-caption">Iterative prompt refinement — understanding why specific tokens work, not just what tokens to use.</p>
+    </div>
+    <div class="showcase-compare">
+      <div class="showcase-compare-side">
+        <span class="showcase-compare-label before">Before</span>
+        <div class="placeholder-img">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+        </div>
+        <p>"cute anime girl, chibi style, white background"</p>
+      </div>
+      <div class="showcase-compare-side">
+        <span class="showcase-compare-label after">After</span>
+        <div class="placeholder-img">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+        </div>
+        <p>"1girl, chibi, bust portrait, sharp eye highlights, vibrant anime color palette, cel-shading, crisp lineart..."</p>
+      </div>
+    </div>
+  </div>
 </section>
 
 <div class="divider"></div>
@@ -1093,6 +1331,22 @@ window.addEventListener('scroll', () => {
     }, { once: true, passive: true });
   }
 })();
+
+// Mobile tap-to-reveal prompt overlays on avatar cells
+document.querySelectorAll('.avatar-cell').forEach(cell => {
+  cell.addEventListener('click', (e) => {
+    if (window.innerWidth > 768) return;
+    e.preventDefault();
+    const wasActive = cell.classList.contains('show-prompt');
+    document.querySelectorAll('.avatar-cell.show-prompt').forEach(c => c.classList.remove('show-prompt'));
+    if (!wasActive) cell.classList.add('show-prompt');
+  });
+});
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.avatar-cell')) {
+    document.querySelectorAll('.avatar-cell.show-prompt').forEach(c => c.classList.remove('show-prompt'));
+  }
+});
 </script>
 </body>
 </html>
