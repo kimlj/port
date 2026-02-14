@@ -357,9 +357,17 @@ footer .footer-accent { color: var(--accent); }
 .showcase-header h3 { font-family: var(--serif); font-size: 1.5rem; font-weight: 400; }
 .showcase-caption { font-size: 0.82rem; color: var(--text-muted); font-weight: 300; font-style: italic; line-height: 1.6; }
 
-.avatar-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 1.25rem; }
+.avatar-accordion { margin-bottom: 0.5rem; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; transition: border-color 0.3s; }
+.avatar-accordion:hover { border-color: var(--border-hover); }
+.avatar-accordion-header { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.25rem; cursor: pointer; background: var(--bg-card); transition: background 0.3s; user-select: none; }
+.avatar-accordion-header:hover { background: var(--bg-card-hover); }
+.avatar-accordion-label { font-family: var(--mono); font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.12em; text-transform: uppercase; }
+.avatar-accordion.open .avatar-accordion-label { color: var(--accent); }
+.avatar-accordion-arrow { width: 16px; height: 16px; stroke: var(--text-dim); fill: none; stroke-width: 2; transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); flex-shrink: 0; }
+.avatar-accordion.open .avatar-accordion-arrow { transform: rotate(180deg); stroke: var(--accent); }
+.avatar-accordion-body { display: grid; grid-template-columns: repeat(8, 1fr); gap: 1.25rem; padding: 0 1.25rem; max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), padding 0.4s; }
+.avatar-accordion.open .avatar-accordion-body { max-height: 500px; padding: 1rem 1.25rem 1.25rem; }
 .avatar-cell { position: relative; aspect-ratio: 1; border-radius: 50%; overflow: hidden; border: 2px solid var(--border); transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); background: var(--bg-card); cursor: pointer; }
-.avatar-grid-label { grid-column: 1 / -1; font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim); letter-spacing: 0.12em; text-transform: uppercase; padding-top: 0.25rem; }
 .avatar-cell:hover { border-color: var(--accent); transform: scale(1.1); box-shadow: 0 0 24px rgba(200,255,0,0.15); z-index: 2; }
 .avatar-cell img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .avatar-cell .prompt-overlay { position: absolute; inset: 0; background: rgba(10,10,11,0.88); display: flex; align-items: center; justify-content: center; text-align: center; padding: 0.5rem; opacity: 0; transition: opacity 0.3s; border-radius: 50%; pointer-events: none; }
@@ -396,7 +404,7 @@ footer .footer-accent { color: var(--accent); }
 .showcase-compare-side p { font-size: 0.78rem; color: var(--text-dim); font-weight: 300; font-style: italic; line-height: 1.5; }
 
 @media (max-width: 768px) {
-  .avatar-grid { grid-template-columns: repeat(4, 1fr); gap: 0.75rem; max-width: 100%; }
+  .avatar-accordion-body { grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
   .avatar-cell .prompt-overlay span { font-size: 0.42rem; }
   .showcase-flow { grid-template-columns: 1fr; gap: 0.75rem; }
   .showcase-flow-arrow { transform: rotate(90deg); justify-self: center; }
@@ -646,89 +654,138 @@ footer .footer-accent { color: var(--accent); }
       <span class="prompt-label">Base Prompt</span>
       <code>1girl/1boy, chibi, bust portrait, sharp eye highlights, vibrant anime color palette, cel-shading, crisp lineart, white background, centered composition, high detail face</code>
     </div>
-    <p class="prompt-hint">Hover over avatars to see the modifier prompt used for each variation</p>
+    <p class="prompt-hint">Hover or tap avatars to see the modifier prompt used for each variation</p>
 
-    <div class="avatar-grid">
-      <span class="avatar-grid-label">Hair &amp; expression modifiers</span>
-      <div class="avatar-cell"><img src="assets/ai-showcase/01-consistency-girl-redhair-peace.webp" alt="Red hair chibi" loading="lazy"><div class="prompt-overlay"><span>red hair, peace sign, cheerful smile</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/02-consistency-girl-purplehair-peace.webp" alt="Purple hair chibi" loading="lazy"><div class="prompt-overlay"><span>purple hair, peace sign, gentle expression</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/03-consistency-girl-pinkhair-wink.webp" alt="Pink hair chibi" loading="lazy"><div class="prompt-overlay"><span>pink hair, winking, playful</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/04-expression-girl-blonde-smug.webp" alt="Blonde smug chibi" loading="lazy"><div class="prompt-overlay"><span>blonde hair, smug expression, confident</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/05-expression-girl-gradient-starryeyes.webp" alt="Starry-eyed chibi" loading="lazy"><div class="prompt-overlay"><span>gradient hair, starry eyes, sparkling</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/06-expression-girl-purple-excited.webp" alt="Excited purple chibi" loading="lazy"><div class="prompt-overlay"><span>purple hair, excited, open mouth</span></div></div>
+    <div class="avatar-accordion open">
+      <div class="avatar-accordion-header">
+        <span class="avatar-accordion-label">Hair &amp; expression modifiers</span>
+        <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="avatar-accordion-body">
+        <div class="avatar-cell"><img src="assets/ai-showcase/01-consistency-girl-redhair-peace.webp" alt="Red hair chibi" loading="lazy"><div class="prompt-overlay"><span>red hair, peace sign, cheerful smile</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/02-consistency-girl-purplehair-peace.webp" alt="Purple hair chibi" loading="lazy"><div class="prompt-overlay"><span>purple hair, peace sign, gentle expression</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/03-consistency-girl-pinkhair-wink.webp" alt="Pink hair chibi" loading="lazy"><div class="prompt-overlay"><span>pink hair, winking, playful</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/04-expression-girl-blonde-smug.webp" alt="Blonde smug chibi" loading="lazy"><div class="prompt-overlay"><span>blonde hair, smug expression, confident</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/05-expression-girl-gradient-starryeyes.webp" alt="Starry-eyed chibi" loading="lazy"><div class="prompt-overlay"><span>gradient hair, starry eyes, sparkling</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/06-expression-girl-purple-excited.webp" alt="Excited purple chibi" loading="lazy"><div class="prompt-overlay"><span>purple hair, excited, open mouth</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/45-expression-girl-pink-catears-lollipop.webp" alt="Pink catears girl lollipop" loading="lazy"><div class="prompt-overlay"><span>pink hair, cat ears, lollipop, wink, green eyes</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/46-expression-girl-pink-catears-smirk.webp" alt="Pink catears girl smirk" loading="lazy"><div class="prompt-overlay"><span>pink hair, cat ears, smirk, green eyes</span></div></div>
+      </div>
+    </div>
 
-      <div class="avatar-cell"><img src="assets/ai-showcase/45-expression-girl-pink-catears-lollipop.webp" alt="Pink catears girl lollipop" loading="lazy"><div class="prompt-overlay"><span>pink hair, cat ears, lollipop, wink, green eyes</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/46-expression-girl-pink-catears-smirk.webp" alt="Pink catears girl smirk" loading="lazy"><div class="prompt-overlay"><span>pink hair, cat ears, smirk, green eyes</span></div></div>
+    <div class="avatar-accordion">
+      <div class="avatar-accordion-header">
+        <span class="avatar-accordion-label">Props &amp; accessories</span>
+        <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="avatar-accordion-body">
+        <div class="avatar-cell"><img src="assets/ai-showcase/11-prop-girl-redhair-bubblegum.webp" alt="Red hair bubblegum girl" loading="lazy"><div class="prompt-overlay"><span>red hair, blowing bubblegum</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/12-prop-girl-blonde-cap-bubblegum.webp" alt="Cap bubblegum girl" loading="lazy"><div class="prompt-overlay"><span>blonde, baseball cap, bubblegum</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/13-prop-girl-pink-catears-lollipop.webp" alt="Cat ears lollipop girl" loading="lazy"><div class="prompt-overlay"><span>pink hair, cat ears, lollipop</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/14-prop-girl-brown-bobatea.webp" alt="Boba tea girl" loading="lazy"><div class="prompt-overlay"><span>brown hair, sipping boba tea</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/29-catgirl-pink-boba.webp" alt="Pink catgirl boba" loading="lazy"><div class="prompt-overlay"><span>pink hair, cat ears, sipping drink, wink</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/30-catgirl-orange-lollipop.webp" alt="Orange catgirl lollipop" loading="lazy"><div class="prompt-overlay"><span>orange hair, cat ears, lollipop, puffed cheeks</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/47-prop-boy-leather-pocky-earring.webp" alt="Leather boy pocky" loading="lazy"><div class="prompt-overlay"><span>leather jacket, pocky stick, earring, smirk</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/48-prop-boy-cap-coffee-shy.webp" alt="Cap boy coffee" loading="lazy"><div class="prompt-overlay"><span>baseball cap, holding coffee, shy expression</span></div></div>
+      </div>
+    </div>
 
-      <span class="avatar-grid-label">Props &amp; accessories</span>
-      <div class="avatar-cell"><img src="assets/ai-showcase/11-prop-girl-redhair-bubblegum.webp" alt="Red hair bubblegum girl" loading="lazy"><div class="prompt-overlay"><span>red hair, blowing bubblegum</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/12-prop-girl-blonde-cap-bubblegum.webp" alt="Cap bubblegum girl" loading="lazy"><div class="prompt-overlay"><span>blonde, baseball cap, bubblegum</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/13-prop-girl-pink-catears-lollipop.webp" alt="Cat ears lollipop girl" loading="lazy"><div class="prompt-overlay"><span>pink hair, cat ears, lollipop</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/14-prop-girl-brown-bobatea.webp" alt="Boba tea girl" loading="lazy"><div class="prompt-overlay"><span>brown hair, sipping boba tea</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/29-catgirl-pink-boba.webp" alt="Pink catgirl boba" loading="lazy"><div class="prompt-overlay"><span>pink hair, cat ears, sipping drink, wink</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/30-catgirl-orange-lollipop.webp" alt="Orange catgirl lollipop" loading="lazy"><div class="prompt-overlay"><span>orange hair, cat ears, lollipop, puffed cheeks</span></div></div>
+    <div class="avatar-accordion">
+      <div class="avatar-accordion-header">
+        <span class="avatar-accordion-label">Gamer variants</span>
+        <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="avatar-accordion-body">
+        <div class="avatar-cell"><img src="assets/ai-showcase/07-gamer-girl-headphones-jacket.webp" alt="Gamer girl headphones" loading="lazy"><div class="prompt-overlay"><span>headphones, gaming jacket, confident</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/08-gamer-girl-catears-streamer.webp" alt="Cat ears streamer" loading="lazy"><div class="prompt-overlay"><span>cat ear headphones, streamer setup</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/09-gamer-boy-energydrink-headphones.webp" alt="Gamer boy energy drink" loading="lazy"><div class="prompt-overlay"><span>headphones, energy drink, intense gaze</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/10-gamer-boy-pocky-chillgamer.webp" alt="Chill gamer boy" loading="lazy"><div class="prompt-overlay"><span>headphones, pocky stick, relaxed</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/34-gamer-girl-red-headphones.webp" alt="Red hair gamer girl" loading="lazy"><div class="prompt-overlay"><span>red hair, gaming headset, devil horns, sipping</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/26-gamer-boy-headphones-shy.webp" alt="Shy gamer boy" loading="lazy"><div class="prompt-overlay"><span>brown hair, red headphones, shy expression</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/49-gamer-girl-red-headphones-sipping.webp" alt="Red gamer girl sipping" loading="lazy"><div class="prompt-overlay"><span>red hair, devil horn headphones, sipping drink</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/50-gamer-girl-purple-headphones-sipping.webp" alt="Purple gamer girl sipping" loading="lazy"><div class="prompt-overlay"><span>purple hair, pink headphones, hoodie, sipping drink</span></div></div>
+      </div>
+    </div>
 
-      <div class="avatar-cell"><img src="assets/ai-showcase/47-prop-boy-leather-pocky-earring.webp" alt="Leather boy pocky" loading="lazy"><div class="prompt-overlay"><span>leather jacket, pocky stick, earring, smirk</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/48-prop-boy-cap-coffee-shy.webp" alt="Cap boy coffee" loading="lazy"><div class="prompt-overlay"><span>baseball cap, holding coffee, shy expression</span></div></div>
+    <div class="avatar-accordion">
+      <div class="avatar-accordion-header">
+        <span class="avatar-accordion-label">Street style</span>
+        <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="avatar-accordion-body">
+        <div class="avatar-cell"><img src="assets/ai-showcase/21-street-girl-cap-bubblegum-chains.webp" alt="Street girl chains" loading="lazy"><div class="prompt-overlay"><span>cap, bubblegum, chain necklace, streetwear</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/22-street-boy-sunglasses-bubblegum.webp" alt="Street boy sunglasses" loading="lazy"><div class="prompt-overlay"><span>sunglasses, bubblegum, street fashion</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/32-street-girl-cap-bubblegum2.webp" alt="Street girl cap bubblegum" loading="lazy"><div class="prompt-overlay"><span>blonde, baseball cap, bubblegum, jacket</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/44-street-girl-cap-bubblegum3.webp" alt="Street girl cap bubblegum v2" loading="lazy"><div class="prompt-overlay"><span>blonde bob, cap, bubblegum, stud earrings</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/33-street-boy-cap-sunglasses-bubblegum.webp" alt="Street boy cap chains" loading="lazy"><div class="prompt-overlay"><span>orange hair, cap, sunglasses on head, bubblegum, chains</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/38-street-boy-purple-bubblegum.webp" alt="Purple street boy" loading="lazy"><div class="prompt-overlay"><span>purple hair, cap, sunglasses, bubblegum, chains, earbuds</span></div></div>
+      </div>
+    </div>
 
-      <span class="avatar-grid-label">Gamer variants</span>
-      <div class="avatar-cell"><img src="assets/ai-showcase/07-gamer-girl-headphones-jacket.webp" alt="Gamer girl headphones" loading="lazy"><div class="prompt-overlay"><span>headphones, gaming jacket, confident</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/08-gamer-girl-catears-streamer.webp" alt="Cat ears streamer" loading="lazy"><div class="prompt-overlay"><span>cat ear headphones, streamer setup</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/09-gamer-boy-energydrink-headphones.webp" alt="Gamer boy energy drink" loading="lazy"><div class="prompt-overlay"><span>headphones, energy drink, intense gaze</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/10-gamer-boy-pocky-chillgamer.webp" alt="Chill gamer boy" loading="lazy"><div class="prompt-overlay"><span>headphones, pocky stick, relaxed</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/34-gamer-girl-red-headphones.webp" alt="Red hair gamer girl" loading="lazy"><div class="prompt-overlay"><span>red hair, gaming headset, devil horns, sipping</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/26-gamer-boy-headphones-shy.webp" alt="Shy gamer boy" loading="lazy"><div class="prompt-overlay"><span>brown hair, red headphones, shy expression</span></div></div>
+    <div class="avatar-accordion">
+      <div class="avatar-accordion-header">
+        <span class="avatar-accordion-label">Archetypes &amp; fantasy</span>
+        <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="avatar-accordion-body">
+        <div class="avatar-cell"><img src="assets/ai-showcase/15-archetype-boy-mysterious-hoodie-mask.webp" alt="Mysterious hooded boy" loading="lazy"><div class="prompt-overlay"><span>hoodie, face mask, mysterious, glowing eyes</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/16-archetype-boy-edgelord-eyepatch.webp" alt="Edgelord eyepatch boy" loading="lazy"><div class="prompt-overlay"><span>eyepatch, edgy expression, dark clothes</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/18-archetype-girl-witch-hat.webp" alt="Witch girl" loading="lazy"><div class="prompt-overlay"><span>witch hat, magical girl, mystical</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/25-nerd-boy-beret-glasses.webp" alt="Nerd boy beret" loading="lazy"><div class="prompt-overlay"><span>beret, round glasses, artistic, shy</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/28-cyber-boy-whitehair-glasses.webp" alt="Cyber boy white hair" loading="lazy"><div class="prompt-overlay"><span>white hair, glasses, choker, cyberpunk</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/43-rebel-boy-leather-jacket.webp" alt="Rebel leather jacket" loading="lazy"><div class="prompt-overlay"><span>leather jacket, pocky stick, earring, rebellious</span></div></div>
+      </div>
+    </div>
 
-      <div class="avatar-cell"><img src="assets/ai-showcase/49-gamer-girl-red-headphones-sipping.webp" alt="Red gamer girl sipping" loading="lazy"><div class="prompt-overlay"><span>red hair, devil horn headphones, sipping drink</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/50-gamer-girl-purple-headphones-sipping.webp" alt="Purple gamer girl sipping" loading="lazy"><div class="prompt-overlay"><span>purple hair, pink headphones, hoodie, sipping drink</span></div></div>
+    <div class="avatar-accordion">
+      <div class="avatar-accordion-header">
+        <span class="avatar-accordion-label">Royalty &amp; explorers</span>
+        <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="avatar-accordion-body">
+        <div class="avatar-cell"><img src="assets/ai-showcase/17-archetype-boy-royalty-crown.webp" alt="Royalty crown boy" loading="lazy"><div class="prompt-overlay"><span>crown, royal cape, proud expression</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/35-royalty-boy-crown-brown.webp" alt="Royalty boy brown hair" loading="lazy"><div class="prompt-overlay"><span>small crown, gold earrings, red cape, charming</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/36-royalty-boy-crown-purple.webp" alt="Royalty boy purple hair" loading="lazy"><div class="prompt-overlay"><span>purple hair, crown, gold earrings, military jacket</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/37-stylish-boy-earrings.webp" alt="Stylish boy earrings" loading="lazy"><div class="prompt-overlay"><span>dark hair, gold hoop earrings, smirk, elegant</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/27-explorer-boy-goggles-adventurer.webp" alt="Explorer boy goggles" loading="lazy"><div class="prompt-overlay"><span>aviator goggles, backpack, adventurer, curious</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/31-explorer-girl-goggles-aviator.webp" alt="Explorer girl aviator" loading="lazy"><div class="prompt-overlay"><span>aviator goggles, orange hair, wink, explorer outfit</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/51-royalty-girl-red-tiara-pearls.webp" alt="Royalty girl tiara pearls" loading="lazy"><div class="prompt-overlay"><span>red hair, tiara, pearl earrings, regal gaze</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/52-royalty-girl-red-tiara-golden.webp" alt="Royalty girl tiara golden" loading="lazy"><div class="prompt-overlay"><span>red hair, golden tiara, cheerful, warm smile</span></div></div>
+      </div>
+    </div>
 
-      <span class="avatar-grid-label">Street style</span>
-      <div class="avatar-cell"><img src="assets/ai-showcase/21-street-girl-cap-bubblegum-chains.webp" alt="Street girl chains" loading="lazy"><div class="prompt-overlay"><span>cap, bubblegum, chain necklace, streetwear</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/22-street-boy-sunglasses-bubblegum.webp" alt="Street boy sunglasses" loading="lazy"><div class="prompt-overlay"><span>sunglasses, bubblegum, street fashion</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/32-street-girl-cap-bubblegum2.webp" alt="Street girl cap bubblegum" loading="lazy"><div class="prompt-overlay"><span>blonde, baseball cap, bubblegum, jacket</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/44-street-girl-cap-bubblegum3.webp" alt="Street girl cap bubblegum v2" loading="lazy"><div class="prompt-overlay"><span>blonde bob, cap, bubblegum, stud earrings</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/33-street-boy-cap-sunglasses-bubblegum.webp" alt="Street boy cap chains" loading="lazy"><div class="prompt-overlay"><span>orange hair, cap, sunglasses on head, bubblegum, chains</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/38-street-boy-purple-bubblegum.webp" alt="Purple street boy" loading="lazy"><div class="prompt-overlay"><span>purple hair, cap, sunglasses, bubblegum, chains, earbuds</span></div></div>
+    <div class="avatar-accordion">
+      <div class="avatar-accordion-header">
+        <span class="avatar-accordion-label">Scientists &amp; tech</span>
+        <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="avatar-accordion-body">
+        <div class="avatar-cell"><img src="assets/ai-showcase/19-archetype-girl-scientist-labcoat.webp" alt="Scientist girl labcoat" loading="lazy"><div class="prompt-overlay"><span>lab coat, safety goggles, test tubes</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/20-archetype-boy-techscientist-vrvisor.webp" alt="Tech scientist VR" loading="lazy"><div class="prompt-overlay"><span>VR visor, tech gear, futuristic scientist</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/39-scientist-boy-labcoat-goggles.webp" alt="Scientist boy lab goggles" loading="lazy"><div class="prompt-overlay"><span>lab coat, safety goggles, test tube, excited</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/40-scientist-girl-goggles-colorful.webp" alt="Scientist girl colorful" loading="lazy"><div class="prompt-overlay"><span>lab goggles, colorful lab coat, sparkles, messy hair</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/41-scientist-boy-goggles-red.webp" alt="Scientist boy red goggles" loading="lazy"><div class="prompt-overlay"><span>red tinted goggles, lab coat, gloves, confident smirk</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/42-athletic-boy-muscular-jersey.webp" alt="Athletic muscular boy" loading="lazy"><div class="prompt-overlay"><span>muscular, athletic jersey, earbuds, energetic grin</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/53-scientist-boy-visor-labcoat-blue.webp" alt="Scientist boy blue visor" loading="lazy"><div class="prompt-overlay"><span>blue visor, lab coat, serious, blue eyes</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/54-scientist-boy-glasses-beard.webp" alt="Scientist boy glasses beard" loading="lazy"><div class="prompt-overlay"><span>glasses, goatee, lab coat, thinking pose</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/55-scientist-girl-purple-glasses-labcoat.webp" alt="Scientist girl purple glasses" loading="lazy"><div class="prompt-overlay"><span>purple hair, glasses, lab coat, gentle smile</span></div></div>
+      </div>
+    </div>
 
-      <span class="avatar-grid-label">Archetypes &amp; fantasy</span>
-      <div class="avatar-cell"><img src="assets/ai-showcase/15-archetype-boy-mysterious-hoodie-mask.webp" alt="Mysterious hooded boy" loading="lazy"><div class="prompt-overlay"><span>hoodie, face mask, mysterious, glowing eyes</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/16-archetype-boy-edgelord-eyepatch.webp" alt="Edgelord eyepatch boy" loading="lazy"><div class="prompt-overlay"><span>eyepatch, edgy expression, dark clothes</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/18-archetype-girl-witch-hat.webp" alt="Witch girl" loading="lazy"><div class="prompt-overlay"><span>witch hat, magical girl, mystical</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/25-nerd-boy-beret-glasses.webp" alt="Nerd boy beret" loading="lazy"><div class="prompt-overlay"><span>beret, round glasses, artistic, shy</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/28-cyber-boy-whitehair-glasses.webp" alt="Cyber boy white hair" loading="lazy"><div class="prompt-overlay"><span>white hair, glasses, choker, cyberpunk</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/43-rebel-boy-leather-jacket.webp" alt="Rebel leather jacket" loading="lazy"><div class="prompt-overlay"><span>leather jacket, pocky stick, earring, rebellious</span></div></div>
-
-      <span class="avatar-grid-label">Royalty &amp; explorers</span>
-      <div class="avatar-cell"><img src="assets/ai-showcase/17-archetype-boy-royalty-crown.webp" alt="Royalty crown boy" loading="lazy"><div class="prompt-overlay"><span>crown, royal cape, proud expression</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/35-royalty-boy-crown-brown.webp" alt="Royalty boy brown hair" loading="lazy"><div class="prompt-overlay"><span>small crown, gold earrings, red cape, charming</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/36-royalty-boy-crown-purple.webp" alt="Royalty boy purple hair" loading="lazy"><div class="prompt-overlay"><span>purple hair, crown, gold earrings, military jacket</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/37-stylish-boy-earrings.webp" alt="Stylish boy earrings" loading="lazy"><div class="prompt-overlay"><span>dark hair, gold hoop earrings, smirk, elegant</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/27-explorer-boy-goggles-adventurer.webp" alt="Explorer boy goggles" loading="lazy"><div class="prompt-overlay"><span>aviator goggles, backpack, adventurer, curious</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/31-explorer-girl-goggles-aviator.webp" alt="Explorer girl aviator" loading="lazy"><div class="prompt-overlay"><span>aviator goggles, orange hair, wink, explorer outfit</span></div></div>
-
-      <div class="avatar-cell"><img src="assets/ai-showcase/51-royalty-girl-red-tiara-pearls.webp" alt="Royalty girl tiara pearls" loading="lazy"><div class="prompt-overlay"><span>red hair, tiara, pearl earrings, regal gaze</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/52-royalty-girl-red-tiara-golden.webp" alt="Royalty girl tiara golden" loading="lazy"><div class="prompt-overlay"><span>red hair, golden tiara, cheerful, warm smile</span></div></div>
-
-      <span class="avatar-grid-label">Scientists &amp; tech</span>
-      <div class="avatar-cell"><img src="assets/ai-showcase/19-archetype-girl-scientist-labcoat.webp" alt="Scientist girl labcoat" loading="lazy"><div class="prompt-overlay"><span>lab coat, safety goggles, test tubes</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/20-archetype-boy-techscientist-vrvisor.webp" alt="Tech scientist VR" loading="lazy"><div class="prompt-overlay"><span>VR visor, tech gear, futuristic scientist</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/39-scientist-boy-labcoat-goggles.webp" alt="Scientist boy lab goggles" loading="lazy"><div class="prompt-overlay"><span>lab coat, safety goggles, test tube, excited</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/40-scientist-girl-goggles-colorful.webp" alt="Scientist girl colorful" loading="lazy"><div class="prompt-overlay"><span>lab goggles, colorful lab coat, sparkles, messy hair</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/41-scientist-boy-goggles-red.webp" alt="Scientist boy red goggles" loading="lazy"><div class="prompt-overlay"><span>red tinted goggles, lab coat, gloves, confident smirk</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/42-athletic-boy-muscular-jersey.webp" alt="Athletic muscular boy" loading="lazy"><div class="prompt-overlay"><span>muscular, athletic jersey, earbuds, energetic grin</span></div></div>
-
-      <div class="avatar-cell"><img src="assets/ai-showcase/53-scientist-boy-visor-labcoat-blue.webp" alt="Scientist boy blue visor" loading="lazy"><div class="prompt-overlay"><span>blue visor, lab coat, serious, blue eyes</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/54-scientist-boy-glasses-beard.webp" alt="Scientist boy glasses beard" loading="lazy"><div class="prompt-overlay"><span>glasses, goatee, lab coat, thinking pose</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/55-scientist-girl-purple-glasses-labcoat.webp" alt="Scientist girl purple glasses" loading="lazy"><div class="prompt-overlay"><span>purple hair, glasses, lab coat, gentle smile</span></div></div>
-
-      <span class="avatar-grid-label">Athletic &amp; combat</span>
-      <div class="avatar-cell"><img src="assets/ai-showcase/23-athletic-boy-boxer-intense.webp" alt="Boxer boy" loading="lazy"><div class="prompt-overlay"><span>boxing gloves, intense stare, fighter stance</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/24-athletic-girl-gym-wink.webp" alt="Gym girl wink" loading="lazy"><div class="prompt-overlay"><span>sports top, wink, gym accessories, athletic</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/56-street-girl-cap-bubblegum-crop.webp" alt="Street athletic girl" loading="lazy"><div class="prompt-overlay"><span>cap, bubblegum, crop top, chain necklace</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/57-athletic-boy-swimmer-towel.webp" alt="Swimmer boy" loading="lazy"><div class="prompt-overlay"><span>swimmer, towel, goggles, muscular, friendly</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/58-athletic-boy-headband-basketball.webp" alt="Basketball boy" loading="lazy"><div class="prompt-overlay"><span>red headband, basketball jersey, grin</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/59-athletic-girl-muscular-peace.webp" alt="Muscular girl peace" loading="lazy"><div class="prompt-overlay"><span>tank top, muscular, peace sign, wink</span></div></div>
-      <div class="avatar-cell"><img src="assets/ai-showcase/60-athletic-girl-cap-bubblegum-muscular.webp" alt="Athletic girl bubblegum" loading="lazy"><div class="prompt-overlay"><span>trucker cap, bubblegum, muscular, gold earrings</span></div></div>
+    <div class="avatar-accordion">
+      <div class="avatar-accordion-header">
+        <span class="avatar-accordion-label">Athletic &amp; combat</span>
+        <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="avatar-accordion-body">
+        <div class="avatar-cell"><img src="assets/ai-showcase/23-athletic-boy-boxer-intense.webp" alt="Boxer boy" loading="lazy"><div class="prompt-overlay"><span>boxing gloves, intense stare, fighter stance</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/24-athletic-girl-gym-wink.webp" alt="Gym girl wink" loading="lazy"><div class="prompt-overlay"><span>sports top, wink, gym accessories, athletic</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/56-street-girl-cap-bubblegum-crop.webp" alt="Street athletic girl" loading="lazy"><div class="prompt-overlay"><span>cap, bubblegum, crop top, chain necklace</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/57-athletic-boy-swimmer-towel.webp" alt="Swimmer boy" loading="lazy"><div class="prompt-overlay"><span>swimmer, towel, goggles, muscular, friendly</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/58-athletic-boy-headband-basketball.webp" alt="Basketball boy" loading="lazy"><div class="prompt-overlay"><span>red headband, basketball jersey, grin</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/59-athletic-girl-muscular-peace.webp" alt="Muscular girl peace" loading="lazy"><div class="prompt-overlay"><span>tank top, muscular, peace sign, wink</span></div></div>
+        <div class="avatar-cell"><img src="assets/ai-showcase/60-athletic-girl-cap-bubblegum-muscular.webp" alt="Athletic girl bubblegum" loading="lazy"><div class="prompt-overlay"><span>trucker cap, bubblegum, muscular, gold earrings</span></div></div>
+      </div>
     </div>
   </div>
 
@@ -1331,6 +1388,13 @@ window.addEventListener('scroll', () => {
     }, { once: true, passive: true });
   }
 })();
+
+// Accordion toggle for avatar categories
+document.querySelectorAll('.avatar-accordion-header').forEach(header => {
+  header.addEventListener('click', () => {
+    header.parentElement.classList.toggle('open');
+  });
+});
 
 // Mobile tap-to-reveal prompt overlays on avatar cells
 document.querySelectorAll('.avatar-cell').forEach(cell => {
