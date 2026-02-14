@@ -385,12 +385,15 @@ footer .footer-accent { color: var(--accent); }
 .batch-flow-arrow { color: var(--text-dim); font-size: 1.5rem; transform: rotate(90deg); }
 .batch-flow-card { border: 1px solid var(--border); border-radius: 16px; background: rgba(17,17,19,0.6); overflow: hidden; transition: border-color 0.3s; width: min(100%, 700px); }
 .batch-flow-card:hover { border-color: var(--border-hover); }
-.batch-flow-card-content { overflow: hidden; }
-.batch-flow-card-content > img { width: 100%; display: block; }
-.batch-flow-card-content video { width: 100%; display: block; }
+.batch-flow-card-content > img { width: 100%; height: auto; display: block; }
+.batch-flow-card-content video { width: 100%; height: auto; display: block; }
 .batch-flow-card-label { padding: 1rem 1.25rem; border-top: 1px solid var(--border); text-align: center; }
-.batch-flow-card-label span { font-weight: 600; font-size: 0.95rem; color: var(--text); display: block; margin-bottom: 0.25rem; }
+.batch-flow-card-label span { font-weight: 600; font-size: 0.95rem; color: var(--accent); display: block; margin-bottom: 0.25rem; }
 .batch-flow-card-label p { font-size: 0.78rem; color: var(--text-dim); margin: 0; }
+.batch-script-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.25rem; padding: 2.5rem 2rem; background: linear-gradient(135deg, rgba(200,255,0,0.04) 0%, rgba(0,0,0,0.3) 100%); min-height: 200px; }
+.batch-script-placeholder svg { width: 48px; height: 48px; color: var(--accent); opacity: 0.4; }
+.batch-script-lines { display: flex; flex-direction: column; gap: 0.5rem; width: 80%; }
+.batch-script-lines span { display: block; height: 6px; border-radius: 3px; background: rgba(200,255,0,0.1); }
 .batch-output-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.4rem; padding: 0.6rem; }
 .batch-output-grid img { width: 100%; display: block; border-radius: 4px; aspect-ratio: 1; object-fit: cover; }
 
@@ -428,8 +431,12 @@ footer .footer-accent { color: var(--accent); }
   .workflow-scroll-hint { display: none; }
   .workflow-image-wrap { padding: 0.75rem; }
   .workflow-image-wrap img { width: 100%; }
-  .batch-flow { max-height: 80vh; overflow-y: auto; padding: 0.5rem; border-radius: 16px; }
-  .batch-output-grid { grid-template-columns: repeat(4, 1fr); }
+  .batch-flow-card { width: 100%; }
+  .batch-output-grid { grid-template-columns: repeat(4, 1fr); max-height: 250px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--accent) transparent; }
+  .batch-output-grid::-webkit-scrollbar { width: 6px; }
+  .batch-output-grid::-webkit-scrollbar-track { background: transparent; }
+  .batch-output-grid::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+  .batch-output-grid::-webkit-scrollbar-thumb:hover { background: #d4ff33; }
 }
 </style>
 </head>
@@ -833,8 +840,16 @@ footer .footer-accent { color: var(--accent); }
     <!-- Flow cards: content on top, label below -->
     <div class="batch-flow">
       <div class="batch-flow-card">
-        <div class="batch-flow-card-content">
-          <img src="assets/ai-showcase/batch-script.webp" alt="Python batch generation script terminal output" loading="lazy">
+        <div class="batch-flow-card-content batch-script-placeholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 18l6-6-6-6"/><path d="M8 6l-6 6 6 6"/></svg>
+          <div class="batch-script-lines">
+            <span style="width:60%"></span>
+            <span style="width:80%"></span>
+            <span style="width:45%"></span>
+            <span style="width:70%"></span>
+            <span style="width:55%"></span>
+            <span style="width:65%"></span>
+          </div>
         </div>
         <div class="batch-flow-card-label">
           <span>Python Script</span>
