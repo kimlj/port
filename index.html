@@ -381,10 +381,18 @@ footer .footer-accent { color: var(--accent); }
 .workflow-image-wrap { border-radius: 16px; overflow: hidden; border: 1px solid var(--border); background: linear-gradient(135deg, rgba(200,255,0,0.06) 0%, rgba(0,255,200,0.04) 50%, rgba(200,255,0,0.06) 100%); padding: 1.25rem; }
 .workflow-image-wrap img { width: 100%; display: block; border-radius: 10px; }
 
-.batch-demo-video { border-radius: 16px; overflow: hidden; border: 1px solid var(--border); background: #0d0d0f; margin-top: 2rem; }
-.batch-demo-video video { width: 100%; display: block; }
-.batch-output-grid { margin-top: 1.5rem; border-radius: 16px; overflow: hidden; border: 1px solid var(--border); background: linear-gradient(135deg, rgba(200,255,0,0.04) 0%, rgba(0,255,200,0.03) 100%); padding: 1.25rem; display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.75rem; }
-.batch-output-grid img { width: 100%; display: block; border-radius: 10px; aspect-ratio: 1; object-fit: cover; }
+.batch-flow { display: flex; flex-direction: column; align-items: center; gap: 1.25rem; margin-top: 2rem; }
+.batch-flow-arrow { color: var(--text-dim); font-size: 1.5rem; transform: rotate(90deg); }
+.batch-flow-card { border: 1px solid var(--border); border-radius: 16px; background: rgba(17,17,19,0.6); overflow: hidden; transition: border-color 0.3s; width: min(100%, 700px); }
+.batch-flow-card:hover { border-color: var(--border-hover); }
+.batch-flow-card-content { overflow: hidden; }
+.batch-flow-card-content > img { width: 100%; display: block; }
+.batch-flow-card-content video { width: 100%; display: block; }
+.batch-flow-card-label { padding: 1rem 1.25rem; border-top: 1px solid var(--border); text-align: center; }
+.batch-flow-card-label span { font-weight: 600; font-size: 0.95rem; color: var(--text); display: block; margin-bottom: 0.25rem; }
+.batch-flow-card-label p { font-size: 0.78rem; color: var(--text-dim); margin: 0; }
+.batch-output-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.4rem; padding: 0.6rem; }
+.batch-output-grid img { width: 100%; display: block; border-radius: 4px; aspect-ratio: 1; object-fit: cover; }
 
 .showcase-placeholder { border: 1px dashed var(--border); border-radius: 20px; padding: 3rem 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; min-height: 200px; background: rgba(17,17,19,0.5); transition: all 0.4s; }
 .showcase-placeholder:hover { border-color: var(--border-hover); background: rgba(17,17,19,0.8); }
@@ -420,7 +428,8 @@ footer .footer-accent { color: var(--accent); }
   .workflow-scroll-hint { display: none; }
   .workflow-image-wrap { padding: 0.75rem; }
   .workflow-image-wrap img { width: 100%; }
-  .batch-output-grid { grid-template-columns: repeat(4, 1fr); gap: 0.5rem; padding: 0.75rem; }
+  .batch-flow { max-height: 80vh; overflow-y: auto; padding: 0.5rem; border-radius: 16px; }
+  .batch-output-grid { grid-template-columns: repeat(4, 1fr); }
 }
 </style>
 </head>
@@ -821,66 +830,66 @@ footer .footer-accent { color: var(--accent); }
       <p class="showcase-caption">Python script feeds different modifier combinations into ComfyUI via API — automating unique avatars from a single prompt template.</p>
     </div>
 
-    <!-- Flow labels -->
-    <div class="showcase-flow">
-      <div class="showcase-flow-step">
-        <div class="showcase-placeholder-icon">
-          <svg viewBox="0 0 24 24"><path d="M16 18l6-6-6-6"/><path d="M8 6l-6 6 6 6"/></svg>
+    <!-- Flow cards: content on top, label below -->
+    <div class="batch-flow">
+      <div class="batch-flow-card">
+        <div class="batch-flow-card-content">
+          <img src="assets/ai-showcase/batch-script.webp" alt="Python batch generation script terminal output" loading="lazy">
         </div>
-        <span class="showcase-placeholder-label">Python Script</span>
-        <p>Modifier combos, prompt templates, batch queue</p>
-      </div>
-      <span class="showcase-flow-arrow">&rarr;</span>
-      <div class="showcase-flow-step">
-        <div class="showcase-placeholder-icon">
-          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        <div class="batch-flow-card-label">
+          <span>Python Script</span>
+          <p>Modifier combos, prompt templates, batch queue</p>
         </div>
-        <span class="showcase-placeholder-label">ComfyUI API</span>
-        <p>Node pipeline processes each prompt automatically</p>
       </div>
-      <span class="showcase-flow-arrow">&rarr;</span>
-      <div class="showcase-flow-step">
-        <div class="showcase-placeholder-icon">
-          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-        </div>
-        <span class="showcase-placeholder-label">Output Grid</span>
-        <p>24 unique avatars, production-ready</p>
-      </div>
-    </div>
 
-    <!-- Demo video -->
-    <div class="batch-demo-video">
-      <video autoplay loop muted playsinline>
-        <source src="assets/ai-showcase/batch-demo.mp4" type="video/mp4">
-      </video>
-    </div>
+      <span class="batch-flow-arrow">&rarr;</span>
 
-    <!-- Output grid: 6×4 actual avatars -->
-    <div class="batch-output-grid">
-      <img src="assets/ai-showcase/batch/hair-expression_red-hair-peace.webp" alt="Red Hair Peace" loading="lazy">
-      <img src="assets/ai-showcase/batch/hair-expression_pink-hair-wink.webp" alt="Pink Hair Wink" loading="lazy">
-      <img src="assets/ai-showcase/batch/hair-expression_blonde-smug.webp" alt="Blonde Smug" loading="lazy">
-      <img src="assets/ai-showcase/batch/props-accessories_boba-tea.webp" alt="Boba Tea" loading="lazy">
-      <img src="assets/ai-showcase/batch/props-accessories_catgirl-lollipop.webp" alt="Catgirl Lollipop" loading="lazy">
-      <img src="assets/ai-showcase/batch/props-accessories_cap-coffee.webp" alt="Cap Coffee" loading="lazy">
-      <img src="assets/ai-showcase/batch/gamer-variants_headphones-jacket.webp" alt="Headphones Jacket" loading="lazy">
-      <img src="assets/ai-showcase/batch/gamer-variants_catear-streamer.webp" alt="Catear Streamer" loading="lazy">
-      <img src="assets/ai-showcase/batch/gamer-variants_energy-drink.webp" alt="Energy Drink" loading="lazy">
-      <img src="assets/ai-showcase/batch/street-style_cap-chains.webp" alt="Cap Chains" loading="lazy">
-      <img src="assets/ai-showcase/batch/street-style_sunglasses-street.webp" alt="Sunglasses Street" loading="lazy">
-      <img src="assets/ai-showcase/batch/street-style_purple-chains.webp" alt="Purple Chains" loading="lazy">
-      <img src="assets/ai-showcase/batch/archetypes-fantasy_mysterious-hoodie.webp" alt="Mysterious Hoodie" loading="lazy">
-      <img src="assets/ai-showcase/batch/archetypes-fantasy_witch-hat.webp" alt="Witch Hat" loading="lazy">
-      <img src="assets/ai-showcase/batch/archetypes-fantasy_cyber-white-hair.webp" alt="Cyber White Hair" loading="lazy">
-      <img src="assets/ai-showcase/batch/royalty_royal-crown.webp" alt="Royal Crown" loading="lazy">
-      <img src="assets/ai-showcase/batch/royalty_tiara-pearls.webp" alt="Tiara Pearls" loading="lazy">
-      <img src="assets/ai-showcase/batch/royalty_golden-tiara.webp" alt="Golden Tiara" loading="lazy">
-      <img src="assets/ai-showcase/batch/scientists-tech_lab-coat-goggles.webp" alt="Lab Coat Goggles" loading="lazy">
-      <img src="assets/ai-showcase/batch/scientists-tech_vr-scientist.webp" alt="VR Scientist" loading="lazy">
-      <img src="assets/ai-showcase/batch/scientists-tech_professor.webp" alt="Professor" loading="lazy">
-      <img src="assets/ai-showcase/batch/athletic-combat_boxer-intense.webp" alt="Boxer Intense" loading="lazy">
-      <img src="assets/ai-showcase/batch/athletic-combat_basketball.webp" alt="Basketball" loading="lazy">
-      <img src="assets/ai-showcase/batch/athletic-combat_muscular-peace.webp" alt="Muscular Peace" loading="lazy">
+      <div class="batch-flow-card">
+        <div class="batch-flow-card-content">
+          <video autoplay loop muted playsinline>
+            <source src="assets/ai-showcase/batch-demo.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="batch-flow-card-label">
+          <span>ComfyUI API</span>
+          <p>Node pipeline processes each prompt automatically</p>
+        </div>
+      </div>
+
+      <span class="batch-flow-arrow">&rarr;</span>
+
+      <div class="batch-flow-card">
+        <div class="batch-flow-card-content batch-output-grid">
+          <img src="assets/ai-showcase/batch/hair-expression_red-hair-peace.webp" alt="Red Hair Peace" loading="lazy">
+          <img src="assets/ai-showcase/batch/hair-expression_pink-hair-wink.webp" alt="Pink Hair Wink" loading="lazy">
+          <img src="assets/ai-showcase/batch/hair-expression_blonde-smug.webp" alt="Blonde Smug" loading="lazy">
+          <img src="assets/ai-showcase/batch/props-accessories_boba-tea.webp" alt="Boba Tea" loading="lazy">
+          <img src="assets/ai-showcase/batch/props-accessories_catgirl-lollipop.webp" alt="Catgirl Lollipop" loading="lazy">
+          <img src="assets/ai-showcase/batch/props-accessories_cap-coffee.webp" alt="Cap Coffee" loading="lazy">
+          <img src="assets/ai-showcase/batch/gamer-variants_headphones-jacket.webp" alt="Headphones Jacket" loading="lazy">
+          <img src="assets/ai-showcase/batch/gamer-variants_catear-streamer.webp" alt="Catear Streamer" loading="lazy">
+          <img src="assets/ai-showcase/batch/gamer-variants_energy-drink.webp" alt="Energy Drink" loading="lazy">
+          <img src="assets/ai-showcase/batch/street-style_cap-chains.webp" alt="Cap Chains" loading="lazy">
+          <img src="assets/ai-showcase/batch/street-style_sunglasses-street.webp" alt="Sunglasses Street" loading="lazy">
+          <img src="assets/ai-showcase/batch/street-style_purple-chains.webp" alt="Purple Chains" loading="lazy">
+          <img src="assets/ai-showcase/batch/archetypes-fantasy_mysterious-hoodie.webp" alt="Mysterious Hoodie" loading="lazy">
+          <img src="assets/ai-showcase/batch/archetypes-fantasy_witch-hat.webp" alt="Witch Hat" loading="lazy">
+          <img src="assets/ai-showcase/batch/archetypes-fantasy_cyber-white-hair.webp" alt="Cyber White Hair" loading="lazy">
+          <img src="assets/ai-showcase/batch/royalty_royal-crown.webp" alt="Royal Crown" loading="lazy">
+          <img src="assets/ai-showcase/batch/royalty_tiara-pearls.webp" alt="Tiara Pearls" loading="lazy">
+          <img src="assets/ai-showcase/batch/royalty_golden-tiara.webp" alt="Golden Tiara" loading="lazy">
+          <img src="assets/ai-showcase/batch/scientists-tech_lab-coat-goggles.webp" alt="Lab Coat Goggles" loading="lazy">
+          <img src="assets/ai-showcase/batch/scientists-tech_vr-scientist.webp" alt="VR Scientist" loading="lazy">
+          <img src="assets/ai-showcase/batch/scientists-tech_professor.webp" alt="Professor" loading="lazy">
+          <img src="assets/ai-showcase/batch/athletic-combat_boxer-intense.webp" alt="Boxer Intense" loading="lazy">
+          <img src="assets/ai-showcase/batch/athletic-combat_basketball.webp" alt="Basketball" loading="lazy">
+          <img src="assets/ai-showcase/batch/athletic-combat_muscular-peace.webp" alt="Muscular Peace" loading="lazy">
+        </div>
+        <div class="batch-flow-card-label">
+          <span>Output Grid</span>
+          <p>24 unique avatars, production-ready</p>
+        </div>
+      </div>
     </div>
   </div>
 
