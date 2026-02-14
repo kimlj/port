@@ -407,6 +407,11 @@ footer .footer-accent { color: var(--accent); }
 .batch-output-grid::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
 .batch-output-grid img { width: 100%; display: block; border-radius: 4px; aspect-ratio: 1; object-fit: cover; }
 
+.mid-cta { text-align: center; padding: 4rem 2rem; }
+.mid-cta--soft { padding: 3rem 2rem; }
+.mid-cta--soft .mid-cta-text { font-size: 1rem; }
+.mid-cta-text { font-size: 1.15rem; color: var(--text-dim); font-weight: 300; margin-bottom: 1.5rem; letter-spacing: -0.01em; }
+
 .showcase-placeholder { border: 1px dashed var(--border); border-radius: 20px; padding: 3rem 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; min-height: 200px; background: rgba(17,17,19,0.5); transition: all 0.4s; }
 .showcase-placeholder:hover { border-color: var(--border-hover); background: rgba(17,17,19,0.8); }
 .showcase-placeholder-icon { width: 52px; height: 52px; border-radius: 14px; background: var(--accent-dim); border: 1px solid rgba(200,255,0,0.12); display: flex; align-items: center; justify-content: center; }
@@ -465,10 +470,11 @@ footer .footer-accent { color: var(--accent); }
     </div>
   </div>
   <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#skills">Skills</a></li>
     <li><a href="#projects">Projects</a></li>
+    <li><a href="#ai-showcase">AI</a></li>
+    <li><a href="#skills">Skills</a></li>
     <li><a href="#experience">Experience</a></li>
+    <li><a href="#about">About</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
   <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
@@ -480,10 +486,11 @@ footer .footer-accent { color: var(--accent); }
 
 <div class="mobile-menu" id="mobileMenu">
   <span class="mobile-menu-label">Navigation</span>
-  <a href="#about">About</a>
-  <a href="#skills">Skills</a>
   <a href="#projects">Projects</a>
+  <a href="#ai-showcase">AI</a>
+  <a href="#skills">Skills</a>
   <a href="#experience">Experience</a>
+  <a href="#about">About</a>
   <a href="#contact">Contact</a>
 </div>
 
@@ -531,77 +538,8 @@ footer .footer-accent { color: var(--accent); }
 
 <div class="divider"></div>
 
-<section id="about">
-  <p class="section-label reveal">01 / About</p>
-  <h2 class="section-title reveal">Building things that <em>matter</em></h2>
-  <div class="about-grid">
-    <div class="about-text reveal">
-      <p>I'm a full stack developer with deep expertise in web development, mobile applications, data analysis, and AI-powered solutions. Since 2018, I've been shipping products that merge clean engineering with intelligent design.</p>
-      <p>My toolkit spans the entire stack, from SQL databases and Node.js backends to React Native mobile apps and Docker-containerized deployments. I bring additional depth in AI and automation, including LLM integration, image and video generation with ComfyUI, and building intelligent systems that solve real problems.</p>
-      <p>Whether it's a blockchain-powered platform, a real-time multiplayer game, or an automated warehouse system, I approach every project with careful attention to detail and user experience.</p>
-    </div>
-    <div class="about-stats stagger-children">
-      <div class="stat-card reveal"><div class="stat-number" data-count="7">0+</div><div class="stat-label">Years of Development</div></div>
-      <div class="stat-card reveal"><div class="stat-number" data-count="15">0+</div><div class="stat-label">Technologies Used</div></div>
-      <div class="stat-card reveal"><div class="stat-number">Full</div><div class="stat-label">Stack Proficiency</div></div>
-      <div class="stat-card reveal"><div class="stat-number">AI</div><div class="stat-label">& LLM Integration</div></div>
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<section id="skills">
-  <p class="section-label reveal">02 / Skills</p>
-  <h2 class="section-title reveal">Tools &amp; Technologies</h2>
-  <div class="skills-marquee-wrapper">
-    <div class="skills-marquee">
-      <span class="skill-chip highlight">JavaScript</span><span class="skill-chip">TypeScript</span><span class="skill-chip highlight">React Native</span><span class="skill-chip">HTML5</span><span class="skill-chip">CSS3</span><span class="skill-chip highlight">Tailwind CSS</span><span class="skill-chip highlight">Node.js</span><span class="skill-chip">SQL</span><span class="skill-chip">PostgreSQL</span><span class="skill-chip">MySQL</span><span class="skill-chip highlight">Python</span><span class="skill-chip">Swift</span><span class="skill-chip">Kotlin</span><span class="skill-chip highlight">Docker</span><span class="skill-chip">Git</span><span class="skill-chip">CI/CD</span><span class="skill-chip highlight">VPS</span><span class="skill-chip">Linux</span>
-      <span class="skill-chip highlight">JavaScript</span><span class="skill-chip">TypeScript</span><span class="skill-chip highlight">React Native</span><span class="skill-chip">HTML5</span><span class="skill-chip">CSS3</span><span class="skill-chip highlight">Tailwind CSS</span><span class="skill-chip highlight">Node.js</span><span class="skill-chip">SQL</span><span class="skill-chip">PostgreSQL</span><span class="skill-chip">MySQL</span><span class="skill-chip highlight">Python</span><span class="skill-chip">Swift</span><span class="skill-chip">Kotlin</span><span class="skill-chip highlight">Docker</span><span class="skill-chip">Git</span><span class="skill-chip">CI/CD</span><span class="skill-chip highlight">VPS</span><span class="skill-chip">Linux</span>
-    </div>
-    <div class="skills-marquee">
-      <span class="skill-chip highlight">LLM Integration</span><span class="skill-chip">ComfyUI</span><span class="skill-chip">Stable Diffusion</span><span class="skill-chip highlight">Prompt Engineering</span><span class="skill-chip highlight">Data Analysis</span><span class="skill-chip">REST APIs</span><span class="skill-chip">Firebase</span><span class="skill-chip highlight">React</span><span class="skill-chip">Next.js</span><span class="skill-chip">Express</span><span class="skill-chip highlight">AI Automation</span><span class="skill-chip">MongoDB</span><span class="skill-chip">Vercel</span><span class="skill-chip highlight">Google Cloud</span><span class="skill-chip">DigitalOcean</span><span class="skill-chip highlight">Figma</span><span class="skill-chip">Postman</span><span class="skill-chip">Cursor</span><span class="skill-chip highlight">HealthKit</span><span class="skill-chip">Video Generation</span>
-      <span class="skill-chip highlight">LLM Integration</span><span class="skill-chip">ComfyUI</span><span class="skill-chip">Stable Diffusion</span><span class="skill-chip highlight">Prompt Engineering</span><span class="skill-chip highlight">Data Analysis</span><span class="skill-chip">REST APIs</span><span class="skill-chip">Firebase</span><span class="skill-chip highlight">React</span><span class="skill-chip">Next.js</span><span class="skill-chip">Express</span><span class="skill-chip highlight">AI Automation</span><span class="skill-chip">MongoDB</span><span class="skill-chip">Vercel</span><span class="skill-chip highlight">Google Cloud</span><span class="skill-chip">DigitalOcean</span><span class="skill-chip highlight">Figma</span><span class="skill-chip">Postman</span><span class="skill-chip">Cursor</span><span class="skill-chip highlight">HealthKit</span><span class="skill-chip">Video Generation</span>
-    </div>
-  </div>
-  <div class="expertise-grid stagger-children">
-    <div class="expertise-card reveal tilt-card spotlight-card">
-      <div class="expertise-icon"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
-      <h3>Full Stack Development</h3>
-      <p>End-to-end web applications with modern JavaScript frameworks, Node.js backends, SQL & NoSQL databases, and cloud deployment via Docker and VPS.</p>
-    </div>
-    <div class="expertise-card reveal tilt-card spotlight-card">
-      <div class="expertise-icon"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
-      <h3>Mobile Development</h3>
-      <p>Native and cross-platform iOS & Android applications using React Native, Swift, and Kotlin, from concept to App Store deployment.</p>
-    </div>
-    <div class="expertise-card reveal tilt-card spotlight-card">
-      <div class="expertise-icon"><svg viewBox="0 0 24 24"><path d="M12 2a4 4 0 0 1 4 4c0 1.95-1.4 3.58-3.25 3.93L12 22l-.75-12.07A4.001 4.001 0 0 1 12 2z"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="6.5" r="2.5"/></svg></div>
-      <h3>AI & Automation</h3>
-      <p>LLM integration, image and video generation with ComfyUI and Stable Diffusion, intelligent automation pipelines, and AI-powered product features.</p>
-    </div>
-    <div class="expertise-card reveal tilt-card spotlight-card">
-      <div class="expertise-icon"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="3" y1="20" x2="21" y2="20"/></svg></div>
-      <h3>Data Analysis</h3>
-      <p>Transforming raw data into actionable insights through statistical analysis, visualization, and data-driven decision making.</p>
-    </div>
-    <div class="expertise-card reveal tilt-card spotlight-card">
-      <div class="expertise-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
-      <h3>Web Development</h3>
-      <p>Responsive, performant websites and web apps using React, Next.js, and modern CSS, optimized for speed and exceptional UX.</p>
-    </div>
-    <div class="expertise-card reveal tilt-card spotlight-card">
-      <div class="expertise-icon"><svg viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></div>
-      <h3>DevOps & Infrastructure</h3>
-      <p>Docker containerization, CI/CD pipelines, Git workflow management, VPS administration, and automated deployment strategies.</p>
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
 <section id="projects">
-  <p class="section-label reveal">03 / Projects</p>
+  <p class="section-label reveal">01 / Projects</p>
   <h2 class="section-title reveal">Selected Work</h2>
   <div class="projects-grid">
     <a href="https://wordwarz.io" target="_blank" class="project-card reveal spotlight-card">
@@ -675,10 +613,15 @@ footer .footer-accent { color: var(--accent); }
   <div class="scroll-dots" id="scrollDots"></div>
 </section>
 
+<div class="mid-cta reveal">
+  <p class="mid-cta-text">Have a product idea? I can help you ship it.</p>
+  <a href="#contact" class="btn-primary btn-magnetic">Start a Project <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+</div>
+
 <div class="divider"></div>
 
 <section id="ai-showcase">
-  <p class="section-label reveal">03.5 / AI Showcase</p>
+  <p class="section-label reveal">02 / AI Showcase</p>
   <h2 class="section-title reveal">AI Content <em>Pipeline</em></h2>
   <p class="ai-showcase-intro reveal">A look at how the avatars for <code>WordWarz.io</code> were generated using a modular prompt system. Same base model, same style — different modifiers swapped programmatically through ComfyUI and Python scripts.</p>
 
@@ -979,6 +922,60 @@ footer .footer-accent { color: var(--accent); }
   </div>
 </section>
 
+<div class="mid-cta mid-cta--soft reveal">
+  <p class="mid-cta-text">Interested in working together?</p>
+  <a href="#contact" class="btn-ghost btn-magnetic">Contact Me</a>
+</div>
+
+<div class="divider"></div>
+
+<section id="skills">
+  <p class="section-label reveal">03 / Skills</p>
+  <h2 class="section-title reveal">Tools &amp; Technologies</h2>
+  <div class="skills-marquee-wrapper">
+    <div class="skills-marquee">
+      <span class="skill-chip highlight">JavaScript</span><span class="skill-chip">TypeScript</span><span class="skill-chip highlight">React Native</span><span class="skill-chip">HTML5</span><span class="skill-chip">CSS3</span><span class="skill-chip highlight">Tailwind CSS</span><span class="skill-chip highlight">Node.js</span><span class="skill-chip">SQL</span><span class="skill-chip">PostgreSQL</span><span class="skill-chip">MySQL</span><span class="skill-chip highlight">Python</span><span class="skill-chip">Swift</span><span class="skill-chip">Kotlin</span><span class="skill-chip highlight">Docker</span><span class="skill-chip">Git</span><span class="skill-chip">CI/CD</span><span class="skill-chip highlight">VPS</span><span class="skill-chip">Linux</span>
+      <span class="skill-chip highlight">JavaScript</span><span class="skill-chip">TypeScript</span><span class="skill-chip highlight">React Native</span><span class="skill-chip">HTML5</span><span class="skill-chip">CSS3</span><span class="skill-chip highlight">Tailwind CSS</span><span class="skill-chip highlight">Node.js</span><span class="skill-chip">SQL</span><span class="skill-chip">PostgreSQL</span><span class="skill-chip">MySQL</span><span class="skill-chip highlight">Python</span><span class="skill-chip">Swift</span><span class="skill-chip">Kotlin</span><span class="skill-chip highlight">Docker</span><span class="skill-chip">Git</span><span class="skill-chip">CI/CD</span><span class="skill-chip highlight">VPS</span><span class="skill-chip">Linux</span>
+    </div>
+    <div class="skills-marquee">
+      <span class="skill-chip highlight">LLM Integration</span><span class="skill-chip">ComfyUI</span><span class="skill-chip">Stable Diffusion</span><span class="skill-chip highlight">Prompt Engineering</span><span class="skill-chip highlight">Data Analysis</span><span class="skill-chip">REST APIs</span><span class="skill-chip">Firebase</span><span class="skill-chip highlight">React</span><span class="skill-chip">Next.js</span><span class="skill-chip">Express</span><span class="skill-chip highlight">AI Automation</span><span class="skill-chip">MongoDB</span><span class="skill-chip">Vercel</span><span class="skill-chip highlight">Google Cloud</span><span class="skill-chip">DigitalOcean</span><span class="skill-chip highlight">Figma</span><span class="skill-chip">Postman</span><span class="skill-chip">Cursor</span><span class="skill-chip highlight">HealthKit</span><span class="skill-chip">Video Generation</span>
+      <span class="skill-chip highlight">LLM Integration</span><span class="skill-chip">ComfyUI</span><span class="skill-chip">Stable Diffusion</span><span class="skill-chip highlight">Prompt Engineering</span><span class="skill-chip highlight">Data Analysis</span><span class="skill-chip">REST APIs</span><span class="skill-chip">Firebase</span><span class="skill-chip highlight">React</span><span class="skill-chip">Next.js</span><span class="skill-chip">Express</span><span class="skill-chip highlight">AI Automation</span><span class="skill-chip">MongoDB</span><span class="skill-chip">Vercel</span><span class="skill-chip highlight">Google Cloud</span><span class="skill-chip">DigitalOcean</span><span class="skill-chip highlight">Figma</span><span class="skill-chip">Postman</span><span class="skill-chip">Cursor</span><span class="skill-chip highlight">HealthKit</span><span class="skill-chip">Video Generation</span>
+    </div>
+  </div>
+  <div class="expertise-grid stagger-children">
+    <div class="expertise-card reveal tilt-card spotlight-card">
+      <div class="expertise-icon"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+      <h3>Full Stack Development</h3>
+      <p>End-to-end web applications with modern JavaScript frameworks, Node.js backends, SQL & NoSQL databases, and cloud deployment via Docker and VPS.</p>
+    </div>
+    <div class="expertise-card reveal tilt-card spotlight-card">
+      <div class="expertise-icon"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
+      <h3>Mobile Development</h3>
+      <p>Native and cross-platform iOS & Android applications using React Native, Swift, and Kotlin, from concept to App Store deployment.</p>
+    </div>
+    <div class="expertise-card reveal tilt-card spotlight-card">
+      <div class="expertise-icon"><svg viewBox="0 0 24 24"><path d="M12 2a4 4 0 0 1 4 4c0 1.95-1.4 3.58-3.25 3.93L12 22l-.75-12.07A4.001 4.001 0 0 1 12 2z"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="6.5" r="2.5"/></svg></div>
+      <h3>AI & Automation</h3>
+      <p>LLM integration, image and video generation with ComfyUI and Stable Diffusion, intelligent automation pipelines, and AI-powered product features.</p>
+    </div>
+    <div class="expertise-card reveal tilt-card spotlight-card">
+      <div class="expertise-icon"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="3" y1="20" x2="21" y2="20"/></svg></div>
+      <h3>Data Analysis</h3>
+      <p>Transforming raw data into actionable insights through statistical analysis, visualization, and data-driven decision making.</p>
+    </div>
+    <div class="expertise-card reveal tilt-card spotlight-card">
+      <div class="expertise-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+      <h3>Web Development</h3>
+      <p>Responsive, performant websites and web apps using React, Next.js, and modern CSS, optimized for speed and exceptional UX.</p>
+    </div>
+    <div class="expertise-card reveal tilt-card spotlight-card">
+      <div class="expertise-icon"><svg viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></div>
+      <h3>DevOps & Infrastructure</h3>
+      <p>Docker containerization, CI/CD pipelines, Git workflow management, VPS administration, and automated deployment strategies.</p>
+    </div>
+  </div>
+</section>
+
 <div class="divider"></div>
 
 <section id="experience">
@@ -1080,8 +1077,28 @@ footer .footer-accent { color: var(--accent); }
 
 <div class="divider"></div>
 
+<section id="about">
+  <p class="section-label reveal">05 / About</p>
+  <h2 class="section-title reveal">Building things that <em>matter</em></h2>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p>I'm a full stack developer with deep expertise in web development, mobile applications, data analysis, and AI-powered solutions. Since 2018, I've been shipping products that merge clean engineering with intelligent design.</p>
+      <p>My toolkit spans the entire stack, from SQL databases and Node.js backends to React Native mobile apps and Docker-containerized deployments. I bring additional depth in AI and automation, including LLM integration, image and video generation with ComfyUI, and building intelligent systems that solve real problems.</p>
+      <p>Whether it's a blockchain-powered platform, a real-time multiplayer game, or an automated warehouse system, I approach every project with careful attention to detail and user experience.</p>
+    </div>
+    <div class="about-stats stagger-children">
+      <div class="stat-card reveal"><div class="stat-number" data-count="7">0+</div><div class="stat-label">Years of Development</div></div>
+      <div class="stat-card reveal"><div class="stat-number" data-count="15">0+</div><div class="stat-label">Technologies Used</div></div>
+      <div class="stat-card reveal"><div class="stat-number">Full</div><div class="stat-label">Stack Proficiency</div></div>
+      <div class="stat-card reveal"><div class="stat-number">AI</div><div class="stat-label">& LLM Integration</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
 <section id="contact" class="contact-section">
-  <p class="section-label reveal">05 / Contact</p>
+  <p class="section-label reveal">06 / Contact</p>
   <h2 class="section-title reveal">Let's build something <em>great</em></h2>
   <p class="contact-sub reveal">Open to collaborations, freelance work, and exciting opportunities.</p>
   <div class="contact-links reveal">
@@ -1118,7 +1135,7 @@ footer .footer-accent { color: var(--accent); }
 
 <footer>
   <p>&copy; 2025 Kim Julongbayan</p>
-  <p>Built with <span class="footer-accent">obsessive attention</span> to detail</p>
+  <p>Built with <span class="footer-accent">care</span> and attention to detail</p>
 </footer>
 
 <script>
