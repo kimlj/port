@@ -381,20 +381,30 @@ footer .footer-accent { color: var(--accent); }
 .workflow-image-wrap { border-radius: 16px; overflow: hidden; border: 1px solid var(--border); background: linear-gradient(135deg, rgba(200,255,0,0.06) 0%, rgba(0,255,200,0.04) 50%, rgba(200,255,0,0.06) 100%); padding: 1.25rem; }
 .workflow-image-wrap img { width: 100%; display: block; border-radius: 10px; }
 
-.batch-flow { display: flex; flex-direction: column; align-items: center; gap: 1.25rem; margin-top: 2rem; }
-.batch-flow-arrow { color: var(--text-dim); font-size: 1.5rem; transform: rotate(90deg); }
-.batch-flow-card { border: 1px solid var(--border); border-radius: 16px; background: rgba(17,17,19,0.6); overflow: hidden; transition: border-color 0.3s; width: min(100%, 700px); }
+.batch-flow { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 0.75rem; align-items: stretch; margin-top: 2rem; }
+.batch-flow-arrow { color: var(--text-dim); font-size: 1.25rem; align-self: center; }
+.batch-flow-card { border: 1px solid var(--border); border-radius: 12px; background: rgba(17,17,19,0.6); overflow: hidden; transition: border-color 0.3s; }
 .batch-flow-card:hover { border-color: var(--border-hover); }
 .batch-flow-card-content > img { width: 100%; height: auto; display: block; }
 .batch-flow-card-content video { width: 100%; height: auto; display: block; }
-.batch-flow-card-label { padding: 1rem 1.25rem; border-top: 1px solid var(--border); text-align: center; }
-.batch-flow-card-label span { font-weight: 600; font-size: 0.95rem; color: var(--accent); display: block; margin-bottom: 0.25rem; }
-.batch-flow-card-label p { font-size: 0.78rem; color: var(--text-dim); margin: 0; }
-.batch-script-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.25rem; padding: 2.5rem 2rem; background: linear-gradient(135deg, rgba(200,255,0,0.04) 0%, rgba(0,0,0,0.3) 100%); min-height: 200px; }
-.batch-script-placeholder svg { width: 48px; height: 48px; color: var(--accent); opacity: 0.4; }
+.batch-flow-card-label { padding: 0.75rem 1rem; border-top: 1px solid var(--border); text-align: center; }
+.batch-flow-card-label span { font-weight: 600; font-size: 0.8rem; color: var(--accent); display: block; margin-bottom: 0.2rem; }
+.batch-flow-card-label p { font-size: 0.68rem; color: var(--text-dim); margin: 0; }
+.batch-script-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; padding: 1.5rem 1rem; background: linear-gradient(135deg, rgba(200,255,0,0.04) 0%, rgba(0,0,0,0.3) 100%); min-height: 160px; }
+.batch-script-placeholder svg { width: 36px; height: 36px; color: var(--accent); opacity: 0.4; }
 .batch-script-lines { display: flex; flex-direction: column; gap: 0.5rem; width: 80%; }
 .batch-script-lines span { display: block; height: 6px; border-radius: 3px; background: rgba(200,255,0,0.1); }
-.batch-output-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.4rem; padding: 0.6rem; }
+.batch-badges-label { font-size: 0.75rem; color: var(--text-dim); margin: 1.5rem 0 0.5rem 0; letter-spacing: 0.02em; }
+.batch-badges { display: flex; gap: 1rem; flex-wrap: wrap; }
+.batch-badge { display: flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.7rem; border: 1px solid var(--border); border-radius: 8px; background: rgba(200,255,0,0.03); }
+.batch-badge svg { width: 14px; height: 14px; flex-shrink: 0; color: var(--accent); }
+.batch-badge strong { font-size: 0.7rem; color: var(--accent); }
+.batch-badge p { font-size: 0.65rem; color: var(--text-dim); margin: 0; }
+.batch-badge code { font-size: 0.6rem; background: rgba(200,255,0,0.08); padding: 0.05rem 0.25rem; border-radius: 3px; color: var(--accent); }
+.batch-output-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.3rem; padding: 0.5rem; max-height: 280px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--accent) transparent; }
+.batch-output-grid::-webkit-scrollbar { width: 6px; }
+.batch-output-grid::-webkit-scrollbar-track { background: transparent; }
+.batch-output-grid::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
 .batch-output-grid img { width: 100%; display: block; border-radius: 4px; aspect-ratio: 1; object-fit: cover; }
 
 .showcase-placeholder { border: 1px dashed var(--border); border-radius: 20px; padding: 3rem 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; min-height: 200px; background: rgba(17,17,19,0.5); transition: all 0.4s; }
@@ -431,8 +441,10 @@ footer .footer-accent { color: var(--accent); }
   .workflow-scroll-hint { display: none; }
   .workflow-image-wrap { padding: 0.75rem; }
   .workflow-image-wrap img { width: 100%; }
+  .batch-flow { grid-template-columns: 1fr; gap: 0.75rem; }
+  .batch-flow-arrow { transform: rotate(90deg); justify-self: center; }
   .batch-flow-card { width: 100%; }
-  .batch-output-grid { grid-template-columns: repeat(4, 1fr); max-height: 250px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--accent) transparent; }
+  .batch-output-grid { grid-template-columns: repeat(4, 1fr); max-height: 220px; }
   .batch-output-grid::-webkit-scrollbar { width: 6px; }
   .batch-output-grid::-webkit-scrollbar-track { background: transparent; }
   .batch-output-grid::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
@@ -526,11 +538,11 @@ footer .footer-accent { color: var(--accent); }
     <div class="about-text reveal">
       <p>I'm a full stack developer with deep expertise in web development, mobile applications, data analysis, and AI-powered solutions. Since 2018, I've been shipping products that merge clean engineering with intelligent design.</p>
       <p>My toolkit spans the entire stack, from SQL databases and Node.js backends to React Native mobile apps and Docker-containerized deployments. I bring additional depth in AI and automation, including LLM integration, image and video generation with ComfyUI, and building intelligent systems that solve real problems.</p>
-      <p>Whether it's a blockchain-powered platform, a real-time multiplayer game, or an automated warehouse system, I approach every project with the same obsessive attention to craft and user experience.</p>
+      <p>Whether it's a blockchain-powered platform, a real-time multiplayer game, or an automated warehouse system, I approach every project with careful attention to detail and user experience.</p>
     </div>
     <div class="about-stats stagger-children">
       <div class="stat-card reveal"><div class="stat-number" data-count="7">0+</div><div class="stat-label">Years of Development</div></div>
-      <div class="stat-card reveal"><div class="stat-number" data-count="15">0+</div><div class="stat-label">Technologies Mastered</div></div>
+      <div class="stat-card reveal"><div class="stat-number" data-count="15">0+</div><div class="stat-label">Technologies Used</div></div>
       <div class="stat-card reveal"><div class="stat-number">Full</div><div class="stat-label">Stack Proficiency</div></div>
       <div class="stat-card reveal"><div class="stat-number">AI</div><div class="stat-label">& LLM Integration</div></div>
     </div>
@@ -668,7 +680,7 @@ footer .footer-accent { color: var(--accent); }
 <section id="ai-showcase">
   <p class="section-label reveal">03.5 / AI Showcase</p>
   <h2 class="section-title reveal">AI Content <em>Pipeline</em></h2>
-  <p class="ai-showcase-intro reveal">Not just claims — here's proof. These avatars were generated for <code>WordWarz.io</code> using a modular prompt system I built. Same base model, same style — different modifiers swapped programmatically through ComfyUI and Python scripts.</p>
+  <p class="ai-showcase-intro reveal">A look at how the avatars for <code>WordWarz.io</code> were generated using a modular prompt system. Same base model, same style — different modifiers swapped programmatically through ComfyUI and Python scripts.</p>
 
   <!-- PART 1: Character Consistency Grid -->
   <div class="showcase-block reveal">
@@ -822,7 +834,7 @@ footer .footer-accent { color: var(--accent); }
     <div class="showcase-header">
       <span class="showcase-step">02 — ComfyUI Pipeline</span>
       <h3>Node-Based Workflow</h3>
-      <p class="showcase-caption">Custom ComfyUI node graph — not just typing prompts, but engineering visual pipelines with control over every generation parameter.</p>
+      <p class="showcase-caption">Custom ComfyUI node graph — a visual pipeline with control over each generation parameter.</p>
     </div>
     <div class="workflow-image-wrap">
       <img src="assets/ai-showcase/comfyui-workflow.webp" alt="ComfyUI node-based workflow showing model loading, prompt conditioning, sampling, background removal, and output" loading="lazy">
@@ -835,6 +847,38 @@ footer .footer-accent { color: var(--accent); }
       <span class="showcase-step">03 — Batch Automation</span>
       <h3>Script-Driven Generation</h3>
       <p class="showcase-caption">Python script feeds different modifier combinations into ComfyUI via API — automating unique avatars from a single prompt template.</p>
+    </div>
+
+    <p class="batch-badges-label">Included in the scripts:</p>
+    <div class="batch-badges">
+      <div class="batch-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <div>
+          <strong>Auto-Naming</strong>
+          <p>Files saved as <code>category_variant-name.png</code></p>
+        </div>
+      </div>
+      <div class="batch-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <div>
+          <strong>BG Removal</strong>
+          <p>BiRefNet auto-strips backgrounds in pipeline</p>
+        </div>
+      </div>
+      <div class="batch-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <div>
+          <strong>Image Optimization</strong>
+          <p>PNG → WebP, <code>90% smaller</code></p>
+        </div>
+      </div>
+      <div class="batch-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+        <div>
+          <strong>Video Compression</strong>
+          <p>ffmpeg H.264, <code>54MB → 1.4MB</code></p>
+        </div>
+      </div>
     </div>
 
     <!-- Flow cards: content on top, label below -->
@@ -901,11 +945,12 @@ footer .footer-accent { color: var(--accent); }
           <img src="assets/ai-showcase/batch/athletic-combat_muscular-peace.webp" alt="Muscular Peace" loading="lazy">
         </div>
         <div class="batch-flow-card-label">
-          <span>Output Grid</span>
+          <span>Output</span>
           <p>24 unique avatars, production-ready</p>
         </div>
       </div>
     </div>
+
   </div>
 
   <!-- PART 4: Prompt Optimization (Placeholder) -->
@@ -913,7 +958,7 @@ footer .footer-accent { color: var(--accent); }
     <div class="showcase-header">
       <span class="showcase-step">04 — Prompt Engineering</span>
       <h3>Optimization Process</h3>
-      <p class="showcase-caption">Iterative prompt refinement — understanding why specific tokens work, not just what tokens to use.</p>
+      <p class="showcase-caption">Iterative prompt refinement — testing how specific tokens affect output quality and consistency.</p>
     </div>
     <div class="showcase-compare">
       <div class="showcase-compare-side">
