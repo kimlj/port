@@ -1159,9 +1159,10 @@ window.addEventListener('scroll', () => {
     }, 30);
   }
 
-  // Scramble on load
+  // Scramble on load, then loop every 5 seconds (skip when tab hidden)
   scramble();
-  // Scramble on hover
+  setInterval(() => { if (!document.hidden) scramble(); }, 5000);
+  // Also scramble on hover
   logo.addEventListener('mouseenter', scramble);
 })();
 
