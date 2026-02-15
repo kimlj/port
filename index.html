@@ -391,14 +391,18 @@ footer .footer-accent { color: var(--accent); }
 .batch-flow-card:hover { border-color: var(--border-hover); }
 .batch-flow-card-content { flex: 1; display: flex; flex-direction: column; }
 .batch-flow-card-content > img { width: 100%; height: auto; display: block; }
-.batch-flow-card-content video { width: 100%; height: auto; display: block; flex: 1; object-fit: cover; }
+.batch-flow-card-content video { width: 100%; height: 100%; display: block; flex: 1; object-fit: cover; }
 .batch-flow-card-label { padding: 0.75rem 1rem; border-top: 1px solid var(--border); border-bottom: 2px solid rgba(200,255,0,0.15); text-align: center; }
 .batch-flow-card-label span { font-weight: 600; font-size: 0.8rem; color: var(--accent); display: block; margin-bottom: 0.2rem; }
 .batch-flow-card-label p { font-size: 0.68rem; color: var(--text-dim); margin: 0; }
-.batch-script-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; padding: 1.5rem 1rem; background: linear-gradient(135deg, rgba(200,255,0,0.04) 0%, rgba(0,0,0,0.3) 100%); min-height: 160px; flex: 1; }
-.batch-script-placeholder svg { width: 36px; height: 36px; color: var(--accent); opacity: 0.4; }
-.batch-script-lines { display: flex; flex-direction: column; gap: 0.5rem; width: 80%; }
-.batch-script-lines span { display: block; height: 6px; border-radius: 3px; background: rgba(200,255,0,0.1); }
+.batch-script-code { padding: 1rem; background: rgba(0,0,0,0.4); flex: 1; overflow: hidden; position: relative; }
+.batch-script-code pre { margin: 0; overflow-y: auto; overflow-x: auto; position: absolute; inset: 1rem; }
+.batch-script-code pre::-webkit-scrollbar { width: 3px; }
+.batch-script-code pre::-webkit-scrollbar-track { background: transparent; }
+.batch-script-code pre::-webkit-scrollbar-thumb { background: rgba(200,255,0,0.15); border-radius: 3px; }
+.batch-script-code code { font-family: var(--mono); font-size: 0.55rem; line-height: 1.6; color: rgba(255,255,255,0.4); white-space: pre; }
+.batch-script-code .cv { color: var(--accent); }
+.batch-script-code .cs { color: #e5c07b; }
 .batch-caption-mobile { display: none; }
 .batch-inline-tag { color: var(--accent); font-weight: 500; }
 .batch-badges-label { font-size: 0.75rem; color: var(--text-dim); margin: 1.5rem 0 0.5rem 0; letter-spacing: 0.02em; }
@@ -408,10 +412,10 @@ footer .footer-accent { color: var(--accent); }
 .batch-badge strong { font-size: 0.7rem; color: var(--text); }
 .batch-badge p { font-size: 0.65rem; color: var(--text-dim); margin: 0; }
 .batch-badge code { font-size: 0.6rem; background: rgba(200,255,0,0.06); padding: 0.05rem 0.25rem; border-radius: 3px; color: var(--accent); }
-.batch-output-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.3rem; padding: 0.5rem; max-height: 280px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--accent) transparent; flex: 1; }
-.batch-output-grid::-webkit-scrollbar { width: 6px; }
+.batch-output-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.3rem; padding: 0.5rem; max-height: 280px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(200,255,0,0.15) transparent; flex: 1; }
+.batch-output-grid::-webkit-scrollbar { width: 3px; }
 .batch-output-grid::-webkit-scrollbar-track { background: transparent; }
-.batch-output-grid::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+.batch-output-grid::-webkit-scrollbar-thumb { background: rgba(200,255,0,0.15); border-radius: 3px; }
 .batch-output-grid img { width: 100%; display: block; border-radius: 4px; aspect-ratio: 1; object-fit: cover; }
 
 .mid-cta { text-align: center; padding: 4rem 2rem; }
@@ -463,11 +467,12 @@ footer .footer-accent { color: var(--accent); }
   .batch-flow-step-line { display: none; }
   .batch-flow-card { width: 100%; box-shadow: 0 20px 40px rgba(0,0,0,0.5); border-bottom: 1px solid rgba(200,255,0,0.08); }
   .batch-flow-card-label span { display: none; }
+  .batch-script-code { position: static; min-height: 200px; max-height: 240px; overflow-y: auto; }
+  .batch-script-code pre { position: static; }
   .batch-output-grid { grid-template-columns: repeat(4, 1fr); max-height: 220px; }
-  .batch-output-grid::-webkit-scrollbar { width: 6px; }
+  .batch-output-grid::-webkit-scrollbar { width: 3px; }
   .batch-output-grid::-webkit-scrollbar-track { background: transparent; }
-  .batch-output-grid::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
-  .batch-output-grid::-webkit-scrollbar-thumb:hover { background: #d4ff33; }
+  .batch-output-grid::-webkit-scrollbar-thumb { background: rgba(200,255,0,0.15); border-radius: 3px; }
 }
 </style>
 </head>
@@ -842,16 +847,47 @@ footer .footer-accent { color: var(--accent); }
       <div class="batch-flow-step"><span class="batch-flow-step-label">01 — Python Script</span><div class="batch-flow-step-line"></div></div>
 
       <div class="batch-flow-card">
-        <div class="batch-flow-card-content batch-script-placeholder">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 18l6-6-6-6"/><path d="M8 6l-6 6 6 6"/></svg>
-          <div class="batch-script-lines">
-            <span style="width:60%"></span>
-            <span style="width:80%"></span>
-            <span style="width:45%"></span>
-            <span style="width:70%"></span>
-            <span style="width:55%"></span>
-            <span style="width:65%"></span>
-          </div>
+        <div class="batch-flow-card-content batch-script-code">
+<pre><code><span class="cv">MODIFIERS</span> = {
+  <span class="cs">"Hair &amp; Expression"</span>: [
+    {<span class="cs">"name"</span>: <span class="cs">"Red Hair Peace"</span>,
+     <span class="cs">"prompt"</span>: <span class="cs">"red hair, peace sign"</span>},
+    {<span class="cs">"name"</span>: <span class="cs">"Pink Hair Wink"</span>,
+     <span class="cs">"prompt"</span>: <span class="cs">"pink hair, winking, playful"</span>},
+    {<span class="cs">"name"</span>: <span class="cs">"Blonde Smug"</span>,
+     <span class="cs">"prompt"</span>: <span class="cs">"blonde hair, smug expression"</span>},
+  ],
+  <span class="cs">"Props &amp; Accessories"</span>: [
+    {<span class="cs">"name"</span>: <span class="cs">"Boba Tea"</span>,
+     <span class="cs">"prompt"</span>: <span class="cs">"brown hair, sipping boba tea"</span>},
+    {<span class="cs">"name"</span>: <span class="cs">"Catgirl Lollipop"</span>,
+     <span class="cs">"prompt"</span>: <span class="cs">"orange hair, cat ears, lollipop"</span>},
+  ],
+  <span class="cs">"Gamer Variants"</span>: [
+    {<span class="cs">"name"</span>: <span class="cs">"Headphones Jacket"</span>,
+     <span class="cs">"prompt"</span>: <span class="cs">"headphones, gaming jacket"</span>},
+    {<span class="cs">"name"</span>: <span class="cs">"Catear Streamer"</span>,
+     <span class="cs">"prompt"</span>: <span class="cs">"cat ear headphones, streamer setup"</span>},
+  ],
+  <span class="cs">"Street Style"</span>: [
+    {<span class="cs">"name"</span>: <span class="cs">"Cap Chains"</span>,
+     <span class="cs">"prompt"</span>: <span class="cs">"cap, bubblegum, chain necklace"</span>},
+    {<span class="cs">"name"</span>: <span class="cs">"Sunglasses Street"</span>,
+     <span class="cs">"prompt"</span>: <span class="cs">"sunglasses, bubblegum, street fashion"</span>},
+  ],
+  <span class="cs">"Royalty"</span>: [
+    {<span class="cs">"name"</span>: <span class="cs">"Royal Crown"</span>,
+     <span class="cs">"prompt"</span>: <span class="cs">"crown, royal cape, proud expression"</span>},
+    {<span class="cs">"name"</span>: <span class="cs">"Tiara Pearls"</span>,
+     <span class="cs">"prompt"</span>: <span class="cs">"small tiara, smug, pearl earrings"</span>},
+  ],
+  <span class="cs">"Scientists &amp; Tech"</span>: [
+    {<span class="cs">"name"</span>: <span class="cs">"Lab Coat Goggles"</span>,
+     <span class="cs">"prompt"</span>: <span class="cs">"lab coat, safety goggles"</span>},
+    {<span class="cs">"name"</span>: <span class="cs">"VR Scientist"</span>,
+     <span class="cs">"prompt"</span>: <span class="cs">"VR visor, tech gear, futuristic"</span>},
+  ],
+}</code></pre>
         </div>
         <div class="batch-flow-card-label">
           <span>1. Python Script</span>
