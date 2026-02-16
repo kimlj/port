@@ -748,152 +748,151 @@ footer .footer-accent { color: var(--accent); }
 <section id="ai-showcase">
   <p class="section-label reveal">02 / AI Showcase</p>
   <h2 class="section-title reveal">AI Content <em>Pipeline</em></h2>
-  <p class="ai-showcase-intro reveal">A look at how the avatars for <code>WordWarz.io</code> were generated using a modular prompt system. Same base model, same style — different modifiers swapped programmatically through ComfyUI and Python scripts.</p>
+  <p class="ai-showcase-intro reveal">Generating 60+ consistent avatars for <code>WordWarz.io</code> meant solving a core problem: AI models are unpredictable, and every word in a prompt matters. Here's the process — from prompt engineering to a fully automated pipeline.</p>
 
-  <!-- PART 1: Character Consistency Grid -->
+  <!-- PART 1: Prompt Engineering -->
   <div class="showcase-block reveal">
     <div class="showcase-header">
-      <span class="showcase-step">01 — Style Consistency</span>
-      <h3>Character Avatar System</h3>
-      <p class="showcase-caption">Same base prompt, different modifiers — hair color, expression, accessories, archetype. All generated with one unified pipeline.</p>
+      <span class="showcase-step">01 — Prompt Engineering</span>
+      <h3>The Foundation</h3>
+      <p class="showcase-caption">Wording is everything in AI image generation — a single token can change the entire output. These comparisons show how prompt structure directly controls what the model produces.</p>
+    </div>
+    <div class="prompt-tabs" id="promptTabs">
+      <button class="prompt-tab active" data-cat="animal">Wording &amp; Tags</button>
+      <button class="prompt-tab" data-cat="double-meaning">Double Meaning</button>
+      <button class="prompt-tab" data-cat="literal">Literal vs Figurative</button>
+      <button class="prompt-tab" data-cat="specificity">Specificity</button>
     </div>
 
-    <div class="base-prompt-block">
-      <span class="prompt-label">Base Prompt</span>
-      <code>1girl/1boy, chibi, bust portrait, sharp eye highlights, vibrant anime color palette, cel-shading, crisp lineart, white background, centered composition, high detail face</code>
-    </div>
-    <p class="prompt-hint">Hover or tap avatars to see the modifier prompt used for each variation</p>
-
-    <div class="avatar-accordion open">
-      <div class="avatar-accordion-header">
-        <span class="avatar-accordion-label">Hair &amp; expression modifiers</span>
-        <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    <div class="prompt-category active" data-cat="animal">
+      <p class="prompt-category-desc">How natural language vs structured tags changes what the model generates — "cat girl" becomes a literal cat.</p>
+      <div class="showcase-compare" id="compare-animal">
+        <div class="showcase-compare-side">
+          <span class="showcase-compare-label before">Before</span>
+          <div class="compare-img"><img id="img-animal-before" src="assets/ai-showcase/comparisons/animal/before_1.webp" alt="Before"></div>
+        </div>
+        <span class="showcase-compare-arrow">&rarr;</span>
+        <div class="showcase-compare-side">
+          <span class="showcase-compare-label after">After</span>
+          <div class="compare-img"><img id="img-animal-after" src="assets/ai-showcase/comparisons/animal/after_1.webp" alt="After"></div>
+        </div>
       </div>
-      <div class="avatar-accordion-body">
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/01-consistency-girl-redhair-peace.webp" alt="Red hair chibi"><div class="prompt-overlay"><span>red hair, peace sign, cheerful smile</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/02-consistency-girl-purplehair-peace.webp" alt="Purple hair chibi"><div class="prompt-overlay"><span>purple hair, peace sign, gentle expression</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/03-consistency-girl-pinkhair-wink.webp" alt="Pink hair chibi"><div class="prompt-overlay"><span>pink hair, winking, playful</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/04-expression-girl-blonde-smug.webp" alt="Blonde smug chibi"><div class="prompt-overlay"><span>blonde hair, smug expression, confident</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/05-expression-girl-gradient-starryeyes.webp" alt="Starry-eyed chibi"><div class="prompt-overlay"><span>gradient hair, starry eyes, sparkling</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/06-expression-girl-purple-excited.webp" alt="Excited purple chibi"><div class="prompt-overlay"><span>purple hair, excited, open mouth</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/45-expression-girl-pink-catears-lollipop.webp" alt="Pink catears girl lollipop"><div class="prompt-overlay"><span>pink hair, cat ears, lollipop, wink, green eyes</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/46-expression-girl-pink-catears-smirk.webp" alt="Pink catears girl smirk"><div class="prompt-overlay"><span>pink hair, cat ears, smirk, green eyes</span></div></div>
+      <p class="prompt-seed" id="seed-animal">same seed: 300003</p>
+      <div class="prompt-display">
+        <div class="prompt-block before"><div class="prompt-block-label">Before Prompt</div><span id="prompt-animal-before"></span></div>
+        <div class="prompt-block after"><div class="prompt-block-label">After Prompt</div><span id="prompt-animal-after"></span></div>
       </div>
-    </div>
-
-    <div class="avatar-accordion">
-      <div class="avatar-accordion-header">
-        <span class="avatar-accordion-label">Props &amp; accessories</span>
-        <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-      </div>
-      <div class="avatar-accordion-body">
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/11-prop-girl-redhair-bubblegum.webp" alt="Red hair bubblegum girl"><div class="prompt-overlay"><span>red hair, blowing bubblegum</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/12-prop-girl-blonde-cap-bubblegum.webp" alt="Cap bubblegum girl"><div class="prompt-overlay"><span>blonde, baseball cap, bubblegum</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/13-prop-girl-pink-catears-lollipop.webp" alt="Cat ears lollipop girl"><div class="prompt-overlay"><span>pink hair, cat ears, lollipop</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/14-prop-girl-brown-bobatea.webp" alt="Boba tea girl"><div class="prompt-overlay"><span>brown hair, sipping boba tea</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/29-catgirl-pink-boba.webp" alt="Pink catgirl boba"><div class="prompt-overlay"><span>pink hair, cat ears, sipping drink, wink</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/30-catgirl-orange-lollipop.webp" alt="Orange catgirl lollipop"><div class="prompt-overlay"><span>orange hair, cat ears, lollipop, puffed cheeks</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/47-prop-boy-leather-pocky-earring.webp" alt="Leather boy pocky"><div class="prompt-overlay"><span>leather jacket, pocky stick, earring, smirk</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/48-prop-boy-cap-coffee-shy.webp" alt="Cap boy coffee"><div class="prompt-overlay"><span>baseball cap, holding coffee, shy expression</span></div></div>
+      <div class="prompt-nav">
+        <button class="prompt-nav-btn" data-dir="prev" data-cat="animal">&#8249;</button>
+        <span class="prompt-nav-counter" id="nav-animal">1 / 5</span>
+        <button class="prompt-nav-btn" data-dir="next" data-cat="animal">&#8250;</button>
       </div>
     </div>
 
-    <div class="avatar-accordion">
-      <div class="avatar-accordion-header">
-        <span class="avatar-accordion-label">Gamer variants</span>
-        <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    <div class="prompt-category" data-cat="double-meaning">
+      <p class="prompt-category-desc">Words with multiple meanings confuse the model — "bat girl" could be a bat or a girl with bat wings.</p>
+      <div class="showcase-compare" id="compare-double-meaning">
+        <div class="showcase-compare-side">
+          <span class="showcase-compare-label before">Before</span>
+          <div class="compare-img"><img id="img-double-meaning-before" src="assets/ai-showcase/comparisons/double-meaning/before_1.webp" alt="Before"></div>
+        </div>
+        <span class="showcase-compare-arrow">&rarr;</span>
+        <div class="showcase-compare-side">
+          <span class="showcase-compare-label after">After</span>
+          <div class="compare-img"><img id="img-double-meaning-after" src="assets/ai-showcase/comparisons/double-meaning/after_1.webp" alt="After"></div>
+        </div>
       </div>
-      <div class="avatar-accordion-body">
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/07-gamer-girl-headphones-jacket.webp" alt="Gamer girl headphones"><div class="prompt-overlay"><span>headphones, gaming jacket, confident</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/08-gamer-girl-catears-streamer.webp" alt="Cat ears streamer"><div class="prompt-overlay"><span>cat ear headphones, streamer setup</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/09-gamer-boy-energydrink-headphones.webp" alt="Gamer boy energy drink"><div class="prompt-overlay"><span>headphones, energy drink, intense gaze</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/10-gamer-boy-pocky-chillgamer.webp" alt="Chill gamer boy"><div class="prompt-overlay"><span>headphones, pocky stick, relaxed</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/34-gamer-girl-red-headphones.webp" alt="Red hair gamer girl"><div class="prompt-overlay"><span>red hair, gaming headset, devil horns, sipping</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/26-gamer-boy-headphones-shy.webp" alt="Shy gamer boy"><div class="prompt-overlay"><span>brown hair, red headphones, shy expression</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/49-gamer-girl-red-headphones-sipping.webp" alt="Red gamer girl sipping"><div class="prompt-overlay"><span>red hair, devil horn headphones, sipping drink</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/50-gamer-girl-purple-headphones-sipping.webp" alt="Purple gamer girl sipping"><div class="prompt-overlay"><span>purple hair, pink headphones, hoodie, sipping drink</span></div></div>
+      <p class="prompt-seed" id="seed-double-meaning">same seed: 310001</p>
+      <div class="prompt-display">
+        <div class="prompt-block before"><div class="prompt-block-label">Before Prompt</div><span id="prompt-double-meaning-before"></span></div>
+        <div class="prompt-block after"><div class="prompt-block-label">After Prompt</div><span id="prompt-double-meaning-after"></span></div>
       </div>
-    </div>
-
-    <div class="avatar-accordion">
-      <div class="avatar-accordion-header">
-        <span class="avatar-accordion-label">Street style</span>
-        <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-      </div>
-      <div class="avatar-accordion-body">
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/21-street-girl-cap-bubblegum-chains.webp" alt="Street girl chains"><div class="prompt-overlay"><span>cap, bubblegum, chain necklace, streetwear</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/22-street-boy-sunglasses-bubblegum.webp" alt="Street boy sunglasses"><div class="prompt-overlay"><span>sunglasses, bubblegum, street fashion</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/32-street-girl-cap-bubblegum2.webp" alt="Street girl cap bubblegum"><div class="prompt-overlay"><span>blonde, baseball cap, bubblegum, jacket</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/44-street-girl-cap-bubblegum3.webp" alt="Street girl cap bubblegum v2"><div class="prompt-overlay"><span>blonde bob, cap, bubblegum, stud earrings</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/33-street-boy-cap-sunglasses-bubblegum.webp" alt="Street boy cap chains"><div class="prompt-overlay"><span>orange hair, cap, sunglasses on head, bubblegum, chains</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/38-street-boy-purple-bubblegum.webp" alt="Purple street boy"><div class="prompt-overlay"><span>purple hair, cap, sunglasses, bubblegum, chains, earbuds</span></div></div>
+      <div class="prompt-nav">
+        <button class="prompt-nav-btn" data-dir="prev" data-cat="double-meaning">&#8249;</button>
+        <span class="prompt-nav-counter" id="nav-double-meaning">1 / 5</span>
+        <button class="prompt-nav-btn" data-dir="next" data-cat="double-meaning">&#8250;</button>
       </div>
     </div>
 
-    <div class="avatar-accordion">
-      <div class="avatar-accordion-header">
-        <span class="avatar-accordion-label">Archetypes &amp; fantasy</span>
-        <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    <div class="prompt-category" data-cat="literal">
+      <p class="prompt-category-desc">Figurative speech gets interpreted literally — "fire in her eyes" produces actual flames.</p>
+      <div class="showcase-compare" id="compare-literal">
+        <div class="showcase-compare-side">
+          <span class="showcase-compare-label before">Before</span>
+          <div class="compare-img"><img id="img-literal-before" src="assets/ai-showcase/comparisons/literal/before_1.webp" alt="Before"></div>
+        </div>
+        <span class="showcase-compare-arrow">&rarr;</span>
+        <div class="showcase-compare-side">
+          <span class="showcase-compare-label after">After</span>
+          <div class="compare-img"><img id="img-literal-after" src="assets/ai-showcase/comparisons/literal/after_1.webp" alt="After"></div>
+        </div>
       </div>
-      <div class="avatar-accordion-body">
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/15-archetype-boy-mysterious-hoodie-mask.webp" alt="Mysterious hooded boy"><div class="prompt-overlay"><span>hoodie, face mask, mysterious, glowing eyes</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/16-archetype-boy-edgelord-eyepatch.webp" alt="Edgelord eyepatch boy"><div class="prompt-overlay"><span>eyepatch, edgy expression, dark clothes</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/18-archetype-girl-witch-hat.webp" alt="Witch girl"><div class="prompt-overlay"><span>witch hat, magical girl, mystical</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/25-nerd-boy-beret-glasses.webp" alt="Nerd boy beret"><div class="prompt-overlay"><span>beret, round glasses, artistic, shy</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/28-cyber-boy-whitehair-glasses.webp" alt="Cyber boy white hair"><div class="prompt-overlay"><span>white hair, glasses, choker, cyberpunk</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/43-rebel-boy-leather-jacket.webp" alt="Rebel leather jacket"><div class="prompt-overlay"><span>leather jacket, pocky stick, earring, rebellious</span></div></div>
+      <p class="prompt-seed" id="seed-literal">same seed: 410001</p>
+      <div class="prompt-display">
+        <div class="prompt-block before"><div class="prompt-block-label">Before Prompt</div><span id="prompt-literal-before"></span></div>
+        <div class="prompt-block after"><div class="prompt-block-label">After Prompt</div><span id="prompt-literal-after"></span></div>
       </div>
-    </div>
-
-    <div class="avatar-accordion">
-      <div class="avatar-accordion-header">
-        <span class="avatar-accordion-label">Royalty &amp; explorers</span>
-        <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-      </div>
-      <div class="avatar-accordion-body">
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/17-archetype-boy-royalty-crown.webp" alt="Royalty crown boy"><div class="prompt-overlay"><span>crown, royal cape, proud expression</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/35-royalty-boy-crown-brown.webp" alt="Royalty boy brown hair"><div class="prompt-overlay"><span>small crown, gold earrings, red cape, charming</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/36-royalty-boy-crown-purple.webp" alt="Royalty boy purple hair"><div class="prompt-overlay"><span>purple hair, crown, gold earrings, military jacket</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/37-stylish-boy-earrings.webp" alt="Stylish boy earrings"><div class="prompt-overlay"><span>dark hair, gold hoop earrings, smirk, elegant</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/27-explorer-boy-goggles-adventurer.webp" alt="Explorer boy goggles"><div class="prompt-overlay"><span>aviator goggles, backpack, adventurer, curious</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/31-explorer-girl-goggles-aviator.webp" alt="Explorer girl aviator"><div class="prompt-overlay"><span>aviator goggles, orange hair, wink, explorer outfit</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/51-royalty-girl-red-tiara-pearls.webp" alt="Royalty girl tiara pearls"><div class="prompt-overlay"><span>red hair, tiara, pearl earrings, regal gaze</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/52-royalty-girl-red-tiara-golden.webp" alt="Royalty girl tiara golden"><div class="prompt-overlay"><span>red hair, golden tiara, cheerful, warm smile</span></div></div>
+      <div class="prompt-nav">
+        <button class="prompt-nav-btn" data-dir="prev" data-cat="literal">&#8249;</button>
+        <span class="prompt-nav-counter" id="nav-literal">1 / 5</span>
+        <button class="prompt-nav-btn" data-dir="next" data-cat="literal">&#8250;</button>
       </div>
     </div>
 
-    <div class="avatar-accordion">
-      <div class="avatar-accordion-header">
-        <span class="avatar-accordion-label">Scientists &amp; tech</span>
-        <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    <div class="prompt-category" data-cat="specificity">
+      <p class="prompt-category-desc">Vague descriptions produce generic output — detailed tags create unique characters.</p>
+      <div class="showcase-compare" id="compare-specificity">
+        <div class="showcase-compare-side">
+          <span class="showcase-compare-label before">Before</span>
+          <div class="compare-img"><img id="img-specificity-before" src="assets/ai-showcase/comparisons/specificity/before_1.webp" alt="Before"></div>
+        </div>
+        <span class="showcase-compare-arrow">&rarr;</span>
+        <div class="showcase-compare-side">
+          <span class="showcase-compare-label after">After</span>
+          <div class="compare-img"><img id="img-specificity-after" src="assets/ai-showcase/comparisons/specificity/after_1.webp" alt="After"></div>
+        </div>
       </div>
-      <div class="avatar-accordion-body">
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/19-archetype-girl-scientist-labcoat.webp" alt="Scientist girl labcoat"><div class="prompt-overlay"><span>lab coat, safety goggles, test tubes</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/20-archetype-boy-techscientist-vrvisor.webp" alt="Tech scientist VR"><div class="prompt-overlay"><span>VR visor, tech gear, futuristic scientist</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/39-scientist-boy-labcoat-goggles.webp" alt="Scientist boy lab goggles"><div class="prompt-overlay"><span>lab coat, safety goggles, test tube, excited</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/40-scientist-girl-goggles-colorful.webp" alt="Scientist girl colorful"><div class="prompt-overlay"><span>lab goggles, colorful lab coat, sparkles, messy hair</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/41-scientist-boy-goggles-red.webp" alt="Scientist boy red goggles"><div class="prompt-overlay"><span>red tinted goggles, lab coat, gloves, confident smirk</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/42-athletic-boy-muscular-jersey.webp" alt="Athletic muscular boy"><div class="prompt-overlay"><span>muscular, athletic jersey, earbuds, energetic grin</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/53-scientist-boy-visor-labcoat-blue.webp" alt="Scientist boy blue visor"><div class="prompt-overlay"><span>blue visor, lab coat, serious, blue eyes</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/54-scientist-boy-glasses-beard.webp" alt="Scientist boy glasses beard"><div class="prompt-overlay"><span>glasses, goatee, lab coat, thinking pose</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/55-scientist-girl-purple-glasses-labcoat.webp" alt="Scientist girl purple glasses"><div class="prompt-overlay"><span>purple hair, glasses, lab coat, gentle smile</span></div></div>
+      <p class="prompt-seed" id="seed-specificity">same seed: 510001</p>
+      <div class="prompt-display">
+        <div class="prompt-block before"><div class="prompt-block-label">Before Prompt</div><span id="prompt-specificity-before"></span></div>
+        <div class="prompt-block after"><div class="prompt-block-label">After Prompt</div><span id="prompt-specificity-after"></span></div>
+      </div>
+      <div class="prompt-nav">
+        <button class="prompt-nav-btn" data-dir="prev" data-cat="specificity">&#8249;</button>
+        <span class="prompt-nav-counter" id="nav-specificity">1 / 5</span>
+        <button class="prompt-nav-btn" data-dir="next" data-cat="specificity">&#8250;</button>
       </div>
     </div>
 
-    <div class="avatar-accordion">
-      <div class="avatar-accordion-header">
-        <span class="avatar-accordion-label">Athletic &amp; combat</span>
-        <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    <div class="sampler-settings">
+      <p class="compare-pair-label">KSampler Settings</p>
+      <div class="sampler-grid">
+        <div class="sampler-param">
+          <span class="sampler-key">steps</span>
+          <span class="sampler-val">30</span>
+        </div>
+        <div class="sampler-param">
+          <span class="sampler-key">cfg</span>
+          <span class="sampler-val">4.0</span>
+        </div>
+        <div class="sampler-param">
+          <span class="sampler-key">sampler</span>
+          <span class="sampler-val">res_multistep</span>
+        </div>
+        <div class="sampler-param">
+          <span class="sampler-key">scheduler</span>
+          <span class="sampler-val">simple</span>
+        </div>
+        <div class="sampler-param">
+          <span class="sampler-key">denoise</span>
+          <span class="sampler-val">1.0</span>
+        </div>
+        <div class="sampler-param">
+          <span class="sampler-key">resolution</span>
+          <span class="sampler-val">1024 &times; 1024</span>
+        </div>
       </div>
-      <div class="avatar-accordion-body">
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/23-athletic-boy-boxer-intense.webp" alt="Boxer boy"><div class="prompt-overlay"><span>boxing gloves, intense stare, fighter stance</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/24-athletic-girl-gym-wink.webp" alt="Gym girl wink"><div class="prompt-overlay"><span>sports top, wink, gym accessories, athletic</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/56-street-girl-cap-bubblegum-crop.webp" alt="Street athletic girl"><div class="prompt-overlay"><span>cap, bubblegum, crop top, chain necklace</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/57-athletic-boy-swimmer-towel.webp" alt="Swimmer boy"><div class="prompt-overlay"><span>swimmer, towel, goggles, muscular, friendly</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/58-athletic-boy-headband-basketball.webp" alt="Basketball boy"><div class="prompt-overlay"><span>red headband, basketball jersey, grin</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/59-athletic-girl-muscular-peace.webp" alt="Muscular girl peace"><div class="prompt-overlay"><span>tank top, muscular, peace sign, wink</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/60-athletic-girl-cap-bubblegum-muscular.webp" alt="Athletic girl bubblegum"><div class="prompt-overlay"><span>trucker cap, bubblegum, muscular, gold earrings</span></div></div>
-      </div>
+      <p class="sampler-note">30 steps with res_multistep sampler + ModelSamplingAuraFlow (shift 4.0) for clean Lumina-based generation; low cfg preserves natural detail.</p>
     </div>
   </div>
 
@@ -902,7 +901,7 @@ footer .footer-accent { color: var(--accent); }
     <div class="showcase-header">
       <span class="showcase-step">02 — ComfyUI Pipeline</span>
       <h3>Node-Based Workflow</h3>
-      <p class="showcase-caption">Custom ComfyUI node graph — a visual pipeline with control over each generation parameter.</p>
+      <p class="showcase-caption">With the right prompts figured out, I built a visual pipeline in ComfyUI — a node graph with full control over each generation parameter.</p>
     </div>
     <div class="workflow-image-wrap">
       <img src="assets/ai-showcase/comfyui-workflow.webp" alt="ComfyUI node-based workflow showing model loading, prompt conditioning, sampling, background removal, and output" loading="lazy">
@@ -914,7 +913,7 @@ footer .footer-accent { color: var(--accent); }
     <div class="showcase-header">
       <span class="showcase-step">03 — Batch Automation</span>
       <h3>Script-Driven Generation</h3>
-      <p class="showcase-caption">Python script feeds different modifier combinations into ComfyUI via API — automating unique avatars from a single prompt template.</p>
+      <p class="showcase-caption">Then automated the whole thing — a Python script feeds modifier combinations into ComfyUI via API, generating unique avatars from a single prompt template.</p>
       <p class="showcase-caption batch-caption-mobile">Scripts handle <span class="batch-inline-tag">auto-naming</span>, <span class="batch-inline-tag">BG removal</span>, <span class="batch-inline-tag">image optimization</span>, and <span class="batch-inline-tag">video compression</span> — all automated in the pipeline.</p>
     </div>
 
@@ -1055,149 +1054,150 @@ footer .footer-accent { color: var(--accent); }
 
   </div>
 
-  <!-- PART 4: Prompt Optimization (Placeholder) -->
+  <!-- PART 4: Full Avatar Collection -->
   <div class="showcase-block reveal">
     <div class="showcase-header">
-      <span class="showcase-step">04 — Prompt Engineering</span>
-      <h3>Optimization Process</h3>
-      <p class="showcase-caption">Iterative prompt refinement — testing how specific tokens affect output quality and consistency.</p>
-    </div>
-    <div class="prompt-tabs" id="promptTabs">
-      <button class="prompt-tab active" data-cat="animal">Wording &amp; Tags</button>
-      <button class="prompt-tab" data-cat="double-meaning">Double Meaning</button>
-      <button class="prompt-tab" data-cat="literal">Literal vs Figurative</button>
-      <button class="prompt-tab" data-cat="specificity">Specificity</button>
+      <span class="showcase-step">04 — The Result</span>
+      <h3>The Full Collection</h3>
+      <p class="showcase-caption">And here's what the system produces — 60+ avatars, all from one pipeline.</p>
     </div>
 
-    <div class="prompt-category active" data-cat="animal">
-      <p class="prompt-category-desc">How natural language vs structured tags changes what the model generates — "cat girl" becomes a literal cat.</p>
-      <div class="showcase-compare" id="compare-animal">
-        <div class="showcase-compare-side">
-          <span class="showcase-compare-label before">Before</span>
-          <div class="compare-img"><img id="img-animal-before" src="assets/ai-showcase/comparisons/animal/before_1.webp" alt="Before"></div>
-        </div>
-        <span class="showcase-compare-arrow">&rarr;</span>
-        <div class="showcase-compare-side">
-          <span class="showcase-compare-label after">After</span>
-          <div class="compare-img"><img id="img-animal-after" src="assets/ai-showcase/comparisons/animal/after_1.webp" alt="After"></div>
-        </div>
+    <div class="base-prompt-block">
+      <span class="prompt-label">Base Prompt</span>
+      <code>1girl/1boy, chibi, bust portrait, sharp eye highlights, vibrant anime color palette, cel-shading, crisp lineart, white background, centered composition, high detail face</code>
+    </div>
+    <p class="prompt-hint">Hover or tap avatars to see the modifier prompt used for each variation</p>
+
+    <div class="avatar-accordion open">
+      <div class="avatar-accordion-header">
+        <span class="avatar-accordion-label">Hair &amp; expression modifiers</span>
+        <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
-      <p class="prompt-seed" id="seed-animal">same seed: 300003</p>
-      <div class="prompt-display">
-        <div class="prompt-block before"><div class="prompt-block-label">Before Prompt</div><span id="prompt-animal-before"></span></div>
-        <div class="prompt-block after"><div class="prompt-block-label">After Prompt</div><span id="prompt-animal-after"></span></div>
-      </div>
-      <div class="prompt-nav">
-        <button class="prompt-nav-btn" data-dir="prev" data-cat="animal">&#8249;</button>
-        <span class="prompt-nav-counter" id="nav-animal">1 / 5</span>
-        <button class="prompt-nav-btn" data-dir="next" data-cat="animal">&#8250;</button>
+      <div class="avatar-accordion-body">
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/01-consistency-girl-redhair-peace.webp" alt="Red hair chibi"><div class="prompt-overlay"><span>red hair, peace sign, cheerful smile</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/02-consistency-girl-purplehair-peace.webp" alt="Purple hair chibi"><div class="prompt-overlay"><span>purple hair, peace sign, gentle expression</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/03-consistency-girl-pinkhair-wink.webp" alt="Pink hair chibi"><div class="prompt-overlay"><span>pink hair, winking, playful</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/04-expression-girl-blonde-smug.webp" alt="Blonde smug chibi"><div class="prompt-overlay"><span>blonde hair, smug expression, confident</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/05-expression-girl-gradient-starryeyes.webp" alt="Starry-eyed chibi"><div class="prompt-overlay"><span>gradient hair, starry eyes, sparkling</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/06-expression-girl-purple-excited.webp" alt="Excited purple chibi"><div class="prompt-overlay"><span>purple hair, excited, open mouth</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/45-expression-girl-pink-catears-lollipop.webp" alt="Pink catears girl lollipop"><div class="prompt-overlay"><span>pink hair, cat ears, lollipop, wink, green eyes</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/46-expression-girl-pink-catears-smirk.webp" alt="Pink catears girl smirk"><div class="prompt-overlay"><span>pink hair, cat ears, smirk, green eyes</span></div></div>
       </div>
     </div>
 
-    <div class="prompt-category" data-cat="double-meaning">
-      <p class="prompt-category-desc">Words with multiple meanings confuse the model — "bat girl" could be a bat or a girl with bat wings.</p>
-      <div class="showcase-compare" id="compare-double-meaning">
-        <div class="showcase-compare-side">
-          <span class="showcase-compare-label before">Before</span>
-          <div class="compare-img"><img id="img-double-meaning-before" src="assets/ai-showcase/comparisons/double-meaning/before_1.webp" alt="Before"></div>
-        </div>
-        <span class="showcase-compare-arrow">&rarr;</span>
-        <div class="showcase-compare-side">
-          <span class="showcase-compare-label after">After</span>
-          <div class="compare-img"><img id="img-double-meaning-after" src="assets/ai-showcase/comparisons/double-meaning/after_1.webp" alt="After"></div>
-        </div>
+    <div class="avatar-accordion">
+      <div class="avatar-accordion-header">
+        <span class="avatar-accordion-label">Props &amp; accessories</span>
+        <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
-      <p class="prompt-seed" id="seed-double-meaning">same seed: 310001</p>
-      <div class="prompt-display">
-        <div class="prompt-block before"><div class="prompt-block-label">Before Prompt</div><span id="prompt-double-meaning-before"></span></div>
-        <div class="prompt-block after"><div class="prompt-block-label">After Prompt</div><span id="prompt-double-meaning-after"></span></div>
-      </div>
-      <div class="prompt-nav">
-        <button class="prompt-nav-btn" data-dir="prev" data-cat="double-meaning">&#8249;</button>
-        <span class="prompt-nav-counter" id="nav-double-meaning">1 / 5</span>
-        <button class="prompt-nav-btn" data-dir="next" data-cat="double-meaning">&#8250;</button>
+      <div class="avatar-accordion-body">
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/11-prop-girl-redhair-bubblegum.webp" alt="Red hair bubblegum girl"><div class="prompt-overlay"><span>red hair, blowing bubblegum</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/12-prop-girl-blonde-cap-bubblegum.webp" alt="Cap bubblegum girl"><div class="prompt-overlay"><span>blonde, baseball cap, bubblegum</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/13-prop-girl-pink-catears-lollipop.webp" alt="Cat ears lollipop girl"><div class="prompt-overlay"><span>pink hair, cat ears, lollipop</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/14-prop-girl-brown-bobatea.webp" alt="Boba tea girl"><div class="prompt-overlay"><span>brown hair, sipping boba tea</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/29-catgirl-pink-boba.webp" alt="Pink catgirl boba"><div class="prompt-overlay"><span>pink hair, cat ears, sipping drink, wink</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/30-catgirl-orange-lollipop.webp" alt="Orange catgirl lollipop"><div class="prompt-overlay"><span>orange hair, cat ears, lollipop, puffed cheeks</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/47-prop-boy-leather-pocky-earring.webp" alt="Leather boy pocky"><div class="prompt-overlay"><span>leather jacket, pocky stick, earring, smirk</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/48-prop-boy-cap-coffee-shy.webp" alt="Cap boy coffee"><div class="prompt-overlay"><span>baseball cap, holding coffee, shy expression</span></div></div>
       </div>
     </div>
 
-    <div class="prompt-category" data-cat="literal">
-      <p class="prompt-category-desc">Figurative speech gets interpreted literally — "fire in her eyes" produces actual flames.</p>
-      <div class="showcase-compare" id="compare-literal">
-        <div class="showcase-compare-side">
-          <span class="showcase-compare-label before">Before</span>
-          <div class="compare-img"><img id="img-literal-before" src="assets/ai-showcase/comparisons/literal/before_1.webp" alt="Before"></div>
-        </div>
-        <span class="showcase-compare-arrow">&rarr;</span>
-        <div class="showcase-compare-side">
-          <span class="showcase-compare-label after">After</span>
-          <div class="compare-img"><img id="img-literal-after" src="assets/ai-showcase/comparisons/literal/after_1.webp" alt="After"></div>
-        </div>
+    <div class="avatar-accordion">
+      <div class="avatar-accordion-header">
+        <span class="avatar-accordion-label">Gamer variants</span>
+        <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
-      <p class="prompt-seed" id="seed-literal">same seed: 410001</p>
-      <div class="prompt-display">
-        <div class="prompt-block before"><div class="prompt-block-label">Before Prompt</div><span id="prompt-literal-before"></span></div>
-        <div class="prompt-block after"><div class="prompt-block-label">After Prompt</div><span id="prompt-literal-after"></span></div>
-      </div>
-      <div class="prompt-nav">
-        <button class="prompt-nav-btn" data-dir="prev" data-cat="literal">&#8249;</button>
-        <span class="prompt-nav-counter" id="nav-literal">1 / 5</span>
-        <button class="prompt-nav-btn" data-dir="next" data-cat="literal">&#8250;</button>
+      <div class="avatar-accordion-body">
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/07-gamer-girl-headphones-jacket.webp" alt="Gamer girl headphones"><div class="prompt-overlay"><span>headphones, gaming jacket, confident</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/08-gamer-girl-catears-streamer.webp" alt="Cat ears streamer"><div class="prompt-overlay"><span>cat ear headphones, streamer setup</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/09-gamer-boy-energydrink-headphones.webp" alt="Gamer boy energy drink"><div class="prompt-overlay"><span>headphones, energy drink, intense gaze</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/10-gamer-boy-pocky-chillgamer.webp" alt="Chill gamer boy"><div class="prompt-overlay"><span>headphones, pocky stick, relaxed</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/34-gamer-girl-red-headphones.webp" alt="Red hair gamer girl"><div class="prompt-overlay"><span>red hair, gaming headset, devil horns, sipping</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/26-gamer-boy-headphones-shy.webp" alt="Shy gamer boy"><div class="prompt-overlay"><span>brown hair, red headphones, shy expression</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/49-gamer-girl-red-headphones-sipping.webp" alt="Red gamer girl sipping"><div class="prompt-overlay"><span>red hair, devil horn headphones, sipping drink</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/50-gamer-girl-purple-headphones-sipping.webp" alt="Purple gamer girl sipping"><div class="prompt-overlay"><span>purple hair, pink headphones, hoodie, sipping drink</span></div></div>
       </div>
     </div>
 
-    <div class="prompt-category" data-cat="specificity">
-      <p class="prompt-category-desc">Vague descriptions produce generic output — detailed tags create unique characters.</p>
-      <div class="showcase-compare" id="compare-specificity">
-        <div class="showcase-compare-side">
-          <span class="showcase-compare-label before">Before</span>
-          <div class="compare-img"><img id="img-specificity-before" src="assets/ai-showcase/comparisons/specificity/before_1.webp" alt="Before"></div>
-        </div>
-        <span class="showcase-compare-arrow">&rarr;</span>
-        <div class="showcase-compare-side">
-          <span class="showcase-compare-label after">After</span>
-          <div class="compare-img"><img id="img-specificity-after" src="assets/ai-showcase/comparisons/specificity/after_1.webp" alt="After"></div>
-        </div>
+    <div class="avatar-accordion">
+      <div class="avatar-accordion-header">
+        <span class="avatar-accordion-label">Street style</span>
+        <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
-      <p class="prompt-seed" id="seed-specificity">same seed: 510001</p>
-      <div class="prompt-display">
-        <div class="prompt-block before"><div class="prompt-block-label">Before Prompt</div><span id="prompt-specificity-before"></span></div>
-        <div class="prompt-block after"><div class="prompt-block-label">After Prompt</div><span id="prompt-specificity-after"></span></div>
-      </div>
-      <div class="prompt-nav">
-        <button class="prompt-nav-btn" data-dir="prev" data-cat="specificity">&#8249;</button>
-        <span class="prompt-nav-counter" id="nav-specificity">1 / 5</span>
-        <button class="prompt-nav-btn" data-dir="next" data-cat="specificity">&#8250;</button>
+      <div class="avatar-accordion-body">
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/21-street-girl-cap-bubblegum-chains.webp" alt="Street girl chains"><div class="prompt-overlay"><span>cap, bubblegum, chain necklace, streetwear</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/22-street-boy-sunglasses-bubblegum.webp" alt="Street boy sunglasses"><div class="prompt-overlay"><span>sunglasses, bubblegum, street fashion</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/32-street-girl-cap-bubblegum2.webp" alt="Street girl cap bubblegum"><div class="prompt-overlay"><span>blonde, baseball cap, bubblegum, jacket</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/44-street-girl-cap-bubblegum3.webp" alt="Street girl cap bubblegum v2"><div class="prompt-overlay"><span>blonde bob, cap, bubblegum, stud earrings</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/33-street-boy-cap-sunglasses-bubblegum.webp" alt="Street boy cap chains"><div class="prompt-overlay"><span>orange hair, cap, sunglasses on head, bubblegum, chains</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/38-street-boy-purple-bubblegum.webp" alt="Purple street boy"><div class="prompt-overlay"><span>purple hair, cap, sunglasses, bubblegum, chains, earbuds</span></div></div>
       </div>
     </div>
 
-    <div class="sampler-settings">
-      <p class="compare-pair-label">KSampler Settings</p>
-      <div class="sampler-grid">
-        <div class="sampler-param">
-          <span class="sampler-key">steps</span>
-          <span class="sampler-val">30</span>
-        </div>
-        <div class="sampler-param">
-          <span class="sampler-key">cfg</span>
-          <span class="sampler-val">4.0</span>
-        </div>
-        <div class="sampler-param">
-          <span class="sampler-key">sampler</span>
-          <span class="sampler-val">res_multistep</span>
-        </div>
-        <div class="sampler-param">
-          <span class="sampler-key">scheduler</span>
-          <span class="sampler-val">simple</span>
-        </div>
-        <div class="sampler-param">
-          <span class="sampler-key">denoise</span>
-          <span class="sampler-val">1.0</span>
-        </div>
-        <div class="sampler-param">
-          <span class="sampler-key">resolution</span>
-          <span class="sampler-val">1024 &times; 1024</span>
-        </div>
+    <div class="avatar-accordion">
+      <div class="avatar-accordion-header">
+        <span class="avatar-accordion-label">Archetypes &amp; fantasy</span>
+        <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
-      <p class="sampler-note">30 steps with res_multistep sampler + ModelSamplingAuraFlow (shift 4.0) for clean Lumina-based generation; low cfg preserves natural detail.</p>
+      <div class="avatar-accordion-body">
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/15-archetype-boy-mysterious-hoodie-mask.webp" alt="Mysterious hooded boy"><div class="prompt-overlay"><span>hoodie, face mask, mysterious, glowing eyes</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/16-archetype-boy-edgelord-eyepatch.webp" alt="Edgelord eyepatch boy"><div class="prompt-overlay"><span>eyepatch, edgy expression, dark clothes</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/18-archetype-girl-witch-hat.webp" alt="Witch girl"><div class="prompt-overlay"><span>witch hat, magical girl, mystical</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/25-nerd-boy-beret-glasses.webp" alt="Nerd boy beret"><div class="prompt-overlay"><span>beret, round glasses, artistic, shy</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/28-cyber-boy-whitehair-glasses.webp" alt="Cyber boy white hair"><div class="prompt-overlay"><span>white hair, glasses, choker, cyberpunk</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/43-rebel-boy-leather-jacket.webp" alt="Rebel leather jacket"><div class="prompt-overlay"><span>leather jacket, pocky stick, earring, rebellious</span></div></div>
+      </div>
+    </div>
+
+    <div class="avatar-accordion">
+      <div class="avatar-accordion-header">
+        <span class="avatar-accordion-label">Royalty &amp; explorers</span>
+        <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="avatar-accordion-body">
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/17-archetype-boy-royalty-crown.webp" alt="Royalty crown boy"><div class="prompt-overlay"><span>crown, royal cape, proud expression</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/35-royalty-boy-crown-brown.webp" alt="Royalty boy brown hair"><div class="prompt-overlay"><span>small crown, gold earrings, red cape, charming</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/36-royalty-boy-crown-purple.webp" alt="Royalty boy purple hair"><div class="prompt-overlay"><span>purple hair, crown, gold earrings, military jacket</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/37-stylish-boy-earrings.webp" alt="Stylish boy earrings"><div class="prompt-overlay"><span>dark hair, gold hoop earrings, smirk, elegant</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/27-explorer-boy-goggles-adventurer.webp" alt="Explorer boy goggles"><div class="prompt-overlay"><span>aviator goggles, backpack, adventurer, curious</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/31-explorer-girl-goggles-aviator.webp" alt="Explorer girl aviator"><div class="prompt-overlay"><span>aviator goggles, orange hair, wink, explorer outfit</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/51-royalty-girl-red-tiara-pearls.webp" alt="Royalty girl tiara pearls"><div class="prompt-overlay"><span>red hair, tiara, pearl earrings, regal gaze</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/52-royalty-girl-red-tiara-golden.webp" alt="Royalty girl tiara golden"><div class="prompt-overlay"><span>red hair, golden tiara, cheerful, warm smile</span></div></div>
+      </div>
+    </div>
+
+    <div class="avatar-accordion">
+      <div class="avatar-accordion-header">
+        <span class="avatar-accordion-label">Scientists &amp; tech</span>
+        <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="avatar-accordion-body">
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/19-archetype-girl-scientist-labcoat.webp" alt="Scientist girl labcoat"><div class="prompt-overlay"><span>lab coat, safety goggles, test tubes</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/20-archetype-boy-techscientist-vrvisor.webp" alt="Tech scientist VR"><div class="prompt-overlay"><span>VR visor, tech gear, futuristic scientist</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/39-scientist-boy-labcoat-goggles.webp" alt="Scientist boy lab goggles"><div class="prompt-overlay"><span>lab coat, safety goggles, test tube, excited</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/40-scientist-girl-goggles-colorful.webp" alt="Scientist girl colorful"><div class="prompt-overlay"><span>lab goggles, colorful lab coat, sparkles, messy hair</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/41-scientist-boy-goggles-red.webp" alt="Scientist boy red goggles"><div class="prompt-overlay"><span>red tinted goggles, lab coat, gloves, confident smirk</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/42-athletic-boy-muscular-jersey.webp" alt="Athletic muscular boy"><div class="prompt-overlay"><span>muscular, athletic jersey, earbuds, energetic grin</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/53-scientist-boy-visor-labcoat-blue.webp" alt="Scientist boy blue visor"><div class="prompt-overlay"><span>blue visor, lab coat, serious, blue eyes</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/54-scientist-boy-glasses-beard.webp" alt="Scientist boy glasses beard"><div class="prompt-overlay"><span>glasses, goatee, lab coat, thinking pose</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/55-scientist-girl-purple-glasses-labcoat.webp" alt="Scientist girl purple glasses"><div class="prompt-overlay"><span>purple hair, glasses, lab coat, gentle smile</span></div></div>
+      </div>
+    </div>
+
+    <div class="avatar-accordion">
+      <div class="avatar-accordion-header">
+        <span class="avatar-accordion-label">Athletic &amp; combat</span>
+        <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="avatar-accordion-body">
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/23-athletic-boy-boxer-intense.webp" alt="Boxer boy"><div class="prompt-overlay"><span>boxing gloves, intense stare, fighter stance</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/24-athletic-girl-gym-wink.webp" alt="Gym girl wink"><div class="prompt-overlay"><span>sports top, wink, gym accessories, athletic</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/56-street-girl-cap-bubblegum-crop.webp" alt="Street athletic girl"><div class="prompt-overlay"><span>cap, bubblegum, crop top, chain necklace</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/57-athletic-boy-swimmer-towel.webp" alt="Swimmer boy"><div class="prompt-overlay"><span>swimmer, towel, goggles, muscular, friendly</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/58-athletic-boy-headband-basketball.webp" alt="Basketball boy"><div class="prompt-overlay"><span>red headband, basketball jersey, grin</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/59-athletic-girl-muscular-peace.webp" alt="Muscular girl peace"><div class="prompt-overlay"><span>tank top, muscular, peace sign, wink</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/60-athletic-girl-cap-bubblegum-muscular.webp" alt="Athletic girl bubblegum"><div class="prompt-overlay"><span>trucker cap, bubblegum, muscular, gold earrings</span></div></div>
+      </div>
     </div>
   </div>
 </section>
