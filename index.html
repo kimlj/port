@@ -178,8 +178,8 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 .expertise-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.65; font-weight: 300; }
 
 .projects-grid { display: grid; gap: 1.5rem; }
-.project-card { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--border); border-radius: 20px; overflow: hidden; background: var(--bg-card); transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); text-decoration: none; color: inherit; }
-.project-card:hover { border-color: var(--border-hover); transform: translateY(-4px); box-shadow: 0 20px 60px var(--shadow); }
+.project-card { --border-angle: 0deg; display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--border); border-radius: 20px; overflow: hidden; background: var(--bg-card); transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); text-decoration: none; color: inherit; }
+.project-card:hover { border: 1px solid transparent; background: linear-gradient(var(--bg-card), var(--bg-card)) padding-box, conic-gradient(from var(--border-angle), transparent 40%, var(--gradient-1), var(--gradient-2), transparent 60%) border-box; transform: translateY(-4px); box-shadow: 0 20px 60px var(--shadow); animation: rotateBorder 3s linear infinite; }
 .project-info { padding: 3rem; display: flex; flex-direction: column; justify-content: center; }
 .project-tag { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent); margin-bottom: 1rem; }
 .project-info h3 { font-family: var(--serif); font-size: 1.8rem; font-weight: 400; margin-bottom: 0.75rem; }
@@ -273,10 +273,7 @@ footer .footer-accent { color: var(--accent); }
 .spotlight-card:hover::after { opacity: 1; }
 
 /* Animated gradient border on project cards */
-.project-card { position: relative; }
-.project-card::before { content: ''; position: absolute; inset: -1px; border-radius: 21px; padding: 1px; background: conic-gradient(from var(--border-angle, 0deg), transparent 40%, var(--gradient-1), var(--gradient-2), transparent 60%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity 0.4s; pointer-events: none; z-index: 1; }
-.project-card:hover::before { opacity: 1; animation: rotateBorder 3s linear infinite; }
-@keyframes rotateBorder { 0% { --border-angle: 0deg; } 100% { --border-angle: 360deg; } }
+@keyframes rotateBorder { to { --border-angle: 360deg; } }
 @property --border-angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
 
 /* Typewriter cursor */
