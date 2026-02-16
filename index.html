@@ -196,6 +196,7 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 .project-visual-content { position: relative; z-index: 1; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; }
 .project-visual-icon svg { width: 56px; height: 56px; stroke: var(--text-dim); fill: none; stroke-width: 1; opacity: 0.6; transition: all 0.4s; }
 .project-card:hover .project-visual-icon svg { stroke: var(--accent); opacity: 1; }
+.project-visual-img { position: relative; z-index: 1; width: 100%; height: auto; display: block; }
 .project-visual-label { font-family: var(--mono); font-size: 0.75rem; color: var(--text-dim); letter-spacing: 0.1em; }
 .project-link { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1.25rem; font-size: 0.85rem; font-weight: 500; color: var(--accent); transition: gap 0.3s; }
 .project-link svg { width: 16px; height: 16px; stroke: var(--accent); fill: none; stroke-width: 2; transition: transform 0.3s; }
@@ -350,7 +351,8 @@ footer .footer-accent { color: var(--accent); }
   .projects-grid .project-info { padding: 1.5rem; flex: 1; }
   .projects-grid .project-info h3 { font-size: 1.3rem; }
   .projects-grid .project-info p { font-size: 0.82rem; line-height: 1.6; }
-  .projects-grid .project-visual { height: 140px; flex-shrink: 0; }
+  .projects-grid .project-visual { height: 200px; min-height: 0; flex-shrink: 0; }
+  .projects-grid .project-visual-img { object-fit: cover; object-position: top; }
   .projects-grid .project-tech span { font-size: 0.6rem; padding: 0.25rem 0.5rem; }
   .swipe-hint { display: none; }
   @keyframes swipeHint { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(8px); } }
@@ -679,10 +681,7 @@ footer .footer-accent { color: var(--accent); }
       </div>
       <div class="project-visual">
         <div class="project-visual-bg pv-1"></div>
-        <div class="project-visual-content">
-          <div class="project-visual-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M7 16h10"/></svg></div>
-          <div class="project-visual-label">wordwarz.io</div>
-        </div>
+        <img src="assets/wordwarz-preview.webp" alt="WordWarz.io game lobby screenshot" class="project-visual-img" loading="lazy">
       </div>
     </a>
     <a href="https://casinore.io" target="_blank" class="project-card reveal spotlight-card">
@@ -696,13 +695,10 @@ footer .footer-accent { color: var(--accent); }
       </div>
       <div class="project-visual">
         <div class="project-visual-bg pv-2"></div>
-        <div class="project-visual-content">
-          <div class="project-visual-icon"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
-          <div class="project-visual-label">casinore.io</div>
-        </div>
+        <img src="assets/casinore-preview.webp" alt="Casinore.io platform screenshot" class="project-visual-img" loading="lazy">
       </div>
     </a>
-    <a href="https://thesis-bikeshop-git-main-kimljs-projects.vercel.app/" target="_blank" class="project-card reveal spotlight-card">
+    <a href="https://kikoysbike.app" target="_blank" class="project-card reveal spotlight-card">
       <div class="project-info">
         <span class="project-tag">E-Commerce &amp; AI</span>
         <h3>AI-Integrated BikeShop</h3>
@@ -712,10 +708,7 @@ footer .footer-accent { color: var(--accent); }
       </div>
       <div class="project-visual">
         <div class="project-visual-bg pv-3"></div>
-        <div class="project-visual-content">
-          <div class="project-visual-icon"><svg viewBox="0 0 24 24"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2"/></svg></div>
-          <div class="project-visual-label">bikeshop</div>
-        </div>
+        <img src="assets/kikoysbike-preview.webp" alt="Kikoy's Bike Shop homepage screenshot" class="project-visual-img" loading="lazy">
       </div>
     </a>
     <div class="project-card reveal spotlight-card">
