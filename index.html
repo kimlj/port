@@ -158,7 +158,8 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 .stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem; letter-spacing: 0.02em; }
 
 .skills-marquee-wrapper { overflow: hidden; padding: 2rem 0; }
-.skills-marquee { display: flex; gap: 0.75rem; animation: marquee 40s linear infinite; width: max-content; }
+.skills-marquee { display: flex; gap: 0.75rem; animation: marquee 40s linear infinite; width: max-content; animation-play-state: paused; }
+.skills-marquee-wrapper.in-view .skills-marquee { animation-play-state: running; }
 .skills-marquee:nth-child(2) { animation-direction: reverse; animation-duration: 35s; margin-top: 0.75rem; }
 .skill-chip { padding: 0.65rem 1.25rem; border: 1px solid var(--border); border-radius: 100px; font-size: 0.82rem; color: var(--text-muted); white-space: nowrap; font-weight: 400; letter-spacing: 0.01em; background: var(--bg-card); transition: all 0.3s; flex-shrink: 0; }
 .skill-chip:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
@@ -275,6 +276,9 @@ footer .footer-accent { color: var(--accent); }
 /* Animated gradient border on project cards */
 @keyframes rotateBorder { to { --border-angle: 360deg; } }
 @property --border-angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+@media (max-width: 768px) {
+  .project-card.border-animate { border: 1px solid transparent; background: linear-gradient(var(--bg-card), var(--bg-card)) padding-box, conic-gradient(from var(--border-angle), transparent 40%, var(--gradient-1), var(--gradient-2), transparent 60%) border-box; animation: rotateBorder 4s linear 1; }
+}
 
 /* Typewriter cursor */
 .typewriter-cursor { display: inline-block; width: 2px; height: 1.1em; background: var(--accent); margin-left: 2px; vertical-align: text-bottom; animation: blink 0.7s step-end infinite; }
@@ -1488,6 +1492,27 @@ const observer = new IntersectionObserver((entries) => {
   });
 }, observerOptions);
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+if (window.innerWidth <= 768) {
+  const borderObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('border-animate');
+        borderObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('.project-card').forEach(el => borderObserver.observe(el));
+}
+
+var marqueeWrap = document.querySelector('.skills-marquee-wrapper');
+if (marqueeWrap) {
+  new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      entry.target.classList.toggle('in-view', entry.isIntersecting);
+    });
+  }, { threshold: 0 }).observe(marqueeWrap);
+}
 
 const counterObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
