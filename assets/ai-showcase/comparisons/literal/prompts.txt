@@ -1,0 +1,29 @@
+=== Pair 1 (seed: 410001) ===
+BEFORE positive: girl with fire in her eyes, chibi, half body, white background
+BEFORE negative: bad quality
+AFTER positive: 1girl, intense eyes, fierce expression, glowing red eyes, determined look, chibi, half body portrait, head and shoulders, looking at viewer, masterpiece, best quality, ultra detailed, high resolution, vibrant anime color palette, rich saturated colors, deep colors, bold colors, high color separation, strong contrast, clean contrast, crisp lineart, smooth anti-aliased edges, cel-shading, dynamic lighting, soft rim lighting, controlled highlights, bright eyes with depth and sparkle, glossy skin, clear silhouette, modern anime illustration, polished digital art, studio-quality, simple white background, solid background
+AFTER negative: face only, head only, cropped at neck, neck crop, too close, extreme closeup, floating head, no body, disembodied, full body, legs visible, waist visible, complex background, detailed background, blurry, low quality, bad anatomy, extra limbs, deformed, ugly, text, watermark, signature, nsfw
+
+=== Pair 2 (seed: 420002) ===
+BEFORE positive: boy with a heart of gold, chibi, half body, white background
+BEFORE negative: bad quality
+AFTER positive: 1boy, kind expression, warm smile, gentle eyes, soft lighting, chibi, half body portrait, head and shoulders, looking at viewer, masterpiece, best quality, ultra detailed, high resolution, vibrant anime color palette, rich saturated colors, deep colors, bold colors, high color separation, strong contrast, clean contrast, crisp lineart, smooth anti-aliased edges, cel-shading, dynamic lighting, soft rim lighting, controlled highlights, bright eyes with depth and sparkle, glossy skin, clear silhouette, modern anime illustration, polished digital art, studio-quality, simple white background, solid background
+AFTER negative: face only, head only, cropped at neck, neck crop, too close, extreme closeup, floating head, no body, disembodied, full body, legs visible, waist visible, complex background, detailed background, blurry, low quality, bad anatomy, extra limbs, deformed, ugly, text, watermark, signature, nsfw
+
+=== Pair 3 (seed: 430003) ===
+BEFORE positive: girl who is a star, chibi, half body, white background
+BEFORE negative: bad quality
+AFTER positive: 1girl, idol, sparkling aura, stage lighting, confident pose, chibi, half body portrait, head and shoulders, looking at viewer, masterpiece, best quality, ultra detailed, high resolution, vibrant anime color palette, rich saturated colors, deep colors, bold colors, high color separation, strong contrast, clean contrast, crisp lineart, smooth anti-aliased edges, cel-shading, dynamic lighting, soft rim lighting, controlled highlights, bright eyes with depth and sparkle, glossy skin, clear silhouette, modern anime illustration, polished digital art, studio-quality, simple white background, solid background
+AFTER negative: face only, head only, cropped at neck, neck crop, too close, extreme closeup, floating head, no body, disembodied, full body, legs visible, waist visible, complex background, detailed background, blurry, low quality, bad anatomy, extra limbs, deformed, ugly, text, watermark, signature, nsfw
+
+=== Pair 4 (seed: 440004) ===
+BEFORE positive: boy with ice cold stare, chibi, half body, white background
+BEFORE negative: bad quality
+AFTER positive: 1boy, cold expression, piercing blue eyes, sharp gaze, cool demeanor, chibi, half body portrait, head and shoulders, looking at viewer, masterpiece, best quality, ultra detailed, high resolution, vibrant anime color palette, rich saturated colors, deep colors, bold colors, high color separation, strong contrast, clean contrast, crisp lineart, smooth anti-aliased edges, cel-shading, dynamic lighting, soft rim lighting, controlled highlights, bright eyes with depth and sparkle, glossy skin, clear silhouette, modern anime illustration, polished digital art, studio-quality, simple white background, solid background
+AFTER negative: face only, head only, cropped at neck, neck crop, too close, extreme closeup, floating head, no body, disembodied, full body, legs visible, waist visible, complex background, detailed background, blurry, low quality, bad anatomy, extra limbs, deformed, ugly, text, watermark, signature, nsfw
+
+=== Pair 5 (seed: 450005) ===
+BEFORE positive: girl with a broken heart crying, chibi, half body, white background
+BEFORE negative: bad quality
+AFTER positive: 1girl, sad expression, tears, crying, melancholic, emotional, chibi, half body portrait, head and shoulders, looking at viewer, masterpiece, best quality, ultra detailed, high resolution, vibrant anime color palette, rich saturated colors, deep colors, bold colors, high color separation, strong contrast, clean contrast, crisp lineart, smooth anti-aliased edges, cel-shading, dynamic lighting, soft rim lighting, controlled highlights, bright eyes with depth and sparkle, glossy skin, clear silhouette, modern anime illustration, polished digital art, studio-quality, simple white background, solid background
+AFTER negative: face only, head only, cropped at neck, neck crop, too close, extreme closeup, floating head, no body, disembodied, full body, legs visible, waist visible, complex background, detailed background, blurry, low quality, bad anatomy, extra limbs, deformed, ugly, text, watermark, signature, nsfw

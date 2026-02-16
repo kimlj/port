@@ -1,0 +1,29 @@
+=== Pair 1 (seed: 310001) ===
+BEFORE positive: bat girl hanging out at night, chibi, half body, white background
+BEFORE negative: bad quality
+AFTER positive: 1girl, bat wings, night sky, hanging upside down, chibi, half body portrait, head and shoulders, looking at viewer, masterpiece, best quality, ultra detailed, high resolution, vibrant anime color palette, rich saturated colors, deep colors, bold colors, high color separation, strong contrast, clean contrast, crisp lineart, smooth anti-aliased edges, cel-shading, dynamic lighting, soft rim lighting, controlled highlights, bright eyes with depth and sparkle, glossy skin, clear silhouette, modern anime illustration, polished digital art, studio-quality, simple white background, solid background
+AFTER negative: face only, head only, cropped at neck, neck crop, too close, extreme closeup, floating head, no body, disembodied, full body, legs visible, waist visible, complex background, detailed background, blurry, low quality, bad anatomy, extra limbs, deformed, ugly, text, watermark, signature, nsfw
+
+=== Pair 2 (seed: 320002) ===
+BEFORE positive: crane boy standing on one leg at construction site, chibi, half body, white background
+BEFORE negative: bad quality
+AFTER positive: 1boy, crane pose, hard hat, construction site background, chibi, half body portrait, head and shoulders, looking at viewer, masterpiece, best quality, ultra detailed, high resolution, vibrant anime color palette, rich saturated colors, deep colors, bold colors, high color separation, strong contrast, clean contrast, crisp lineart, smooth anti-aliased edges, cel-shading, dynamic lighting, soft rim lighting, controlled highlights, bright eyes with depth and sparkle, glossy skin, clear silhouette, modern anime illustration, polished digital art, studio-quality, simple white background, solid background
+AFTER negative: face only, head only, cropped at neck, neck crop, too close, extreme closeup, floating head, no body, disembodied, full body, legs visible, waist visible, complex background, detailed background, blurry, low quality, bad anatomy, extra limbs, deformed, ugly, text, watermark, signature, nsfw
+
+=== Pair 3 (seed: 330003) ===
+BEFORE positive: mouse girl sneaking around with cheese, chibi, half body, white background
+BEFORE negative: bad quality
+AFTER positive: 1girl, mouse ears, mouse tail, cheese, sneaking pose, chibi, half body portrait, head and shoulders, looking at viewer, masterpiece, best quality, ultra detailed, high resolution, vibrant anime color palette, rich saturated colors, deep colors, bold colors, high color separation, strong contrast, clean contrast, crisp lineart, smooth anti-aliased edges, cel-shading, dynamic lighting, soft rim lighting, controlled highlights, bright eyes with depth and sparkle, glossy skin, clear silhouette, modern anime illustration, polished digital art, studio-quality, simple white background, solid background
+AFTER negative: face only, head only, cropped at neck, neck crop, too close, extreme closeup, floating head, no body, disembodied, full body, legs visible, waist visible, complex background, detailed background, blurry, low quality, bad anatomy, extra limbs, deformed, ugly, text, watermark, signature, nsfw
+
+=== Pair 4 (seed: 340004) ===
+BEFORE positive: spider boy climbing a wall, chibi, half body, white background
+BEFORE negative: bad quality
+AFTER positive: 1boy, spider web pattern, climbing pose, wall background, chibi, half body portrait, head and shoulders, looking at viewer, masterpiece, best quality, ultra detailed, high resolution, vibrant anime color palette, rich saturated colors, deep colors, bold colors, high color separation, strong contrast, clean contrast, crisp lineart, smooth anti-aliased edges, cel-shading, dynamic lighting, soft rim lighting, controlled highlights, bright eyes with depth and sparkle, glossy skin, clear silhouette, modern anime illustration, polished digital art, studio-quality, simple white background, solid background
+AFTER negative: face only, head only, cropped at neck, neck crop, too close, extreme closeup, floating head, no body, disembodied, full body, legs visible, waist visible, complex background, detailed background, blurry, low quality, bad anatomy, extra limbs, deformed, ugly, text, watermark, signature, nsfw
+
+=== Pair 5 (seed: 350005) ===
+BEFORE positive: phoenix girl rising from flames, chibi, half body, white background
+BEFORE negative: bad quality
+AFTER positive: 1girl, fire wings, flame hair, rising pose, fire background, chibi, half body portrait, head and shoulders, looking at viewer, masterpiece, best quality, ultra detailed, high resolution, vibrant anime color palette, rich saturated colors, deep colors, bold colors, high color separation, strong contrast, clean contrast, crisp lineart, smooth anti-aliased edges, cel-shading, dynamic lighting, soft rim lighting, controlled highlights, bright eyes with depth and sparkle, glossy skin, clear silhouette, modern anime illustration, polished digital art, studio-quality, simple white background, solid background
+AFTER negative: face only, head only, cropped at neck, neck crop, too close, extreme closeup, floating head, no body, disembodied, full body, legs visible, waist visible, complex background, detailed background, blurry, low quality, bad anatomy, extra limbs, deformed, ugly, text, watermark, signature, nsfw

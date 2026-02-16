@@ -480,22 +480,58 @@ footer .footer-accent { color: var(--accent); }
 .showcase-flow-step .showcase-placeholder-label { font-size: 0.7rem; }
 .showcase-flow-step p { font-size: 0.75rem; color: var(--text-dim); font-weight: 300; }
 
-.showcase-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-.showcase-compare-side { border: 1px dashed var(--border); border-radius: 20px; padding: 2rem; background: rgba(var(--bg-card-r),var(--bg-card-g),var(--bg-card-b),0.5); transition: all 0.4s; }
+.compare-pairs { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+.compare-pair-label { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-dim); margin-bottom: 0.75rem; }
+.showcase-compare { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; align-items: center; }
+.showcase-compare-side { border: 1px dashed var(--border); border-radius: 20px; padding: 1.5rem; background: rgba(var(--bg-card-r),var(--bg-card-g),var(--bg-card-b),0.5); transition: all 0.4s; text-align: center; }
 .showcase-compare-side:hover { border-color: var(--border-hover); }
-.showcase-compare-label { font-family: var(--mono); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 1rem; display: inline-block; padding: 0.3rem 0.7rem; border-radius: 6px; }
+.showcase-compare-label { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.75rem; display: inline-block; padding: 0.25rem 0.6rem; border-radius: 6px; }
 .showcase-compare-label.before { color: var(--text-dim); background: var(--white-overlay); border: 1px solid var(--border); }
 .showcase-compare-label.after { color: var(--accent); background: var(--accent-dim); border: 1px solid rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.15); }
-.showcase-compare-side .placeholder-img { width: 100%; aspect-ratio: 1; border-radius: 12px; background: var(--bg-card); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
-.showcase-compare-side .placeholder-img svg { width: 32px; height: 32px; stroke: var(--text-dim); fill: none; stroke-width: 1; opacity: 0.3; }
-.showcase-compare-side p { font-size: 0.78rem; color: var(--text-dim); font-weight: 300; font-style: italic; line-height: 1.5; }
+.showcase-compare-side .compare-img { width: 140px; height: 140px; border-radius: 50%; background: var(--bg-card); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem; overflow: hidden; }
+.showcase-compare-side .compare-img img { width: 100%; height: 100%; object-fit: cover; }
+.showcase-compare-side .compare-img svg { width: 28px; height: 28px; stroke: var(--text-dim); fill: none; stroke-width: 1; opacity: 0.3; }
+.showcase-compare-arrow { color: var(--text-dim); font-size: 1.25rem; }
+.showcase-compare-side p { font-size: 0.68rem; color: var(--text-dim); font-weight: 300; font-style: italic; line-height: 1.5; }
+
+.sampler-settings { margin-top: 2rem; }
+.sampler-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+.sampler-param { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.85rem; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-card); }
+.sampler-key { font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.04em; }
+.sampler-val { font-family: var(--mono); font-size: 0.72rem; color: var(--accent); font-weight: 500; }
+.sampler-note { font-size: 0.72rem; color: var(--text-dim); font-weight: 300; font-style: italic; line-height: 1.6; margin-top: 0.75rem; max-width: 600px; }
+
+.prompt-tabs { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+.prompt-tab { font-family: var(--mono); font-size: 0.7rem; padding: 0.4rem 1rem; border-radius: 999px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); cursor: pointer; transition: all 0.25s; letter-spacing: 0.02em; }
+.prompt-tab:hover { border-color: var(--border-hover); color: var(--text); }
+.prompt-tab.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+.prompt-category { display: none; }
+.prompt-category.active { display: block; }
+.prompt-category-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1.5rem; font-weight: 300; }
+.prompt-display { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
+.prompt-block { padding: 0.85rem 1rem; border-radius: 10px; border: 1px solid var(--border); background: var(--bg-card); font-family: var(--mono); font-size: 0.65rem; line-height: 1.7; word-break: break-word; }
+.prompt-block-label { font-family: var(--sans); font-size: 0.6rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.5rem; }
+.prompt-block.before .prompt-block-label { color: var(--text-dim); }
+.prompt-block.before { color: var(--text-dim); }
+.prompt-block.after .prompt-block-label { color: var(--accent); }
+.prompt-block.after { color: var(--text-muted); border-color: rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.15); }
+.prompt-seed { text-align: center; margin-top: 0.75rem; font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim); letter-spacing: 0.04em; opacity: 0.7; }
+.prompt-nav { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: 1.25rem; }
+.prompt-nav-btn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); background: transparent; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.25s; font-size: 0.85rem; }
+.prompt-nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+.prompt-nav-counter { font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim); letter-spacing: 0.05em; min-width: 3rem; text-align: center; }
 
 @media (max-width: 768px) {
   .avatar-accordion-body { grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
   .avatar-cell .prompt-overlay span { font-size: 0.42rem; }
   .showcase-flow { grid-template-columns: 1fr; gap: 0.75rem; }
   .showcase-flow-arrow { transform: rotate(90deg); justify-self: center; }
+  .compare-pairs { grid-template-columns: 1fr; }
   .showcase-compare { grid-template-columns: 1fr; }
+  .showcase-compare-arrow { transform: rotate(90deg); justify-self: center; }
+  .prompt-display { grid-template-columns: 1fr; }
+  .prompt-tabs { gap: 0.35rem; }
+  .prompt-tab { font-size: 0.6rem; padding: 0.35rem 0.75rem; }
   .workflow-scroll-hint { display: none; }
   .workflow-image-wrap { padding: 0.75rem; }
   .workflow-image-wrap img { width: 100%; }
@@ -1026,21 +1062,142 @@ footer .footer-accent { color: var(--accent); }
       <h3>Optimization Process</h3>
       <p class="showcase-caption">Iterative prompt refinement — testing how specific tokens affect output quality and consistency.</p>
     </div>
-    <div class="showcase-compare">
-      <div class="showcase-compare-side">
-        <span class="showcase-compare-label before">Before</span>
-        <div class="placeholder-img">
-          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+    <div class="prompt-tabs" id="promptTabs">
+      <button class="prompt-tab active" data-cat="animal">Wording &amp; Tags</button>
+      <button class="prompt-tab" data-cat="double-meaning">Double Meaning</button>
+      <button class="prompt-tab" data-cat="literal">Literal vs Figurative</button>
+      <button class="prompt-tab" data-cat="specificity">Specificity</button>
+    </div>
+
+    <div class="prompt-category active" data-cat="animal">
+      <p class="prompt-category-desc">How natural language vs structured tags changes what the model generates — "cat girl" becomes a literal cat.</p>
+      <div class="showcase-compare" id="compare-animal">
+        <div class="showcase-compare-side">
+          <span class="showcase-compare-label before">Before</span>
+          <div class="compare-img"><img id="img-animal-before" src="assets/ai-showcase/comparisons/animal/before_1.png" alt="Before"></div>
         </div>
-        <p>"cute anime girl, chibi style, white background"</p>
-      </div>
-      <div class="showcase-compare-side">
-        <span class="showcase-compare-label after">After</span>
-        <div class="placeholder-img">
-          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+        <span class="showcase-compare-arrow">&rarr;</span>
+        <div class="showcase-compare-side">
+          <span class="showcase-compare-label after">After</span>
+          <div class="compare-img"><img id="img-animal-after" src="assets/ai-showcase/comparisons/animal/after_1.png" alt="After"></div>
         </div>
-        <p>"1girl, chibi, bust portrait, sharp eye highlights, vibrant anime color palette, cel-shading, crisp lineart..."</p>
       </div>
+      <p class="prompt-seed" id="seed-animal">same seed: 300003</p>
+      <div class="prompt-display">
+        <div class="prompt-block before"><div class="prompt-block-label">Before Prompt</div><span id="prompt-animal-before"></span></div>
+        <div class="prompt-block after"><div class="prompt-block-label">After Prompt</div><span id="prompt-animal-after"></span></div>
+      </div>
+      <div class="prompt-nav">
+        <button class="prompt-nav-btn" data-dir="prev" data-cat="animal">&#8249;</button>
+        <span class="prompt-nav-counter" id="nav-animal">1 / 5</span>
+        <button class="prompt-nav-btn" data-dir="next" data-cat="animal">&#8250;</button>
+      </div>
+    </div>
+
+    <div class="prompt-category" data-cat="double-meaning">
+      <p class="prompt-category-desc">Words with multiple meanings confuse the model — "bat girl" could be a bat or a girl with bat wings.</p>
+      <div class="showcase-compare" id="compare-double-meaning">
+        <div class="showcase-compare-side">
+          <span class="showcase-compare-label before">Before</span>
+          <div class="compare-img"><img id="img-double-meaning-before" src="assets/ai-showcase/comparisons/double-meaning/before_1.png" alt="Before"></div>
+        </div>
+        <span class="showcase-compare-arrow">&rarr;</span>
+        <div class="showcase-compare-side">
+          <span class="showcase-compare-label after">After</span>
+          <div class="compare-img"><img id="img-double-meaning-after" src="assets/ai-showcase/comparisons/double-meaning/after_1.png" alt="After"></div>
+        </div>
+      </div>
+      <p class="prompt-seed" id="seed-double-meaning">same seed: 310001</p>
+      <div class="prompt-display">
+        <div class="prompt-block before"><div class="prompt-block-label">Before Prompt</div><span id="prompt-double-meaning-before"></span></div>
+        <div class="prompt-block after"><div class="prompt-block-label">After Prompt</div><span id="prompt-double-meaning-after"></span></div>
+      </div>
+      <div class="prompt-nav">
+        <button class="prompt-nav-btn" data-dir="prev" data-cat="double-meaning">&#8249;</button>
+        <span class="prompt-nav-counter" id="nav-double-meaning">1 / 5</span>
+        <button class="prompt-nav-btn" data-dir="next" data-cat="double-meaning">&#8250;</button>
+      </div>
+    </div>
+
+    <div class="prompt-category" data-cat="literal">
+      <p class="prompt-category-desc">Figurative speech gets interpreted literally — "fire in her eyes" produces actual flames.</p>
+      <div class="showcase-compare" id="compare-literal">
+        <div class="showcase-compare-side">
+          <span class="showcase-compare-label before">Before</span>
+          <div class="compare-img"><img id="img-literal-before" src="assets/ai-showcase/comparisons/literal/before_1.png" alt="Before"></div>
+        </div>
+        <span class="showcase-compare-arrow">&rarr;</span>
+        <div class="showcase-compare-side">
+          <span class="showcase-compare-label after">After</span>
+          <div class="compare-img"><img id="img-literal-after" src="assets/ai-showcase/comparisons/literal/after_1.png" alt="After"></div>
+        </div>
+      </div>
+      <p class="prompt-seed" id="seed-literal">same seed: 410001</p>
+      <div class="prompt-display">
+        <div class="prompt-block before"><div class="prompt-block-label">Before Prompt</div><span id="prompt-literal-before"></span></div>
+        <div class="prompt-block after"><div class="prompt-block-label">After Prompt</div><span id="prompt-literal-after"></span></div>
+      </div>
+      <div class="prompt-nav">
+        <button class="prompt-nav-btn" data-dir="prev" data-cat="literal">&#8249;</button>
+        <span class="prompt-nav-counter" id="nav-literal">1 / 5</span>
+        <button class="prompt-nav-btn" data-dir="next" data-cat="literal">&#8250;</button>
+      </div>
+    </div>
+
+    <div class="prompt-category" data-cat="specificity">
+      <p class="prompt-category-desc">Vague descriptions produce generic output — detailed tags create unique characters.</p>
+      <div class="showcase-compare" id="compare-specificity">
+        <div class="showcase-compare-side">
+          <span class="showcase-compare-label before">Before</span>
+          <div class="compare-img"><img id="img-specificity-before" src="assets/ai-showcase/comparisons/specificity/before_1.png" alt="Before"></div>
+        </div>
+        <span class="showcase-compare-arrow">&rarr;</span>
+        <div class="showcase-compare-side">
+          <span class="showcase-compare-label after">After</span>
+          <div class="compare-img"><img id="img-specificity-after" src="assets/ai-showcase/comparisons/specificity/after_1.png" alt="After"></div>
+        </div>
+      </div>
+      <p class="prompt-seed" id="seed-specificity">same seed: 510001</p>
+      <div class="prompt-display">
+        <div class="prompt-block before"><div class="prompt-block-label">Before Prompt</div><span id="prompt-specificity-before"></span></div>
+        <div class="prompt-block after"><div class="prompt-block-label">After Prompt</div><span id="prompt-specificity-after"></span></div>
+      </div>
+      <div class="prompt-nav">
+        <button class="prompt-nav-btn" data-dir="prev" data-cat="specificity">&#8249;</button>
+        <span class="prompt-nav-counter" id="nav-specificity">1 / 5</span>
+        <button class="prompt-nav-btn" data-dir="next" data-cat="specificity">&#8250;</button>
+      </div>
+    </div>
+
+    <div class="sampler-settings">
+      <p class="compare-pair-label">KSampler Settings</p>
+      <div class="sampler-grid">
+        <div class="sampler-param">
+          <span class="sampler-key">steps</span>
+          <span class="sampler-val">30</span>
+        </div>
+        <div class="sampler-param">
+          <span class="sampler-key">cfg</span>
+          <span class="sampler-val">4.0</span>
+        </div>
+        <div class="sampler-param">
+          <span class="sampler-key">sampler</span>
+          <span class="sampler-val">res_multistep</span>
+        </div>
+        <div class="sampler-param">
+          <span class="sampler-key">scheduler</span>
+          <span class="sampler-val">simple</span>
+        </div>
+        <div class="sampler-param">
+          <span class="sampler-key">denoise</span>
+          <span class="sampler-val">1.0</span>
+        </div>
+        <div class="sampler-param">
+          <span class="sampler-key">resolution</span>
+          <span class="sampler-val">1024 &times; 1024</span>
+        </div>
+      </div>
+      <p class="sampler-note">30 steps with res_multistep sampler + ModelSamplingAuraFlow (shift 4.0) for clean Lumina-based generation; low cfg preserves natural detail.</p>
     </div>
   </div>
 </section>
@@ -1687,6 +1844,98 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
     if (!localStorage.getItem('theme')) {
       setTheme(e.matches ? 'light' : 'dark', true);
     }
+  });
+})();
+
+// Prompt Engineering Category Browser
+(function() {
+  var base = 'assets/ai-showcase/comparisons/';
+  var data = {
+    animal: {
+      count: 5, seeds: [300003, 600006, 700007, 800008, 900009],
+      pairs: [
+        { before: 'cat girl with lollipop winking, chibi, half body, white background', after: '1girl, cat ears, lollipop, wink, chibi, half body portrait, head and shoulders, looking at viewer, masterpiece, best quality...' },
+        { before: 'bunny girl with bow tie smiling, chibi, half body, white background', after: '1girl, rabbit ears, bow tie, smile, chibi, half body portrait, head and shoulders, looking at viewer, masterpiece, best quality...' },
+        { before: 'fox boy with scarf looking cool, chibi, half body, white background', after: '1boy, fox ears, fox tail, scarf, cool expression, chibi, half body portrait, head and shoulders, looking at viewer, masterpiece, best quality...' },
+        { before: 'wolf girl howling under moon, chibi, half body, white background', after: '1girl, wolf ears, wolf tail, moon, howling pose, chibi, half body portrait, head and shoulders, looking at viewer, masterpiece, best quality...' },
+        { before: 'dog boy with collar and jacket, chibi, half body, white background', after: '1boy, dog ears, collar, jacket, chibi, half body portrait, head and shoulders, looking at viewer, masterpiece, best quality...' }
+      ]
+    },
+    'double-meaning': {
+      count: 5, seeds: [310001, 320002, 330003, 340004, 350005],
+      pairs: [
+        { before: 'bat girl hanging out at night, chibi, half body, white background', after: '1girl, bat wings, night sky, hanging upside down, chibi, half body portrait, head and shoulders, looking at viewer, masterpiece, best quality...' },
+        { before: 'crane boy standing on one leg at construction site, chibi, half body, white background', after: '1boy, crane pose, hard hat, construction site background, chibi, half body portrait, head and shoulders, looking at viewer, masterpiece, best quality...' },
+        { before: 'mouse girl sneaking around with cheese, chibi, half body, white background', after: '1girl, mouse ears, mouse tail, cheese, sneaking pose, chibi, half body portrait, head and shoulders, looking at viewer, masterpiece, best quality...' },
+        { before: 'spider boy climbing a wall, chibi, half body, white background', after: '1boy, spider web pattern, climbing pose, wall background, chibi, half body portrait, head and shoulders, looking at viewer, masterpiece, best quality...' },
+        { before: 'phoenix girl rising from flames, chibi, half body, white background', after: '1girl, fire wings, flame hair, rising pose, fire background, chibi, half body portrait, head and shoulders, looking at viewer, masterpiece, best quality...' }
+      ]
+    },
+    literal: {
+      count: 5, seeds: [410001, 420002, 430003, 440004, 450005],
+      pairs: [
+        { before: 'girl with fire in her eyes, chibi, half body, white background', after: '1girl, intense eyes, fierce expression, glowing red eyes, determined look, chibi, half body portrait, head and shoulders, looking at viewer, masterpiece, best quality...' },
+        { before: 'boy with a heart of gold, chibi, half body, white background', after: '1boy, kind expression, warm smile, gentle eyes, soft lighting, chibi, half body portrait, head and shoulders, looking at viewer, masterpiece, best quality...' },
+        { before: 'girl who is a star, chibi, half body, white background', after: '1girl, idol, sparkling aura, stage lighting, confident pose, chibi, half body portrait, head and shoulders, looking at viewer, masterpiece, best quality...' },
+        { before: 'boy with ice cold stare, chibi, half body, white background', after: '1boy, cold expression, piercing blue eyes, sharp gaze, cool demeanor, chibi, half body portrait, head and shoulders, looking at viewer, masterpiece, best quality...' },
+        { before: 'girl with a broken heart crying, chibi, half body, white background', after: '1girl, sad expression, tears, crying, melancholic, emotional, chibi, half body portrait, head and shoulders, looking at viewer, masterpiece, best quality...' }
+      ]
+    },
+    specificity: {
+      count: 5, seeds: [510001, 520002, 530003, 540004, 550005],
+      pairs: [
+        { before: 'pretty anime girl, chibi, half body, white background', after: '1girl, silver hair, twin braids, blue eyes, sailor uniform, hair ribbons, chibi, half body portrait, head and shoulders, looking at viewer, masterpiece, best quality...' },
+        { before: 'cool anime boy, chibi, half body, white background', after: '1boy, messy black hair, red eyes, scar on cheek, leather jacket, chain necklace, chibi, half body portrait, head and shoulders, looking at viewer, masterpiece, best quality...' },
+        { before: 'cute girl with hat, chibi, half body, white background', after: '1girl, blonde hair, side ponytail, green eyes, oversized witch hat, freckles, chibi, half body portrait, head and shoulders, looking at viewer, masterpiece, best quality...' },
+        { before: 'strong boy warrior, chibi, half body, white background', after: '1boy, white hair, eyepatch, armored shoulder pad, battle scars, fierce expression, chibi, half body portrait, head and shoulders, looking at viewer, masterpiece, best quality...' },
+        { before: 'magical girl, chibi, half body, white background', after: '1girl, pink gradient hair, heterochromia, star-shaped pupils, magical staff, frilly dress, chibi, half body portrait, head and shoulders, looking at viewer, masterpiece, best quality...' }
+      ]
+    }
+  };
+
+  var state = { animal: 0, 'double-meaning': 0, literal: 0, specificity: 0 };
+
+  function update(cat) {
+    var idx = state[cat];
+    var pair = data[cat].pairs[idx];
+    var n = (idx + 1);
+    document.getElementById('img-' + cat + '-before').src = base + cat + '/before_' + n + '.png';
+    document.getElementById('img-' + cat + '-after').src = base + cat + '/after_' + n + '.png';
+    document.getElementById('prompt-' + cat + '-before').textContent = pair.before;
+    document.getElementById('prompt-' + cat + '-after').textContent = pair.after;
+    document.getElementById('nav-' + cat).textContent = n + ' / ' + data[cat].count;
+    document.getElementById('seed-' + cat).textContent = 'same seed: ' + data[cat].seeds[idx];
+    // preload adjacent
+    var nextIdx = (idx + 1) % data[cat].count;
+    var nn = nextIdx + 1;
+    new Image().src = base + cat + '/before_' + nn + '.png';
+    new Image().src = base + cat + '/after_' + nn + '.png';
+  }
+
+  // Init all categories
+  Object.keys(data).forEach(function(cat) { update(cat); });
+
+  // Tab clicks
+  document.getElementById('promptTabs').addEventListener('click', function(e) {
+    var tab = e.target.closest('.prompt-tab');
+    if (!tab) return;
+    var cat = tab.dataset.cat;
+    document.querySelectorAll('.prompt-tab').forEach(function(t) { t.classList.remove('active'); });
+    tab.classList.add('active');
+    document.querySelectorAll('.prompt-category').forEach(function(c) { c.classList.remove('active'); });
+    document.querySelector('.prompt-category[data-cat="' + cat + '"]').classList.add('active');
+  });
+
+  // Nav clicks
+  document.querySelectorAll('.prompt-nav-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var cat = btn.dataset.cat;
+      var dir = btn.dataset.dir;
+      var count = data[cat].count;
+      if (dir === 'next') state[cat] = (state[cat] + 1) % count;
+      else state[cat] = (state[cat] - 1 + count) % count;
+      update(cat);
+    });
   });
 })();
 </script>
