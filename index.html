@@ -1074,12 +1074,12 @@ footer .footer-accent { color: var(--accent); }
       <div class="showcase-compare" id="compare-animal">
         <div class="showcase-compare-side">
           <span class="showcase-compare-label before">Before</span>
-          <div class="compare-img"><img id="img-animal-before" src="assets/ai-showcase/comparisons/animal/before_1.png" alt="Before"></div>
+          <div class="compare-img"><img id="img-animal-before" src="assets/ai-showcase/comparisons/animal/before_1.webp" alt="Before"></div>
         </div>
         <span class="showcase-compare-arrow">&rarr;</span>
         <div class="showcase-compare-side">
           <span class="showcase-compare-label after">After</span>
-          <div class="compare-img"><img id="img-animal-after" src="assets/ai-showcase/comparisons/animal/after_1.png" alt="After"></div>
+          <div class="compare-img"><img id="img-animal-after" src="assets/ai-showcase/comparisons/animal/after_1.webp" alt="After"></div>
         </div>
       </div>
       <p class="prompt-seed" id="seed-animal">same seed: 300003</p>
@@ -1099,12 +1099,12 @@ footer .footer-accent { color: var(--accent); }
       <div class="showcase-compare" id="compare-double-meaning">
         <div class="showcase-compare-side">
           <span class="showcase-compare-label before">Before</span>
-          <div class="compare-img"><img id="img-double-meaning-before" src="assets/ai-showcase/comparisons/double-meaning/before_1.png" alt="Before"></div>
+          <div class="compare-img"><img id="img-double-meaning-before" src="assets/ai-showcase/comparisons/double-meaning/before_1.webp" alt="Before"></div>
         </div>
         <span class="showcase-compare-arrow">&rarr;</span>
         <div class="showcase-compare-side">
           <span class="showcase-compare-label after">After</span>
-          <div class="compare-img"><img id="img-double-meaning-after" src="assets/ai-showcase/comparisons/double-meaning/after_1.png" alt="After"></div>
+          <div class="compare-img"><img id="img-double-meaning-after" src="assets/ai-showcase/comparisons/double-meaning/after_1.webp" alt="After"></div>
         </div>
       </div>
       <p class="prompt-seed" id="seed-double-meaning">same seed: 310001</p>
@@ -1124,12 +1124,12 @@ footer .footer-accent { color: var(--accent); }
       <div class="showcase-compare" id="compare-literal">
         <div class="showcase-compare-side">
           <span class="showcase-compare-label before">Before</span>
-          <div class="compare-img"><img id="img-literal-before" src="assets/ai-showcase/comparisons/literal/before_1.png" alt="Before"></div>
+          <div class="compare-img"><img id="img-literal-before" src="assets/ai-showcase/comparisons/literal/before_1.webp" alt="Before"></div>
         </div>
         <span class="showcase-compare-arrow">&rarr;</span>
         <div class="showcase-compare-side">
           <span class="showcase-compare-label after">After</span>
-          <div class="compare-img"><img id="img-literal-after" src="assets/ai-showcase/comparisons/literal/after_1.png" alt="After"></div>
+          <div class="compare-img"><img id="img-literal-after" src="assets/ai-showcase/comparisons/literal/after_1.webp" alt="After"></div>
         </div>
       </div>
       <p class="prompt-seed" id="seed-literal">same seed: 410001</p>
@@ -1149,12 +1149,12 @@ footer .footer-accent { color: var(--accent); }
       <div class="showcase-compare" id="compare-specificity">
         <div class="showcase-compare-side">
           <span class="showcase-compare-label before">Before</span>
-          <div class="compare-img"><img id="img-specificity-before" src="assets/ai-showcase/comparisons/specificity/before_1.png" alt="Before"></div>
+          <div class="compare-img"><img id="img-specificity-before" src="assets/ai-showcase/comparisons/specificity/before_1.webp" alt="Before"></div>
         </div>
         <span class="showcase-compare-arrow">&rarr;</span>
         <div class="showcase-compare-side">
           <span class="showcase-compare-label after">After</span>
-          <div class="compare-img"><img id="img-specificity-after" src="assets/ai-showcase/comparisons/specificity/after_1.png" alt="After"></div>
+          <div class="compare-img"><img id="img-specificity-after" src="assets/ai-showcase/comparisons/specificity/after_1.webp" alt="After"></div>
         </div>
       </div>
       <p class="prompt-seed" id="seed-specificity">same seed: 510001</p>
@@ -1899,8 +1899,8 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
     var idx = state[cat];
     var pair = data[cat].pairs[idx];
     var n = (idx + 1);
-    document.getElementById('img-' + cat + '-before').src = base + cat + '/before_' + n + '.png';
-    document.getElementById('img-' + cat + '-after').src = base + cat + '/after_' + n + '.png';
+    document.getElementById('img-' + cat + '-before').src = base + cat + '/before_' + n + '.webp';
+    document.getElementById('img-' + cat + '-after').src = base + cat + '/after_' + n + '.webp';
     document.getElementById('prompt-' + cat + '-before').textContent = pair.before;
     document.getElementById('prompt-' + cat + '-after').textContent = pair.after;
     document.getElementById('nav-' + cat).textContent = n + ' / ' + data[cat].count;
@@ -1908,8 +1908,8 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
     // preload adjacent
     var nextIdx = (idx + 1) % data[cat].count;
     var nn = nextIdx + 1;
-    new Image().src = base + cat + '/before_' + nn + '.png';
-    new Image().src = base + cat + '/after_' + nn + '.png';
+    new Image().src = base + cat + '/before_' + nn + '.webp';
+    new Image().src = base + cat + '/after_' + nn + '.webp';
   }
 
   // Init all categories
