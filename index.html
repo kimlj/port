@@ -752,9 +752,9 @@ footer .footer-accent { color: var(--accent); }
     </div>
     <div class="prompt-tabs" id="promptTabs">
       <button class="prompt-tab active" data-cat="animal">Wording &amp; Tags</button>
+      <button class="prompt-tab" data-cat="specificity">Specificity</button>
       <button class="prompt-tab" data-cat="double-meaning">Double Meaning</button>
       <button class="prompt-tab" data-cat="literal">Literal vs Figurative</button>
-      <button class="prompt-tab" data-cat="specificity">Specificity</button>
     </div>
 
     <div class="prompt-category active" data-cat="animal">
@@ -779,6 +779,31 @@ footer .footer-accent { color: var(--accent); }
         <button class="prompt-nav-btn" data-dir="prev" data-cat="animal">&#8249;</button>
         <span class="prompt-nav-counter" id="nav-animal">1 / 5</span>
         <button class="prompt-nav-btn" data-dir="next" data-cat="animal">&#8250;</button>
+      </div>
+    </div>
+
+    <div class="prompt-category" data-cat="specificity">
+      <p class="prompt-category-desc">Vague descriptions produce generic output — detailed tags create unique characters.</p>
+      <div class="showcase-compare" id="compare-specificity">
+        <div class="showcase-compare-side">
+          <span class="showcase-compare-label before">Before</span>
+          <div class="compare-img"><img id="img-specificity-before" src="assets/ai-showcase/comparisons/specificity/before_1.webp" alt="Before"></div>
+        </div>
+        <span class="showcase-compare-arrow">&rarr;</span>
+        <div class="showcase-compare-side">
+          <span class="showcase-compare-label after">After</span>
+          <div class="compare-img"><img id="img-specificity-after" src="assets/ai-showcase/comparisons/specificity/after_1.webp" alt="After"></div>
+        </div>
+      </div>
+      <p class="prompt-seed" id="seed-specificity">same seed: 510001</p>
+      <div class="prompt-display">
+        <div class="prompt-block before"><div class="prompt-block-label">Before Prompt</div><span id="prompt-specificity-before"></span></div>
+        <div class="prompt-block after"><div class="prompt-block-label">After Prompt</div><span id="prompt-specificity-after"></span></div>
+      </div>
+      <div class="prompt-nav">
+        <button class="prompt-nav-btn" data-dir="prev" data-cat="specificity">&#8249;</button>
+        <span class="prompt-nav-counter" id="nav-specificity">1 / 5</span>
+        <button class="prompt-nav-btn" data-dir="next" data-cat="specificity">&#8250;</button>
       </div>
     </div>
 
@@ -829,31 +854,6 @@ footer .footer-accent { color: var(--accent); }
         <button class="prompt-nav-btn" data-dir="prev" data-cat="literal">&#8249;</button>
         <span class="prompt-nav-counter" id="nav-literal">1 / 5</span>
         <button class="prompt-nav-btn" data-dir="next" data-cat="literal">&#8250;</button>
-      </div>
-    </div>
-
-    <div class="prompt-category" data-cat="specificity">
-      <p class="prompt-category-desc">Vague descriptions produce generic output — detailed tags create unique characters.</p>
-      <div class="showcase-compare" id="compare-specificity">
-        <div class="showcase-compare-side">
-          <span class="showcase-compare-label before">Before</span>
-          <div class="compare-img"><img id="img-specificity-before" src="assets/ai-showcase/comparisons/specificity/before_1.webp" alt="Before"></div>
-        </div>
-        <span class="showcase-compare-arrow">&rarr;</span>
-        <div class="showcase-compare-side">
-          <span class="showcase-compare-label after">After</span>
-          <div class="compare-img"><img id="img-specificity-after" src="assets/ai-showcase/comparisons/specificity/after_1.webp" alt="After"></div>
-        </div>
-      </div>
-      <p class="prompt-seed" id="seed-specificity">same seed: 510001</p>
-      <div class="prompt-display">
-        <div class="prompt-block before"><div class="prompt-block-label">Before Prompt</div><span id="prompt-specificity-before"></span></div>
-        <div class="prompt-block after"><div class="prompt-block-label">After Prompt</div><span id="prompt-specificity-after"></span></div>
-      </div>
-      <div class="prompt-nav">
-        <button class="prompt-nav-btn" data-dir="prev" data-cat="specificity">&#8249;</button>
-        <span class="prompt-nav-counter" id="nav-specificity">1 / 5</span>
-        <button class="prompt-nav-btn" data-dir="next" data-cat="specificity">&#8250;</button>
       </div>
     </div>
 
