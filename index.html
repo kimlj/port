@@ -285,8 +285,6 @@ footer .footer-accent { color: var(--accent); }
 }
 
 /* Typewriter cursor */
-.typewriter-cursor { display: inline-block; width: 2px; height: 1.1em; background: var(--accent); margin-left: 2px; vertical-align: text-bottom; animation: blink 0.7s step-end infinite; }
-@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
 /* Magnetic button */
 .btn-magnetic { transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
@@ -1619,28 +1617,6 @@ document.querySelectorAll('.spotlight-card').forEach(card => {
   });
 });
 
-// 3. Typewriter effect on hero subtitle
-(function() {
-  const sub = document.querySelector('.hero-sub');
-  const fullText = sub.textContent;
-  sub.textContent = '';
-  sub.style.opacity = '1';
-  sub.style.animation = 'none';
-  const cursor = document.createElement('span');
-  cursor.className = 'typewriter-cursor';
-  sub.appendChild(cursor);
-  let i = 0;
-  function type() {
-    if (i < fullText.length) {
-      sub.insertBefore(document.createTextNode(fullText[i]), cursor);
-      i++;
-      setTimeout(type, 22 + Math.random() * 20);
-    } else {
-      setTimeout(() => cursor.remove(), 2500);
-    }
-  }
-  setTimeout(type, 1200);
-})();
 
 // 4. Magnetic buttons (desktop only)
 if (window.innerWidth > 768) {
