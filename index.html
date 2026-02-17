@@ -67,6 +67,7 @@
 [data-theme="light"] .pv-2 { background: linear-gradient(135deg, #d0f0e8, #b8ead8, #c8f0e0); }
 [data-theme="light"] .pv-3 { background: linear-gradient(135deg, #e0d8f5, #d4c8f0, #dcd0f5); }
 [data-theme="light"] .pv-4 { background: linear-gradient(135deg, #f0eed0, #ead8b8, #e8dcc0); }
+[data-theme="light"] .pv-5 { background: linear-gradient(135deg, #d0ddf0, #b8c8ea, #c8d4f0); }
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: hidden; }
 body { font-family: var(--sans); background: var(--bg); color: var(--text); overflow-x: hidden; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; }
@@ -183,17 +184,20 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 .project-card:hover { border: 1px solid transparent; background: linear-gradient(var(--bg-card), var(--bg-card)) padding-box, conic-gradient(from var(--border-angle), transparent 40%, var(--gradient-1), var(--gradient-2), transparent 60%) border-box; transform: translateY(-4px); box-shadow: 0 20px 60px var(--shadow); animation: rotateBorder 3s linear infinite; }
 .project-info { padding: 3rem; display: flex; flex-direction: column; justify-content: center; }
 .project-tag { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent); margin-bottom: 1rem; }
+.project-status { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); background: var(--white-overlay); border: 1px solid var(--border); padding: 0.2rem 0.6rem; border-radius: 999px; margin-left: 0.75rem; }
 .project-info h3 { font-family: var(--serif); font-size: 1.8rem; font-weight: 400; margin-bottom: 0.75rem; }
 .project-info p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.7; font-weight: 300; }
 .project-origin { font-size: 0.82rem; color: var(--text-muted); font-style: italic; line-height: 1.65; font-weight: 300; margin-bottom: 0.5rem; opacity: 0.85; }
 .project-tech { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.25rem; }
 .project-tech span { font-family: var(--mono); font-size: 0.7rem; padding: 0.35rem 0.75rem; border: 1px solid var(--border); border-radius: 100px; color: var(--text-dim); }
+.project-tech span.hl { border-color: rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.3); color: var(--accent); background: var(--accent-dim); }
 .project-visual { min-height: 320px; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 .project-visual-bg { position: absolute; inset: 0; }
 .pv-1 { background: linear-gradient(135deg, #0d1a00, #1a2e00, #0d1a0a); }
 .pv-2 { background: linear-gradient(135deg, #001a1a, #002e1a, #001a0d); }
 .pv-3 { background: linear-gradient(135deg, #1a0d1a, #0d001a, #0a0d1a); }
 .pv-4 { background: linear-gradient(135deg, #1a1a0d, #1a0d00, #0d0a00); }
+.pv-5 { background: linear-gradient(135deg, #0d0d1a, #001a2e, #0a0d1a); }
 .project-visual-content { position: relative; z-index: 1; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; }
 .project-visual-icon svg { width: 56px; height: 56px; stroke: var(--text-dim); fill: none; stroke-width: 1; opacity: 0.6; transition: all 0.4s; }
 .project-card:hover .project-visual-icon svg { stroke: var(--accent); opacity: 1; }
@@ -685,9 +689,9 @@ footer .footer-accent { color: var(--accent); }
       <div class="project-info">
         <span class="project-tag">Web &amp; Mobile App</span>
         <h3>WordWarz.io</h3>
-        <p class="project-origin">My family's competitive — we all play Wordle, and the trash talk never stops. "I got it in 3." "Yeah, but I was faster." I searched for a multiplayer version that rewards both speed and accuracy, but nothing existed — so I built one in a weekend. A single page, no backend. Then it hit me to go all in.</p>
-        <p>A real-time multiplayer word game available on web, iOS, and Android. Features competitive gameplay, custom avatar systems, and engaging social mechanics, currently in active development.</p>
-        <div class="project-tech"><span>React Native</span><span>Node.js</span><span>WebSocket</span><span>iOS</span><span>Android</span></div>
+        <p class="project-origin">My family's competitive Wordle trash talk needed a multiplayer version — none existed, so I built one.</p>
+        <p>A real-time multiplayer word game with a Shannon entropy–based AI engine that maximizes information gain per guess. Features a constraint-satisfaction solver for edge cases, 5-tier ELO matchmaking (600–2000) with probabilistic human imperfection modeling, adaptive difficulty scaling, and 60+ AI-generated avatars via custom ComfyUI pipelines.</p>
+        <div class="project-tech"><span class="hl">React Native</span><span>Node.js</span><span class="hl">WebSocket</span><span class="hl">Shannon Entropy</span><span class="hl">AI Engine</span><span>ELO System</span></div>
         <div class="project-link">Visit Site <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
       </div>
       <div class="project-visual">
@@ -701,7 +705,7 @@ footer .footer-accent { color: var(--accent); }
         <h3>Casinore.io</h3>
         <p class="project-origin">A hobby experiment — I wanted to explore Web3 by tinkering with open-source blockchain code and see how far I could push it.</p>
         <p>A decentralized, fully secure blockchain platform built with Privy for seamless wallet authentication. Features trustless architecture, on-chain transactions, and a robust security-first approach to Web3 gaming.</p>
-        <div class="project-tech"><span>Blockchain</span><span>Privy</span><span>Web3</span><span>Node.js</span><span>Decentralized</span></div>
+        <div class="project-tech"><span class="hl">Blockchain</span><span class="hl">Privy</span><span>Web3</span><span>Node.js</span><span>Decentralized</span></div>
         <div class="project-link">Visit Site <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
       </div>
       <div class="project-visual">
@@ -714,7 +718,7 @@ footer .footer-accent { color: var(--accent); }
         <span class="project-tag">E-Commerce &amp; AI</span>
         <h3>AI-Integrated BikeShop</h3>
         <p>A full-featured e-commerce platform for a bike shop, enhanced with AI-powered product recommendations and intelligent search. Built as a thesis project demonstrating LLM integration in online retail.</p>
-        <div class="project-tech"><span>React</span><span>Next.js</span><span>AI / LLM</span><span>Vercel</span></div>
+        <div class="project-tech"><span>React</span><span>Next.js</span><span class="hl">AI / LLM</span><span>Vercel</span></div>
         <div class="project-link">Visit Site <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
       </div>
       <div class="project-visual">
@@ -727,13 +731,29 @@ footer .footer-accent { color: var(--accent); }
         <span class="project-tag">Enterprise Software</span>
         <h3>Automated Warehouse Inventory System</h3>
         <p>Developed during OJT, a comprehensive automated inventory management system for warehouse operations. Features real-time stock tracking, automated reorder triggers, and detailed analytics dashboards.</p>
-        <div class="project-tech"><span>SQL</span><span>Node.js</span><span>Database</span><span>Automation</span></div>
+        <div class="project-tech"><span>SQL</span><span>Node.js</span><span class="hl">Database</span><span class="hl">Automation</span></div>
       </div>
       <div class="project-visual">
         <div class="project-visual-bg pv-4"></div>
         <div class="project-visual-content">
           <div class="project-visual-icon"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div>
           <div class="project-visual-label">inventory system</div>
+        </div>
+      </div>
+    </div>
+    <div class="project-card reveal spotlight-card">
+      <div class="project-info">
+        <span class="project-tag">AI &amp; Automation</span>
+        <span class="project-status">In Development</span>
+        <h3>AI Job Matcher</h3>
+        <p>A web extension that scrapes job listings, parses structured data, and matches roles using resume-aware LLM analysis. Generates personalized cold emails with tone control via OpenAI API. Full automation pipeline: scrape → parse → match → generate → review.</p>
+        <div class="project-tech"><span>Web Extension</span><span class="hl">OpenAI API</span><span class="hl">LLM</span><span class="hl">Automation</span></div>
+      </div>
+      <div class="project-visual">
+        <div class="project-visual-bg pv-5"></div>
+        <div class="project-visual-content">
+          <div class="project-visual-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></div>
+          <div class="project-visual-label">ai job matcher</div>
         </div>
       </div>
     </div>
