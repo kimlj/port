@@ -491,12 +491,32 @@ footer .footer-accent { color: var(--accent); }
 .ipadapter-arrow-down { flex-shrink: 0; }
 .ipadapter-arrow-down svg { width: 24px; height: 24px; color: var(--accent); opacity: 0.5; animation: batchArrowPulse 2s ease-in-out infinite; }
 .ipadapter-grid-2x2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; width: 100%; }
+/* Fashion Generation */
+.fashion-demo { display: flex; align-items: center; gap: 1.5rem; }
+.fashion-source { display: flex; flex-direction: column; gap: 0.5rem; flex-shrink: 0; width: 180px; }
+.fashion-source img { width: 100%; border-radius: 12px; border: 2px solid var(--border); background: var(--bg-card); }
+.fashion-outputs { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
+.fashion-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
+.fashion-cell { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
+.fashion-cell img { width: 100%; border-radius: 12px; border: 2px solid var(--border); transition: all 0.3s; background: var(--bg-card); }
+.fashion-cell:hover img { border-color: var(--accent); transform: scale(1.03); box-shadow: 0 0 20px rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.12); }
+.fashion-cell span { font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; }
+.fashion-demo-compact { justify-content: flex-start; }
+.fashion-before-after { display: flex; align-items: center; gap: 1.5rem; }
+.fashion-ba-item { display: flex; flex-direction: column; gap: 0.5rem; width: 180px; flex-shrink: 0; }
+.fashion-ba-item img { width: 100%; border-radius: 12px; border: 2px solid var(--border); background: var(--bg-card); }
 @media (max-width: 768px) {
   .ipadapter-two-col { grid-template-columns: 1fr; }
   .ipadapter-demo { flex-direction: column; }
   .ipadapter-ref { width: 140px; }
   .ipadapter-arrow { transform: rotate(90deg); }
   .ipadapter-grid { grid-template-columns: repeat(2, 1fr); }
+  .fashion-demo { flex-direction: column; }
+  .fashion-source { width: 140px; }
+  .fashion-grid { grid-template-columns: repeat(2, 1fr); }
+  .fashion-before-after { flex-direction: column; }
+  .fashion-ba-item { width: 140px; }
+  .fashion-before-after .ipadapter-arrow { transform: rotate(90deg); }
 }
 
 .mid-cta { text-align: center; padding: 4rem 2rem; }
@@ -1325,6 +1345,100 @@ footer .footer-accent { color: var(--accent); }
             <img src="assets/ai-showcase/ipadapter/side_view2.webp" alt="Side view" loading="lazy">
             <span>Side</span>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="ai-fashion">
+  <p class="section-label reveal">02.2 / AI Showcase</p>
+  <h2 class="section-title reveal">AI Fashion <em>Generation</em></h2>
+  <p class="ai-showcase-intro reveal">Using <code>ControlNet Depth</code> to preserve a mannequin's pose and body structure, then generating photorealistic clothing variations and tattoo removal from text prompts.</p>
+
+  <div class="showcase-block reveal">
+    <div class="ipadapter-tech">
+      <div class="ipadapter-tech-item">
+        <code>RealVisXL V5.0 Lightning</code>
+        <span>Base model</span>
+      </div>
+      <div class="ipadapter-tech-item">
+        <code>ControlNet Depth SDXL</code>
+        <span>Pose preservation</span>
+      </div>
+      <div class="ipadapter-tech-item">
+        <code>Depth Anything V2</code>
+        <span>Depth preprocessor</span>
+      </div>
+      <div class="ipadapter-tech-item">
+        <code>DPM++ SDE Karras</code>
+        <span>Sampler</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Clothing Generation -->
+  <div class="showcase-block reveal">
+    <div class="showcase-header">
+      <span class="showcase-step">Clothing Generation</span>
+      <h3>Mannequin to Product Shots</h3>
+      <p class="showcase-caption">A blank mannequin serves as the base pose. ControlNet extracts the depth map to lock the silhouette, while the model generates different outfits from text prompts with dynamic ControlNet strength per clothing type.</p>
+    </div>
+
+    <div class="fashion-demo">
+      <div class="fashion-source">
+        <span class="prompt-label">Base Mannequin</span>
+        <img src="assets/ai-showcase/fashion/mannequin-base.webp" alt="Base mannequin with white t-shirt" loading="lazy">
+      </div>
+      <div class="ipadapter-arrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 6 15 12 9 18"/></svg>
+      </div>
+      <div class="fashion-outputs">
+        <span class="prompt-label">Generated Outfits</span>
+        <div class="fashion-grid">
+          <div class="fashion-cell">
+            <img src="assets/ai-showcase/fashion/leather-jacket.webp" alt="Leather jacket" loading="lazy">
+            <span>Leather Jacket</span>
+          </div>
+          <div class="fashion-cell">
+            <img src="assets/ai-showcase/fashion/overcoat.webp" alt="Overcoat" loading="lazy">
+            <span>Overcoat</span>
+          </div>
+          <div class="fashion-cell">
+            <img src="assets/ai-showcase/fashion/trench-coat.webp" alt="Trench coat" loading="lazy">
+            <span>Trench Coat</span>
+          </div>
+          <div class="fashion-cell">
+            <img src="assets/ai-showcase/fashion/dress-shirt.webp" alt="Dress shirt" loading="lazy">
+            <span>Dress Shirt</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tattoo Removal -->
+  <div class="showcase-block reveal">
+    <div class="showcase-header">
+      <span class="showcase-step">Inpainting</span>
+      <h3>Tattoo Removal</h3>
+      <p class="showcase-caption">Using the same depth-guided pipeline with lower denoise strength to selectively remove tattoos while preserving skin texture and clothing.</p>
+    </div>
+
+    <div class="fashion-demo fashion-demo-compact">
+      <div class="fashion-before-after">
+        <div class="fashion-ba-item">
+          <span class="prompt-label">Before</span>
+          <img src="assets/ai-showcase/fashion/mannequin-tattoo.webp" alt="Mannequin with tattoos" loading="lazy">
+        </div>
+        <div class="ipadapter-arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 6 15 12 9 18"/></svg>
+        </div>
+        <div class="fashion-ba-item">
+          <span class="prompt-label">After</span>
+          <img src="assets/ai-showcase/fashion/mannequin-base.webp" alt="Clean mannequin without tattoos" loading="lazy">
         </div>
       </div>
     </div>
