@@ -467,6 +467,29 @@ footer .footer-accent { color: var(--accent); }
 .batch-output-grid::-webkit-scrollbar-thumb { background: rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.15); border-radius: 3px; }
 .batch-output-grid img { width: 100%; display: block; border-radius: 4px; aspect-ratio: 1; object-fit: cover; }
 
+/* IPAdapter Style Transfer */
+.ipadapter-demo { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem; }
+.ipadapter-ref { display: flex; flex-direction: column; gap: 0.5rem; flex-shrink: 0; width: 180px; }
+.ipadapter-ref img { width: 100%; border-radius: 12px; border: 2px solid var(--border); background: var(--bg-card); }
+.ipadapter-arrow { flex-shrink: 0; }
+.ipadapter-arrow svg { width: 28px; height: 28px; color: var(--accent); opacity: 0.5; animation: batchArrowPulse 2s ease-in-out infinite; }
+.ipadapter-outputs { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
+.ipadapter-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
+.ipadapter-cell { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
+.ipadapter-cell img { width: 100%; border-radius: 12px; border: 2px solid var(--border); transition: all 0.3s; background: var(--bg-card); }
+.ipadapter-cell:hover img { border-color: var(--accent); transform: scale(1.03); box-shadow: 0 0 20px rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.12); }
+.ipadapter-cell span { font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; }
+.ipadapter-tech { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+.ipadapter-tech-item { display: flex; flex-direction: column; gap: 0.15rem; padding: 0.5rem 0.75rem; border: 1px solid var(--border); border-radius: 8px; background: rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.03); }
+.ipadapter-tech-item code { font-family: var(--mono); font-size: 0.65rem; color: var(--accent); }
+.ipadapter-tech-item span { font-size: 0.58rem; color: var(--text-dim); }
+@media (max-width: 768px) {
+  .ipadapter-demo { flex-direction: column; }
+  .ipadapter-ref { width: 140px; }
+  .ipadapter-arrow { transform: rotate(90deg); }
+  .ipadapter-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
 .mid-cta { text-align: center; padding: 4rem 2rem; }
 .mid-cta--soft { padding: 3rem 2rem; }
 .mid-cta--soft .mid-cta-text { font-size: 1rem; }
@@ -1223,6 +1246,79 @@ footer .footer-accent { color: var(--accent); }
         <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/59-athletic-girl-muscular-peace.webp" alt="Muscular girl peace"><div class="prompt-overlay"><span>tank top, muscular, peace sign, wink</span></div></div>
         <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/60-athletic-girl-cap-bubblegum-muscular.webp" alt="Athletic girl bubblegum"><div class="prompt-overlay"><span>trucker cap, bubblegum, muscular, gold earrings</span></div></div>
       </div>
+    </div>
+  </div>
+
+</section>
+
+<div class="divider"></div>
+
+<section id="ai-angles">
+  <p class="section-label reveal">02.1 / AI Showcase</p>
+  <h2 class="section-title reveal">Multi-Angle <em>Generation</em></h2>
+  <p class="ai-showcase-intro reveal">Given a single character illustration, generate consistent poses and expressions using <code>IPAdapter</code> style transfer — preserving the original art style across every angle.</p>
+
+  <div class="showcase-block reveal">
+    <div class="ipadapter-demo">
+      <div class="ipadapter-ref">
+        <span class="prompt-label">Reference</span>
+        <img src="assets/ai-showcase/ipadapter/14.webp" alt="Original cowgirl character reference" loading="lazy">
+      </div>
+      <div class="ipadapter-arrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 6 15 12 9 18"/></svg>
+      </div>
+      <div class="ipadapter-outputs">
+        <span class="prompt-label">Generated Angles</span>
+        <div class="ipadapter-grid">
+          <div class="ipadapter-cell">
+            <img src="assets/ai-showcase/ipadapter/front.webp" alt="Front view" loading="lazy">
+            <span>Front</span>
+          </div>
+          <div class="ipadapter-cell">
+            <img src="assets/ai-showcase/ipadapter/back.webp" alt="Back view" loading="lazy">
+            <span>Back</span>
+          </div>
+          <div class="ipadapter-cell">
+            <img src="assets/ai-showcase/ipadapter/shocked.webp" alt="Shocked expression" loading="lazy">
+            <span>Shocked</span>
+          </div>
+          <div class="ipadapter-cell">
+            <img src="assets/ai-showcase/ipadapter/side_view2.webp" alt="Side view" loading="lazy">
+            <span>Side</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="showcase-block reveal">
+    <div class="showcase-header">
+      <span class="showcase-step">Pipeline</span>
+      <h3>ComfyUI + IPAdapter Workflow</h3>
+      <p class="showcase-caption">Style is extracted via CLIP Vision and injected through IPAdapter Advanced, while text prompts control pose and expression independently.</p>
+    </div>
+
+    <div class="ipadapter-tech">
+      <div class="ipadapter-tech-item">
+        <code>DreamShaper XL Lightning</code>
+        <span>Base model</span>
+      </div>
+      <div class="ipadapter-tech-item">
+        <code>IPAdapter SDXL ViT-H</code>
+        <span>Style transfer</span>
+      </div>
+      <div class="ipadapter-tech-item">
+        <code>CLIP-ViT-H-14</code>
+        <span>Vision encoder</span>
+      </div>
+      <div class="ipadapter-tech-item">
+        <code>Style Transfer Precise</code>
+        <span>Weight type</span>
+      </div>
+    </div>
+
+    <div class="workflow-image-wrap" style="margin-top: 1.5rem;">
+      <img src="assets/ai-showcase/ipadapter/workflow.webp" alt="ComfyUI IPAdapter workflow for style-consistent multi-angle generation" loading="lazy">
     </div>
   </div>
 </section>
