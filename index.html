@@ -1267,68 +1267,66 @@ footer .footer-accent { color: var(--accent); }
   <h2 class="section-title reveal">Multi-Angle <em>Generation</em></h2>
   <p class="ai-showcase-intro reveal">Given a single character illustration, generate consistent poses and expressions using <code>IPAdapter</code> style transfer — preserving the original art style across every angle.</p>
 
+  <!-- Pipeline info -->
   <div class="showcase-block reveal">
-    <div class="ipadapter-two-col">
-      <!-- Left: Pipeline + Workflow -->
-      <div class="ipadapter-col-left">
-        <div class="showcase-header">
-          <span class="showcase-step">Pipeline</span>
-          <h3>ComfyUI + IPAdapter Workflow</h3>
-          <p class="showcase-caption">Style is extracted via CLIP Vision and injected through IPAdapter Advanced, while text prompts control pose and expression independently.</p>
-        </div>
+    <div class="showcase-header">
+      <span class="showcase-step">Pipeline</span>
+      <h3>ComfyUI + IPAdapter Workflow</h3>
+      <p class="showcase-caption">Style is extracted via CLIP Vision and injected through IPAdapter Advanced, while text prompts control pose and expression independently.</p>
+    </div>
 
-        <div class="ipadapter-tech">
-          <div class="ipadapter-tech-item">
-            <code>DreamShaper XL Lightning</code>
-            <span>Base model</span>
-          </div>
-          <div class="ipadapter-tech-item">
-            <code>IPAdapter SDXL ViT-H</code>
-            <span>Style transfer</span>
-          </div>
-          <div class="ipadapter-tech-item">
-            <code>CLIP-ViT-H-14</code>
-            <span>Vision encoder</span>
-          </div>
-          <div class="ipadapter-tech-item">
-            <code>Style Transfer Precise</code>
-            <span>Weight type</span>
-          </div>
-        </div>
-
-        <div class="workflow-image-wrap" style="margin-top: 1.5rem;">
-          <img src="assets/ai-showcase/ipadapter/workflow.webp" alt="ComfyUI IPAdapter workflow for style-consistent multi-angle generation" loading="lazy">
-        </div>
+    <div class="ipadapter-tech">
+      <div class="ipadapter-tech-item">
+        <code>DreamShaper XL Lightning</code>
+        <span>Base model</span>
       </div>
+      <div class="ipadapter-tech-item">
+        <code>IPAdapter SDXL ViT-H</code>
+        <span>Style transfer</span>
+      </div>
+      <div class="ipadapter-tech-item">
+        <code>CLIP-ViT-H-14</code>
+        <span>Vision encoder</span>
+      </div>
+      <div class="ipadapter-tech-item">
+        <code>Style Transfer Precise</code>
+        <span>Weight type</span>
+      </div>
+    </div>
 
-      <!-- Right: Reference → Generated Angles -->
-      <div class="ipadapter-col-right">
-        <div class="ipadapter-demo-vertical">
-          <div class="ipadapter-ref">
-            <span class="prompt-label">Reference</span>
-            <img src="assets/ai-showcase/ipadapter/14.webp" alt="Original cowgirl character reference" loading="lazy">
+    <div class="workflow-image-wrap" style="margin-top: 1.5rem; max-width: 500px;">
+      <img src="assets/ai-showcase/ipadapter/workflow.webp" alt="ComfyUI IPAdapter workflow for style-consistent multi-angle generation" loading="lazy">
+    </div>
+  </div>
+
+  <!-- Reference → Generated Angles -->
+  <div class="showcase-block reveal">
+    <div class="ipadapter-demo">
+      <div class="ipadapter-ref">
+        <span class="prompt-label">Reference</span>
+        <img src="assets/ai-showcase/ipadapter/14.webp" alt="Original cowgirl character reference" loading="lazy">
+      </div>
+      <div class="ipadapter-arrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 6 15 12 9 18"/></svg>
+      </div>
+      <div class="ipadapter-outputs">
+        <span class="prompt-label">Generated Angles</span>
+        <div class="ipadapter-grid">
+          <div class="ipadapter-cell">
+            <img src="assets/ai-showcase/ipadapter/front.webp" alt="Front view" loading="lazy">
+            <span>Front</span>
           </div>
-          <div class="ipadapter-arrow-down">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          <div class="ipadapter-cell">
+            <img src="assets/ai-showcase/ipadapter/back.webp" alt="Back view" loading="lazy">
+            <span>Back</span>
           </div>
-          <span class="prompt-label">Generated Angles</span>
-          <div class="ipadapter-grid-2x2">
-            <div class="ipadapter-cell">
-              <img src="assets/ai-showcase/ipadapter/front.webp" alt="Front view" loading="lazy">
-              <span>Front</span>
-            </div>
-            <div class="ipadapter-cell">
-              <img src="assets/ai-showcase/ipadapter/back.webp" alt="Back view" loading="lazy">
-              <span>Back</span>
-            </div>
-            <div class="ipadapter-cell">
-              <img src="assets/ai-showcase/ipadapter/shocked.webp" alt="Shocked expression" loading="lazy">
-              <span>Shocked</span>
-            </div>
-            <div class="ipadapter-cell">
-              <img src="assets/ai-showcase/ipadapter/side_view2.webp" alt="Side view" loading="lazy">
-              <span>Side</span>
-            </div>
+          <div class="ipadapter-cell">
+            <img src="assets/ai-showcase/ipadapter/shocked.webp" alt="Shocked expression" loading="lazy">
+            <span>Shocked</span>
+          </div>
+          <div class="ipadapter-cell">
+            <img src="assets/ai-showcase/ipadapter/side_view2.webp" alt="Side view" loading="lazy">
+            <span>Side</span>
           </div>
         </div>
       </div>
