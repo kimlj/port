@@ -1264,17 +1264,10 @@ footer .footer-accent { color: var(--accent); }
 
 <section id="ai-angles">
   <p class="section-label reveal">02.1 / AI Showcase</p>
-  <h2 class="section-title reveal">Multi-Angle <em>Generation</em></h2>
-  <p class="ai-showcase-intro reveal">Given a single character illustration, generate consistent poses and expressions using <code>IPAdapter</code> style transfer — preserving the original art style across every angle.</p>
+  <h2 class="section-title reveal">ComfyUI + IPAdapter <em>Workflow</em></h2>
+  <p class="ai-showcase-intro reveal">Style is extracted via <code>CLIP Vision</code> and injected through <code>IPAdapter Advanced</code>, while text prompts control pose and expression independently.</p>
 
-  <!-- Pipeline info -->
   <div class="showcase-block reveal">
-    <div class="showcase-header">
-      <span class="showcase-step">Pipeline</span>
-      <h3>ComfyUI + IPAdapter Workflow</h3>
-      <p class="showcase-caption">Style is extracted via CLIP Vision and injected through IPAdapter Advanced, while text prompts control pose and expression independently.</p>
-    </div>
-
     <div class="ipadapter-tech">
       <div class="ipadapter-tech-item">
         <code>DreamShaper XL Lightning</code>
@@ -1293,9 +1286,13 @@ footer .footer-accent { color: var(--accent); }
         <span>Weight type</span>
       </div>
     </div>
+  </div>
 
-    <div class="workflow-image-wrap" style="margin-top: 1.5rem; max-width: 500px;">
-      <img src="assets/ai-showcase/ipadapter/workflow.webp" alt="ComfyUI IPAdapter workflow for style-consistent multi-angle generation" loading="lazy">
+  <div class="showcase-block reveal">
+    <div class="showcase-header">
+      <span class="showcase-step">Result</span>
+      <h3>Multi-Angle Generation</h3>
+      <p class="showcase-caption">Given a single character illustration, generate consistent poses and expressions using IPAdapter style transfer — preserving the original art style across every angle.</p>
     </div>
   </div>
 
