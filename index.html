@@ -566,6 +566,12 @@ footer .footer-accent { color: var(--accent); }
 .prompt-tab.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
 .prompt-category { display: none; }
 .prompt-category.active { display: block; }
+.ai-tabs { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 2.5rem; }
+.ai-tab { font-family: var(--mono); font-size: 0.8rem; padding: 0.5rem 1.25rem; border-radius: 999px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); cursor: pointer; transition: all 0.25s; letter-spacing: 0.02em; }
+.ai-tab:hover { border-color: var(--border-hover); color: var(--text); }
+.ai-tab.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+.ai-tab-content { display: none; }
+.ai-tab-content.active { display: block; }
 .prompt-category-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1.5rem; font-weight: 300; }
 .prompt-display { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
 .prompt-block { padding: 0.85rem 1rem; border-radius: 10px; border: 1px solid var(--border); background: var(--bg-card); font-family: var(--mono); font-size: 0.65rem; line-height: 1.7; word-break: break-word; }
@@ -599,6 +605,8 @@ footer .footer-accent { color: var(--accent); }
   .prompt-nav { margin-top: 0.6rem; gap: 0.75rem; }
   .prompt-nav-btn { width: 28px; height: 28px; font-size: 0.75rem; }
   .prompt-nav-counter { font-size: 0.62rem; }
+  .ai-tabs { gap: 0.4rem; margin-bottom: 1.5rem; }
+  .ai-tab { font-size: 0.65rem; padding: 0.4rem 0.9rem; }
   .prompt-tabs { gap: 0.35rem; margin-bottom: 0.75rem; }
   .prompt-tab { font-size: 0.6rem; padding: 0.35rem 0.75rem; }
   .workflow-scroll-hint { display: none; }
@@ -824,7 +832,13 @@ footer .footer-accent { color: var(--accent); }
 
 <section id="ai-showcase">
   <p class="section-label reveal">02 / AI Showcase</p>
-  <h2 class="section-title reveal">AI Content <em>Pipeline</em></h2>
+  <div class="ai-tabs reveal">
+    <button class="ai-tab active" data-tab="pipeline">Avatar Pipeline</button>
+    <button class="ai-tab" data-tab="style-transfer">Style Transfer</button>
+    <button class="ai-tab" data-tab="fashion">Fashion Generation</button>
+  </div>
+
+  <div class="ai-tab-content active" data-tab="pipeline">
   <p class="ai-showcase-intro reveal">Generating 60+ consistent avatars for <code>WordWarz.io</code> meant solving a core problem: AI models are unpredictable, and every word in a prompt matters. Here's the process — from prompt engineering to a fully automated pipeline.</p>
 
   <!-- PART 1: Prompt Engineering -->
@@ -1278,13 +1292,9 @@ footer .footer-accent { color: var(--accent); }
     </div>
   </div>
 
-</section>
+  </div><!-- /pipeline tab -->
 
-<div class="divider"></div>
-
-<section id="ai-angles">
-  <p class="section-label reveal">02.1 / AI Showcase</p>
-  <h2 class="section-title reveal">ComfyUI + IPAdapter <em>Workflow</em></h2>
+  <div class="ai-tab-content" data-tab="style-transfer">
   <p class="ai-showcase-intro reveal">Style is extracted via <code>CLIP Vision</code> and injected through <code>IPAdapter Advanced</code>, while text prompts control pose and expression independently.</p>
 
   <div class="showcase-block reveal">
@@ -1349,13 +1359,9 @@ footer .footer-accent { color: var(--accent); }
       </div>
     </div>
   </div>
-</section>
+  </div><!-- /style-transfer tab -->
 
-<div class="divider"></div>
-
-<section id="ai-fashion">
-  <p class="section-label reveal">02.2 / AI Showcase</p>
-  <h2 class="section-title reveal">AI Fashion <em>Generation</em></h2>
+  <div class="ai-tab-content" data-tab="fashion">
   <p class="ai-showcase-intro reveal">Using <code>ControlNet Depth</code> to preserve a mannequin's pose and body structure, then generating photorealistic clothing variations and tattoo removal from text prompts.</p>
 
   <div class="showcase-block reveal">
@@ -1418,6 +1424,7 @@ footer .footer-accent { color: var(--accent); }
       </div>
     </div>
   </div>
+  </div><!-- /fashion tab -->
 
 </section>
 
@@ -2124,6 +2131,17 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
   Object.keys(data).forEach(function(cat) { update(cat); });
 
   // Tab clicks
+  // AI Showcase section-level tabs
+  document.querySelector('.ai-tabs').addEventListener('click', function(e) {
+    var tab = e.target.closest('.ai-tab');
+    if (!tab) return;
+    var target = tab.dataset.tab;
+    document.querySelectorAll('.ai-tab').forEach(function(t) { t.classList.remove('active'); });
+    tab.classList.add('active');
+    document.querySelectorAll('.ai-tab-content').forEach(function(c) { c.classList.remove('active'); });
+    document.querySelector('.ai-tab-content[data-tab="' + target + '"]').classList.add('active');
+  });
+
   document.getElementById('promptTabs').addEventListener('click', function(e) {
     var tab = e.target.closest('.prompt-tab');
     if (!tab) return;
