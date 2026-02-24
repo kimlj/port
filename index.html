@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Kim Julongbayan | Full Stack Developer specializing in AI-powered applications</title>
+<title>Kim Julongbayan | Full Stack Engineer | AI Engineer | Backend Systems</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -69,6 +69,7 @@
 [data-theme="light"] .pv-3 { background: linear-gradient(135deg, #e0d8f5, #d4c8f0, #dcd0f5); }
 [data-theme="light"] .pv-4 { background: linear-gradient(135deg, #f0eed0, #ead8b8, #e8dcc0); }
 [data-theme="light"] .pv-5 { background: linear-gradient(135deg, #d0ddf0, #b8c8ea, #c8d4f0); }
+[data-theme="light"] .pv-6 { background: linear-gradient(135deg, #f0d0d8, #eab8c8, #f0c8d4); }
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: hidden; }
 body { font-family: var(--sans); background: var(--bg); color: var(--text); overflow-x: hidden; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; }
@@ -199,6 +200,7 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 .pv-3 { background: linear-gradient(135deg, #1a0d1a, #0d001a, #0a0d1a); }
 .pv-4 { background: linear-gradient(135deg, #1a1a0d, #1a0d00, #0d0a00); }
 .pv-5 { background: linear-gradient(135deg, #0d0d1a, #001a2e, #0a0d1a); }
+.pv-6 { background: linear-gradient(135deg, #1a0d0d, #2e001a, #1a0a0d); }
 .project-visual-content { position: relative; z-index: 1; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; }
 .project-visual-icon svg { width: 56px; height: 56px; stroke: var(--text-dim); fill: none; stroke-width: 1; opacity: 0.6; transition: all 0.4s; }
 .project-card:hover .project-visual-icon svg { stroke: var(--accent); opacity: 1; }
@@ -699,12 +701,12 @@ footer .footer-accent { color: var(--accent); }
 </div>
 
 <section class="hero">
-  <p class="hero-label">Full Stack Developer specializing in AI-powered applications</p>
+  <p class="hero-label">Full Stack Engineer | AI Engineer | Backend Systems</p>
   <h1>
     <span class="hero-line">I'm Kim Julongbayan</span>
     <span class="hero-line">I turn ideas into <em>real products</em></span>
   </h1>
-  <p class="hero-sub">Crafting high-performance web and mobile applications with expertise spanning full stack development, AI integration, and creative technology.</p>
+  <p class="hero-sub">Full Stack Engineer with 5+ years of experience building scalable web, mobile, and AI-integrated systems. Specialized in LLM integration, real-time WebSocket systems, Dockerized cloud deployments, and CI/CD automation.</p>
   <div class="hero-cta">
     <a href="#projects" class="btn-primary btn-magnetic">
       View Projects
@@ -802,6 +804,18 @@ footer .footer-accent { color: var(--accent); }
         <img src="assets/casinore-preview.webp" alt="Casinore.io platform screenshot" class="project-visual-img" loading="lazy">
       </div>
     </a>
+    <div class="project-card reveal spotlight-card">
+      <div class="project-info">
+        <span class="project-tag">AI &amp; Automation</span>
+        <h3>Job Email Watcher</h3>
+        <p>An end-to-end n8n automation pipeline that monitors Gmail for job alerts (Indeed, Upwork, JobStreet), scores listings against my resume using GPT-4o with a hybrid AI + code salary algorithm, logs everything to Google Sheets, and sends Telegram notifications for high-scoring matches.</p>
+        <div class="project-tech"><span class="hl">n8n</span><span class="hl">OpenAI GPT-4o</span><span>Gmail API</span><span>Google Sheets API</span><span class="hl">Telegram Bot API</span><span>JavaScript</span></div>
+      </div>
+      <div class="project-visual">
+        <div class="project-visual-bg pv-6"></div>
+        <img src="assets/jobwatcher-preview.webp" alt="Job Email Watcher n8n workflow diagram" class="project-visual-img" loading="lazy">
+      </div>
+    </div>
     <a href="https://kikoysbike.app" target="_blank" class="project-card reveal spotlight-card">
       <div class="project-info">
         <span class="project-tag">E-Commerce &amp; AI</span>
@@ -1483,37 +1497,19 @@ footer .footer-accent { color: var(--accent); }
       <div class="timeline-item">
         <div class="timeline-dot-ripple"></div>
         <div class="timeline-item-inner">
-          <div class="timeline-date">2022 — Present</div>
-          <h3>Independent App Developer</h3>
-          <h4>Full Stack & Mobile</h4>
-          <p>Building and shipping mobile and web applications independently, including WordWarz.io, Casinore.io, and fitness apps. Full ownership of product lifecycle from ideation to deployment on iOS and Android.</p>
+          <div class="timeline-date">2018 — Present</div>
+          <h3>Independent Full Stack Engineer</h3>
+          <h4>Full Stack &amp; AI</h4>
+          <p>Designed and deployed production-grade applications across frontend, backend, and database layers. Built REST APIs and real-time systems; optimized database queries and backend performance. Managed Docker containers, Linux VPS infrastructure, and CI/CD deployment workflows.</p>
         </div>
       </div>
       <div class="timeline-item">
         <div class="timeline-dot-ripple"></div>
         <div class="timeline-item-inner">
-          <div class="timeline-date">Capstone Project</div>
-          <h3>E-Commerce Developer</h3>
-          <h4>Online Retail Platform</h4>
-          <p>Built and maintained e-commerce platform features including product catalog and checkout flow. Managed version control with Git/GitLab for collaborative development. Conducted QA testing and debugged frontend/backend issues across devices.</p>
-        </div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-dot-ripple"></div>
-        <div class="timeline-item-inner">
-          <div class="timeline-date">OJT</div>
-          <h3>Dashboard Analytics Developer</h3>
-          <h4>Mining Company</h4>
-          <p>Developed real-time analytics dashboards for monitoring mining operations and production metrics. Created data visualization components with SQL queries for KPIs and operational data. Ensured data accuracy through validation, quality checks, and anomaly detection.</p>
-        </div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-dot-ripple"></div>
-        <div class="timeline-item-inner">
-          <div class="timeline-date">2018 — 2020</div>
-          <h3>Web Development</h3>
-          <h4>Frontend & Backend</h4>
-          <p>Started professional journey in web development, building responsive websites and learning core technologies including HTML, CSS, JavaScript, and backend fundamentals with Node.js and databases.</p>
+          <div class="timeline-date">2025</div>
+          <h3>Bachelor of Science in Information Technology</h3>
+          <h4>AMA Computer College Makati</h4>
+          <p>Completed a comprehensive IT program covering software development, database management, networking, and system analysis with hands-on capstone project experience.</p>
         </div>
       </div>
     </div>
@@ -1581,12 +1577,12 @@ footer .footer-accent { color: var(--accent); }
   </div>
   <div class="about-grid">
     <div class="about-text reveal">
-      <p>I'm a full stack developer with deep expertise in web development, mobile applications, data analysis, and AI-powered solutions. Since 2018, I've been shipping products that merge clean engineering with intelligent design.</p>
-      <p>My toolkit spans the entire stack, from SQL databases and Node.js backends to React Native mobile apps and Docker-containerized deployments. I bring additional depth in AI and automation, including LLM integration, image and video generation with ComfyUI, and building intelligent systems that solve real problems.</p>
-      <p>Whether it's a blockchain-powered platform, a real-time multiplayer game, or an automated warehouse system, I approach every project with careful attention to detail and user experience.</p>
+      <p>I'm a Full Stack Engineer with 5+ years of experience building scalable web, mobile, and AI-integrated systems. Specialized in LLM integration, real-time WebSocket systems, Dockerized cloud deployments, and CI/CD automation.</p>
+      <p>My toolkit spans the entire stack — JavaScript, TypeScript, Python, React, React Native, Next.js, Node.js, Express, and PostgreSQL. I bring deep expertise in AI workflow automation, including LLM integration with Claude and GPT, Stable Diffusion, ComfyUI, and prompt engineering.</p>
+      <p>Proven ownership of end-to-end system architecture, backend performance optimization, and production infrastructure. Whether it's a real-time multiplayer game, an AI-powered redesigner, or a blockchain DApp, I ship products with meticulous attention to detail.</p>
     </div>
     <div class="about-stats stagger-children">
-      <div class="stat-card reveal"><div class="stat-number" data-count="7">0+</div><div class="stat-label">Years of Development</div></div>
+      <div class="stat-card reveal"><div class="stat-number" data-count="5">0+</div><div class="stat-label">Years of Development</div></div>
       <div class="stat-card reveal"><div class="stat-number" data-count="15">0+</div><div class="stat-label">Technologies Used</div></div>
       <div class="stat-card reveal"><div class="stat-number">Full</div><div class="stat-label">Stack Proficiency</div></div>
       <div class="stat-card reveal"><div class="stat-number">AI</div><div class="stat-label">& LLM Integration</div></div>
@@ -1625,7 +1621,7 @@ footer .footer-accent { color: var(--accent); }
 </section>
 
 <footer>
-  <p>&copy; 2025 Kim Julongbayan</p>
+  <p>&copy; 2026 Kim Julongbayan</p>
   <p>Built with <span class="footer-accent">meticulous</span> attention to detail</p>
 </footer>
 
