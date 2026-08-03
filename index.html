@@ -269,7 +269,20 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 .pitch-field { width: 100%; background: transparent; border: none; color: var(--text); font-family: var(--sans); font-size: 1rem; font-weight: 300; line-height: 1.7; padding: 0; }
 .pitch-field:focus { outline: none; }
 .pitch-field::placeholder { color: var(--text-dim); }
-textarea.pitch-field { min-height: 155px; resize: vertical; display: block; }
+/* Chrome paints its own pale background and black text on autofilled fields and
+   ignores background-color. An inset shadow is the only reliable cover. */
+.pitch-field:-webkit-autofill,
+.pitch-field:-webkit-autofill:hover,
+.pitch-field:-webkit-autofill:focus,
+.pitch-field:-webkit-autofill:active {
+  -webkit-text-fill-color: var(--text);
+  -webkit-box-shadow: 0 0 0 100px var(--bg-card) inset;
+  box-shadow: 0 0 0 100px var(--bg-card) inset;
+  caret-color: var(--text);
+  font-family: var(--sans);
+}
+.pitch-field:autofill { -webkit-text-fill-color: var(--text); box-shadow: 0 0 0 100px var(--bg-card) inset; }
+textarea.pitch-field { min-height: 155px; resize: none; display: block; overflow-y: auto; }
 .pitch-rule { height: 1px; background: var(--border); margin: 1.35rem 0; }
 .pitch-footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap; }
 .pitch-count { font-family: var(--mono); font-size: 0.7rem; color: var(--text-dim); letter-spacing: 0.05em; }
