@@ -261,6 +261,32 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 .contact-pill:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); transform: translateY(-2px); }
 .contact-pill svg { width: 18px; height: 18px; flex-shrink: 0; }
 
+/* Pitch form */
+.pitch-form { max-width: 640px; margin: 0 auto 4rem; text-align: left; }
+.pitch-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 1.75rem; transition: border-color 0.3s, box-shadow 0.3s; }
+.pitch-card:focus-within { border-color: var(--border-hover); box-shadow: 0 0 40px var(--accent-glow); }
+.pitch-label { display: block; font-family: var(--mono); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.22em; color: var(--text-dim); margin-bottom: 0.9rem; }
+.pitch-field { width: 100%; background: transparent; border: none; color: var(--text); font-family: var(--sans); font-size: 1rem; font-weight: 300; line-height: 1.7; padding: 0; }
+.pitch-field:focus { outline: none; }
+.pitch-field::placeholder { color: var(--text-dim); }
+textarea.pitch-field { min-height: 155px; resize: vertical; display: block; }
+.pitch-rule { height: 1px; background: var(--border); margin: 1.35rem 0; }
+.pitch-footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap; }
+.pitch-count { font-family: var(--mono); font-size: 0.7rem; color: var(--text-dim); letter-spacing: 0.05em; }
+.pitch-count.over { color: #ef4444; }
+.pitch-submit { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.9rem 2rem; background: var(--accent); color: var(--bg); border: none; font-family: var(--sans); font-weight: 600; font-size: 0.9rem; border-radius: 100px; cursor: pointer; transition: all 0.3s; letter-spacing: 0.01em; }
+.pitch-submit:hover:not(:disabled) { box-shadow: 0 0 30px var(--accent-glow), 0 0 60px rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.08); transform: translateY(-2px); }
+.pitch-submit:disabled { opacity: 0.45; cursor: not-allowed; }
+.pitch-submit svg { width: 16px; height: 16px; transition: transform 0.3s; }
+.pitch-submit:hover:not(:disabled) svg { transform: translateX(3px); }
+.pitch-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.pitch-status { font-size: 0.85rem; font-weight: 300; margin-top: 1.1rem; min-height: 1.2em; text-align: center; opacity: 0; transition: opacity 0.3s; }
+.pitch-status.show { opacity: 1; }
+.pitch-status.ok { color: var(--accent); }
+.pitch-status.err { color: #ef4444; }
+.contact-alt-label { font-family: var(--mono); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.22em; color: var(--text-dim); margin-bottom: 1.25rem; }
+.contact-links .contact-pill { padding: 0.7rem 1.35rem; font-size: 0.82rem; }
+
 footer { padding: 2rem 5vw; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
 footer p { font-size: 0.78rem; color: var(--text-dim); }
 footer .footer-accent { color: var(--accent); }
@@ -393,7 +419,7 @@ footer .footer-accent { color: var(--accent); }
 }
 
 @media (max-width: 1024px) { .about-grid { grid-template-columns: 1fr; gap: 2.5rem; } .expertise-grid { grid-template-columns: 1fr 1fr; } .project-card { grid-template-columns: 1fr; } .project-visual { min-height: 200px; } }
-@media (max-width: 768px) { nav { padding: 1rem 1.5rem; } .nav-links { display: none; } .nav-hamburger { display: flex; } section { padding: 4rem 1.5rem; } .hero { padding: 7rem 1.5rem 3rem; } .expertise-grid { grid-template-columns: 1fr; } .about-stats { grid-template-columns: 1fr 1fr; } footer { flex-direction: column; gap: 0.75rem; text-align: center; } .contact-section { padding: 5rem 1.5rem; } .scroll-indicator { display: none; } }
+@media (max-width: 768px) { nav { padding: 1rem 1.5rem; } .nav-links { display: none; } .nav-hamburger { display: flex; } section { padding: 4rem 1.5rem; } .hero { padding: 7rem 1.5rem 3rem; } .expertise-grid { grid-template-columns: 1fr; } .about-stats { grid-template-columns: 1fr 1fr; } footer { flex-direction: column; gap: 0.75rem; text-align: center; } .contact-section { padding: 5rem 1.5rem; } .scroll-indicator { display: none; } .pitch-card { padding: 1.35rem; border-radius: 16px; } .pitch-footer { flex-direction: column-reverse; align-items: stretch; } .pitch-submit { justify-content: center; width: 100%; } .pitch-count { text-align: center; } }
 @media (max-width: 480px) { .nav-links { gap: 0.75rem; } .hero-cta { flex-direction: column; } .btn-primary, .btn-ghost { justify-content: center; width: 100%; } .cv-dropdown { width: 100%; } .cv-dropdown-toggle { justify-content: center; width: 100%; } }
 
 /* AI Showcase Section */
@@ -1596,6 +1622,33 @@ footer .footer-accent { color: var(--accent); }
   <p class="section-label reveal">06 / Contact</p>
   <h2 class="section-title reveal">Let's build something <em>great</em></h2>
   <p class="contact-sub reveal">Open to collaborations, freelance work, and exciting opportunities.</p>
+
+  <form class="pitch-form reveal" id="pitchForm" novalidate>
+    <div class="pitch-card">
+      <label class="pitch-label" for="pitchIdea">What's your idea?</label>
+      <textarea class="pitch-field" id="pitchIdea" name="idea" rows="6" maxlength="4000" required
+        placeholder="A rough sketch is fine &mdash; what you're building, the problem it solves, where you're stuck, or what you'd want me to do. No pitch deck required."></textarea>
+
+      <div class="pitch-rule"></div>
+
+      <label class="pitch-label" for="pitchEmail">Where do I reply?</label>
+      <input class="pitch-field" type="email" id="pitchEmail" name="email" required
+        autocomplete="email" spellcheck="false" placeholder="you@company.com">
+
+      <input class="pitch-hp" type="text" id="pitchHp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+      <div class="pitch-footer">
+        <span class="pitch-count" id="pitchCount">0 / 4000</span>
+        <button type="submit" class="pitch-submit" id="pitchSubmit">
+          Send it over
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+    <p class="pitch-status" id="pitchStatus" role="status" aria-live="polite"></p>
+  </form>
+
+  <p class="contact-alt-label reveal">Or find me here</p>
   <div class="contact-links reveal">
     <a href="Kim_Julongbayan_Resume.pdf" target="_blank" class="contact-pill">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -2158,6 +2211,75 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
       else state[cat] = (state[cat] - 1 + count) % count;
       update(cat);
     });
+  });
+})();
+</script>
+
+<!-- Pitch form — deliberately kept in its own script block so an error anywhere
+     else on the page cannot stop the contact form from working. -->
+<script>
+(function() {
+  const form = document.getElementById('pitchForm');
+  if (!form) return;
+
+  const idea = document.getElementById('pitchIdea');
+  const email = document.getElementById('pitchEmail');
+  const hp = document.getElementById('pitchHp');
+  const count = document.getElementById('pitchCount');
+  const status = document.getElementById('pitchStatus');
+  const submit = document.getElementById('pitchSubmit');
+  const MAX = 4000;
+  const MIN = 15;
+
+  function say(msg, kind) {
+    status.textContent = msg;
+    status.className = 'pitch-status show ' + kind;
+  }
+
+  idea.addEventListener('input', () => {
+    const n = idea.value.length;
+    count.textContent = n + ' / ' + MAX;
+    count.classList.toggle('over', n > MAX);
+    idea.style.height = 'auto';
+    idea.style.height = Math.max(155, idea.scrollHeight) + 'px';
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const body = idea.value.trim();
+    const from = email.value.trim();
+
+    if (body.length < MIN) { say('Give me a bit more to work with — a sentence or two.', 'err'); idea.focus(); return; }
+    if (body.length > MAX) { say('That’s over ' + MAX + ' characters. Trim it down a little.', 'err'); idea.focus(); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(from)) { say('That email doesn’t look right — I won’t be able to reply.', 'err'); email.focus(); return; }
+
+    submit.disabled = true;
+    submit.querySelector('svg').style.display = 'none';
+    submit.childNodes[0].nodeValue = 'Sending';
+    say('', '');
+
+    try {
+      const res = await fetch('/api/pitch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idea: body, email: from, company: hp.value })
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) throw new Error(data.error || 'Something went wrong on my end.');
+
+      form.reset();
+      idea.style.height = '';
+      count.textContent = '0 / ' + MAX;
+      say('Got it — landed in my inbox. I’ll reply to ' + from + '.', 'ok');
+    } catch (err) {
+      say(err.message + ' You can also email me directly at kljulongbayan@gmail.com.', 'err');
+    } finally {
+      submit.disabled = false;
+      submit.childNodes[0].nodeValue = 'Send it over';
+      submit.querySelector('svg').style.display = '';
+    }
   });
 })();
 </script>
