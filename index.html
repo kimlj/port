@@ -73,6 +73,13 @@
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: hidden; }
 body { font-family: var(--sans); background: var(--bg); color: var(--text); overflow-x: hidden; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; }
+/* overflow-x:hidden forces overflow-y to compute as auto, which makes these
+   scroll containers and silently disables position:sticky everywhere below.
+   clip suppresses the same horizontal overflow without that side effect.
+   Guarded so pre-Safari-16 keeps hidden rather than dropping the clamp. */
+@supports (overflow-x: clip) {
+  html, body { overflow-x: clip; }
+}
 ::selection { background: var(--accent); color: var(--bg); }
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
@@ -299,6 +306,66 @@ textarea.pitch-field { min-height: 155px; resize: none; display: block; overflow
 .pitch-status.err { color: #ef4444; }
 .contact-alt-label { font-family: var(--mono); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.22em; color: var(--text-dim); margin-bottom: 1.25rem; }
 .contact-links .contact-pill { padding: 0.7rem 1.35rem; font-size: 0.82rem; }
+
+/* ============ Motion layer ============ */
+
+/* Tonal gradient headings. The reference uses #646973 -> #BBCCD7, a tonal fade
+   rather than a brand-colour one; mapping it to --text-muted -> --text keeps
+   that dimensional look and works unchanged in both themes. Applied to
+   .hero-line rather than the h1 because transformed children break an
+   ancestor's background-clip: text. */
+.section-title, .hero-line {
+  background: linear-gradient(180deg, var(--text-muted) 0%, var(--text) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.section-title em, .hero-line em { -webkit-text-fill-color: var(--accent); }
+
+/* Scroll-driven marquee */
+.marquee-strip { padding: 3.5rem 0 2.5rem; display: flex; flex-direction: column; gap: 0.75rem; overflow: hidden; }
+/* Fades the tiles out at both edges so the strip reads as continuous motion
+   rather than a row that happens to be clipped by the viewport. */
+.marquee-row { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%); }
+.marquee-track { display: flex; gap: 0.75rem; width: max-content; will-change: transform; }
+.marquee-tile { width: 180px; height: 240px; flex-shrink: 0; border-radius: 16px; overflow: hidden; border: 1px solid var(--border); background: var(--bg-card); }
+.marquee-tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.marquee-caption { text-align: center; font-family: var(--mono); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.22em; color: var(--text-dim); margin-top: 2rem; }
+
+/* Character-by-character scroll reveal */
+.char-reveal .ch { opacity: 0.18; will-change: opacity; }
+
+/* Sticky-stacking project cards (desktop only — mobile keeps its carousel) */
+@media (min-width: 769px) {
+  /* section{overflow:hidden} would make this the scroll container and kill
+     position:sticky outright, so it has to be reset here. */
+  #projects { overflow: visible; }
+  .projects-grid { display: block; gap: 0; }
+  /* The full-height item is what sticks — a sticky element can only travel
+     inside its own parent's box, so making the inner wrapper sticky gives it
+     almost no range and it scrolls away instead of stacking. */
+  /* flex-start, not center: the cards have different content heights, so
+     centring them would misalign their top edges and break the deck illusion. */
+  /* top clears the fixed nav so the stacked deck edges stay visible under it. */
+  .project-stack-item { position: sticky; top: 5.5rem; height: 82vh; display: flex; align-items: flex-start; }
+  .project-stuck { width: 100%; position: relative; top: calc(var(--i) * 14px); }
+  .project-stack-item .project-card { transform-origin: top center; will-change: transform; }
+  /* Cards must be opaque: .reveal fades 0->1, and a half-faded card in a stack
+     shows the entire deck through it. The stacking motion replaces the fade
+     here, and .reveal's translateY was already being overridden by the inline
+     scale() anyway. Mobile keeps the normal reveal. */
+  .project-stack-item .project-card.reveal { opacity: 1; }
+}
+@media (max-width: 768px) {
+  /* display:contents dissolves the stacking wrappers so .project-card is a
+     direct flex child again and the existing carousel CSS applies untouched. */
+  .project-stack-item, .project-stuck { display: contents; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { transform: none !important; }
+  .char-reveal .ch { opacity: 1 !important; }
+  .project-stack-item .project-card { transform: none !important; }
+}
 
 footer { padding: 2rem 5vw; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
 footer p { font-size: 0.78rem; color: var(--text-dim); }
@@ -781,93 +848,125 @@ footer .footer-accent { color: var(--accent); }
 
 <div class="divider"></div>
 
+<!-- Tiles are built in JS from assets/ai-showcase rather than hand-written as
+     66 img tags. Purely decorative, hence aria-hidden. -->
+<div class="marquee-strip" id="marqueeStrip" aria-hidden="true">
+  <div class="marquee-row"><div class="marquee-track" data-dir="1"></div></div>
+  <div class="marquee-row"><div class="marquee-track" data-dir="-1"></div></div>
+</div>
+<p class="marquee-caption reveal">60+ characters generated with custom ComfyUI pipelines</p>
+
 <section id="projects">
   <p class="section-label reveal">01 / Projects</p>
   <h2 class="section-title reveal">Selected Work</h2>
   <div class="projects-grid">
-    <a href="https://wordwarz.io" target="_blank" class="project-card reveal spotlight-card">
-      <div class="project-info">
-        <span class="project-tag">Web &amp; Mobile App</span>
-        <h3>WordWarz.io</h3>
-        <p class="project-origin">My family's competitive Wordle trash talk needed a multiplayer version — none existed, so I built one.</p>
-        <p>A real-time multiplayer word game with a Shannon entropy–based AI bot engine that maximizes information gain per guess. Features a constraint-satisfaction solver for edge cases, 5-tier ELO matchmaking (600–2000) with probabilistic human imperfection modeling, adaptive difficulty scaling, and 60+ AI-generated avatars via custom ComfyUI pipelines.</p>
-        <div class="project-tech"><span class="hl">React Native</span><span>Node.js</span><span class="hl">WebSocket</span><span class="hl">Shannon Entropy</span><span class="hl">AI Bot Engine</span><span>ELO System</span></div>
-        <div class="project-link">Visit Site <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-      </div>
-      <div class="project-visual">
-        <div class="project-visual-bg pv-1"></div>
-        <img src="assets/wordwarz-preview.webp" alt="WordWarz.io game lobby screenshot" class="project-visual-img" loading="lazy">
-      </div>
-    </a>
-    <a href="https://recode.kimlj.dev" target="_blank" class="project-card reveal spotlight-card">
-      <div class="project-info">
-        <span class="project-tag">AI &amp; Automation</span>
-        <h3>RecodeAI</h3>
-        <p>AI-powered website redesigner that crawls any site, analyzes brand identity with Claude, generates a premium redesign, and deploys it to a live URL — all in real time via Server-Sent Events streaming.</p>
-        <div class="project-tech"><span>Next.js</span><span class="hl">Claude API</span><span class="hl">SSE</span><span class="hl">AI Pipeline</span><span>Netlify API</span></div>
-        <div class="project-link">Visit Site <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-      </div>
-      <div class="project-visual">
-        <div class="project-visual-bg pv-4"></div>
-        <video class="project-visual-img" autoplay loop muted playsinline>
-          <source src="assets/recode-demo.mp4" type="video/mp4">
-        </video>
-      </div>
-    </a>
-    <div class="project-card reveal spotlight-card">
-      <div class="project-info">
-        <span class="project-tag">AI &amp; Automation</span>
-        <span class="project-status">In Development</span>
-        <h3>AI Job Matcher</h3>
-        <p>A web extension that scrapes job listings, parses structured data, and matches roles using resume-aware LLM analysis. Generates personalized cold emails with tone control via OpenAI API. Full automation pipeline: scrape → parse → match → generate → review.</p>
-        <div class="project-tech"><span>Web Extension</span><span class="hl">OpenAI API</span><span class="hl">LLM</span><span class="hl">Automation</span></div>
-      </div>
-      <div class="project-visual">
-        <div class="project-visual-bg pv-5"></div>
-        <video class="project-visual-img" autoplay loop muted playsinline>
-          <source src="assets/jobmatch-demo.mp4" type="video/mp4">
-        </video>
+    <div class="project-stack-item" style="--i:0">
+      <div class="project-stuck">
+        <a href="https://wordwarz.io" target="_blank" class="project-card reveal spotlight-card">
+          <div class="project-info">
+            <span class="project-tag">Web &amp; Mobile App</span>
+            <h3>WordWarz.io</h3>
+            <p class="project-origin">My family's competitive Wordle trash talk needed a multiplayer version — none existed, so I built one.</p>
+            <p>A real-time multiplayer word game with a Shannon entropy–based AI bot engine that maximizes information gain per guess. Features a constraint-satisfaction solver for edge cases, 5-tier ELO matchmaking (600–2000) with probabilistic human imperfection modeling, adaptive difficulty scaling, and 60+ AI-generated avatars via custom ComfyUI pipelines.</p>
+            <div class="project-tech"><span class="hl">React Native</span><span>Node.js</span><span class="hl">WebSocket</span><span class="hl">Shannon Entropy</span><span class="hl">AI Bot Engine</span><span>ELO System</span></div>
+            <div class="project-link">Visit Site <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          </div>
+          <div class="project-visual">
+            <div class="project-visual-bg pv-1"></div>
+            <img src="assets/wordwarz-preview.webp" alt="WordWarz.io game lobby screenshot" class="project-visual-img" loading="lazy">
+          </div>
+        </a>
       </div>
     </div>
-    <div class="project-card reveal spotlight-card">
-      <div class="project-info">
-        <span class="project-tag">AI &amp; Automation</span>
-        <h3>Job Email Watcher</h3>
-        <p>An end-to-end n8n automation pipeline that monitors Gmail for job alerts (Indeed, Upwork, JobStreet), scores listings against my resume using GPT-4o with a hybrid AI + code salary algorithm, logs everything to Google Sheets, and sends Telegram notifications for high-scoring matches.</p>
-        <div class="project-tech"><span class="hl">n8n</span><span class="hl">OpenAI GPT-4o</span><span>Gmail API</span><span>Google Sheets API</span><span class="hl">Telegram Bot API</span><span>JavaScript</span></div>
-      </div>
-      <div class="project-visual">
-        <div class="project-visual-bg pv-6"></div>
-        <img src="assets/jobwatcher-preview.webp" alt="Job Email Watcher n8n workflow diagram" class="project-visual-img" loading="lazy">
+    <div class="project-stack-item" style="--i:1">
+      <div class="project-stuck">
+        <a href="https://recode.kimlj.dev" target="_blank" class="project-card reveal spotlight-card">
+          <div class="project-info">
+            <span class="project-tag">AI &amp; Automation</span>
+            <h3>RecodeAI</h3>
+            <p>AI-powered website redesigner that crawls any site, analyzes brand identity with Claude, generates a premium redesign, and deploys it to a live URL — all in real time via Server-Sent Events streaming.</p>
+            <div class="project-tech"><span>Next.js</span><span class="hl">Claude API</span><span class="hl">SSE</span><span class="hl">AI Pipeline</span><span>Netlify API</span></div>
+            <div class="project-link">Visit Site <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          </div>
+          <div class="project-visual">
+            <div class="project-visual-bg pv-4"></div>
+            <video class="project-visual-img" autoplay loop muted playsinline>
+              <source src="assets/recode-demo.mp4" type="video/mp4">
+            </video>
+          </div>
+        </a>
       </div>
     </div>
-    <a href="https://casinore.io" target="_blank" class="project-card reveal spotlight-card">
-      <div class="project-info">
-        <span class="project-tag">Blockchain &amp; Web3</span>
-        <h3>Casinore.io</h3>
-        <p class="project-origin">A hobby experiment — I wanted to explore Web3 by tinkering with open-source blockchain code and see how far I could push it.</p>
-        <p>A decentralized, fully secure blockchain platform built with Privy for seamless wallet authentication. Features trustless architecture, on-chain transactions, and a robust security-first approach to Web3 gaming.</p>
-        <div class="project-tech"><span class="hl">Blockchain</span><span class="hl">Privy</span><span>Web3</span><span>Node.js</span><span>Decentralized</span></div>
-        <div class="project-link">Visit Site <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+    <div class="project-stack-item" style="--i:2">
+      <div class="project-stuck">
+        <div class="project-card reveal spotlight-card">
+          <div class="project-info">
+            <span class="project-tag">AI &amp; Automation</span>
+            <span class="project-status">In Development</span>
+            <h3>AI Job Matcher</h3>
+            <p>A web extension that scrapes job listings, parses structured data, and matches roles using resume-aware LLM analysis. Generates personalized cold emails with tone control via OpenAI API. Full automation pipeline: scrape → parse → match → generate → review.</p>
+            <div class="project-tech"><span>Web Extension</span><span class="hl">OpenAI API</span><span class="hl">LLM</span><span class="hl">Automation</span></div>
+          </div>
+          <div class="project-visual">
+            <div class="project-visual-bg pv-5"></div>
+            <video class="project-visual-img" autoplay loop muted playsinline>
+              <source src="assets/jobmatch-demo.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
       </div>
-      <div class="project-visual">
-        <div class="project-visual-bg pv-2"></div>
-        <img src="assets/casinore-preview.webp" alt="Casinore.io platform screenshot" class="project-visual-img" loading="lazy">
+    </div>
+    <div class="project-stack-item" style="--i:3">
+      <div class="project-stuck">
+        <div class="project-card reveal spotlight-card">
+          <div class="project-info">
+            <span class="project-tag">AI &amp; Automation</span>
+            <h3>Job Email Watcher</h3>
+            <p>An end-to-end n8n automation pipeline that monitors Gmail for job alerts (Indeed, Upwork, JobStreet), scores listings against my resume using GPT-4o with a hybrid AI + code salary algorithm, logs everything to Google Sheets, and sends Telegram notifications for high-scoring matches.</p>
+            <div class="project-tech"><span class="hl">n8n</span><span class="hl">OpenAI GPT-4o</span><span>Gmail API</span><span>Google Sheets API</span><span class="hl">Telegram Bot API</span><span>JavaScript</span></div>
+          </div>
+          <div class="project-visual">
+            <div class="project-visual-bg pv-6"></div>
+            <img src="assets/jobwatcher-preview.webp" alt="Job Email Watcher n8n workflow diagram" class="project-visual-img" loading="lazy">
+          </div>
+        </div>
       </div>
-    </a>
-    <a href="https://kikoysbike.app" target="_blank" class="project-card reveal spotlight-card">
-      <div class="project-info">
-        <span class="project-tag">E-Commerce &amp; AI</span>
-        <h3>AI-Integrated BikeShop</h3>
-        <p>A full-featured e-commerce platform for a bike shop, enhanced with AI-powered product recommendations and intelligent search. Built as a thesis project demonstrating LLM integration in online retail.</p>
-        <div class="project-tech"><span>React</span><span>Next.js</span><span class="hl">AI / LLM</span><span>Vercel</span></div>
-        <div class="project-link">Visit Site <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+    </div>
+    <div class="project-stack-item" style="--i:4">
+      <div class="project-stuck">
+        <a href="https://casinore.io" target="_blank" class="project-card reveal spotlight-card">
+          <div class="project-info">
+            <span class="project-tag">Blockchain &amp; Web3</span>
+            <h3>Casinore.io</h3>
+            <p class="project-origin">A hobby experiment — I wanted to explore Web3 by tinkering with open-source blockchain code and see how far I could push it.</p>
+            <p>A decentralized, fully secure blockchain platform built with Privy for seamless wallet authentication. Features trustless architecture, on-chain transactions, and a robust security-first approach to Web3 gaming.</p>
+            <div class="project-tech"><span class="hl">Blockchain</span><span class="hl">Privy</span><span>Web3</span><span>Node.js</span><span>Decentralized</span></div>
+            <div class="project-link">Visit Site <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          </div>
+          <div class="project-visual">
+            <div class="project-visual-bg pv-2"></div>
+            <img src="assets/casinore-preview.webp" alt="Casinore.io platform screenshot" class="project-visual-img" loading="lazy">
+          </div>
+        </a>
       </div>
-      <div class="project-visual">
-        <div class="project-visual-bg pv-3"></div>
-        <img src="assets/kikoysbike-preview.webp" alt="Kikoy's Bike Shop homepage screenshot" class="project-visual-img" loading="lazy">
+    </div>
+    <div class="project-stack-item" style="--i:5">
+      <div class="project-stuck">
+        <a href="https://kikoysbike.app" target="_blank" class="project-card reveal spotlight-card">
+          <div class="project-info">
+            <span class="project-tag">E-Commerce &amp; AI</span>
+            <h3>AI-Integrated BikeShop</h3>
+            <p>A full-featured e-commerce platform for a bike shop, enhanced with AI-powered product recommendations and intelligent search. Built as a thesis project demonstrating LLM integration in online retail.</p>
+            <div class="project-tech"><span>React</span><span>Next.js</span><span class="hl">AI / LLM</span><span>Vercel</span></div>
+            <div class="project-link">Visit Site <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          </div>
+          <div class="project-visual">
+            <div class="project-visual-bg pv-3"></div>
+            <img src="assets/kikoysbike-preview.webp" alt="Kikoy's Bike Shop homepage screenshot" class="project-visual-img" loading="lazy">
+          </div>
+        </a>
       </div>
-    </a>
+    </div>
   </div>
   <div class="swipe-hint">
     <span>Swipe</span>
@@ -1616,7 +1715,7 @@ footer .footer-accent { color: var(--accent); }
   </div>
   <div class="about-grid">
     <div class="about-text reveal">
-      <p>I'm a Full Stack Developer with 5+ years of on-and-off experience building independent projects — scalable web, mobile, and AI-integrated systems. Specialized in LLM integration, real-time WebSocket systems, Dockerized cloud deployments, and CI/CD automation.</p>
+      <p class="char-reveal">I'm a Full Stack Developer with 5+ years of on-and-off experience building independent projects — scalable web, mobile, and AI-integrated systems. Specialized in LLM integration, real-time WebSocket systems, Dockerized cloud deployments, and CI/CD automation.</p>
       <p>My toolkit spans the entire stack — JavaScript, TypeScript, Python, React, React Native, Next.js, Node.js, Express, and PostgreSQL. I bring hands-on experience in AI workflow automation, including LLM integration with Claude and GPT, Stable Diffusion, ComfyUI, and prompt engineering.</p>
       <p>Proven ownership of end-to-end system architecture, backend performance optimization, and production infrastructure. Whether it's a real-time multiplayer game, an AI-powered redesigner, or a blockchain DApp, I ship products with meticulous attention to detail.</p>
     </div>
@@ -2225,6 +2324,170 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
       update(cat);
     });
   });
+})();
+</script>
+
+<!-- Scroll-driven motion: marquee, character reveal, card stacking. Own block so
+     a failure here cannot take the pitch form below down with it. -->
+<script>
+(function() {
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- Marquee ---- */
+  var MARQUEE = [
+    '01-consistency-girl-redhair-peace', '02-consistency-girl-purplehair-peace',
+    '03-consistency-girl-pinkhair-wink', '04-expression-girl-blonde-smug',
+    '05-expression-girl-gradient-starryeyes', '06-expression-girl-purple-excited',
+    '07-gamer-girl-headphones-jacket', '08-gamer-girl-catears-streamer',
+    '09-gamer-boy-energydrink-headphones', '10-gamer-boy-pocky-chillgamer',
+    '11-prop-girl-redhair-bubblegum', '12-prop-girl-blonde-cap-bubblegum',
+    '13-prop-girl-pink-catears-lollipop', '14-prop-girl-brown-bobatea',
+    '15-archetype-boy-mysterious-hoodie-mask', '16-archetype-boy-edgelord-eyepatch',
+    '17-archetype-boy-royalty-crown', '18-archetype-girl-witch-hat',
+    '19-archetype-girl-scientist-labcoat', '20-archetype-boy-techscientist-vrvisor',
+    '21-street-girl-cap-bubblegum-chains', '22-street-boy-sunglasses-bubblegum'
+  ];
+
+  var strip = document.getElementById('marqueeStrip');
+  var tracks = strip ? strip.querySelectorAll('.marquee-track') : [];
+
+  if (strip && tracks.length === 2) {
+    var half = Math.ceil(MARQUEE.length / 2);
+    var rows = [MARQUEE.slice(0, half), MARQUEE.slice(half)];
+
+    rows.forEach(function(names, r) {
+      var frag = document.createDocumentFragment();
+      // Tripled so the row never runs out of tiles at either scroll extreme.
+      for (var pass = 0; pass < 3; pass++) {
+        names.forEach(function(n) {
+          var tile = document.createElement('div');
+          tile.className = 'marquee-tile';
+          var img = document.createElement('img');
+          img.src = 'assets/ai-showcase/' + n + '.webp';
+          img.alt = '';
+          img.loading = 'lazy';
+          img.decoding = 'async';
+          tile.appendChild(img);
+          frag.appendChild(tile);
+        });
+      }
+      tracks[r].appendChild(frag);
+    });
+
+    // Centre each row on its middle copy so there is runway in both directions.
+    var basis = [];
+    tracks.forEach(function(t) { basis.push(-t.scrollWidth / 3); });
+
+    var stripTop = 0;
+    function measure() {
+      var r = strip.getBoundingClientRect();
+      stripTop = r.top + window.scrollY;
+      basis = [];
+      tracks.forEach(function(t) { basis.push(-t.scrollWidth / 3); });
+    }
+    measure();
+    window.addEventListener('resize', measure);
+
+    var mTicking = false;
+    function moveMarquee() {
+      mTicking = false;
+      var offset = (window.scrollY - stripTop + window.innerHeight) * 0.3;
+      tracks.forEach(function(t, idx) {
+        var dir = parseFloat(t.dataset.dir) || 1;
+        t.style.transform = 'translate3d(' + (basis[idx] + dir * (offset - 200)) + 'px,0,0)';
+      });
+    }
+    if (!reduced) {
+      moveMarquee();
+      window.addEventListener('scroll', function() {
+        if (!mTicking) { mTicking = true; requestAnimationFrame(moveMarquee); }
+      }, { passive: true });
+    }
+  }
+
+  /* ---- Character-by-character scroll reveal ---- */
+  var para = document.querySelector('.char-reveal');
+  if (para && !reduced) {
+    var text = para.textContent;
+    para.textContent = '';
+    var chars = [];
+    for (var c = 0; c < text.length; c++) {
+      var s = document.createElement('span');
+      s.className = 'ch';
+      // Non-breaking space keeps spans from collapsing, but a normal space is
+      // needed for wrapping — so only swap when the span would collapse.
+      s.textContent = text[c];
+      if (text[c] === ' ') s.style.whiteSpace = 'pre';
+      para.appendChild(s);
+      chars.push(s);
+    }
+
+    var cTicking = false;
+    function revealChars() {
+      cTicking = false;
+      var rect = para.getBoundingClientRect();
+      var vh = window.innerHeight;
+      // Starts when the paragraph is 85% down the viewport and completes while
+      // it is still comfortably in view at 25% — tying completion to the
+      // paragraph's own height let it finish only after scrolling off the top.
+      var start = vh * 0.85;
+      var end = vh * 0.25;
+      var progress = (start - rect.top) / (start - end);
+      progress = Math.min(1, Math.max(0, progress));
+      var lit = progress * chars.length;
+      for (var k = 0; k < chars.length; k++) {
+        chars[k].style.opacity = k < lit ? 1 : 0.18;
+      }
+    }
+    revealChars();
+    window.addEventListener('scroll', function() {
+      if (!cTicking) { cTicking = true; requestAnimationFrame(revealChars); }
+    }, { passive: true });
+  }
+
+  /* ---- Sticky card stacking ---- */
+  var items = Array.prototype.slice.call(document.querySelectorAll('.project-stack-item'));
+  if (items.length && !reduced) {
+    var total = items.length;
+    var sTicking = false;
+
+    // The items are sticky, so their rect.top clamps and cannot drive progress.
+    // The grid is not sticky, so derive each item's natural position from it.
+    var grid = items[0].parentElement;
+    var gridTop = 0, itemH = 1;
+    function measureStack() {
+      gridTop = grid.getBoundingClientRect().top + window.scrollY;
+      itemH = items[0].getBoundingClientRect().height || 1;
+    }
+    measureStack();
+
+    function stack() {
+      sTicking = false;
+      if (window.innerWidth <= 768) return;
+      for (var n = 0; n < total; n++) {
+        var card = items[n].querySelector('.project-card');
+        if (!card) continue;
+        var p = Math.min(1, Math.max(0, (window.scrollY - (gridTop + n * itemH)) / itemH));
+        var target = 1 - (total - 1 - n) * 0.02;
+        card.style.transform = 'scale(' + (1 - (1 - target) * p).toFixed(4) + ')';
+      }
+    }
+
+    function onResize() {
+      if (window.innerWidth <= 768) {
+        items.forEach(function(it) {
+          var c = it.querySelector('.project-card');
+          if (c) c.style.transform = '';
+        });
+      } else { measureStack(); stack(); }
+    }
+
+    stack();
+    window.addEventListener('scroll', function() {
+      if (!sTicking) { sTicking = true; requestAnimationFrame(stack); }
+    }, { passive: true });
+    window.addEventListener('resize', onResize);
+  }
 })();
 </script>
 
