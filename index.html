@@ -70,6 +70,7 @@
 [data-theme="light"] .pv-4 { background: linear-gradient(135deg, #f0eed0, #ead8b8, #e8dcc0); }
 [data-theme="light"] .pv-5 { background: linear-gradient(135deg, #d0ddf0, #b8c8ea, #c8d4f0); }
 [data-theme="light"] .pv-6 { background: linear-gradient(135deg, #f0d0d8, #eab8c8, #f0c8d4); }
+[data-theme="light"] .pv-7 { background: linear-gradient(135deg, #cfe4f5, #b6d8ee, #d4ecf7); }
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: hidden; }
 body { font-family: var(--sans); background: var(--bg); color: var(--text); overflow-x: hidden; -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; }
@@ -193,13 +194,39 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 .project-card:hover { border: 1px solid transparent; background: linear-gradient(var(--bg-card), var(--bg-card)) padding-box, conic-gradient(from var(--border-angle), transparent 40%, var(--gradient-1), var(--gradient-2), transparent 60%) border-box; transform: translateY(-4px); box-shadow: 0 20px 60px var(--shadow); animation: rotateBorder 3s linear infinite; }
 .project-info { padding: 3rem; display: flex; flex-direction: column; justify-content: center; }
 .project-tag { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent); margin-bottom: 1rem; }
-.project-status { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); background: var(--white-overlay); border: 1px solid var(--border); padding: 0.2rem 0.6rem; border-radius: 999px; margin-left: 0.75rem; }
+/* align-self is load-bearing: .project-info is a flex column, so a bare span
+   stretches to full width and the pill stops looking like a pill. */
+.project-status { align-self: flex-start; font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); background: var(--white-overlay); border: 1px solid var(--border); padding: 0.2rem 0.6rem; border-radius: 999px; margin-bottom: 0.9rem; }
 .project-info h3 { font-family: var(--serif); font-size: 1.8rem; font-weight: 400; margin-bottom: 0.75rem; }
 .project-info p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.7; font-weight: 300; }
 .project-origin { font-size: 0.82rem; color: var(--text-muted); font-style: italic; line-height: 1.65; font-weight: 300; margin-bottom: 0.5rem; opacity: 0.85; }
 .project-tech { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.25rem; }
 .project-tech span { font-family: var(--mono); font-size: 0.7rem; padding: 0.35rem 0.75rem; border: 1px solid var(--border); border-radius: 100px; color: var(--text-dim); }
 .project-tech span.hl { border-color: rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.3); color: var(--accent); background: var(--accent-dim); }
+/* Live traction numbers inside a project card. Smaller type than .stat-card in
+   About on purpose — these support the card's copy, they aren't the page's own
+   headline. Rule above them separates claims from evidence. */
+.project-metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
+.project-metrics.is-three { grid-template-columns: repeat(3, 1fr); }
+.project-metric-num { font-family: var(--serif); font-size: 1.45rem; color: var(--accent); line-height: 1; }
+/* Keyword emphasis in card copy — weight and color only, no size change, so the
+   scanned words lift without breaking the paragraph's rhythm. */
+.project-info p strong { font-weight: 500; color: var(--text); }
+/* No global code style exists — only section-scoped ones — so card copy needs
+   its own or it falls back to the browser's default monospace. */
+.project-info code { font-family: var(--mono); font-size: 0.78em; color: var(--accent); background: var(--accent-dim); padding: 0.1rem 0.35rem; border-radius: 4px; }
+.project-metric-label { font-family: var(--mono); font-size: 0.56rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-dim); margin-top: 0.45rem; line-height: 1.45; }
+/* Dates the numbers so the card ages honestly, and carries the organic-growth
+   claim — which is the point of the numbers, not a footnote to them. */
+.project-metrics-note, .project-info .project-metrics-note { font-size: 0.72rem; font-style: italic; color: var(--text-dim); margin-top: 0.9rem; line-height: 1.6; }
+/* Metrics can live under the media instead of in the text column: the video
+   pins to the top and the numbers fill the space below it, which pulls ~130px
+   out of the info column and closes most of the height gap. */
+.project-visual.is-stacked { flex-direction: column; justify-content: flex-start; align-items: stretch; }
+/* Opaque card background, not the gradient: the numbers read as part of the
+   card's content, matching the text column beside them. */
+.project-visual-meta { position: relative; z-index: 1; padding: 1.6rem 2rem 1.9rem; background: var(--bg-card); flex: 1; }
+.project-visual-meta .project-metrics { margin-top: 0; padding-top: 0; border-top: none; }
 .project-visual { min-height: 320px; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 .project-visual-bg { position: absolute; inset: 0; }
 .pv-1 { background: linear-gradient(135deg, #0d1a00, #1a2e00, #0d1a0a); }
@@ -208,6 +235,8 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 .pv-4 { background: linear-gradient(135deg, #1a1a0d, #1a0d00, #0d0a00); }
 .pv-5 { background: linear-gradient(135deg, #0d0d1a, #001a2e, #0a0d1a); }
 .pv-6 { background: linear-gradient(135deg, #1a0d0d, #2e001a, #1a0a0d); }
+/* MDS Pro — navy into cyan, matching the product's own palette. */
+.pv-7 { background: linear-gradient(135deg, #001424, #002b3d, #00131f); }
 .project-visual-content { position: relative; z-index: 1; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; }
 .project-visual-icon svg { width: 56px; height: 56px; stroke: var(--text-dim); fill: none; stroke-width: 1; opacity: 0.6; transition: all 0.4s; }
 .project-card:hover .project-visual-icon svg { stroke: var(--accent); opacity: 1; }
@@ -466,6 +495,10 @@ footer .footer-accent { color: var(--accent); }
   .projects-grid .project-visual { height: 200px; min-height: 0; flex-shrink: 0; }
   .projects-grid .project-visual-img { object-fit: cover; object-position: top; }
   .projects-grid .project-tech span { font-size: 0.6rem; padding: 0.25rem 0.5rem; }
+  /* 4-up would leave ~70px per tile inside an 85vw card — 2x2 keeps the
+     numbers readable and the labels off a third line. */
+  .projects-grid .project-metrics { grid-template-columns: 1fr 1fr; gap: 0.9rem 0.75rem; margin-top: 1.15rem; padding-top: 1rem; }
+  .projects-grid .project-metric-num { font-size: 1.25rem; }
   .swipe-hint { display: none; }
   @keyframes swipeHint { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(8px); } }
   .scroll-dots { display: flex; justify-content: center; gap: 0.5rem; padding-top: 1rem; }
@@ -848,14 +881,6 @@ footer .footer-accent { color: var(--accent); }
 
 <div class="divider"></div>
 
-<!-- Tiles are built in JS from assets/ai-showcase rather than hand-written as
-     66 img tags. Purely decorative, hence aria-hidden. -->
-<div class="marquee-strip" id="marqueeStrip" aria-hidden="true">
-  <div class="marquee-row"><div class="marquee-track" data-dir="1"></div></div>
-  <div class="marquee-row"><div class="marquee-track" data-dir="-1"></div></div>
-</div>
-<p class="marquee-caption reveal">60+ characters generated with custom ComfyUI pipelines</p>
-
 <section id="projects">
   <p class="section-label reveal">01 / Projects</p>
   <h2 class="section-title reveal">Selected Work</h2>
@@ -869,16 +894,51 @@ footer .footer-accent { color: var(--accent); }
             <p class="project-origin">My family's competitive Wordle trash talk needed a multiplayer version — none existed, so I built one.</p>
             <p>A real-time multiplayer word game with a Shannon entropy–based AI bot engine that maximizes information gain per guess. Features a constraint-satisfaction solver for edge cases, 5-tier ELO matchmaking (600–2000) with probabilistic human imperfection modeling, adaptive difficulty scaling, and 60+ AI-generated avatars via custom ComfyUI pipelines.</p>
             <div class="project-tech"><span class="hl">React Native</span><span>Node.js</span><span class="hl">WebSocket</span><span class="hl">Shannon Entropy</span><span class="hl">AI Bot Engine</span><span>ELO System</span></div>
+            <div class="project-metrics">
+              <div><div class="project-metric-num">570</div><div class="project-metric-label">Players<br>reached a game</div></div>
+              <div><div class="project-metric-num">1,045</div><div class="project-metric-label">Multiplayer games<br>2+ players</div></div>
+              <div><div class="project-metric-num">39%</div><div class="project-metric-label">Came back<br>a later day</div></div>
+              <div><div class="project-metric-num">176</div><div class="project-metric-label">Active<br>last 30 days</div></div>
+            </div>
+            <p class="project-metrics-note">As of Aug 2026 — grown entirely by word of mouth, with no ads and no marketing spend.</p>
             <div class="project-link">Visit Site <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
           </div>
           <div class="project-visual">
             <div class="project-visual-bg pv-1"></div>
-            <img src="assets/wordwarz-preview.webp" alt="WordWarz.io game lobby screenshot" class="project-visual-img" loading="lazy">
+            <img src="assets/wordwarz-collage-2.webp" alt="WordWarz.io on iPhone — the App Store listing, a live match board, and the spectator view of all players" class="project-visual-img" loading="lazy" width="1248" height="867">
           </div>
         </a>
       </div>
     </div>
     <div class="project-stack-item" style="--i:1">
+      <div class="project-stuck">
+        <a href="https://mdsprosolutions.com" target="_blank" class="project-card reveal spotlight-card">
+          <div class="project-info">
+            <span class="project-tag">Healthcare SaaS &amp; Ops</span>
+            <h3>MDS Pro Solutions</h3>
+            <p class="project-origin">Payroll ran on a Google Sheet the nurses typed their own hours into — editable by anyone, with no record of what changed or who changed it.</p>
+            <p><strong>The users are the threat model — admins included.</strong> Remote nurses in Manila on US hours: no badge reader, no supervisor, real money riding on an editable cell. So I removed the ability to type a time at all — <strong>every punch is <code>now()</code> inside Postgres</strong>, and the API rejects a timestamp from the request body or from its own clock. <strong>Nothing is edited in place:</strong> a missed punch becomes a correction an admin approves, stamped with who and when, so the audit trail is the data model rather than a log bolted on beside it. Shifts straddle Manila midnight, so the dashboard cuts cards from shift chains instead of calendar days — and every rate and rule carries an effective-from date, so switching one on never rewrites payroll already paid.</p>
+            <div class="project-tech"><span class="hl">TypeScript</span><span class="hl">Fastify</span><span class="hl">Supabase / Postgres</span><span class="hl">Chrome MV3</span><span>Postgres RLS</span><span class="hl">Claude API</span><span>ExcelJS</span></div>
+            <div class="project-link">Visit Site <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          </div>
+          <div class="project-visual is-stacked">
+            <div class="project-visual-bg pv-7"></div>
+            <video class="project-visual-img" autoplay loop muted playsinline>
+              <source src="assets/mdspro-demo-2.mp4" type="video/mp4">
+            </video>
+            <div class="project-visual-meta">
+              <div class="project-metrics is-three">
+                <div><div class="project-metric-num">10</div><div class="project-metric-label">Daily active users<br>7 nurses · 2 admins · HR</div></div>
+                <div><div class="project-metric-num">100%</div><div class="project-metric-label">Timestamps server-set<br>never client-supplied</div></div>
+                <div><div class="project-metric-num">0</div><div class="project-metric-label">Rows edited in place<br>every change attributed</div></div>
+              </div>
+              <p class="project-metrics-note">In production and used every workday — headcount rises as the company keeps hiring.</p>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="project-stack-item" style="--i:2">
       <div class="project-stuck">
         <a href="https://recode.kimlj.dev" target="_blank" class="project-card reveal spotlight-card">
           <div class="project-info">
@@ -897,7 +957,7 @@ footer .footer-accent { color: var(--accent); }
         </a>
       </div>
     </div>
-    <div class="project-stack-item" style="--i:2">
+    <div class="project-stack-item" style="--i:3">
       <div class="project-stuck">
         <div class="project-card reveal spotlight-card">
           <div class="project-info">
@@ -916,7 +976,7 @@ footer .footer-accent { color: var(--accent); }
         </div>
       </div>
     </div>
-    <div class="project-stack-item" style="--i:3">
+    <div class="project-stack-item" style="--i:4">
       <div class="project-stuck">
         <div class="project-card reveal spotlight-card">
           <div class="project-info">
@@ -932,7 +992,7 @@ footer .footer-accent { color: var(--accent); }
         </div>
       </div>
     </div>
-    <div class="project-stack-item" style="--i:4">
+    <div class="project-stack-item" style="--i:5">
       <div class="project-stuck">
         <a href="https://casinore.io" target="_blank" class="project-card reveal spotlight-card">
           <div class="project-info">
@@ -946,23 +1006,6 @@ footer .footer-accent { color: var(--accent); }
           <div class="project-visual">
             <div class="project-visual-bg pv-2"></div>
             <img src="assets/casinore-preview.webp" alt="Casinore.io platform screenshot" class="project-visual-img" loading="lazy">
-          </div>
-        </a>
-      </div>
-    </div>
-    <div class="project-stack-item" style="--i:5">
-      <div class="project-stuck">
-        <a href="https://kikoysbike.app" target="_blank" class="project-card reveal spotlight-card">
-          <div class="project-info">
-            <span class="project-tag">E-Commerce &amp; AI</span>
-            <h3>AI-Integrated BikeShop</h3>
-            <p>A full-featured e-commerce platform for a bike shop, enhanced with AI-powered product recommendations and intelligent search. Built as a thesis project demonstrating LLM integration in online retail.</p>
-            <div class="project-tech"><span>React</span><span>Next.js</span><span class="hl">AI / LLM</span><span>Vercel</span></div>
-            <div class="project-link">Visit Site <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-          </div>
-          <div class="project-visual">
-            <div class="project-visual-bg pv-3"></div>
-            <img src="assets/kikoysbike-preview.webp" alt="Kikoy's Bike Shop homepage screenshot" class="project-visual-img" loading="lazy">
           </div>
         </a>
       </div>
@@ -981,6 +1024,15 @@ footer .footer-accent { color: var(--accent); }
 </div>
 
 <div class="divider"></div>
+
+<!-- Tiles are built in JS from assets/ai-showcase rather than hand-written as
+     66 img tags. Purely decorative, hence aria-hidden. Sits here as the lead-in
+     to the AI Showcase, which is the section that explains how they were made. -->
+<div class="marquee-strip" id="marqueeStrip" aria-hidden="true">
+  <div class="marquee-row"><div class="marquee-track" data-dir="1"></div></div>
+  <div class="marquee-row"><div class="marquee-track" data-dir="-1"></div></div>
+</div>
+<p class="marquee-caption reveal">60+ characters generated with custom ComfyUI pipelines</p>
 
 <section id="ai-showcase">
   <p class="section-label reveal">02 / AI Showcase</p>
@@ -2387,6 +2439,10 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
     }
     measure();
     window.addEventListener('resize', measure);
+    // The strip sits far down the page now, below cards whose videos have no
+    // intrinsic size until metadata arrives. Each one that resolves shifts the
+    // strip, so a single init measurement leaves the parallax basis stale.
+    window.addEventListener('load', measure);
 
     var mTicking = false;
     function moveMarquee() {
