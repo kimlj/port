@@ -199,6 +199,11 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 .project-status { align-self: flex-start; font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); background: var(--white-overlay); border: 1px solid var(--border); padding: 0.2rem 0.6rem; border-radius: 999px; margin-bottom: 0.9rem; }
 .project-info h3 { font-family: var(--serif); font-size: 1.8rem; font-weight: 400; margin-bottom: 0.75rem; }
 .project-info p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.7; font-weight: 300; }
+.project-role { font-size: 0.85rem; color: var(--text); font-weight: 500; line-height: 1.6; margin-bottom: 0.25rem; }
+.project-points { list-style: none; margin-top: 0.9rem; display: grid; gap: 0.5rem; }
+.project-points li { position: relative; padding-left: 1.1rem; font-size: 0.85rem; line-height: 1.6; color: var(--text-muted); font-weight: 300; }
+.project-points li::before { content: ''; position: absolute; left: 0; top: 0.62rem; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+.project-points li strong { color: var(--text); font-weight: 500; }
 .project-origin { font-size: 0.82rem; color: var(--text-muted); font-style: italic; line-height: 1.65; font-weight: 300; margin-bottom: 0.5rem; opacity: 0.85; }
 .project-tech { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.25rem; }
 .project-tech span { font-family: var(--mono); font-size: 0.7rem; padding: 0.35rem 0.75rem; border: 1px solid var(--border); border-radius: 100px; color: var(--text-dim); }
@@ -227,6 +232,7 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
    card's content, matching the text column beside them. */
 .project-visual-meta { position: relative; z-index: 1; padding: 1.6rem 2rem 1.9rem; background: var(--bg-card); flex: 1; }
 .project-visual-meta .project-metrics { margin-top: 0; padding-top: 0; border-top: none; }
+.project-visual-meta .project-tech { margin-top: 1.15rem; padding-top: 1.15rem; border-top: 1px solid var(--border); }
 .project-visual { min-height: 320px; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 .project-visual-bg { position: absolute; inset: 0; }
 .pv-1 { background: linear-gradient(135deg, #0d1a00, #1a2e00, #0d1a0a); }
@@ -890,6 +896,7 @@ footer .footer-accent { color: var(--accent); }
         <a href="https://wordwarz.io" target="_blank" class="project-card reveal spotlight-card">
           <div class="project-info">
             <span class="project-tag">Web &amp; Mobile App</span>
+            <span class="project-status">Live on the App Store &middot; Android in review</span>
             <h3>WordWarz.io</h3>
             <p class="project-origin">My family's competitive Wordle trash talk needed a multiplayer version — none existed, so I built one.</p>
             <p>A real-time multiplayer word game with a Shannon entropy–based AI bot engine that maximizes information gain per guess. Features a constraint-satisfaction solver for edge cases, 5-tier ELO matchmaking (600–2000) with probabilistic human imperfection modeling, adaptive difficulty scaling, and 60+ AI-generated avatars via custom ComfyUI pipelines.</p>
@@ -900,7 +907,7 @@ footer .footer-accent { color: var(--accent); }
               <div><div class="project-metric-num">39%</div><div class="project-metric-label">Came back<br>a later day</div></div>
               <div><div class="project-metric-num">176</div><div class="project-metric-label">Active<br>last 30 days</div></div>
             </div>
-            <p class="project-metrics-note">As of Aug 2026 — grown entirely by word of mouth, with no ads and no marketing spend.</p>
+            <p class="project-metrics-note">As of Aug 2026 — shipped to the iOS App Store, with the Android build in review. Grown entirely by word of mouth, with no ads and no marketing spend.</p>
             <div class="project-link">Visit Site <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
           </div>
           <div class="project-visual">
@@ -916,9 +923,17 @@ footer .footer-accent { color: var(--accent); }
           <div class="project-info">
             <span class="project-tag">Healthcare SaaS &amp; Ops</span>
             <h3>MDS Pro Solutions</h3>
-            <p class="project-origin">Payroll ran on a Google Sheet the nurses typed their own hours into — editable by anyone, with no record of what changed or who changed it.</p>
-            <p><strong>The users are the threat model — admins included.</strong> Remote nurses in Manila on US hours: no badge reader, no supervisor, real money riding on an editable cell. So I removed the ability to type a time at all — <strong>every punch is <code>now()</code> inside Postgres</strong>, and the API rejects a timestamp from the request body or from its own clock. <strong>Nothing is edited in place:</strong> a missed punch becomes a correction an admin approves, stamped with who and when, so the audit trail is the data model rather than a log bolted on beside it. Shifts straddle Manila midnight, so the dashboard cuts cards from shift chains instead of calendar days — and every rate and rule carries an effective-from date, so switching one on never rewrites payroll already paid.</p>
-            <div class="project-tech"><span class="hl">TypeScript</span><span class="hl">Fastify</span><span class="hl">Supabase / Postgres</span><span class="hl">Chrome MV3</span><span>Postgres RLS</span><span class="hl">Claude API</span><span>ExcelJS</span></div>
+            <p class="project-role">Sole developer &mdash; a one-man team on a production system a US healthcare client runs its payroll and billing on. Architecture, database, API, admin dashboard, Chrome extension, servers and the owners' spreadsheet automation.</p>
+            <ul class="project-points">
+              <li><strong>Built the admin dashboard</strong> &mdash; 6,000+ lines of vanilla JS across seven surfaces (overview, timesheets, payroll, invoicing, corrections, team), no framework and no build step.</li>
+              <li><strong>Live tracking overview</strong> &mdash; nurse status streams in over Postgres realtime as punches land, with hours and payroll donut charts, benchmark adherence per nurse, and a minute-by-minute activity timeline.</li>
+              <li><strong>Automated client invoicing</strong> end to end &mdash; billable-hours ceiling, preview-then-issue flow, and generated letterhead invoice documents.</li>
+              <li><strong>Automated billing into the owners' Google Sheet</strong> over the Sheets API &mdash; fills blank cells only, reports mismatches, never overwrites a figure a human typed.</li>
+              <li><strong>Built reporting panels inside that sheet</strong> with Apps Script &mdash; company position, per-pay-period P&amp;L, and per-nurse margin.</li>
+              <li><strong>Generated timesheet, payroll and invoice Excel workbooks</strong> from one shared pay calculation, so no two surfaces disagree by a cent.</li>
+              <li><strong>Added plain-English database querying</strong> on the Claude API, executed through a read-only Postgres role with per-question cost tracking.</li>
+              <li><strong>Shipped the nurses' Chrome MV3 extension</strong> through the Web Store; 37 Postgres migrations with row-level security throughout.</li>
+            </ul>
             <div class="project-link">Visit Site <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
           </div>
           <div class="project-visual is-stacked">
@@ -933,6 +948,7 @@ footer .footer-accent { color: var(--accent); }
                 <div><div class="project-metric-num">0</div><div class="project-metric-label">Rows edited in place<br>every change attributed</div></div>
               </div>
               <p class="project-metrics-note">In production and used every workday — headcount rises as the company keeps hiring.</p>
+              <div class="project-tech"><span class="hl">TypeScript</span><span class="hl">Fastify</span><span class="hl">Supabase / Postgres</span><span class="hl">Chrome MV3</span><span>Postgres RLS</span><span class="hl">Google Sheets API</span><span>Apps Script</span><span class="hl">ExcelJS</span><span class="hl">Claude API</span></div>
             </div>
           </div>
         </a>
