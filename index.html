@@ -1854,7 +1854,7 @@ footer .footer-accent { color: var(--accent); }
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
       Download DOCX
     </a>
-    <a href="mailto:kljulongbayan@gmail.com" class="contact-pill">
+    <a class="contact-pill js-email" data-eu="kljulongbayan" data-ed="gmail.com" href="#">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4l-10 8L2 4"/></svg>
       Email
     </a>
@@ -2642,7 +2642,7 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
       count.textContent = '0 / ' + MAX;
       say('Got it — landed in my inbox. I’ll reply to ' + from + '.', 'ok');
     } catch (err) {
-      say(err.message + ' You can also email me directly at kljulongbayan@gmail.com.', 'err');
+      say(err.message + ' You can also email me directly at ' + ['kljulongbayan', 'gmail.com'].join('@') + '.', 'err');
     } finally {
       submit.disabled = false;
       submit.childNodes[0].nodeValue = 'Send it over';
@@ -2657,5 +2657,14 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
 <script src="assets/js/semantic-bloom.js" defer></script>
 <script src="assets/js/horizon-glow.js" defer></script>
 <script src="assets/js/project-visuals.js" defer></script>
+<script>
+  /* Assemble email links at runtime so the raw address never sits in the HTML
+     source for scrapers to harvest. Real users see and click it normally. */
+  document.querySelectorAll('a.js-email').forEach(function (a) {
+    var addr = (a.dataset.eu || '') + '@' + (a.dataset.ed || '');
+    a.href = 'mailto:' + addr;
+    if (a.dataset.showText === '1') a.textContent = addr;
+  });
+</script>
 </body>
 </html>
