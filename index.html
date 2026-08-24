@@ -122,6 +122,10 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 201; padding: 1.25rem
 .hero { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; justify-content: center; padding: 8rem 5vw 4rem; position: relative; overflow: visible; }
 .hero::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.02) 1px, transparent 1px); background-size: 80px 80px; mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black 20%, transparent 70%); -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black 20%, transparent 70%); animation: gridPulse 6s ease-in-out infinite; pointer-events: none; clip-path: inset(0); }
 @keyframes gridPulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+/* Semantic Bloom layer (assets/js/semantic-bloom.js). First child of .hero so
+   it paints below the z-index:1 avatar among equal stacking levels, while all
+   hero text keeps z-index:2. */
+.hero-bloom { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
 
 .hero-label { font-family: var(--mono); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--accent); margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.8s ease forwards 0.2s; position: relative; z-index: 2; }
 .hero h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(3rem, 8vw, 7rem); line-height: 1.05; letter-spacing: -0.02em; max-width: 900px; overflow: hidden; position: relative; z-index: 2; }
@@ -235,6 +239,9 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 .project-visual-meta .project-tech { margin-top: 1.15rem; padding-top: 1.15rem; border-top: 1px solid var(--border); }
 .project-visual { min-height: 320px; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 .project-visual-bg { position: absolute; inset: 0; }
+/* Shader layers (assets/js/project-visuals.js) sit inside the bg div, under
+   .project-visual-content's z-index:1, so icons/labels/media stay on top. */
+.project-visual-bg .pv-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .pv-1 { background: linear-gradient(135deg, #0d1a00, #1a2e00, #0d1a0a); }
 .pv-2 { background: linear-gradient(135deg, #001a1a, #002e1a, #001a0d); }
 .pv-3 { background: linear-gradient(135deg, #1a0d1a, #0d001a, #0a0d1a); }
@@ -296,6 +303,10 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 .timeline-item p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.65; font-weight: 300; }
 
 .contact-section { text-align: center; padding: 8rem 5vw; }
+/* z-index:0 makes the section the stacking context its glow canvas needs:
+   negative-z children paint behind the text but stay inside the section. */
+.contact-section { z-index: 0; }
+.horizon-canvas { position: absolute; left: 0; right: 0; bottom: 0; height: 46%; width: 100%; z-index: -1; pointer-events: none; }
 .contact-section .section-title { font-size: clamp(2.5rem, 5vw, 4.5rem); margin-bottom: 1rem; }
 .contact-sub { color: var(--text-muted); font-size: 1.1rem; font-weight: 300; margin-bottom: 3rem; }
 .contact-links { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
@@ -846,6 +857,7 @@ footer .footer-accent { color: var(--accent); }
 </div>
 
 <section class="hero">
+  <canvas class="hero-bloom" id="bloomCanvas" aria-hidden="true"></canvas>
   <p class="hero-label">Full Stack Developer | AI Developer | Backend Systems</p>
   <h1>
     <span class="hero-line">I'm Kim Julongbayan</span>
@@ -1799,6 +1811,7 @@ footer .footer-accent { color: var(--accent); }
 <div class="divider"></div>
 
 <section id="contact" class="contact-section">
+  <canvas class="horizon-canvas" id="horizonCanvas" aria-hidden="true"></canvas>
   <p class="section-label reveal">06 / Contact</p>
   <h2 class="section-title reveal">Let's build something <em>great</em></h2>
   <p class="contact-sub reveal">Open to collaborations, freelance work, and exciting opportunities.</p>
@@ -1816,6 +1829,9 @@ footer .footer-accent { color: var(--accent); }
         autocomplete="email" spellcheck="false" placeholder="you@company.com">
 
       <input class="pitch-hp" type="text" id="pitchHp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+      <!-- Cloudflare Turnstile (kimlj.dev widget, interaction-only) -->
+      <div class="cf-turnstile" data-sitekey="0x4AAAAAAEZvbDSYwRAttVQp" data-theme="auto" data-appearance="interaction-only" style="margin-top:16px"></div>
 
       <div class="pitch-footer">
         <span class="pitch-count" id="pitchCount">0 / 4000</span>
@@ -2602,6 +2618,10 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
     if (body.length > MAX) { say('That’s over ' + MAX + ' characters. Trim it down a little.', 'err'); idea.focus(); return; }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(from)) { say('That email doesn’t look right — I won’t be able to reply.', 'err'); email.focus(); return; }
 
+    const cfEl = form.querySelector('[name="cf-turnstile-response"]');
+    const cfToken = cfEl ? cfEl.value : '';
+    if (!cfToken) { say('Just a moment — finishing a quick spam check. Try sending again.', 'err'); return; }
+
     submit.disabled = true;
     submit.querySelector('svg').style.display = 'none';
     submit.childNodes[0].nodeValue = 'Sending';
@@ -2611,7 +2631,7 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
       const res = await fetch('/api/pitch', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idea: body, email: from, company: hp.value })
+        body: JSON.stringify({ idea: body, email: from, company: hp.value, turnstileToken: cfToken })
       });
       const data = await res.json().catch(() => ({}));
 
@@ -2627,9 +2647,15 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
       submit.disabled = false;
       submit.childNodes[0].nodeValue = 'Send it over';
       submit.querySelector('svg').style.display = '';
+      /* token is single-use — reset so a retry gets a fresh one */
+      if (window.turnstile) { try { window.turnstile.reset(); } catch (e) {} }
     }
   });
 })();
 </script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script src="assets/js/semantic-bloom.js" defer></script>
+<script src="assets/js/horizon-glow.js" defer></script>
+<script src="assets/js/project-visuals.js" defer></script>
 </body>
 </html>

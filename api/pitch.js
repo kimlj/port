@@ -37,6 +37,29 @@ function parseSender(value) {
   return { email: value.trim() };
 }
 
+// Cloudflare Turnstile server-side check. Fails OPEN when the secret is not
+// configured, so the form keeps working until TURNSTILE_SECRET_KEY is set in
+// Vercel; once it is set, a missing or invalid token is rejected.
+async function verifyTurnstile(token, ip) {
+  const secret = process.env.TURNSTILE_SECRET_KEY;
+  if (!secret) {
+    console.warn('pitch: TURNSTILE_SECRET_KEY not set — skipping Turnstile check.');
+    return true;
+  }
+  try {
+    const r = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ secret, response: token || '', remoteip: ip })
+    });
+    const d = await r.json().catch(() => ({}));
+    return !!d.success;
+  } catch (err) {
+    console.error('pitch: turnstile verify failed', err);
+    return false;
+  }
+}
+
 function escapeHtml(s) {
   return String(s)
     .replace(/&/g, '&amp;')
@@ -75,6 +98,11 @@ module.exports = async (req, res) => {
 
   const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'unknown';
   if (throttled(ip)) return res.status(429).json({ error: 'Too many pitches in a row — give it a minute.' });
+
+  // Turnstile: reject bots before the Brevo call (which costs a daily-quota email).
+  if (!(await verifyTurnstile(body.turnstileToken, ip))) {
+    return res.status(403).json({ error: 'Spam check failed. Please refresh the page and try again.' });
+  }
 
   const preview = idea.replace(/\s+/g, ' ').slice(0, 60);
   const safeIdea = escapeHtml(idea).replace(/\n/g, '<br>');
