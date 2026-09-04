@@ -124,7 +124,7 @@
   /* ── sampling ───────────────────────────────────────────────── */
 
   var cols = 0, rows = 0, cw = 0, size = 0;
-  var cells = [], grid = null;
+  var cells = [], grid = null, at = {};
 
   var fontStack = 'monospace', gridFont = '6px monospace';
 
@@ -280,6 +280,11 @@
   function build() {
     cells = [];
     lanePtr = [];
+    /* Sparse index from grid cell to the character in it, so the lens can ask
+       "is there a glyph here" in one lookup rather than scanning five thousand
+       cells for the nearest one. Sparse because most of the grid is background:
+       the portrait is a cut-out, and the cells that exist are the subject. */
+    at = {};
     for (var y = 0; y < rows; y++) {
       /* The subject runs off the bottom of its own frame, so without this the
          text would stop on a ruled line and read as a cropped screenshot. */
@@ -298,6 +303,7 @@
            stream it took the character from through pickedAt, and that is what
            lets the lens magnify this cell back into its own source line. */
         var ch = pick(ink);
+        at[y * cols + x] = cells.length;
         cells.push({
           x: x * cw, y: y * LINE,
           ch: ch,
@@ -405,11 +411,13 @@
        while it is still closing so it is never left half open on screen. */
     var box = cv.getBoundingClientRect();
     var px = ptr.cx - box.left - PAD, py = ptr.cy - box.top - PAD;
-    var want = (ptr.on && px > -LENS_R && px < size + LENS_R &&
-                py > -LENS_R && py < size + LENS_R) ? 1 : 0;
-    lens += (want - lens) * LENS_FADE;
+    /* Open only over the portrait's own ink. Reading the cell here rather than
+       inside drawLens means the same lookup decides both whether the glass is
+       out and what it is showing, so it can never be open over nothing. */
+    var hit = ptr.on ? cellUnder(px, py) : null;
+    lens += ((hit ? 1 : 0) - lens) * LENS_FADE;
     if (lens < 0.01) { lens = 0; lensLine = -1; }
-    if (lens > 0) drawLens(px, py);
+    if (lens > 0) drawLens(px, py, hit);
 
     /* Ambient typing means there is always another frame owed, so the loop no
        longer stops when the cursor leaves — only when the portrait is offscreen,
@@ -464,26 +472,38 @@
 
   var lens = 0, lensLine = -1, lensX = 0, lensY = 0;
 
-  function nearestCell(px, py) {
-    var best = null, bd = Infinity;
-    for (var i = 0; i < cells.length; i++) {
-      var c = cells[i];
-      var dx = c.x - px, dy = c.y - py, d = dx * dx + dy * dy;
-      if (d < bd) { bd = d; best = c; }
+  /* What is under the pointer, or null if that is background.
+     It used to be the nearest cell within 84px, which meant pointing at empty
+     space beside the head still found a glyph most of a lens-width away and
+     magnified it — the lens opened over blank canvas and showed code that was
+     nowhere near the cursor. An exact lookup with a single ring of forgiveness
+     is both correct and cheaper: the ring keeps it from flickering as the
+     pointer crosses the gap between two characters. */
+  function cellUnder(px, py) {
+    if (px < 0 || py < 0) return null;
+    var cx = (px / cw) | 0, cy = (py / LINE) | 0;
+    if (cx >= cols || cy >= rows) return null;
+    for (var r = 0; r <= 1; r++) {
+      for (var dy = -r; dy <= r; dy++) {
+        for (var dx = -r; dx <= r; dx++) {
+          if (r && Math.abs(dx) !== r && Math.abs(dy) !== r) continue;
+          var x = cx + dx, y = cy + dy;
+          if (x < 0 || y < 0 || x >= cols || y >= rows) continue;
+          var i = at[y * cols + x];
+          if (i !== undefined) return cells[i];
+        }
+      }
     }
-    return bd < HOT_R * HOT_R ? best : null;
+    return null;
   }
 
-  function drawLens(px, py) {
+  function drawLens(px, py, cell) {
     if (!srcLines.length || !streamLine) return;
 
-    /* The line is re-read only when the pointer has actually moved to another
-       cell. Recomputing it every frame made the text flicker between neighbours
-       whenever the cursor sat still on a boundary. */
-    var cell = nearestCell(px, py);
+    /* The glass keeps its last position and line while it fades out, so leaving
+       the portrait closes it where it was rather than snapping it elsewhere. */
     if (cell) {
-      var li = streamLine[cell.si] || 0;
-      if (li !== lensLine) { lensLine = li; }
+      lensLine = streamLine[cell.si] || 0;
       lensX = px; lensY = py;
     }
     if (lensLine < 0) return;

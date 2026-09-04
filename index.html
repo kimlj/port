@@ -334,6 +334,25 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 
 .work-item { display: none; }
 .work-item.is-on { display: block; }
+/* The panel arrives rather than appearing. Switching projects replaced one card
+   with another in a single frame, which reads as a page reload inside a page —
+   a short rise and fade makes it a change of subject instead. Applied to the
+   card and not the panel, so the frame the card sits in never moves. */
+@keyframes workPanelIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+.work-item.is-on .project-card { animation: workPanelIn 0.42s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* The index writes itself in reading order when the section is reached. Rows
+   are added by script, so they never had the page's .reveal treatment and were
+   the one part of the section that simply existed. */
+.work-index.is-armed .work-row { opacity: 0; transform: translateY(8px); }
+.work-index.is-in .work-row {
+  opacity: 1; transform: none;
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--r, 0) * 55ms);
+}
 /* the card is shown outright rather than revealed: .reveal fades from 0, and a
    panel swapped in by a click has no scroll event coming to un-fade it */
 .work-stage .project-card.reveal { opacity: 1; transform: none; }
@@ -415,19 +434,42 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 #projects { padding-top: 2.5rem; padding-bottom: 2.75rem; }
 
 @media (max-width: 900px) {
-  /* Six tracks stop fitting long before the phone breakpoint, so the strip
-     becomes a scroller rather than crushing every name to two words a line.
-     Fixed-width columns, because 1fr in a scroller collapses to nothing. */
+  /* Six across stops fitting long before the phone breakpoint, so the strip
+     wraps to three — still a grid the eye reads across, which keeps it distinct
+     from the AI section's stacked rows and keeps all six projects on screen at
+     once, which is the whole reason the index exists.
+
+     It was briefly a horizontal scroller. That was wrong twice over: .work-row
+     carries width:100%, so in a flex row every row took the full container and
+     exactly one was ever visible, and with the scrollbar hidden there was
+     nothing to say the other five existed. Wrapping needs no affordance. */
   .work-index {
-    display: flex; overflow-x: auto; gap: 0;
-    scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch;
-    scrollbar-width: none; margin-bottom: 1.75rem;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--border); margin-bottom: 1.5rem;
   }
-  .work-index::-webkit-scrollbar { display: none; }
-  .work-row { min-width: 44vw; flex-shrink: 0; scroll-snap-align: start; padding-right: 1.4rem; }
+  .work-row {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 0.3rem;
+    padding: 0.7rem 0.7rem 0.8rem 0;
+    border-top: 2px solid transparent; margin-top: -1px;
+    border-bottom: 1px solid var(--border);
+  }
+  /* the last row of the grid closes on the container's own rule instead */
+  .work-index .work-row:nth-last-child(-n+3) { border-bottom: 0; }
+  .work-index { border-bottom: 1px solid var(--border); }
+  .work-name { font-size: 0.92rem; white-space: normal; line-height: 1.25; }
+  .work-meta { margin-top: auto; padding-top: 0.35rem; }
+  .work-class { display: none; }
+  .work-fig { font-size: 0.53rem; }
+  .work-row.is-on { padding-left: 0; border-top-color: var(--accent); }
 }
-@media (max-width: 640px) {
-  .work-row { min-width: 58vw; }
+@media (max-width: 460px) {
+  /* Still three across on a phone — the shape of the grid is what makes six
+     projects readable as a set. The type steps down instead, and the longer
+     names take a second line rather than the layout taking a second form. */
+  .work-row { padding-right: 0.5rem; }
+  .work-num { font-size: 0.55rem; }
+  .work-name { font-size: 0.8rem; line-height: 1.2; }
+  .work-fig { font-size: 0.5rem; letter-spacing: 0.03em; }
 }
 
 .project-card { --border-angle: 0deg; display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--border); border-radius: 20px; overflow: hidden; background: var(--bg-card); transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); text-decoration: none; color: inherit; }
@@ -1268,19 +1310,41 @@ footer .footer-accent { color: var(--accent); }
 .ai-activity-head { display: flex; flex-wrap: wrap; gap: 1rem 2rem; align-items: baseline; justify-content: space-between; margin-bottom: 1.75rem; }
 .ai-activity-sub { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--text-dim); }
 
-.ai-year { margin-bottom: 1.5rem; }
+#aiActivityYears { margin-top: 1.35rem; padding-top: 1.2rem; border-top: 1px solid var(--border); }
+.ai-year { margin-bottom: 0.9rem; }
 .ai-year:last-of-type { margin-bottom: 0; }
-.ai-year-head { display: flex; align-items: baseline; gap: 0.75rem; margin-bottom: 0.5rem; }
-.ai-year-label { font-family: var(--mono); font-size: 0.8rem; color: var(--text-muted); min-width: 3.2rem; }
-.ai-year-count { font-family: var(--sans); font-size: 0.8rem; color: var(--text-dim); }
+.ai-year-head { display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 0.3rem; }
+.ai-year-label { font-family: var(--mono); font-size: 0.68rem; color: var(--text-muted); min-width: 2.6rem; }
+.ai-year-count { font-family: var(--sans); font-size: 0.7rem; color: var(--text-dim); }
 .ai-year-count b { color: var(--text); font-weight: 600; }
 
 /* The grid scrolls sideways on a narrow screen rather than squashing the cells
    into invisibility. overflow-x on its own container keeps the page itself from
    scrolling horizontally, which is the thing that actually breaks a layout. */
+/* One tooltip for the whole section, moved rather than rebuilt. Replaces the
+   native title tooltip, which renders as an OS-styled white box on a dark page
+   and cannot be told otherwise. pointer-events:none so it can never sit between
+   the cursor and the cell it is describing. */
+.ai-tip {
+  position: fixed; z-index: 300; pointer-events: none;
+  padding: 0.3rem 0.55rem; border-radius: 6px;
+  background: var(--bg-card); border: 1px solid var(--border-hover);
+  box-shadow: 0 6px 20px var(--shadow-heavy);
+  font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.03em;
+  color: var(--text); white-space: nowrap;
+  opacity: 0; transform: translate(-50%, -100%);
+  transition: opacity 0.14s ease;
+}
+.ai-tip.is-on { opacity: 1; }
+.ai-tip b { color: var(--accent); font-weight: 500; }
+
 .ai-grid-scroll { overflow-x: auto; padding-bottom: 0.35rem; scrollbar-width: thin; }
-.ai-grid { display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, 1fr); gap: 3px; min-width: max-content; }
-.ai-cell { width: 11px; height: 11px; border-radius: 2px; background: var(--white-overlay); border: 1px solid transparent; }
+.ai-grid { display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, 1fr); gap: 2px; min-width: max-content; }
+/* 7px rather than 11: a year is 53 columns, and at the old size three of them
+   needed 742px each — fine across the section, far too wide for the column they
+   now live in. Still legible as a heat map, which is all a calendar this small
+   is being asked to be; the exact figure is in the bar beside it. */
+.ai-cell { width: 6px; height: 6px; border-radius: 1.5px; background: var(--white-overlay); border: 1px solid transparent; }
 .ai-cell[data-level="1"] { background: rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.22); }
 .ai-cell[data-level="2"] { background: rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.45); }
 .ai-cell[data-level="3"] { background: rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.7); }
@@ -1321,7 +1385,10 @@ footer .footer-accent { color: var(--accent); }
    floor was 680px and the whole panel was forced that wide inside a 336px
    phone. These let the track win instead of the contents. */
 .ai-charts > * { min-width: 0; }
-@media (min-width: 900px) { .ai-charts { grid-template-columns: 1.6fr 1fr; } }
+/* The right column carries the calendars now, so it takes a little more of the
+   row — enough that a 53-week year fits without scrolling, which matters because
+   a scrolled calendar parks on its busiest weeks and hides January. */
+@media (min-width: 900px) { .ai-charts { grid-template-columns: 1.45fr 1fr; } }
 
 .ai-chart { border: 1px solid var(--border); border-radius: 14px; padding: 1.25rem 1.35rem 1rem; background: var(--bg); }
 .ai-chart-title { font-family: var(--sans); font-size: 0.85rem; font-weight: 600; color: var(--text); }
@@ -1658,10 +1725,13 @@ footer .footer-accent { color: var(--accent); }
         <div class="ai-chart-title">GitHub contributions by year</div>
         <div class="ai-chart-sub">including private repositories</div>
         <div class="ai-years" id="aiYearBars"></div>
+        <!-- The per-year calendars sit under the bars that total them, in the
+             column beside the Claude Code chart: the bars had most of a panel
+             of empty space under them, and the calendars had a full-width row
+             each for something a reader takes in at a glance. -->
+        <div id="aiActivityYears"></div>
       </div>
     </div>
-
-    <div id="aiActivityYears"></div>
     <div class="ai-activity-foot">
       <p class="ai-note" id="aiActivityNote"></p>
       <div class="ai-legend">
@@ -3144,6 +3214,7 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
 
       // Hover opens it on a pointer; focus does the same for a keyboard, so
       // tabbing the list walks the panels rather than skipping past them.
+      row.style.setProperty('--r', i);
       row.addEventListener('mouseenter', function() { open(i); });
       row.addEventListener('focus', function() { open(i); });
       row.addEventListener('click', function() { open(i); });
@@ -3173,6 +3244,18 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
     // Opens on the first project rather than on nothing: a reader who never
     // moves the pointer should still see what the section holds.
     open(0);
+
+    // The rows write themselves in when the index is reached. Armed only if the
+    // observer exists and motion is welcome — otherwise they are simply there,
+    // which is the correct resting state and needs no undoing.
+    if (!reduced && window.IntersectionObserver) {
+      stage.classList.add('is-armed');
+      new IntersectionObserver(function(entries, obs) {
+        if (!entries[0].isIntersecting) return;
+        obs.disconnect();
+        stage.classList.add('is-in');
+      }, { rootMargin: '0px 0px -25% 0px' }).observe(stage);
+    }
   }
 })();
 </script>
@@ -3259,6 +3342,7 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
 <script src="assets/js/button-field.js" defer></script>
 <script src="assets/js/section-ornaments.js" defer></script>
 <script src="assets/js/ai-ledger.js" defer></script>
+<script src="assets/js/activity-motion.js" defer></script>
 <script>
   /* Assemble email links at runtime so the raw address never sits in the HTML
      source for scrapers to harvest. Real users see and click it normally. */
@@ -3333,7 +3417,14 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
         cell.setAttribute('data-level', level(count));
         // The count is in the accessible name, so the grid does not convey its
         // meaning through colour alone.
-        cell.title = count
+        // data-tip, not title: the native tooltip is an OS-styled white box that
+        // has nothing to do with this page. assets/js/activity-motion.js renders
+        // these. The accessible name still comes from aria-label, so the count
+        // reaches a screen reader whether or not the tooltip does.
+        cell.setAttribute('aria-label', count
+          ? count + (count === 1 ? ' contribution' : ' contributions') + ' on ' + iso
+          : 'No contributions on ' + iso);
+        cell.dataset.tip = count
           ? count + (count === 1 ? ' contribution' : ' contributions') + ' on ' + iso
           : 'No contributions on ' + iso;
         grid.appendChild(cell);
@@ -3550,7 +3641,7 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
         var v = vals[i];
         var pct = Math.max(v > 0 ? 4 : 0, Math.round((v / max) * 100));
         return '<div class="ai-spark-col" data-zero="' + (v > 0 ? 0 : 1) +
-          '" style="height:' + pct + '%" title="' + monthShort(s[0]) + ': ' +
+          '" style="height:' + pct + '%" data-tip="' + monthShort(s[0]) + ': ' +
           (v > 0 ? fmt(Math.round(v)) + (usePrompts ? ' prompts' : ' tokens')
                  : 'no activity') + '"></div>';
       }).join('');
@@ -3588,7 +3679,7 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
             .toLocaleDateString('en-US', { month: 'short', timeZone: 'UTC' });
           var cls = 'ai-month' + (m === peakMonth ? ' is-peak' : '') +
                     (n === 0 ? ' is-gap' : '');
-          return '<div class="' + cls + '" title="' + m + ': ' + n.toLocaleString() + monthUnit + '">' +
+          return '<div class="' + cls + '" data-tip="' + m + ': ' + n.toLocaleString() + monthUnit + '">' +
             '<span class="ai-month-val">' + (n ? n.toLocaleString() : '') + '</span>' +
             '<div class="ai-month-bar" style="height:' +
               Math.max(n ? 3 : 1, Math.round((n / mMax) * 100)) + '%"></div>' +
