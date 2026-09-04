@@ -1,5 +1,9 @@
 # TODO
 
+Open work on the portfolio. See `CLAUDE.md` for how the codebase is put together
+and the traps it has already sprung.
+
+
 ## Site assistant for kimlj.dev
 
 Build a scoped chatbot for this portfolio, modelled on the one already running on
@@ -99,3 +103,20 @@ Whichever way, two things the page needs either way:
   fall back to the committed JSON, not disappear. The panels already remove
   themselves on a failed fetch; that is the right instinct for a missing chart
   and the wrong one for a chart that has a slightly old copy on disk.
+
+
+## Smaller, unscheduled
+
+- **Two AI transcripts are illustrative.** The behaviour in `ai-ledger.js` is read
+  from the real `chat.js` on mdsprosolutions.com; the wording is invented and
+  labelled as such in the source. Replace both with captured exchanges before
+  showing the page to anyone — a fabricated transcript on a section arguing
+  against hallucination is the worst possible own goal.
+- **`assets/js/semantic-bloom.js` is untracked and unreferenced.** It predates the
+  current site. Delete it or wire it up.
+- **The mid-page CTAs still use the old hover idiom.** "Start a Project" keeps its
+  lift-and-glow while the hero's primary lost it when the dot field replaced it,
+  so the two `.btn-primary`s behave differently.
+- **Style Transfer may be coming out of the AI section.** Raised, then set aside
+  mid-task; nothing was removed. It would be its panel and its row, with Fashion
+  generation staying.
