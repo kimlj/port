@@ -1,8 +1,8 @@
-/* Hero CTA fields — the same dot language as the portrait and the headline,
- * scaled down to a button. Each one holds a field of specks clipped to its own
- * pill; they are invisible until the cursor is over the button, and then only
- * the ones near it light, so what you see is a small cloud gathering under the
- * pointer and parting around it.
+/* Button fields — the same dot language as the portrait and the headline,
+ * scaled down to a button, on every call to action on the page. Each one holds a field of specks clipped to its own pill; they are
+ * invisible until the cursor is over the button, and then only the ones near it
+ * light, so what you see is a small cloud gathering under the pointer and
+ * parting around it.
  *
  * The label is deliberately left alone. Everything else in the hero splits into
  * glyphs that the cursor pushes, but a call to action is a thing you are aiming
@@ -15,8 +15,14 @@
 (function () {
   'use strict';
 
-  var cta = document.querySelector('.hero-cta');
-  if (!cta || !window.matchMedia) return;
+  /* Every call to action on the page: the two in the hero, "Start a Project"
+     under Projects, "Contact Me" under the showcase, and the contact section's
+     submit and pills. .btn-primary and .btn-ghost are unqualified deliberately —
+     the page has exactly four of them and all four are CTAs, so naming their
+     sections instead would just be a list to keep in sync. */
+  var TARGETS = '.btn-primary, .btn-ghost, .hero-cta .cv-dropdown-toggle, ' +
+                '#contact .pitch-submit, #contact .contact-pill';
+  if (!window.matchMedia) return;
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   if (matchMedia('(hover: none), (pointer: coarse)').matches) return;
 
@@ -30,6 +36,11 @@
       MAX = 13,        /* a dot pushed further than this leaves the pill */
       BASE_A = 0.62,
       FADE_IN = 0.14, FADE_OUT = 0.08;
+
+  function opaque(value) {
+    var m = /^rgba\(\s*[0-9.]+[\s,]+[0-9.]+[\s,]+[0-9.]+[\s,/]+([0-9.]+)/i.exec(String(value || ''));
+    return !m || parseFloat(m[1]) >= 0.9;
+  }
 
   function rgb(value, fallback) {
     var v = String(value || '').trim();
@@ -54,25 +65,37 @@
        same display, alignment and gap the button was using. */
     var inner = document.createElement('span');
     inner.className = 'btn-inner';
+    /* Read the gap off the button rather than assuming one: the hero buttons
+       space their label and icon at 0.5rem and the contact pills at 0.6rem, and
+       the wrapper has to reproduce whichever it took over. */
+    inner.style.gap = getComputedStyle(btn).columnGap || '0.5rem';
     while (btn.firstChild) inner.appendChild(btn.firstChild);
 
     cv.className = 'btn-field';
     cv.setAttribute('aria-hidden', 'true');
     btn.appendChild(cv);
     btn.appendChild(inner);
-    btn.classList.add('has-field');
+    /* Not 'has-field': .hero-avatar already carries that, and a shared class
+       name meant this rule's position:relative and overflow:hidden landed on the
+       portrait's wrapper too — same specificity, later in the sheet — which quietly
+       dropped it out of its absolute placement and into the flow. */
+    btn.classList.add('has-btn-field');
 
     var P = [], W = 0, H = 0, dpr = 1, ink = '200,255,0', inkScale = 1;
 
     function palette() {
       var cs = getComputedStyle(btn);
-      /* The solid button is already accent-coloured, so its dots take its own
-         text colour and read as specks of the page showing through. The outlined
-         ones sit on the page background and take the accent. */
-      var solid = btn.classList.contains('btn-primary');
-      ink = solid
-        ? rgb(cs.color, '10,10,11')
-        : rgb(getComputedStyle(document.documentElement).getPropertyValue('--accent'), '200,255,0');
+      var accent = rgb(getComputedStyle(document.documentElement)
+                       .getPropertyValue('--accent'), '200,255,0');
+      /* A button filled with the accent is already accent-coloured, so its dots
+         take its own text colour and read as specks of the page showing through;
+         everything else sits on the page ground and takes the accent. Asked of
+         the computed fill rather than of a class, so it covers the hero's
+         primary and the contact form's submit without naming either — and the
+         opacity test matters, because an outlined pill's hover tint is the
+         accent at 8% and would otherwise read as a filled one. */
+      var solid = opaque(cs.backgroundColor) && rgb(cs.backgroundColor, '') === accent;
+      ink = solid ? rgb(cs.color, '10,10,11') : accent;
       /* Dark specks on a solid accent fill carry far more contrast than accent
          specks on the page do, so the solid button gets less of them or it
          reads as dirt on the paint rather than as a field. */
@@ -197,6 +220,6 @@
       { attributes: true, attributeFilter: ['data-theme'] });
   }
 
-  var btns = cta.querySelectorAll('.btn-primary, .btn-ghost, .cv-dropdown-toggle');
+  var btns = document.querySelectorAll(TARGETS);
   for (var i = 0; i < btns.length; i++) make(btns[i]);
 })();

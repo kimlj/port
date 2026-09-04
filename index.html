@@ -143,7 +143,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 201; padding: 1.25rem
 .btn-ghost:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
 
 .hero-avatar { position: absolute; right: 5vw; top: 50%; transform: translateY(-40%); z-index: 1; opacity: 0; animation: fadeIn 1.5s ease forwards 1.2s; }
-.hero-avatar img { width: 360px; height: 360px; object-fit: cover; object-position: top; border-radius: 50%; border: 1px solid rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.08); box-shadow: 0 10px 30px var(--shadow-heavy), 0 0 20px rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.08); }
+.hero-avatar img { width: 480px; height: 480px; object-fit: cover; object-position: top; border-radius: 50%; border: 1px solid rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.08); box-shadow: 0 10px 30px var(--shadow-heavy), 0 0 20px rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.08); }
 
 /* Hero portrait field — the headshot drawn as dots (assets/js/avatar-field.js).
    The <img> stays laid out rather than display:none: it is what the canvas
@@ -152,12 +152,33 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 201; padding: 1.25rem
    the existing breakpoints keep sizing and placing the portrait with no second
    source of truth.
 
-   The canvas covers the whole section rather than the portrait, because the
-   entrance falls in from every corner of the hero and a canvas the size of the
-   portrait would clip that cloud into the shape of its own box. z-index 1 puts
-   it under the copy, which is 2, so dots crossing the headline pass behind it. */
+   The canvas is the portrait's own box: the entrance is a decode wipe down the
+   grid rather than a cloud falling in from the section, so nothing needs to be
+   drawn outside the frame any more. */
 .hero-avatar.has-field img { visibility: hidden; }
-.avatar-field { position: absolute; left: 0; top: 0; z-index: 1; pointer-events: none; }
+/* left/top are written by the script: the canvas overhangs the portrait so the
+   magnifier stays a whole circle at the edges, and is pulled back by exactly
+   that overhang to keep the portrait aligned with the <img> it replaces. */
+.avatar-field { position: absolute; z-index: 1; pointer-events: none; }
+/* Says what the thing above it is, for a reader who cannot tell that the face is
+   made of characters. Added by the script, so it only ever appears when the code
+   portrait actually rendered and never over the plain photograph. Hiding the
+   <img> takes its alt text out of the accessibility tree with it, so the script
+   moves the name onto the wrapper and marks this aria-hidden — the picture keeps
+   one accessible name rather than none or two. */
+.avatar-caption {
+  position: relative;
+  z-index: 2;
+  margin: 0.85rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-align: center;
+  line-height: 1.5;
+}
+.avatar-caption span { color: var(--text-muted); }
 
 /* Hero particle text — glyphs the cursor pushes around (assets/js/hero-particles.js).
    Every glyph becomes its own inline-block, which lets the browser break a line
@@ -201,13 +222,17 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 201; padding: 1.25rem
    (assets/js/button-field.js). overflow:hidden is what clips the field to the
    pill; the label is wrapped so it paints over a canvas that would otherwise
    cover it, and the wrapper carries the flex gap the button used to apply to
-   its own children. The field rides along with the magnetic pull: the canvas is
+   its own children. The contact section's submit and its pills take the same
+   treatment and keep their own hover states, which are a lift and a tint rather
+   than the magnetism this replaced in the hero. The field rides along with the
+   magnetic pull where there is one: the canvas is
    a child, so it moves with the button, and the loop re-reads the canvas box
    every frame, which is what keeps the cloud under the cursor while the button
    is chasing it. */
-.hero-cta .has-field { position: relative; overflow: hidden; }
+.has-btn-field { position: relative; overflow: hidden; }
 .btn-field { position: absolute; left: 0; top: 0; pointer-events: none; }
-.btn-inner { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 0.5rem; }
+/* gap is written by the script, from whatever the button was already using */
+.btn-inner { position: relative; z-index: 1; display: inline-flex; align-items: center; }
 /* A transform on .cv-dropdown makes it the containing block for the menu
    absolutely positioned inside it, which is precisely why the magnetism is
    mounted there: the menu keeps its anchor and rides along instead of being
@@ -418,6 +443,88 @@ textarea.pitch-field { min-height: 155px; resize: none; display: block; overflow
 .contact-alt-label { font-family: var(--mono); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.22em; color: var(--text-dim); margin-bottom: 1.25rem; }
 .contact-links .contact-pill { padding: 0.7rem 1.35rem; font-size: 0.82rem; }
 
+/* ============ Section ornaments ============ */
+/* Three systems over the descent from Projects to the footer, divided by
+   territory so they never contend for the same gutter — the field takes the
+   plane, the trace the left, the marks the right and the section corners.
+   assets/js/section-ornaments.js draws them.
+
+   Everything here is inert and unpickable: pointer-events off, aria-hidden in
+   the markup, and z-index 0 so it paints behind the sections, which carry no
+   background of their own and let it through. */
+.orn-canvas { position: fixed; left: 0; top: 0; z-index: 0; pointer-events: none; }
+.orn-marks { position: absolute; left: 0; width: 100%; z-index: 0; pointer-events: none; }
+
+.orn-corner {
+  position: absolute;
+  width: 12px; height: 12px;
+  border-left: 1px solid var(--border-hover);
+  border-top: 1px solid var(--border-hover);
+  transform-origin: top left;
+}
+.orn-dim {
+  position: absolute;
+  transform: translate(-100%, -100%);
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+  padding-bottom: 4px;
+}
+
+/* The scroll readout rides beside the ruler's cursor, which sits at the middle
+   of the viewport because that is where the reader is. */
+.orn-read {
+  position: fixed;
+  right: 26px; top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+/* The drawing's title block, where the sheet terminates. Every value is read
+   off the page itself rather than written down here. */
+.orn-block {
+  margin: 0 5vw 1.5rem;
+  display: flex;
+  width: max-content;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.orn-block > div { padding: 0.5rem 1rem; border-right: 1px solid var(--border); }
+.orn-block > div:last-child { border-right: 0; }
+.orn-block span {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.orn-block b {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+/* The ornaments run at every width — the script narrows their geometry rather
+   than switching them off. Only the percentage readout goes on a phone: it needs
+   a label's worth of room beside the ruler that a 24px gutter does not have. */
+@media (max-width: 767px) {
+  .orn-read { display: none; }
+  .orn-block { margin: 0 1.5rem 1.25rem; }
+  .orn-block > div { padding: 0.45rem 0.7rem; }
+  .orn-block b { font-size: 0.66rem; }
+}
+
 /* ============ Motion layer ============ */
 
 /* Tonal gradient headings. The reference uses #646973 -> #BBCCD7, a tonal fade
@@ -525,7 +632,6 @@ footer .footer-accent { color: var(--accent); }
 .nav-logo { cursor: default; }
 
 /* Scroll progress bar */
-.scroll-progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--gradient-1), var(--gradient-2)); z-index: 202; width: 0%; transition: none; }
 
 /* Touch ripple */
 .touch-ripple { position: absolute; border-radius: 50%; background: rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.15); transform: scale(0); animation: rippleExpand 0.6s ease-out forwards; pointer-events: none; z-index: 10; }
@@ -591,11 +697,15 @@ footer .footer-accent { color: var(--accent); }
   .swipe-hint, .scroll-dots { display: none; }
 }
 
-/* Hero avatar responsive. The portrait is drawn as dots rather than a framed
-   circle, so it carries a larger size than a photo would; these steps keep it
-   clear of the headline as the viewport narrows. */
+/* Hero avatar responsive. The portrait is typeset rather than framed, and its
+   detail is a row count — so it carries a larger size than a photo would, and
+   loses that size in steps that keep it clear of the headline as the viewport
+   narrows. Below the last step the grid is too few rows to read as a face. */
+@media (max-width: 1400px) {
+  .hero-avatar img { width: 400px; height: 400px; }
+}
 @media (max-width: 1200px) {
-  .hero-avatar img { width: 300px; height: 300px; }
+  .hero-avatar img { width: 340px; height: 340px; }
 }
 /* Between the portrait shrinking and the portrait disappearing, the headline
    has to keep wrapping to three lines the way it does at full width. Left at
@@ -616,7 +726,7 @@ footer .footer-accent { color: var(--accent); }
 }
 @media (max-width: 1024px) {
   .hero-avatar { right: 2vw; transform: translateY(-35%); }
-  .hero-avatar img { width: 260px; height: 260px; box-shadow: 0 8px 20px var(--shadow-heavy), 0 0 12px rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.05); }
+  .hero-avatar img { width: 280px; height: 280px; box-shadow: 0 8px 20px var(--shadow-heavy), 0 0 12px rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.05); }
 }
 @media (max-width: 768px) {
   .hero-avatar { display: none; }
@@ -990,6 +1100,11 @@ footer .footer-accent { color: var(--accent); }
    Both use the accent as a single sequential hue rather than a categorical set.
    Neither has a second series, so neither needs a legend; the title names it. */
 .ai-charts { display: grid; grid-template-columns: 1fr; gap: 1.75rem; margin: 1.75rem 0 0; }
+/* Grid and flex children default to min-width:auto, which means they refuse to
+   shrink below their content. The sparkline below is ~340 day columns, so that
+   floor was 680px and the whole panel was forced that wide inside a 336px
+   phone. These let the track win instead of the contents. */
+.ai-charts > * { min-width: 0; }
 @media (min-width: 900px) { .ai-charts { grid-template-columns: 1.6fr 1fr; } }
 
 .ai-chart { border: 1px solid var(--border); border-radius: 14px; padding: 1.25rem 1.35rem 1rem; background: var(--bg); }
@@ -1028,7 +1143,8 @@ footer .footer-accent { color: var(--accent); }
 .ai-hero-unit { font-family: var(--sans); font-size: 0.95rem; color: var(--text-muted); }
 .ai-hero-note { font-family: var(--mono); font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.16em; color: var(--text-dim); margin-bottom: 1.5rem; }
 
-.ai-months { display: flex; align-items: flex-end; gap: 6px; height: 150px; margin-bottom: 0.4rem; }
+.ai-months { display: flex; align-items: flex-end; gap: 6px; height: 150px; margin-bottom: 0.4rem; min-width: 0; }
+.ai-months > * { min-width: 0; }
 .ai-month { flex: 1 1 0; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; gap: 0.35rem; }
 .ai-month-val { font-family: var(--sans); font-size: 0.68rem; font-weight: 600; color: var(--text-muted); white-space: nowrap; }
 .ai-month.is-peak .ai-month-val { color: var(--accent); }
@@ -1039,15 +1155,20 @@ footer .footer-accent { color: var(--accent); }
 
 /* The daily detail survives as a thin strip under the months - texture and the
    honest gaps, without pretending to be the headline. */
-.ai-spark { display: flex; align-items: flex-end; gap: 1px; height: 34px; margin-top: 1rem; padding-top: 0.9rem; border-top: 1px solid var(--border); }
-.ai-spark-col { flex: 1 1 0; min-width: 1px; background: rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.5); border-radius: 1px; min-height: 1px; }
+.ai-spark { display: flex; align-items: flex-end; gap: 1px; height: 34px; margin-top: 1rem; padding-top: 0.9rem; border-top: 1px solid var(--border); min-width: 0; }
+/* min-width:0, so a year's worth of days compresses to whatever width there is
+   rather than setting a floor for the whole panel. Sub-pixel columns still
+   render — a denser, fainter line, which is what a year squeezed onto a phone
+   should look like. */
+.ai-spark-col { flex: 1 1 0; min-width: 0; background: rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.5); border-radius: 1px; min-height: 1px; }
+/* the 1px gaps alone would still total more than a phone's width */
+@media (max-width: 900px) { .ai-spark { gap: 0; } }
 .ai-spark-col[data-zero="1"] { background: var(--white-overlay); }
 .ai-spark-cap { font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim); margin-top: 0.4rem; display: flex; justify-content: space-between; }
 </style>
 </head>
 <body>
 <a class="skip-link" href="#projects">Skip to content</a>
-<div class="scroll-progress" id="scrollProgress"></div>
 <div class="cursor-glow" id="cursorGlow"></div>
 
 <nav>
@@ -1125,7 +1246,7 @@ footer .footer-accent { color: var(--accent); }
     </div>
   </div>
   <div class="hero-avatar">
-    <img src="assets/profile.webp" alt="Kim Julongbayan" width="360" height="360">
+    <img src="assets/profile.webp" alt="Kim Julongbayan" width="480" height="480">
   </div>
 </section>
 
@@ -2415,14 +2536,6 @@ if (window.innerWidth > 768) {
   });
 })();
 
-// 6. Scroll progress bar
-const scrollProgress = document.getElementById('scrollProgress');
-window.addEventListener('scroll', () => {
-  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-  const scrolled = (window.scrollY / docHeight) * 100;
-  scrollProgress.style.width = scrolled + '%';
-}, { passive: true });
-
 // 6. Timeline draw + stagger + dot ripple
 (function() {
   const timeline = document.getElementById('timeline');
@@ -2797,12 +2910,15 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
     para.textContent = '';
     var chars = [];
     for (var c = 0; c < text.length; c++) {
+      // Spaces stay plain text nodes rather than spans. Wrapped in a span with
+      // white-space:pre they stopped being soft-wrap opportunities, so the whole
+      // paragraph became one unbreakable run: its min-content width was the
+      // width of the entire text, which forced the About grid 621px wide inside
+      // a 384px phone. A space has no glyph to reveal, so nothing is lost.
+      if (text[c] === ' ') { para.appendChild(document.createTextNode(' ')); continue; }
       var s = document.createElement('span');
       s.className = 'ch';
-      // Non-breaking space keeps spans from collapsing, but a normal space is
-      // needed for wrapping — so only swap when the span would collapse.
       s.textContent = text[c];
-      if (text[c] === ' ') s.style.whiteSpace = 'pre';
       para.appendChild(s);
       chars.push(s);
     }
@@ -2956,6 +3072,7 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
 <script src="assets/js/hero-particles.js" defer></script>
 <script src="assets/js/avatar-field.js" defer></script>
 <script src="assets/js/button-field.js" defer></script>
+<script src="assets/js/section-ornaments.js" defer></script>
 <script>
   /* Assemble email links at runtime so the raw address never sits in the HTML
      source for scrapers to harvest. Real users see and click it normally. */
@@ -2995,6 +3112,7 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
     var years = Object.keys(data.years).sort();
     var box = document.getElementById('aiActivityYears');
     var frag = document.createDocumentFragment();
+    var parked = [];
 
     years.forEach(function (year) {
       var stats = data.years[year];
@@ -3008,6 +3126,7 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
         '</b> contributions</span>';
       wrap.appendChild(head);
 
+      var colTotals = [], cellIndex = 0;
       var scroll = document.createElement('div');
       scroll.className = 'ai-grid-scroll';
       var grid = document.createElement('div');
@@ -3032,13 +3151,48 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
           ? count + (count === 1 ? ' contribution' : ' contributions') + ' on ' + iso
           : 'No contributions on ' + iso;
         grid.appendChild(cell);
+        // seven cells to a column, so this totals each week as it is built
+        var col = (cellIndex / 7) | 0;
+        colTotals[col] = (colTotals[col] || 0) + count;
+        cellIndex++;
       }
       scroll.appendChild(grid);
       wrap.appendChild(scroll);
       frag.appendChild(wrap);
+      parked.push([scroll, grid, colTotals]);
     });
 
     box.appendChild(frag);
+
+    // A year opens wherever its grid happens to start, and on a phone that is a
+    // couple of months out of twelve - so a year whose work is in December reads
+    // as empty when it was the busiest of the three. Each grid is parked on its
+    // own busiest stretch instead: the window of weeks, exactly as wide as what
+    // is visible, holding the most contributions. That is right whichever end of
+    // the year the activity sits at, where "scroll to the first active day" is
+    // only right for a year that starts busy.
+    //
+    // Only where the grid actually overflows: on a desktop the whole year fits
+    // and moving it would just hide January for no gain.
+    function park() {
+      for (var pi = 0; pi < parked.length; pi++) {
+        var sc = parked[pi][0], grid = parked[pi][1], totals = parked[pi][2];
+        if (sc.scrollWidth <= sc.clientWidth || !totals.length) continue;
+
+        var colW = grid.scrollWidth / totals.length;
+        var span = Math.max(1, Math.round(sc.clientWidth / colW));
+        var sum = 0, i;
+        for (i = 0; i < span && i < totals.length; i++) sum += totals[i] || 0;
+        var best = sum, bestAt = 0;
+        for (i = span; i < totals.length; i++) {
+          sum += (totals[i] || 0) - (totals[i - span] || 0);
+          if (sum > best) { best = sum; bestAt = i - span + 1; }
+        }
+        if (!best) continue;
+        sc.scrollLeft = Math.max(0, Math.min(sc.scrollWidth - sc.clientWidth,
+                                             bestAt * colW - colW * 2));
+      }
+    }
 
     var first = years[0], last = years[years.length - 1];
     document.getElementById('aiActivityRange').textContent = first + ' — ' + last;
@@ -3055,6 +3209,11 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
       ' of this year\u2019s contributions live. Generated from the GitHub API.';
 
     host.hidden = false;
+    // Parked only now: the panel is [hidden] while it is built, and a hidden
+    // element has no layout at all - offsetLeft and scrollWidth are both 0, so
+    // every grid looked like it fitted and none of them moved.
+    requestAnimationFrame(park);
+    addEventListener('resize', park);
   }
 })();
 </script>
