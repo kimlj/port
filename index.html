@@ -143,13 +143,82 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 201; padding: 1.25rem
 .btn-ghost:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
 
 .hero-avatar { position: absolute; right: 5vw; top: 50%; transform: translateY(-40%); z-index: 1; opacity: 0; animation: fadeIn 1.5s ease forwards 1.2s; }
-.hero-avatar img { width: 280px; height: 280px; object-fit: cover; object-position: top; border-radius: 50%; border: 1px solid rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.08); box-shadow: 0 10px 30px var(--shadow-heavy), 0 0 20px rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.08); }
+.hero-avatar img { width: 360px; height: 360px; object-fit: cover; object-position: top; border-radius: 50%; border: 1px solid rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.08); box-shadow: 0 10px 30px var(--shadow-heavy), 0 0 20px rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.08); }
 
-.scroll-indicator { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.5rem; opacity: 0; animation: fadeIn 1s ease forwards 1.8s; }
-.scroll-indicator span { font-family: var(--mono); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-dim); }
-.scroll-line { width: 1px; height: 32px; background: var(--border); position: relative; overflow: hidden; }
-.scroll-line::after { content: ''; position: absolute; top: -100%; left: 0; width: 1px; height: 100%; background: var(--accent); animation: scrollDown 2s ease-in-out infinite; }
-@keyframes scrollDown { 0% { top: -100%; } 100% { top: 100%; } }
+/* Hero portrait field — the headshot drawn as dots (assets/js/avatar-field.js).
+   The <img> stays laid out rather than display:none: it is what the canvas
+   samples, it carries the alt text, it is the fallback if the script or the
+   canvas ever fails, and its box is what the field measures itself against, so
+   the existing breakpoints keep sizing and placing the portrait with no second
+   source of truth.
+
+   The canvas covers the whole section rather than the portrait, because the
+   entrance falls in from every corner of the hero and a canvas the size of the
+   portrait would clip that cloud into the shape of its own box. z-index 1 puts
+   it under the copy, which is 2, so dots crossing the headline pass behind it. */
+.hero-avatar.has-field img { visibility: hidden; }
+.avatar-field { position: absolute; left: 0; top: 0; z-index: 1; pointer-events: none; }
+
+/* Hero particle text — glyphs the cursor pushes around (assets/js/hero-particles.js).
+   Every glyph becomes its own inline-block, which lets the browser break a line
+   between any two of them; .pw is the word wrapper that keeps that from
+   hyphenating the headline mid-word.
+
+   Deliberately no will-change: promoting ninety glyphs to their own compositor
+   layers made Chrome rasterise each one separately and paint the headline as a
+   pile of misplaced, blurred letters. A 2D transform on this many small inline
+   boxes is cheap enough without the hint. */
+.hero .pw { display: inline-block; white-space: nowrap; }
+.hero .pg { display: inline-block; transition: color 0.4s ease, -webkit-text-fill-color 0.4s ease, text-shadow 0.4s ease; }
+.hero h1.pg-open { overflow: visible; }
+
+/* The gradient the headline is painted with has to move down onto the glyphs.
+   It lives on .hero-line as background-clip:text, and the note above that rule
+   is exactly this case: a transformed child breaks an ancestor's clipped
+   background — the glyph's box moves but its fill is still sampled at the
+   line's origin, so a pushed letter paints nothing and leaves a smear behind.
+   Each glyph therefore carries the gradient itself, sized to the whole line
+   and offset by how far down the line the glyph sits (hero-particles.js writes
+   those two values once per measure), which reproduces the line's fade exactly
+   while making every glyph independently paintable. */
+.hero-line .pg {
+  background-image: linear-gradient(180deg, var(--text-muted) 0%, var(--text) 100%);
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero-line em .pg { background-image: none; -webkit-text-fill-color: var(--accent); }
+/* ...and the line must then stop painting one of its own. Left in place it
+   keeps drawing its clipped gradient through the glyph shapes of any child
+   that has moved, but at the line's origin rather than the child's box — a
+   pile of ghost letters stacked over the first word. The class is added by the
+   script once the text actually lives in the spans. */
+.hero-line.is-split { background-image: none; -webkit-text-fill-color: currentColor; }
+.hero .pg.is-hot { color: var(--accent); -webkit-text-fill-color: var(--accent); text-shadow: 0 0 14px var(--accent-glow); }
+
+/* Hero CTA fields — the same dot language inside the buttons
+   (assets/js/button-field.js). overflow:hidden is what clips the field to the
+   pill; the label is wrapped so it paints over a canvas that would otherwise
+   cover it, and the wrapper carries the flex gap the button used to apply to
+   its own children. The field rides along with the magnetic pull: the canvas is
+   a child, so it moves with the button, and the loop re-reads the canvas box
+   every frame, which is what keeps the cloud under the cursor while the button
+   is chasing it. */
+.hero-cta .has-field { position: relative; overflow: hidden; }
+.btn-field { position: absolute; left: 0; top: 0; pointer-events: none; }
+.btn-inner { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 0.5rem; }
+/* A transform on .cv-dropdown makes it the containing block for the menu
+   absolutely positioned inside it, which is precisely why the magnetism is
+   mounted there: the menu keeps its anchor and rides along instead of being
+   left behind by a toggle that moved. */
+
+/* The glow goes — the field is what answers the hover now. `transform: none`
+   cancels only the 2px lift, which would otherwise fire as a small jump before
+   the first mousemove; the magnetic script writes an inline transform, and that
+   outranks this rule, so the button still follows the cursor. */
+.hero-cta .btn-primary:hover { transform: none; box-shadow: none; }
+
 
 section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 .section-label { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.25em; color: var(--text-dim); margin-bottom: 0.75rem; }
@@ -522,10 +591,32 @@ footer .footer-accent { color: var(--accent); }
   .swipe-hint, .scroll-dots { display: none; }
 }
 
-/* Hero avatar responsive */
+/* Hero avatar responsive. The portrait is drawn as dots rather than a framed
+   circle, so it carries a larger size than a photo would; these steps keep it
+   clear of the headline as the viewport narrows. */
+@media (max-width: 1200px) {
+  .hero-avatar img { width: 300px; height: 300px; }
+}
+/* Between the portrait shrinking and the portrait disappearing, the headline
+   has to keep wrapping to three lines the way it does at full width. Left at
+   900px it pulls "real products" up onto line two and runs the accent straight
+   across the portrait — legible enough over a photograph, not at all over a
+   field of accent-coloured dots. The measure is in vw because the type is: at
+   8vw a fixed cap that clears the portrait at 820px breaks "I'm Kim" off its
+   own line by 1024px. 62vw sits above line one's natural width and below line
+   two's, which is exactly the window that forces the wrap and nothing else.
+   Bounded below at 769px, where the portrait is gone and the headline should
+   have the full column. */
+@media (min-width: 769px) and (max-width: 1200px) {
+  .hero h1 { max-width: 62vw; }
+  /* The lede needs the same treatment for the same reason, but only at the
+     bottom of the range: min() leaves its 550px measure alone until the
+     viewport is narrow enough that 550px would reach the portrait. */
+  .hero-sub { max-width: min(550px, 56vw); }
+}
 @media (max-width: 1024px) {
   .hero-avatar { right: 2vw; transform: translateY(-35%); }
-  .hero-avatar img { width: 220px; height: 220px; box-shadow: 0 8px 20px var(--shadow-heavy), 0 0 12px rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.05); }
+  .hero-avatar img { width: 260px; height: 260px; box-shadow: 0 8px 20px var(--shadow-heavy), 0 0 12px rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.05); }
 }
 @media (max-width: 768px) {
   .hero-avatar { display: none; }
@@ -545,7 +636,7 @@ footer .footer-accent { color: var(--accent); }
 }
 
 @media (max-width: 1024px) { .about-grid { grid-template-columns: 1fr; gap: 2.5rem; } .expertise-grid { grid-template-columns: 1fr 1fr; } .project-card { grid-template-columns: 1fr; } .project-visual { min-height: 200px; } }
-@media (max-width: 768px) { nav { padding: 1rem 1.5rem; } .nav-links { display: none; } .nav-hamburger { display: flex; } section { padding: 4rem 1.5rem; } .hero { padding: 7rem 1.5rem 3rem; } .expertise-grid { grid-template-columns: 1fr; } .about-stats { grid-template-columns: 1fr 1fr; } footer { flex-direction: column; gap: 0.75rem; text-align: center; } .contact-section { padding: 5rem 1.5rem; } .scroll-indicator { display: none; } .pitch-card { padding: 1.35rem; border-radius: 16px; } .pitch-footer { flex-direction: column-reverse; align-items: stretch; } .pitch-submit { justify-content: center; width: 100%; } .pitch-count { text-align: center; } }
+@media (max-width: 768px) { nav { padding: 1rem 1.5rem; } .nav-links { display: none; } .nav-hamburger { display: flex; } section { padding: 4rem 1.5rem; } .hero { padding: 7rem 1.5rem 3rem; } .expertise-grid { grid-template-columns: 1fr; } .about-stats { grid-template-columns: 1fr 1fr; } footer { flex-direction: column; gap: 0.75rem; text-align: center; } .contact-section { padding: 5rem 1.5rem; } .pitch-card { padding: 1.35rem; border-radius: 16px; } .pitch-footer { flex-direction: column-reverse; align-items: stretch; } .pitch-submit { justify-content: center; width: 100%; } .pitch-count { text-align: center; } }
 @media (max-width: 480px) { .nav-links { gap: 0.75rem; } .hero-cta { flex-direction: column; } .btn-primary, .btn-ghost { justify-content: center; width: 100%; } .cv-dropdown { width: 100%; } .cv-dropdown-toggle { justify-content: center; width: 100%; } }
 
 /* AI Showcase Section */
@@ -847,9 +938,8 @@ footer .footer-accent { color: var(--accent); }
    public-only view of the same person shows almost nothing, so the panel says
    what it counts rather than leaving a reader to compare against the profile
    page and distrust both numbers. */
-.ai-activity { margin: 0 0 4rem; padding: 2rem; border: 1px solid var(--border); border-radius: 20px; background: var(--bg-card); }
+.ai-activity { margin: 0; padding: 2rem; border: 1px solid var(--border); border-radius: 20px; background: var(--bg-card); }
 .ai-activity-head { display: flex; flex-wrap: wrap; gap: 1rem 2rem; align-items: baseline; justify-content: space-between; margin-bottom: 1.75rem; }
-.ai-activity-title { font-family: var(--serif); font-size: 1.6rem; font-weight: 400; }
 .ai-activity-sub { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--text-dim); }
 
 .ai-year { margin-bottom: 1.5rem; }
@@ -970,6 +1060,7 @@ footer .footer-accent { color: var(--accent); }
   </div>
   <ul class="nav-links">
     <li><a href="#projects">Projects</a></li>
+    <li><a href="#activity">Activity</a></li>
     <li><a href="#ai-showcase">AI</a></li>
     <li><a href="#skills">Skills</a></li>
     <li><a href="#experience">Experience</a></li>
@@ -990,6 +1081,7 @@ footer .footer-accent { color: var(--accent); }
 <div class="mobile-menu" id="mobileMenu">
   <span class="mobile-menu-label">Navigation</span>
   <a href="#projects">Projects</a>
+  <a href="#activity">Activity</a>
   <a href="#ai-showcase">AI</a>
   <a href="#skills">Skills</a>
   <a href="#experience">Experience</a>
@@ -1014,7 +1106,7 @@ footer .footer-accent { color: var(--accent); }
       <svg class="arrow-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
     </a>
     <a href="#contact" class="btn-ghost btn-magnetic">Get In Touch</a>
-    <div class="cv-dropdown">
+    <div class="cv-dropdown btn-magnetic">
       <button class="cv-dropdown-toggle">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Download CV
@@ -1033,11 +1125,7 @@ footer .footer-accent { color: var(--accent); }
     </div>
   </div>
   <div class="hero-avatar">
-    <img src="assets/profile.webp" alt="Kim Julongbayan" width="280" height="280">
-  </div>
-  <div class="scroll-indicator">
-    <span>Scroll</span>
-    <div class="scroll-line"></div>
+    <img src="assets/profile.webp" alt="Kim Julongbayan" width="360" height="360">
   </div>
 </section>
 
@@ -1197,25 +1285,17 @@ footer .footer-accent { color: var(--accent); }
 
 <div class="divider"></div>
 
-<!-- Tiles are built in JS from assets/ai-showcase rather than hand-written as
-     66 img tags. Purely decorative, hence aria-hidden. Sits here as the lead-in
-     to the AI Showcase, which is the section that explains how they were made. -->
-<div class="marquee-strip" id="marqueeStrip" aria-hidden="true">
-  <div class="marquee-row"><div class="marquee-track" data-dir="1"></div></div>
-  <div class="marquee-row"><div class="marquee-track" data-dir="-1"></div></div>
-</div>
-<p class="marquee-caption reveal">60+ characters generated with custom ComfyUI pipelines</p>
-
-<section id="ai-showcase">
-  <p class="section-label reveal">02 / AI Showcase</p>
-
+<!-- Build activity stands on its own rather than opening the AI Showcase:
+     it measures shipping across every project, not the ComfyUI work. -->
+<section id="activity">
+  <p class="section-label reveal">02 / Build Activity</p>
+  <h2 class="section-title reveal">Hours &amp; Commits</h2>
   <!-- Contribution grid. Data is baked into assets/contributions.json by
        scripts/fetch-contributions.mjs; the page never talks to GitHub, because
        the calendar API needs a token and a token in a page is a leaked token. -->
   <div class="ai-activity reveal" id="aiActivity" hidden>
     <div class="ai-activity-head">
       <div>
-        <div class="ai-activity-title">Build activity</div>
         <div class="ai-activity-sub" id="aiActivityRange"></div>
       </div>
       <div class="ai-jump" id="aiActivityJump"></div>
@@ -1260,6 +1340,20 @@ footer .footer-accent { color: var(--accent); }
       </div>
     </div>
   </div>
+</section>
+
+<!-- Tiles are built in JS from assets/ai-showcase rather than hand-written as
+     66 img tags. Purely decorative, hence aria-hidden. Sits here as the lead-in
+     to the AI Showcase, which is the section that explains how they were made. -->
+<div class="marquee-strip" id="marqueeStrip" aria-hidden="true">
+  <div class="marquee-row"><div class="marquee-track" data-dir="1"></div></div>
+  <div class="marquee-row"><div class="marquee-track" data-dir="-1"></div></div>
+</div>
+<p class="marquee-caption reveal">60+ characters generated with custom ComfyUI pipelines</p>
+
+<section id="ai-showcase">
+  <p class="section-label reveal">03 / AI Showcase</p>
+
   <div class="ai-tabs reveal">
     <button class="ai-tab active" data-tab="pipeline">Avatar Pipeline</button>
     <button class="ai-tab" data-tab="style-transfer">Style Transfer</button>
@@ -1864,7 +1958,7 @@ footer .footer-accent { color: var(--accent); }
 <div class="divider"></div>
 
 <section id="skills">
-  <p class="section-label reveal">03 / Skills</p>
+  <p class="section-label reveal">04 / Skills</p>
   <h2 class="section-title reveal">Tools &amp; Technologies</h2>
   <div class="skills-marquee-wrapper">
     <div class="skills-marquee">
@@ -1903,7 +1997,7 @@ footer .footer-accent { color: var(--accent); }
 <div class="divider"></div>
 
 <section id="experience">
-  <p class="section-label reveal">04 / Journey</p>
+  <p class="section-label reveal">05 / Journey</p>
   <h2 class="section-title reveal">Experience</h2>
   <div class="experience-grid">
     <div class="timeline" id="timeline">
@@ -1984,7 +2078,7 @@ footer .footer-accent { color: var(--accent); }
 <div class="divider"></div>
 
 <section id="about">
-  <p class="section-label reveal">05 / About</p>
+  <p class="section-label reveal">06 / About</p>
   <h2 class="section-title reveal">Building things that <em>matter</em></h2>
   <div class="about-avatar reveal">
     <img src="assets/profile.webp" alt="Kim Julongbayan" width="120" height="120">
@@ -2008,7 +2102,7 @@ footer .footer-accent { color: var(--accent); }
 
 <section id="contact" class="contact-section">
   <canvas class="horizon-canvas" id="horizonCanvas" aria-hidden="true"></canvas>
-  <p class="section-label reveal">06 / Contact</p>
+  <p class="section-label reveal">07 / Contact</p>
   <h2 class="section-title reveal">Let's build something <em>great</em></h2>
   <p class="contact-sub reveal">Open to collaborations, freelance work, and exciting opportunities.</p>
 
@@ -2264,6 +2358,13 @@ document.querySelectorAll('.spotlight-card').forEach(card => {
 if (window.innerWidth > 768) {
   document.querySelectorAll('.btn-magnetic').forEach(btn => {
     btn.addEventListener('mousemove', (e) => {
+      // The CV control is magnetised on its wrapper rather than its button, so
+      // the toggle and the menu anchored to it travel together. That wrapper
+      // also contains the open menu, which would otherwise feed this its own
+      // mouse position — the cursor sitting 60px below the toggle reads as a
+      // large offset and slides the whole control out from under itself while
+      // you are picking an item. So while it is open, it stays put.
+      if (btn.classList.contains('open')) { btn.style.transform = ''; return; }
       const rect = btn.getBoundingClientRect();
       const x = e.clientX - rect.left - rect.width / 2;
       const y = e.clientY - rect.top - rect.height / 2;
@@ -2852,6 +2953,9 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script src="assets/js/horizon-glow.js" defer></script>
 <script src="assets/js/project-visuals.js" defer></script>
+<script src="assets/js/hero-particles.js" defer></script>
+<script src="assets/js/avatar-field.js" defer></script>
+<script src="assets/js/button-field.js" defer></script>
 <script>
   /* Assemble email links at runtime so the raw address never sits in the HTML
      source for scrapers to harvest. Real users see and click it normally. */
