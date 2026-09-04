@@ -690,16 +690,6 @@ textarea.pitch-field { min-height: 155px; resize: none; display: block; overflow
 }
 .section-title em, .hero-line em { -webkit-text-fill-color: var(--accent); }
 
-/* Scroll-driven marquee */
-.marquee-strip { padding: 3.5rem 0 2.5rem; display: flex; flex-direction: column; gap: 0.75rem; overflow: hidden; }
-/* Fades the tiles out at both edges so the strip reads as continuous motion
-   rather than a row that happens to be clipped by the viewport. */
-.marquee-row { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%); }
-.marquee-track { display: flex; gap: 0.75rem; width: max-content; will-change: transform; }
-.marquee-tile { width: 180px; height: 240px; flex-shrink: 0; border-radius: 16px; overflow: hidden; border: 1px solid var(--border); background: var(--bg-card); }
-.marquee-tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.marquee-caption { text-align: center; font-family: var(--mono); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.22em; color: var(--text-dim); margin-top: 2rem; }
-
 /* Character-by-character scroll reveal */
 .char-reveal .ch { opacity: 0.18; will-change: opacity; }
 
@@ -712,7 +702,6 @@ textarea.pitch-field { min-height: 155px; resize: none; display: block; overflow
   #projects { overflow: visible; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .marquee-track { transform: none !important; }
   .char-reveal .ch { opacity: 1 !important; }
 }
 
@@ -1050,10 +1039,108 @@ footer .footer-accent { color: var(--accent); }
 .prompt-tab.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
 .prompt-category { display: none; }
 .prompt-category.active { display: block; }
-.ai-tabs { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 2.5rem; }
-.ai-tab { font-family: var(--mono); font-size: 0.8rem; padding: 0.5rem 1.25rem; border-radius: 999px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); cursor: pointer; transition: transform, opacity, color, background-color, border-color, box-shadow; transition-duration: 0.25s; letter-spacing: 0.02em; }
+/* ============ AI Showcase — the evidence ledger ============ */
+/* Eight systems as rows; the open one proves itself below in whatever medium it
+   actually works in. The assistants transcribe, the pipelines run their steps,
+   the image systems keep the walkthrough they already had — the engineering
+   there is the process, not the finished avatars, so flattening it to a grid of
+   output would throw away the part worth showing.
+
+   .ai-tab / .ai-tab-content keep their names: the switching logic that drove the
+   old three-button strip is unchanged, and the rows are still tabs underneath. */
+.ev-intro { color: var(--text-muted); max-width: 62ch; margin: -1.5rem 0 1.75rem; font-size: 1rem; }
+
+.ai-tabs { display: flex; flex-direction: column; border-top: 1px solid var(--border); margin-bottom: 2rem; }
+.ai-tab {
+  display: grid; grid-template-columns: 2.1rem 1fr auto auto;
+  align-items: baseline; gap: 0.9rem 1.3rem;
+  padding: 0.85rem 0; width: 100%;
+  border: 0; border-bottom: 1px solid var(--border);
+  background: none; text-align: left; font: inherit; color: inherit; cursor: pointer;
+  border-radius: 0;
+  transition: opacity 0.3s ease, padding-left 0.3s var(--ease-out);
+}
+.ev-num { font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim); letter-spacing: 0.1em; }
+.ev-name { font-family: var(--serif); font-size: 1.15rem; line-height: 1.15; letter-spacing: -0.005em; }
+.ev-model { font-family: var(--mono); font-size: 0.57rem; color: var(--text-dim); letter-spacing: 0.07em; }
+/* the column the section exists for: what each system is held to */
+.ev-guard { font-family: var(--mono); font-size: 0.57rem; color: var(--gradient-2); letter-spacing: 0.05em; text-align: right; }
+.ev-name, .ev-model, .ev-guard { white-space: nowrap; }
+
+/* Per-row hover, not a list-wide dim. The dim was borrowed from Selected Work,
+   where pointing at a row IS opening it — here a row has to be clicked, and a
+   list that goes dark while giving the row under the cursor no distinction
+   leaves you unable to see what you are about to open. These panels are heavy
+   enough (one carries 93 images) that hover-to-open would be the wrong trade. */
+.ai-tab:hover, .ai-tab:focus-visible { padding-left: 0.7rem; background: var(--white-overlay); }
+.ai-tab:hover .ev-name { color: var(--accent); }
+.ai-tab:hover .ev-model, .ai-tab:hover .ev-guard { color: var(--text-muted); }
+
+/* The open row is marked differently from the pointed-at one, so the two states
+   never have to be told apart by memory: hover tints, open underlines. */
+.ai-tab.active { border-bottom-color: var(--accent); padding-left: 0.7rem; }
+.ai-tab.active .ev-num, .ai-tab.active .ev-guard { color: var(--accent); }
+.ai-tab.active .ev-name { color: var(--text); }
+.ai-tab:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.ev-lede { color: var(--text-muted); max-width: 68ch; font-size: 0.95rem; margin: 0 0 1.5rem; }
+.ev-split { display: grid; grid-template-columns: 1.05fr 1fr; gap: 2.25rem; align-items: start; }
+
+/* ---- transcript ---- */
+.ev-chat { border: 1px solid var(--border); border-radius: 14px; background: var(--bg-card); padding: 1.15rem 1.25rem; min-height: 250px; }
+.ev-msg { margin-bottom: 0.9rem; }
+.ev-msg:last-child { margin-bottom: 0; }
+.ev-who { font-family: var(--mono); font-size: 0.52rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.25rem; }
+.ev-q { font-size: 0.88rem; color: var(--text); }
+.ev-a { font-size: 0.86rem; color: var(--text-muted); line-height: 1.65; }
+/* the refusal is the point of the panel, so it is the one line that is coloured */
+.ev-msg.is-refusal .ev-a { color: #ffb020; }
+.ev-src { margin-top: 0.35rem; font-family: var(--mono); font-size: 0.54rem; letter-spacing: 0.05em; color: var(--text-dim); }
+/* A caret on the line being typed. ::after on the text itself, so it sits at
+   the end of the last word rather than at the end of the box. */
+.ev-msg.is-typing .ev-q::after,
+.ev-msg.is-typing .ev-a::after {
+  content: ''; display: inline-block; width: 0.5em; height: 1em;
+  margin-left: 2px; vertical-align: -0.15em; background: var(--accent);
+  animation: evCaret 1s steps(2) infinite;
+}
+@keyframes evCaret { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+
+.ev-rules { list-style: none; margin: 0; padding: 0; }
+.ev-rules li { position: relative; padding-left: 1.15rem; font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 0.6rem; }
+.ev-rules li::before { content: ''; position: absolute; left: 0; top: 0.55rem; width: 5px; height: 5px; border-radius: 50%; background: var(--gradient-2); }
+.ev-rules strong { color: var(--text); font-weight: 500; }
+
+/* ---- process log ----
+   Steps and status, deliberately no timings: inventing plausible millisecond
+   figures in the one section arguing against hallucination would be exactly the
+   mistake it warns about. */
+/* Capped rather than full-bleed: the status sits in the last column, and across
+   the whole section it ended up a thousand pixels from the step it belonged to. */
+.ev-log { max-width: 640px; border: 1px solid var(--border); border-radius: 14px; background: var(--bg-card); padding: 1.1rem 1.3rem; font-family: var(--mono); font-size: 0.7rem; line-height: 1.95; min-height: 220px; }
+.ev-log > div { display: grid; grid-template-columns: 4.6rem 1fr auto; gap: 0.9rem; color: var(--text-muted); }
+.ev-log .k { color: var(--text-dim); }
+.ev-log .v { color: var(--text); }
+.ev-log .s { font-size: 0.62rem; letter-spacing: 0.08em; }
+.ev-log .s.run { color: var(--accent); }
+.ev-log .s.done { color: var(--gradient-2); }
+
+.ev-link { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1.35rem; font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.06em; color: var(--accent); text-decoration: none; }
+.ev-link:hover { text-decoration: underline; }
+
+@media (max-width: 900px) {
+  .ev-split { grid-template-columns: 1fr; gap: 1.5rem; }
+}
+@media (max-width: 700px) {
+  /* the model column is the first to go: the name and what holds it are the
+     two a reader is actually scanning for */
+  .ai-tab { grid-template-columns: 1.9rem 1fr auto; gap: 0.7rem 0.9rem; }
+  .ev-model { display: none; }
+  .ev-name { font-size: 1rem; white-space: normal; }
+  .ev-guard { font-size: 0.53rem; white-space: normal; }
+}
+
 .ai-tab:hover { border-color: var(--border-hover); color: var(--text); }
-.ai-tab.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
 .ai-tab-content { display: none; }
 .ai-tab-content.active { display: block; }
 .prompt-category-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1.5rem; font-weight: 300; }
@@ -1590,25 +1677,75 @@ footer .footer-accent { color: var(--accent); }
   </div>
 </section>
 
-<!-- Tiles are built in JS from assets/ai-showcase rather than hand-written as
-     66 img tags. Purely decorative, hence aria-hidden. Sits here as the lead-in
-     to the AI Showcase, which is the section that explains how they were made. -->
-<div class="marquee-strip" id="marqueeStrip" aria-hidden="true">
-  <div class="marquee-row"><div class="marquee-track" data-dir="1"></div></div>
-  <div class="marquee-row"><div class="marquee-track" data-dir="-1"></div></div>
-</div>
-<p class="marquee-caption reveal">60+ characters generated with custom ComfyUI pipelines</p>
-
 <section id="ai-showcase">
   <p class="section-label reveal">03 / AI Showcase</p>
 
-  <div class="ai-tabs reveal">
-    <button class="ai-tab active" data-tab="pipeline">Avatar Pipeline</button>
-    <button class="ai-tab" data-tab="style-transfer">Style Transfer</button>
-    <button class="ai-tab" data-tab="fashion">Fashion Generation</button>
+  <h2 class="section-title reveal">Systems that <em>know their limits</em></h2>
+  <p class="ev-intro reveal">Eight AI systems, language and image. The column that matters is the last one &mdash; what each is held to, so it cannot answer past what it actually knows.</p>
+  <!-- Rows are generated from the panels below by the ledger script, so a system
+       cannot appear in one and not the other. Each panel carries its own row
+       text as data attributes. -->
+  <div class="ai-tabs reveal" role="tablist" aria-label="AI systems"></div>
+
+  <div class="ai-tab-content active" data-tab="site-assistant"
+       data-name="MDS Pro site assistant" data-model="Claude API" data-guard="No tools, no database"
+       data-bar="mdsprosolutions.com &middot; site assistant">
+    <p class="ev-lede reveal">A public assistant that answers about the company and the remote nurse role from a fixed knowledge file. It has no tools and no database, so there is nothing for it to invent from &mdash; and when a question falls outside what it was given, it offers to send it to the team rather than guessing.</p>
+    <div class="ev-split">
+      <div class="ev-chat" data-chat="assistant" aria-label="Example exchange"></div>
+      <ul class="ev-rules">
+        <li><strong>No tools and no database.</strong> Answers come from a knowledge file, not a live system.</li>
+        <li><strong>Scope follows the page.</strong> The careers assistant answers about the role, the home one about the company.</li>
+        <li><strong>Out of scope hands off</strong> to a human instead of guessing.</li>
+        <li><strong>Never rendered as HTML.</strong> No visitor text or model output touches innerHTML &mdash; plain text by instruction is not a guarantee worth betting a script injection on.</li>
+        <li><strong>A short-lived signed ticket</strong> per session, so the endpoint answers the real page.</li>
+      </ul>
+    </div>
+    <a class="ev-link" href="https://mdsprosolutions.com" target="_blank" rel="noopener">Try it on mdsprosolutions.com
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
   </div>
 
-  <div class="ai-tab-content active" data-tab="pipeline">
+  <div class="ai-tab-content" data-tab="db-query"
+       data-name="Plain-English DB querying" data-model="Claude API" data-guard="Read-only Postgres role"
+       data-bar="MDS Pro admin &middot; ask the database">
+    <p class="ev-lede reveal">Inside the admin system, a question in English becomes a query the model composes and a read-only role executes. The answer is built only from the rows that came back, and every question carries its own cost.</p>
+    <div class="ev-split">
+      <div class="ev-chat" data-chat="dbquery" aria-label="Example exchange"></div>
+      <ul class="ev-rules">
+        <li><strong>Read-only Postgres role.</strong> The model can compose a query; it cannot write, drop or escalate.</li>
+        <li><strong>Row-level security underneath</strong>, so the role cannot reach what the asker could not.</li>
+        <li><strong>Answers only from rows returned.</strong> No figure appears that a query did not produce.</li>
+        <li><strong>Per-question cost tracking</strong>, so an expensive question is a visible one.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="ai-tab-content" data-tab="recodeai"
+       data-name="RecodeAI" data-model="Claude API &middot; SSE" data-guard="Crawled source only"
+       data-bar="recode.kimlj.dev &middot; redesign run">
+    <p class="ev-lede reveal">Paste a URL and it crawls the real site, reads its brand identity, generates a redesign and deploys it to a live link &mdash; streamed to the browser over Server-Sent Events as each step completes. The sequence below is what runs.</p>
+    <div class="ev-log" data-log="recodeai"></div>
+    <a class="ev-link" href="https://recode.kimlj.dev" target="_blank" rel="noopener">See it run
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+  </div>
+
+  <div class="ai-tab-content" data-tab="job-matcher"
+       data-name="AI Job Matcher" data-model="OpenAI API" data-guard="Resume as the ground truth"
+       data-bar="browser extension &middot; listing run">
+    <p class="ev-lede reveal">A browser extension that reads a job listing off the page, structures it, and scores the role against the resume rather than against a keyword list &mdash; then drafts a cold email with the tone under control.</p>
+    <div class="ev-log" data-log="matcher"></div>
+  </div>
+
+  <div class="ai-tab-content" data-tab="email-watcher"
+       data-name="Job Email Watcher" data-model="GPT-4o" data-guard="Hybrid AI + code scoring"
+       data-bar="n8n &middot; inbox pipeline">
+    <p class="ev-lede reveal">An n8n pipeline that watches Gmail for job alerts, scores each against the resume, and values the salary with a hybrid of model judgement and deterministic code &mdash; then logs it and reports to Telegram. It has run unattended since it shipped.</p>
+    <div class="ev-log" data-log="watcher"></div>
+  </div>
+
+  <div class="ai-tab-content" data-tab="pipeline"
+       data-name="Avatar pipeline" data-model="ComfyUI &middot; SD" data-guard="Fixed seed + node graph"
+       data-bar="WordWarz.io &middot; 60+ generated avatars">
   <p class="ai-showcase-intro reveal">Generating 60+ consistent avatars for <code>WordWarz.io</code> meant solving a core problem: AI models are unpredictable, and every word in a prompt matters. Here's the process — from prompt engineering to a fully automated pipeline.</p>
 
   <!-- PART 1: Prompt Engineering -->
@@ -2064,7 +2201,9 @@ footer .footer-accent { color: var(--accent); }
 
   </div><!-- /pipeline tab -->
 
-  <div class="ai-tab-content" data-tab="style-transfer">
+  <div class="ai-tab-content" data-tab="style-transfer"
+       data-name="Style transfer" data-model="IPAdapter" data-guard="One illustration as the source"
+       data-bar="showcase &middot; consistency across poses">
   <p class="ai-showcase-intro reveal">Style is extracted via <code>CLIP Vision</code> and injected through <code>IPAdapter Advanced</code>, while text prompts control pose and expression independently.</p>
 
   <div class="showcase-block reveal">
@@ -2131,7 +2270,9 @@ footer .footer-accent { color: var(--accent); }
   </div>
   </div><!-- /style-transfer tab -->
 
-  <div class="ai-tab-content" data-tab="fashion">
+  <div class="ai-tab-content" data-tab="fashion"
+       data-name="Fashion generation" data-model="ControlNet" data-guard="Depth map locks the pose"
+       data-bar="showcase &middot; mannequin to product shots">
   <p class="ai-showcase-intro reveal">Using <code>ControlNet Depth</code> to preserve a mannequin's pose and body structure, then generating photorealistic clothing variations and tattoo removal from text prompts.</p>
 
   <div class="showcase-block reveal">
@@ -2882,17 +3023,9 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
   // Init all categories
   Object.keys(data).forEach(function(cat) { update(cat); });
 
-  // Tab clicks
-  // AI Showcase section-level tabs
-  document.querySelector('.ai-tabs').addEventListener('click', function(e) {
-    var tab = e.target.closest('.ai-tab');
-    if (!tab) return;
-    var target = tab.dataset.tab;
-    document.querySelectorAll('.ai-tab').forEach(function(t) { t.classList.remove('active'); });
-    tab.classList.add('active');
-    document.querySelectorAll('.ai-tab-content').forEach(function(c) { c.classList.remove('active'); });
-    document.querySelector('.ai-tab-content[data-tab="' + target + '"]').classList.add('active');
-  });
+  // The section-level tabs are the evidence ledger now — generated from the
+  // panels and switched by assets/js/ai-ledger.js, which also plays whatever
+  // evidence the open panel carries.
 
   document.getElementById('promptTabs').addEventListener('click', function(e) {
     var tab = e.target.closest('.prompt-tab');
@@ -2923,82 +3056,6 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
 <script>
 (function() {
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  /* ---- Marquee ---- */
-  var MARQUEE = [
-    '01-consistency-girl-redhair-peace', '02-consistency-girl-purplehair-peace',
-    '03-consistency-girl-pinkhair-wink', '04-expression-girl-blonde-smug',
-    '05-expression-girl-gradient-starryeyes', '06-expression-girl-purple-excited',
-    '07-gamer-girl-headphones-jacket', '08-gamer-girl-catears-streamer',
-    '09-gamer-boy-energydrink-headphones', '10-gamer-boy-pocky-chillgamer',
-    '11-prop-girl-redhair-bubblegum', '12-prop-girl-blonde-cap-bubblegum',
-    '13-prop-girl-pink-catears-lollipop', '14-prop-girl-brown-bobatea',
-    '15-archetype-boy-mysterious-hoodie-mask', '16-archetype-boy-edgelord-eyepatch',
-    '17-archetype-boy-royalty-crown', '18-archetype-girl-witch-hat',
-    '19-archetype-girl-scientist-labcoat', '20-archetype-boy-techscientist-vrvisor',
-    '21-street-girl-cap-bubblegum-chains', '22-street-boy-sunglasses-bubblegum'
-  ];
-
-  var strip = document.getElementById('marqueeStrip');
-  var tracks = strip ? strip.querySelectorAll('.marquee-track') : [];
-
-  if (strip && tracks.length === 2) {
-    var half = Math.ceil(MARQUEE.length / 2);
-    var rows = [MARQUEE.slice(0, half), MARQUEE.slice(half)];
-
-    rows.forEach(function(names, r) {
-      var frag = document.createDocumentFragment();
-      // Tripled so the row never runs out of tiles at either scroll extreme.
-      for (var pass = 0; pass < 3; pass++) {
-        names.forEach(function(n) {
-          var tile = document.createElement('div');
-          tile.className = 'marquee-tile';
-          var img = document.createElement('img');
-          img.src = 'assets/ai-showcase/' + n + '.webp';
-          img.alt = '';
-          img.loading = 'lazy';
-          img.decoding = 'async';
-          tile.appendChild(img);
-          frag.appendChild(tile);
-        });
-      }
-      tracks[r].appendChild(frag);
-    });
-
-    // Centre each row on its middle copy so there is runway in both directions.
-    var basis = [];
-    tracks.forEach(function(t) { basis.push(-t.scrollWidth / 3); });
-
-    var stripTop = 0;
-    function measure() {
-      var r = strip.getBoundingClientRect();
-      stripTop = r.top + window.scrollY;
-      basis = [];
-      tracks.forEach(function(t) { basis.push(-t.scrollWidth / 3); });
-    }
-    measure();
-    window.addEventListener('resize', measure);
-    // The strip sits far down the page now, below cards whose videos have no
-    // intrinsic size until metadata arrives. Each one that resolves shifts the
-    // strip, so a single init measurement leaves the parallax basis stale.
-    window.addEventListener('load', measure);
-
-    var mTicking = false;
-    function moveMarquee() {
-      mTicking = false;
-      var offset = (window.scrollY - stripTop + window.innerHeight) * 0.3;
-      tracks.forEach(function(t, idx) {
-        var dir = parseFloat(t.dataset.dir) || 1;
-        t.style.transform = 'translate3d(' + (basis[idx] + dir * (offset - 200)) + 'px,0,0)';
-      });
-    }
-    if (!reduced) {
-      moveMarquee();
-      window.addEventListener('scroll', function() {
-        if (!mTicking) { mTicking = true; requestAnimationFrame(moveMarquee); }
-      }, { passive: true });
-    }
-  }
 
   /* ---- Character-by-character scroll reveal ---- */
   var para = document.querySelector('.char-reveal');
@@ -3201,6 +3258,7 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
 <script src="assets/js/avatar-field.js" defer></script>
 <script src="assets/js/button-field.js" defer></script>
 <script src="assets/js/section-ornaments.js" defer></script>
+<script src="assets/js/ai-ledger.js" defer></script>
 <script>
   /* Assemble email links at runtime so the raw address never sits in the HTML
      source for scrapers to harvest. Real users see and click it normally. */
