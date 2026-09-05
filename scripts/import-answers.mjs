@@ -21,20 +21,29 @@
 // Anything still marked NEEDS-REVIEW, GUESS or YOURS-ONLY is skipped and
 // counted, so the file can sit half-finished for as long as he likes.
 
-import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const DOC = join(ROOT, 'docs', 'assistant-answers.md');
+const DOCS = join(ROOT, 'docs');
 const OUT = join(ROOT, 'lib', 'owner.json');
 
-if (!existsSync(DOC)) {
-  console.error('docs/assistant-answers.md not found.');
+// Every docs/assistant-answers*.md, so the questions can be split across as
+// many files as is convenient to review. A question appearing in two of them is
+// taken from whichever copy is marked OK — see the de-dupe below.
+const files = existsSync(DOCS)
+  ? readdirSync(DOCS)
+      .filter((f) => /^assistant-answers.*\.md$/.test(f))
+      .sort()
+  : [];
+
+if (!files.length) {
+  console.error('no docs/assistant-answers*.md found.');
   process.exit(1);
 }
 
-const lines = readFileSync(DOC, 'utf8').split(/\r?\n/);
+const lines = files.flatMap((f) => readFileSync(join(DOCS, f), 'utf8').split(/\r?\n/));
 
 const entries = [];
 let cur = null;
@@ -94,6 +103,16 @@ for (const e of entries) {
 
   approved.push({ q: e.q, a: text, section: e.section });
 }
+
+// The same question in two files would otherwise reach the corpus twice, and
+// the assistant would hold two answers to it. Last approved copy wins.
+const seen = new Map();
+for (const a of approved) seen.set(a.q.toLowerCase(), a);
+const deduped = [...seen.values()];
+const dupes = approved.length - deduped.length;
+if (dupes) console.warn(`  ! ${dupes} duplicate question${dupes > 1 ? 's' : ''} across files, kept the last`);
+approved.length = 0;
+approved.push(...deduped);
 
 const total = entries.length;
 
