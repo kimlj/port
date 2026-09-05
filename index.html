@@ -253,35 +253,35 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 
 .about-avatar { display: none; margin-bottom: 2rem; text-align: center; }
 .about-avatar img { width: 100px; height: 100px; object-fit: cover; object-position: top; border-radius: 50%; border: 1px solid rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.08); box-shadow: 0 0 30px var(--shadow); }
-.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
-.about-text { font-size: 1.05rem; line-height: 1.8; color: var(--text-muted); font-weight: 300; }
+/* One measured column now: with the technology list living in Skills with
+   receipts, About has nothing to sit beside. */
+.about-grid { display: block; }
+.about-text { font-size: 1.05rem; line-height: 1.8; color: var(--text-muted); font-weight: 300; max-width: 64ch; }
 .about-text p + p { margin-top: 1.25rem; }
-.about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-.stat-card { padding: 1.75rem; border: 1px solid var(--border); border-radius: 16px; background: var(--bg-card); transition: transform, opacity, color, background-color, border-color, box-shadow; transition-duration: 0.4s; }
-.stat-card:hover { border-color: var(--accent); background: var(--accent-dim); transform: translateY(-3px); }
-.stat-number { font-family: var(--serif); font-size: 2.5rem; color: var(--accent); line-height: 1; }
-.stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem; letter-spacing: 0.02em; }
+/* The figures that replaced the four stat cards, two of which held "Full" and
+   "AI" in a number slot. Every one is counted out of the DOM at load, so the
+   line cannot drift away from the page it describes. */
+.about-figures { display: flex; flex-wrap: wrap; gap: 0.5rem 1.9rem; max-width: 880px; margin-top: 2.75rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.07em; color: var(--text-dim); }
+.about-figures b { font-weight: 400; color: var(--accent); }
 
-.skills-marquee-wrapper { overflow: hidden; padding: 2rem 0; }
-.skills-marquee { display: flex; gap: 0.75rem; animation: marquee 40s linear infinite; width: max-content; animation-play-state: paused; }
-.skills-marquee-wrapper.in-view .skills-marquee { animation-play-state: running; }
-.skills-marquee:nth-child(2) { animation-direction: reverse; animation-duration: 35s; margin-top: 0.75rem; }
-.skill-chip { padding: 0.65rem 1.25rem; border: 1px solid var(--border); border-radius: 100px; font-size: 0.82rem; color: var(--text-muted); white-space: nowrap; font-weight: 400; letter-spacing: 0.01em; background: var(--bg-card); transition: transform, opacity, color, background-color, border-color, box-shadow; transition-duration: 0.3s; flex-shrink: 0; }
-.skill-chip:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
-.skill-chip.highlight { border-color: rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.3); color: var(--accent); background: var(--accent-dim); }
-@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+/* -- 04 / Skills ------------------------------------------------------------
+   The legend for the rest of the page. Every technology names the work on this
+   site it was used in, so the section is checkable against the three above it
+   rather than being a list of assertions -- which is also why nothing is listed
+   that has nothing behind it.
 
-.expertise-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; margin-top: 2rem; }
-.expertise-card { padding: 2.25rem; border: 1px solid var(--border); border-radius: 20px; background: var(--bg-card); transition: transform, opacity, color, background-color, border-color, box-shadow; transition-duration: 0.4s; transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94); position: relative; overflow: hidden; }
-.expertise-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--gradient-1), var(--gradient-2)); opacity: 0; transition: opacity 0.4s; }
-.expertise-card:hover { border-color: var(--border-hover); background: var(--bg-card-hover); transform: translateY(-5px); }
-.expertise-card:hover::before { opacity: 1; }
-.expertise-card:hover .expertise-icon { border-color: rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.3); background: rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.12); }
-.expertise-card:hover .expertise-icon svg { transform: scale(1.1); }
-.expertise-icon { width: 48px; height: 48px; border-radius: 14px; background: var(--accent-dim); border: 1px solid rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.12); display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; transition: transform, opacity, color, background-color, border-color, box-shadow; transition-duration: 0.4s; }
-.expertise-icon svg { width: 22px; height: 22px; stroke: var(--accent); fill: none; stroke-width: 1.5; transition: transform 0.4s; }
-.expertise-card h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.6rem; letter-spacing: -0.01em; }
-.expertise-card p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.65; font-weight: 300; }
+   Serif for the name, mono for the provenance: the ledger's typography, but a
+   list rather than rows, so 04 does not become a third index after Selected
+   Work and the AI Showcase. */
+.skills-lede { color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; font-weight: 300; max-width: 640px; margin: -1.5rem 0 3rem; }
+.skill-ledger { max-width: 940px; }
+.skill-group + .skill-group { margin-top: 2.75rem; }
+.skill-group-title { font-family: var(--mono); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.16em; color: var(--accent); padding-bottom: 0.7rem; border-bottom: 1px solid var(--border); }
+.skill-row { display: grid; grid-template-columns: minmax(0, 12rem) minmax(0, 1fr); gap: 0.3rem 2rem; align-items: baseline; padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
+.skill-name { font-family: var(--serif); font-size: 1.02rem; color: var(--text); transition: color 0.3s; }
+.skill-where { display: flex; flex-wrap: wrap; gap: 0.3rem 1.15rem; font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.05em; color: var(--text-dim); transition: color 0.3s; }
+.skill-row:hover .skill-name { color: var(--accent); }
+.skill-row:hover .skill-where { color: var(--text-muted); }
 
 .projects-grid { display: grid; gap: 1.5rem; }
 
@@ -494,9 +494,9 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 .project-tech { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.25rem; }
 .project-tech span { font-family: var(--mono); font-size: 0.7rem; padding: 0.35rem 0.75rem; border: 1px solid var(--border); border-radius: 100px; color: var(--text-dim); }
 .project-tech span.hl { border-color: rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.3); color: var(--accent); background: var(--accent-dim); }
-/* Live traction numbers inside a project card. Smaller type than .stat-card in
-   About on purpose — these support the card's copy, they aren't the page's own
-   headline. Rule above them separates claims from evidence. */
+/* Live traction numbers inside a project card. Deliberately quiet type — these
+   support the card's copy, they aren't the page's own headline. Rule above them
+   separates claims from evidence. */
 .project-metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
 .project-metrics.is-three { grid-template-columns: repeat(3, 1fr); }
 .project-metric-num { font-family: var(--serif); font-size: 1.45rem; color: var(--accent); line-height: 1; }
@@ -541,48 +541,28 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 .project-link svg { width: 16px; height: 16px; stroke: var(--accent); fill: none; stroke-width: 2; transition: transform 0.3s; }
 .project-card:hover .project-link svg { transform: translateX(4px); }
 
-/* Experience layout */
-.experience-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 4rem; align-items: stretch; }
-.experience-sidebar { position: sticky; top: 6rem; display: flex; flex-direction: column; gap: 1.5rem; align-self: start; }
+/* -- 05 / Experience --------------------------------------------------------
+   Two entries do not need a progress rail, ripple dots and a sidebar; the
+   chrome outweighed the content. Mono date column, serif role, prose
+   underneath -- the same two-column measure the Skills list uses, one register
+   quieter, so density keeps falling as the reader nears the contact form. */
+.xp { max-width: 880px; }
+.xp-row { display: grid; grid-template-columns: minmax(0, 12rem) minmax(0, 1fr); gap: 0.5rem 2rem; padding: 2.25rem 0; border-top: 1px solid var(--border); }
+.xp-row:last-of-type { border-bottom: 1px solid var(--border); }
+.xp-when { font-family: var(--mono); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-dim); padding-top: 0.35rem; }
+.xp-role { font-family: var(--serif); font-size: 1.3rem; font-weight: 400; letter-spacing: -0.01em; margin-bottom: 0.3rem; }
+.xp-at { font-size: 0.82rem; color: var(--accent); margin-bottom: 0.9rem; }
+.xp-body { font-size: 0.92rem; line-height: 1.75; color: var(--text-muted); font-weight: 300; max-width: 62ch; }
 
-/* Sidebar card with animated gradient border */
-.sidebar-card { padding: 1.75rem; border: 1px solid var(--border); border-radius: 20px; background: var(--bg-card); position: relative; overflow: hidden; transition: transform, opacity, color, background-color, border-color, box-shadow; transition-duration: 0.4s; }
-.sidebar-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--gradient-1), var(--gradient-2), var(--gradient-1)); background-size: 200% 100%; animation: shimmerBorder 3s linear infinite; }
-@keyframes shimmerBorder { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-.sidebar-card::after { content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity 0.3s; pointer-events: none; border-radius: inherit; background: radial-gradient(circle 300px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.04), transparent 70%); }
-.sidebar-card:hover::after { opacity: 1; }
-.sidebar-card-title { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem; }
-.sidebar-card-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.2), transparent); }
-
-/* Competency items with stagger */
-.competency-item { display: flex; gap: 0.85rem; padding: 0.85rem; border-radius: 12px; border: 1px solid transparent; transition: transform, opacity, color, background-color, border-color, box-shadow; transition-duration: 0.3s; opacity: 0; transform: translateX(20px); }
-.competency-item.comp-visible { opacity: 1; transform: translateX(0); }
-.competency-item:hover { border-color: var(--border); background: rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.02); }
-.competency-item:hover .competency-icon { border-color: rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.3); background: rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.12); transform: scale(1.1); }
-.competency-item:hover .competency-icon svg { animation: iconBounce 0.5s ease; }
-@keyframes iconBounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
-.competency-icon { width: 36px; height: 36px; border-radius: 10px; background: var(--accent-dim); border: 1px solid rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform, opacity, color, background-color, border-color, box-shadow; transition-duration: 0.3s; }
-.competency-icon svg { width: 16px; height: 16px; stroke: var(--accent); fill: none; stroke-width: 1.5; }
-.competency-text { flex: 1; }
-.competency-text h4 { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.2rem; }
-.competency-text p { font-size: 0.72rem; color: var(--text-muted); line-height: 1.5; font-weight: 300; }
-
-/* Availability badge with shimmer */
-.availability-badge { display: flex; align-items: center; gap: 0.75rem; padding: 1.25rem 1.5rem; border: 1px solid rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.15); border-radius: 16px; background: rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.03); position: relative; overflow: hidden; opacity: 0; transform: translateY(10px); transition: transform, opacity, color, background-color, border-color, box-shadow; transition-duration: 0.6s; transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94); }
-.availability-badge.comp-visible { opacity: 1; transform: translateY(0); }
+/* The one thing kept out of the sidebar: it is real and actionable, unlike the
+   six competency claims it sat under. */
+.availability-badge { display: inline-flex; align-items: center; gap: 0.75rem; margin-top: 2.75rem; padding: 0.95rem 1.4rem; border: 1px solid rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.15); border-radius: 100px; background: rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.03); position: relative; overflow: hidden; }
 .availability-badge::before { content: ''; position: absolute; top: 0; left: -100%; width: 60%; height: 100%; background: linear-gradient(90deg, transparent, rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.06), transparent); animation: badgeShimmer 3s ease-in-out infinite 2s; }
 @keyframes badgeShimmer { 0% { left: -100%; } 100% { left: 200%; } }
+@media (prefers-reduced-motion: reduce) { .availability-badge::before { animation: none; } }
 .availability-badge .status-dot { width: 8px; height: 8px; }
 .availability-badge span { font-size: 0.85rem; color: var(--text-muted); font-weight: 400; }
 .availability-badge strong { color: var(--accent); font-weight: 600; }
-
-@media (max-width: 1024px) { .experience-grid { grid-template-columns: 1fr; gap: 2.5rem; } .experience-sidebar { position: static; } }
-
-.timeline { position: relative; max-width: 800px; }
-.timeline-date { font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
-.timeline-item h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.35rem; }
-.timeline-item h4 { font-size: 0.85rem; color: var(--accent); font-weight: 400; margin-bottom: 0.6rem; }
-.timeline-item p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.65; font-weight: 300; }
 
 .contact-section { text-align: center; padding: 8rem 5vw; }
 /* z-index:0 makes the section the stacking context its glow canvas needs:
@@ -804,7 +784,6 @@ footer .footer-accent { color: var(--accent); }
 .reveal.visible { opacity: 1; transform: translateY(0); }
 @media (max-width: 768px) {
   .reveal { transition: transform, opacity, color, background-color, border-color, box-shadow; transition-duration: 0.9s; transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1); }
-  .timeline-item { transition: transform, opacity, color, background-color, border-color, box-shadow; transition-duration: 0.9s; transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1); }
 }
 .stagger-children .reveal:nth-child(1) { transition-delay: 0s; }
 .stagger-children .reveal:nth-child(2) { transition-delay: 0.1s; }
@@ -813,25 +792,6 @@ footer .footer-accent { color: var(--accent); }
 .stagger-children .reveal:nth-child(5) { transition-delay: 0.25s; }
 .stagger-children .reveal:nth-child(6) { transition-delay: 0.3s; }
 
-/* Timeline enhancements */
-.timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: var(--border); }
-.timeline-progress { position: absolute; left: 0; top: 0; width: 1px; height: 0; background: linear-gradient(to bottom, var(--accent), var(--gradient-2)); transition: height 0.1s linear; z-index: 1; }
-.timeline-item { padding-left: 2.5rem; padding-bottom: 3rem; position: relative; opacity: 0; transform: translateX(-30px); transition: transform, opacity, color, background-color, border-color, box-shadow; transition-duration: 0.8s; transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94); }
-.timeline-item.tl-visible { opacity: 1; transform: translateX(0); }
-.timeline-item:nth-of-type(2) { transition-delay: 0.15s; }
-.timeline-item:nth-of-type(3) { transition-delay: 0.3s; }
-.timeline-item:nth-of-type(4) { transition-delay: 0.45s; }
-.timeline-item::before { content: ''; position: absolute; left: -4px; top: 6px; width: 9px; height: 9px; border-radius: 50%; background: var(--border); box-shadow: none; transition: transform, opacity, color, background-color, border-color, box-shadow; transition-duration: 0.4s; z-index: 2; }
-.timeline-item.tl-visible::before { background: var(--accent); box-shadow: 0 0 12px var(--accent-glow); }
-.timeline-dot-ripple { position: absolute; left: -10px; top: 0; width: 21px; height: 21px; border-radius: 50%; border: 1px solid var(--accent); opacity: 0; z-index: 1; pointer-events: none; }
-.timeline-item.tl-visible .timeline-dot-ripple { animation: dotRipple 1s ease-out forwards; }
-@keyframes dotRipple { 0% { transform: scale(0.5); opacity: 0.8; } 100% { transform: scale(2.5); opacity: 0; } }
-
-/* Timeline item hover/tap glow */
-.timeline-item-inner { padding: 1.25rem 1.5rem; border-radius: 16px; border: 1px solid transparent; transition: transform, opacity, color, background-color, border-color, box-shadow; transition-duration: 0.3s; position: relative; overflow: hidden; }
-.timeline-item-inner:hover, .timeline-item-inner.tapped { border-color: var(--border-hover); background: var(--bg-card); }
-.timeline-item-inner::after { content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity 0.3s; pointer-events: none; border-radius: inherit; background: radial-gradient(circle 200px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.05), transparent 70%); }
-.timeline-item-inner:hover::after { opacity: 1; }
 
 /* Mobile horizontal swipe projects */
 @media (max-width: 768px) {
@@ -896,17 +856,23 @@ footer .footer-accent { color: var(--accent); }
 
 /* Mobile tap states for cards */
 @media (max-width: 768px) {
-  .expertise-card:active { border-color: var(--border-hover); background: var(--bg-card-hover); transform: scale(0.98); }
-  .expertise-card:active .expertise-icon { border-color: rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.3); background: rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.12); }
   .project-card:active { border-color: var(--border-hover); transform: scale(0.98); }
   .contact-pill:active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); transform: scale(0.95); }
-  .stat-card:active { border-color: var(--accent); background: var(--accent-dim); transform: scale(0.97); }
   .status-badge { padding: 0.25rem 0.6rem; }
   .status-text { font-size: 0.58rem; }
 }
 
-@media (max-width: 1024px) { .about-grid { grid-template-columns: 1fr; gap: 2.5rem; } .expertise-grid { grid-template-columns: 1fr 1fr; } .project-card { grid-template-columns: 1fr; } .project-visual { min-height: 200px; } }
-@media (max-width: 768px) { nav { padding: 1rem 1.5rem; } .nav-links { display: none; } .nav-hamburger { display: flex; } section { padding: 4rem 1.5rem; } .hero { padding: 7rem 1.5rem 3rem; } .expertise-grid { grid-template-columns: 1fr; } .about-stats { grid-template-columns: 1fr 1fr; } footer { flex-direction: column; gap: 0.75rem; text-align: center; } .contact-section { padding: 5rem 1.5rem; } .pitch-card { padding: 1.35rem; border-radius: 16px; } .pitch-footer { flex-direction: column-reverse; align-items: stretch; } .pitch-submit { justify-content: center; width: 100%; } .pitch-count { text-align: center; } }
+@media (max-width: 1024px) { .project-card { grid-template-columns: 1fr; } .project-visual { min-height: 200px; } }
+@media (max-width: 768px) { nav { padding: 1rem 1.5rem; } .nav-links { display: none; } .nav-hamburger { display: flex; } section { padding: 4rem 1.5rem; } .hero { padding: 7rem 1.5rem 3rem; } footer { flex-direction: column; gap: 0.75rem; text-align: center; } .contact-section { padding: 5rem 1.5rem; } .pitch-card { padding: 1.35rem; border-radius: 16px; } .pitch-footer { flex-direction: column-reverse; align-items: stretch; } .pitch-submit { justify-content: center; width: 100%; } .pitch-count { text-align: center; } }
+@media (max-width: 640px) {
+  .skill-row, .xp-row { grid-template-columns: 1fr; }
+  .skill-row { padding: 0.85rem 0; }
+  .xp-when { padding-top: 0; margin-bottom: 0.35rem; }
+  /* the pill wraps to two lines at this width, and a 100px radius on a
+     two-line box reads as a mistake rather than a shape */
+  .availability-badge { display: flex; border-radius: 16px; }
+  .skills-lede { margin-top: -1rem; }
+}
 @media (max-width: 480px) { .nav-links { gap: 0.75rem; } .hero-cta { flex-direction: column; } .btn-primary, .btn-ghost { justify-content: center; width: 100%; } .cv-dropdown { width: 100%; } .cv-dropdown-toggle { justify-content: center; width: 100%; } }
 
 /* AI Showcase Section */
@@ -2584,37 +2550,52 @@ footer .footer-accent { color: var(--accent); }
 
 <section id="skills">
   <p class="section-label reveal">04 / Skills</p>
-  <h2 class="section-title reveal">Tools &amp; Technologies</h2>
-  <div class="skills-marquee-wrapper">
-    <div class="skills-marquee">
-      <span class="skill-chip highlight">React</span><span class="skill-chip">Next.js</span><span class="skill-chip highlight">TypeScript</span><span class="skill-chip">Node.js</span><span class="skill-chip highlight">Python</span><span class="skill-chip">PostgreSQL</span><span class="skill-chip highlight">Docker</span><span class="skill-chip">Google Cloud</span><span class="skill-chip highlight">React Native</span><span class="skill-chip">LLM Integration</span>
-      <span class="skill-chip highlight">React</span><span class="skill-chip">Next.js</span><span class="skill-chip highlight">TypeScript</span><span class="skill-chip">Node.js</span><span class="skill-chip highlight">Python</span><span class="skill-chip">PostgreSQL</span><span class="skill-chip highlight">Docker</span><span class="skill-chip">Google Cloud</span><span class="skill-chip highlight">React Native</span><span class="skill-chip">LLM Integration</span>
+  <h2 class="section-title reveal">Tools, and <em>where they were used</em></h2>
+  <p class="skills-lede reveal">Each of these names the work on this page it was used in. Nothing is
+    listed that has nothing behind it &mdash; a list of technologies is only worth reading if it can
+    be checked against the sections above.</p>
+  <div class="skill-ledger stagger-children">
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Languages</div>
+      <div class="skill-row"><span class="skill-name">TypeScript</span><span class="skill-where"><span>MDS Pro</span><span>RecodeAI</span></span></div>
+      <div class="skill-row"><span class="skill-name">JavaScript</span><span class="skill-where"><span>WordWarz.io</span><span>MDS Pro</span><span>Casinore.io</span><span>this page</span></span></div>
+      <div class="skill-row"><span class="skill-name">Python</span><span class="skill-where"><span>Avatar pipeline</span></span></div>
     </div>
-    <div class="skills-marquee">
-      <span class="skill-chip">Swift</span><span class="skill-chip highlight">Kotlin</span><span class="skill-chip">Express</span><span class="skill-chip highlight">REST APIs</span><span class="skill-chip">Tailwind CSS</span><span class="skill-chip highlight">Stable Diffusion</span><span class="skill-chip">CI/CD</span><span class="skill-chip highlight">Linux</span><span class="skill-chip">Figma</span><span class="skill-chip highlight">AI Automation</span>
-      <span class="skill-chip">Swift</span><span class="skill-chip highlight">Kotlin</span><span class="skill-chip">Express</span><span class="skill-chip highlight">REST APIs</span><span class="skill-chip">Tailwind CSS</span><span class="skill-chip highlight">Stable Diffusion</span><span class="skill-chip">CI/CD</span><span class="skill-chip highlight">Linux</span><span class="skill-chip">Figma</span><span class="skill-chip highlight">AI Automation</span>
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Interface</div>
+      <div class="skill-row"><span class="skill-name">React</span><span class="skill-where"><span>WordWarz.io</span><span>RecodeAI</span></span></div>
+      <div class="skill-row"><span class="skill-name">Next.js</span><span class="skill-where"><span>RecodeAI</span></span></div>
+      <div class="skill-row"><span class="skill-name">Capacitor</span><span class="skill-where"><span>WordWarz.io &mdash; iOS and Android</span></span></div>
+      <div class="skill-row"><span class="skill-name">Tailwind CSS</span><span class="skill-where"><span>WordWarz.io</span><span>RecodeAI</span></span></div>
+      <div class="skill-row"><span class="skill-name">Chrome MV3</span><span class="skill-where"><span>MDS Pro</span><span>AI Job Matcher</span></span></div>
     </div>
-  </div>
-  <div class="expertise-grid stagger-children">
-    <div class="expertise-card reveal tilt-card spotlight-card">
-      <div class="expertise-icon"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
-      <h3>Core Development &amp; Data Systems</h3>
-      <p>Scalable full-stack applications, REST APIs, authentication, SQL &amp; NoSQL databases, analytics dashboards, and data-driven architecture.</p>
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Server &amp; data</div>
+      <div class="skill-row"><span class="skill-name">Node.js &middot; Express</span><span class="skill-where"><span>WordWarz.io</span></span></div>
+      <div class="skill-row"><span class="skill-name">Fastify</span><span class="skill-where"><span>MDS Pro</span></span></div>
+      <div class="skill-row"><span class="skill-name">Socket.IO</span><span class="skill-where"><span>WordWarz.io &mdash; real-time play</span></span></div>
+      <div class="skill-row"><span class="skill-name">Supabase &middot; Postgres</span><span class="skill-where"><span>MDS Pro</span><span>WordWarz.io</span></span></div>
+      <div class="skill-row"><span class="skill-name">Postgres RLS</span><span class="skill-where"><span>MDS Pro &mdash; 37 migrations</span></span></div>
+      <div class="skill-row"><span class="skill-name">Google Sheets API &middot; Apps Script</span><span class="skill-where"><span>MDS Pro</span><span>Job Email Watcher</span></span></div>
+      <div class="skill-row"><span class="skill-name">ExcelJS</span><span class="skill-where"><span>MDS Pro &mdash; payroll workbooks</span></span></div>
+      <div class="skill-row"><span class="skill-name">Privy &middot; Web3</span><span class="skill-where"><span>Casinore.io</span></span></div>
     </div>
-    <div class="expertise-card reveal tilt-card spotlight-card">
-      <div class="expertise-icon"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
-      <h3>Mobile Applications</h3>
-      <p>React Native, Swift, and Kotlin apps from concept to store deployment, with push notifications and native integrations.</p>
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Models &amp; pipelines</div>
+      <div class="skill-row"><span class="skill-name">Claude API</span><span class="skill-where"><span>MDS Pro site assistant</span><span>Plain-English DB querying</span><span>RecodeAI</span></span></div>
+      <div class="skill-row"><span class="skill-name">OpenAI &middot; GPT-4o</span><span class="skill-where"><span>AI Job Matcher</span><span>Job Email Watcher</span></span></div>
+      <div class="skill-row"><span class="skill-name">ComfyUI &middot; Stable Diffusion</span><span class="skill-where"><span>Avatar pipeline</span><span>Style transfer</span><span>Fashion generation</span></span></div>
+      <div class="skill-row"><span class="skill-name">IPAdapter</span><span class="skill-where"><span>Style transfer</span></span></div>
+      <div class="skill-row"><span class="skill-name">ControlNet</span><span class="skill-where"><span>Fashion generation</span></span></div>
+      <div class="skill-row"><span class="skill-name">n8n</span><span class="skill-where"><span>Job Email Watcher</span></span></div>
     </div>
-    <div class="expertise-card reveal tilt-card spotlight-card">
-      <div class="expertise-icon"><svg viewBox="0 0 24 24"><path d="M12 2a4 4 0 0 1 4 4c0 1.95-1.4 3.58-3.25 3.93L12 22l-.75-12.07A4.001 4.001 0 0 1 12 2z"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="6.5" r="2.5"/></svg></div>
-      <h3>AI &amp; Automation</h3>
-      <p>LLM integration, prompt engineering, image and video generation, and AI-powered product workflows.</p>
-    </div>
-    <div class="expertise-card reveal tilt-card spotlight-card">
-      <div class="expertise-icon"><svg viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></div>
-      <h3>Cloud &amp; Infrastructure</h3>
-      <p>Docker, CI/CD pipelines, Google Cloud, VPS administration, and automated deployment strategies.</p>
+    <div class="skill-group reveal">
+      <div class="skill-group-title">Delivery</div>
+      <div class="skill-row"><span class="skill-name">Docker</span><span class="skill-where"><span>WordWarz.io &mdash; containerised server</span></span></div>
+      <div class="skill-row"><span class="skill-name">Linux VPS &middot; Nginx</span><span class="skill-where"><span>WordWarz.io</span></span></div>
+      <div class="skill-row"><span class="skill-name">Codemagic CI</span><span class="skill-where"><span>WordWarz.io &mdash; App Store and Play builds</span></span></div>
+      <div class="skill-row"><span class="skill-name">Google Cloud</span><span class="skill-where"><span>Casinore.io</span></span></div>
+      <div class="skill-row"><span class="skill-name">Vercel</span><span class="skill-where"><span>this page</span></span></div>
     </div>
   </div>
 </section>
@@ -2622,81 +2603,33 @@ footer .footer-accent { color: var(--accent); }
 <div class="divider"></div>
 
 <section id="experience">
-  <p class="section-label reveal">05 / Journey</p>
+  <p class="section-label reveal">05 / Experience</p>
   <h2 class="section-title reveal">Experience</h2>
-  <div class="experience-grid">
-    <div class="timeline" id="timeline">
-      <div class="timeline-progress" id="timelineProgress"></div>
-      <div class="timeline-item">
-        <div class="timeline-dot-ripple"></div>
-        <div class="timeline-item-inner">
-          <div class="timeline-date">2018 — Present</div>
-          <h3>Independent Full Stack Developer</h3>
-          <h4>Solo Projects &amp; Side Projects</h4>
-          <p>Self-directed, on-and-off development across frontend, backend, and database layers. Built and deployed independent projects including REST APIs, real-time systems, and AI-integrated applications. Managed Docker containers, Linux VPS infrastructure, and CI/CD deployment workflows.</p>
-        </div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-dot-ripple"></div>
-        <div class="timeline-item-inner">
-          <div class="timeline-date">3 of 4 Years Completed</div>
-          <h3>Bachelor of Science in Information Technology</h3>
-          <h4>AMA Computer College Makati</h4>
-          <p>Coursework covering software development, database management, networking, and system analysis. Degree not yet conferred; one year of study remains.</p>
-        </div>
+  <div class="xp">
+    <div class="xp-row reveal">
+      <div class="xp-when">2018 &mdash; Present</div>
+      <div>
+        <h3 class="xp-role">Independent Full Stack Developer</h3>
+        <p class="xp-at">Solo projects and side projects</p>
+        <p class="xp-body">Self-directed, on-and-off development across frontend, backend and
+          database layers. Built and deployed independent projects including REST APIs, real-time
+          systems and AI-integrated applications. Managed Docker containers, Linux VPS
+          infrastructure and CI/CD deployment workflows.</p>
       </div>
     </div>
-    <div class="experience-sidebar">
-      <div class="sidebar-card spotlight-card">
-        <div class="sidebar-card-title">Key Strengths</div>
-        <div class="competency-item">
-          <div class="competency-icon"><svg viewBox="0 0 24 24"><path d="M12 2a4 4 0 0 1 4 4c0 1.95-1.4 3.58-3.25 3.93L12 22l-.75-12.07A4.001 4.001 0 0 1 12 2z"/></svg></div>
-          <div class="competency-text">
-            <h4>AI/LLM Proficiency</h4>
-            <p>Prompt engineering, output evaluation, and AI tool integration</p>
-          </div>
-        </div>
-        <div class="competency-item">
-          <div class="competency-icon"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
-          <div class="competency-text">
-            <h4>DevOps & Cloud</h4>
-            <p>Docker, VPS management, CI/CD workflows</p>
-          </div>
-        </div>
-        <div class="competency-item">
-          <div class="competency-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
-          <div class="competency-text">
-            <h4>Attention to Detail</h4>
-            <p>Meticulous in identifying bugs, edge cases, and quality issues</p>
-          </div>
-        </div>
-        <div class="competency-item">
-          <div class="competency-icon"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
-          <div class="competency-text">
-            <h4>Analytical Thinking</h4>
-            <p>Strong ability to analyze code, data, and AI model behavior</p>
-          </div>
-        </div>
-        <div class="competency-item">
-          <div class="competency-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
-          <div class="competency-text">
-            <h4>Technical Writing</h4>
-            <p>Clear documentation of requirements and specifications</p>
-          </div>
-        </div>
-        <div class="competency-item">
-          <div class="competency-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
-          <div class="competency-text">
-            <h4>English Proficiency</h4>
-            <p>Excellent written and verbal communication skills</p>
-          </div>
-        </div>
-      </div>
-      <div class="availability-badge">
-        <div class="status-dot"></div>
-        <span><strong>Open to remote work</strong> — flexible schedule, reliable setup</span>
+    <div class="xp-row reveal">
+      <div class="xp-when">3 of 4 years completed</div>
+      <div>
+        <h3 class="xp-role">BS Information Technology</h3>
+        <p class="xp-at">AMA Computer College Makati</p>
+        <p class="xp-body">Coursework covering software development, database management,
+          networking and system analysis. Degree not yet conferred; one year of study remains.</p>
       </div>
     </div>
+  </div>
+  <div class="availability-badge reveal">
+    <div class="status-dot"></div>
+    <span><strong>Open to remote work</strong> &mdash; flexible schedule, reliable setup</span>
   </div>
 </section>
 
@@ -2710,16 +2643,18 @@ footer .footer-accent { color: var(--accent); }
   </div>
   <div class="about-grid">
     <div class="about-text reveal">
-      <p class="char-reveal">I'm a Full Stack Developer with 5+ years of on-and-off experience building independent projects — scalable web, mobile, and AI-integrated systems. Specialized in LLM integration, real-time WebSocket systems, Dockerized cloud deployments, and CI/CD automation.</p>
-      <p>My toolkit spans the entire stack — JavaScript, TypeScript, Python, React, React Native, Next.js, Node.js, Express, and PostgreSQL. I bring hands-on experience in AI workflow automation, including LLM integration with Claude and GPT, Stable Diffusion, ComfyUI, and prompt engineering.</p>
-      <p>Proven ownership of end-to-end system architecture, backend performance optimization, and production infrastructure. Whether it's a real-time multiplayer game, an AI-powered redesigner, or a blockchain DApp, I ship products with meticulous attention to detail.</p>
+      <p class="char-reveal">I'm a Full Stack Developer with 5+ years of on-and-off experience
+        building independent projects &mdash; web, mobile and AI-integrated systems. Every project
+        above was built solo, which means the architecture, the deployment and the bugs were all
+        mine to answer for.</p>
+      <p>What runs through the work is a refusal to let two things disagree. One pay calculation
+        behind the timesheet, the payroll and the invoice, so no two surfaces differ by a cent.
+        Timestamps set by the server rather than the client. Rows appended rather than edited in
+        place, so every change stays attributed. The AI systems above are the same instinct pointed
+        at a model: each one is listed with the constraint it is held to, because a system that can
+        reach anything will eventually claim anything.</p>
     </div>
-    <div class="about-stats stagger-children">
-      <div class="stat-card reveal"><div class="stat-number" data-count="5">0+</div><div class="stat-label">Years of Development</div></div>
-      <div class="stat-card reveal"><div class="stat-number" data-count="15">0+</div><div class="stat-label">Technologies Used</div></div>
-      <div class="stat-card reveal"><div class="stat-number">Full</div><div class="stat-label">Stack Proficiency</div></div>
-      <div class="stat-card reveal"><div class="stat-number">AI</div><div class="stat-label">& LLM Integration</div></div>
-    </div>
+    <p class="about-figures" id="aboutFigures" hidden></p>
   </div>
 </section>
 
@@ -2884,43 +2819,6 @@ if (window.innerWidth <= 768) {
   document.querySelectorAll('.project-card').forEach(el => borderObserver.observe(el));
 }
 
-var marqueeWrap = document.querySelector('.skills-marquee-wrapper');
-if (marqueeWrap) {
-  new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-      entry.target.classList.toggle('in-view', entry.isIntersecting);
-    });
-  }, { threshold: 0 }).observe(marqueeWrap);
-}
-
-const counterObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      const el = entry.target;
-      const target = parseInt(el.dataset.count);
-      let current = 0;
-      const duration = 1500;
-      const step = target / (duration / 16);
-      const timer = setInterval(() => {
-        current += step;
-        if (current >= target) { current = target; clearInterval(timer); }
-        el.textContent = Math.floor(current) + '+';
-      }, 16);
-      counterObserver.unobserve(el);
-    }
-  });
-}, { threshold: 0.5 });
-document.querySelectorAll('[data-count]').forEach(el => counterObserver.observe(el));
-
-document.querySelectorAll('.tilt-card').forEach(card => {
-  card.addEventListener('mousemove', (e) => {
-    const rect = card.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    card.style.transform = 'translateY(-5px) perspective(600px) rotateX(' + (-y * 6) + 'deg) rotateY(' + (x * 6) + 'deg)';
-  });
-  card.addEventListener('mouseleave', () => { card.style.transform = ''; });
-});
 
 const sections = document.querySelectorAll('section[id]');
 window.addEventListener('scroll', () => {
@@ -3001,30 +2899,6 @@ if (window.innerWidth > 768) {
   });
 }
 
-// 5. Competency stagger reveal + skill bars
-(function() {
-  const items = document.querySelectorAll('.competency-item, .availability-badge');
-  const compObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const siblings = Array.from(items);
-        const idx = siblings.indexOf(entry.target);
-        setTimeout(() => entry.target.classList.add('comp-visible'), idx * 150);
-        compObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.2, rootMargin: '0px 0px -50px 0px' });
-  items.forEach(item => compObserver.observe(item));
-
-  // Spotlight on sidebar card
-  document.querySelectorAll('.sidebar-card').forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-      const rect = card.getBoundingClientRect();
-      card.style.setProperty('--mouse-x', (e.clientX - rect.left) + 'px');
-      card.style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
-    });
-  });
-})();
 
 // 6. CV dropdown
 (function() {
@@ -3040,49 +2914,11 @@ if (window.innerWidth > 768) {
   });
 })();
 
-// 6. Timeline draw + stagger + dot ripple
-(function() {
-  const timeline = document.getElementById('timeline');
-  const progress = document.getElementById('timelineProgress');
-  const items = document.querySelectorAll('.timeline-item');
-  if (!timeline || !items.length) return;
-
-  const tlObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('tl-visible');
-        tlObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.2, rootMargin: '0px 0px -80px 0px' });
-  items.forEach(item => tlObserver.observe(item));
-
-  // Draw timeline progress on scroll
-  const sectionEl = document.getElementById('experience');
-  window.addEventListener('scroll', () => {
-    if (!sectionEl) return;
-    const rect = timeline.getBoundingClientRect();
-    const timelineTop = rect.top;
-    const timelineHeight = rect.height;
-    const viewCenter = window.innerHeight * 0.7;
-    const drawn = Math.min(Math.max((viewCenter - timelineTop) / timelineHeight, 0), 1);
-    progress.style.height = (drawn * 100) + '%';
-  }, { passive: true });
-
-  // Spotlight on timeline inner cards (desktop)
-  document.querySelectorAll('.timeline-item-inner').forEach(inner => {
-    inner.addEventListener('mousemove', (e) => {
-      const rect = inner.getBoundingClientRect();
-      inner.style.setProperty('--mouse-x', (e.clientX - rect.left) + 'px');
-      inner.style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
-    });
-  });
-})();
 
 // 7. Touch ripple effect (mobile)
 (function() {
   if (!('ontouchstart' in window)) return;
-  const rippleTargets = document.querySelectorAll('.project-card, .expertise-card, .contact-pill, .stat-card, .timeline-item-inner');
+  const rippleTargets = document.querySelectorAll('.project-card, .contact-pill');
   rippleTargets.forEach(el => {
     el.style.position = el.style.position || 'relative';
     el.addEventListener('touchstart', (e) => {
@@ -3099,19 +2935,40 @@ if (window.innerWidth > 768) {
       ripple.addEventListener('animationend', () => ripple.remove());
     }, { passive: true });
   });
-
-  // Tap glow on timeline items
-  document.querySelectorAll('.timeline-item-inner').forEach(inner => {
-    inner.addEventListener('touchstart', () => {
-      inner.classList.add('tapped');
-      setTimeout(() => inner.classList.remove('tapped'), 400);
-    }, { passive: true });
-  });
 })();
 
 // 8. The mobile project carousel is gone with the sticky stack: the Selected
 // Work index is the same on every width, so there is nothing to swipe through
 // and no page of dots to track.
+
+/* 06's figures. Counted out of the page at load rather than typed beside it,
+   for the same reason the showcase rows are generated from their panels: a
+   figure written twice is a figure that will eventually disagree with itself.
+   Everything here is something a reader can check by looking. */
+(function () {
+  var host = document.getElementById('aboutFigures');
+  if (!host) return;
+
+  var seen = Object.create(null);
+  document.querySelectorAll('img[src*="assets/ai-showcase/"]').forEach(function (img) {
+    seen[img.getAttribute('src')] = 1;
+  });
+
+  [[document.querySelectorAll('.work-item').length, 'projects'],
+   [document.querySelectorAll('.ai-tab-content').length, 'AI systems'],
+   [Object.keys(seen).length, 'generated images on this page'],
+   [1, 'hand-written HTML file, no build step']
+  ].forEach(function (pair) {
+    var span = document.createElement('span');
+    var num = document.createElement('b');
+    num.textContent = pair[0];
+    span.appendChild(num);
+    span.appendChild(document.createTextNode(' ' + pair[1]));
+    host.appendChild(span);
+  });
+
+  host.hidden = false;
+})();
 
 // Accordion toggle for avatar categories
 document.querySelectorAll('.avatar-accordion-header').forEach(header => {

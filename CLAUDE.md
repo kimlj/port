@@ -49,6 +49,21 @@ frame until the slide ends, and releases early if the reader touches the wheel.
 
 Classes these scripts add are prefixed `ev-`.
 
+## The Skills list
+
+Section 04 is a list of technologies against the work on this site each was used
+in, and **an entry without provenance does not go in**. The rows were sourced
+from the project cards, the showcase panels, the repositories behind them and the
+owner's resume; the marquee they replaced claimed React Native, Swift, Kotlin and
+Figma, and none of the four survived that check — WordWarz ships through
+Capacitor, whose generated iOS and Android shells are the only Swift and Java in
+that tree. A technology whose provenance cannot be named belongs nowhere on a
+page that argues against unfounded claims.
+
+The list is written out in the markup rather than generated: unlike the showcase
+rows there is no second copy to drift from, and the provenance is prose that has
+to be read and checked rather than derived.
+
 ## The scripts
 
 Each is a self-contained IIFE that finds its own elements and returns quietly if
