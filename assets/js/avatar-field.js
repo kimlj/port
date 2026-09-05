@@ -58,18 +58,21 @@
       HOT_R = 84,       /* the cursor disturbs the code within this radius */
       CARET_CPS = 95,   /* cells a second the writing caret advances */
       TRAIL = 16,       /* cells behind it still cooling from being typed */
-      LENS_R = 66,      /* the reading glass the cursor carries */
-      LENS_PX = 10,     /* type size inside it — big enough to actually read */
-      LENS_LH = 13.5,
-      LENS_ROWS = 5,    /* lines of source shown, the middle one being the cell's */
-      LENS_FADE = 0.16,
-      /* Slack around the portrait so the glass is a whole glass at the edges.
-         Drawn inside the portrait's own box it was sliced flat wherever the
-         cursor came near a border, which reads as a bug rather than as a lens.
-         Sized to clear the lens and its handle at full extension. */
+      PUSH_R = 82,      /* the cursor moves characters within this radius */
+      PUSH_F = 2.9,     /* strong enough that the innermost ones clear the well */
+      SPRING = 0.055,   /* identical to hero-particles.js: the same hand moves */
+      DAMP = 0.86,      /* < 1, so the return overshoots once and settles */
+      MAX_OFF = 62,     /* furthest a character is carried from its own cell */
+      WELL_R = 48,      /* the clearing the push opens, and the code's window */
+      WELL_FADE = 14,   /* characters dissolve across this band at its lip */
+      CODE_PX = 9,      /* type size in the well — big enough to actually read */
+      CODE_LH = 12,
+      CODE_ROWS = 5,    /* lines of source shown, the middle one being the cell's */
+      CODE_FADE = 0.16,
+      /* Slack around the portrait so a character pushed off the edge is still
+         drawn. Without it the field was sliced flat at the border and the push
+         read as characters being deleted rather than moved. */
       PAD = 118,
-      /* down and to the right, in canvas coordinates where y grows downward */
-      HANDLE_ANG = Math.PI / 4,
       SCRAMBLE = '{}()[]<>/\\|=+-*;:.,!?&%$#@_~^abcdefghijklmnopqrstuvwxyz0123456789',
       ENTRY_MS = 1500, ENTRY_HOLD = 700, ENTRY_BAND = 9;
 
@@ -306,10 +309,18 @@
         at[y * cols + x] = cells.length;
         cells.push({
           x: x * cw, y: y * LINE,
+          /* the cell's centre, which is what the cursor measures against —
+             precomputed because it is read for every awake cell every frame */
+          hx: x * cw + cw * 0.5, hy: y * LINE + LINE * 0.5,
           ch: ch,
           si: pickedAt,
           row: y,
-          tier: Math.min(TIERS - 1, Math.floor(ink * TIERS))
+          tier: Math.min(TIERS - 1, Math.floor(ink * TIERS)),
+          /* displacement and velocity, per character, exactly as the hero
+             headline carries them; mass varies so the field does not travel as
+             one sheet */
+          ox: 0, oy: 0, vx: 0, vy: 0,
+          m: 0.88 + Math.random() * 0.3
         });
       }
     }
@@ -407,23 +418,25 @@
 
     if (!reduced) writeCaret(now);
 
-    /* The lens opens and closes rather than snapping, and the loop keeps running
-       while it is still closing so it is never left half open on screen. */
+    /* The well opens and closes rather than snapping, and the loop keeps
+       running while characters are still on their way home, so the field is
+       never left frozen mid-push. */
     var box = cv.getBoundingClientRect();
     var px = ptr.cx - box.left - PAD, py = ptr.cy - box.top - PAD;
     /* Open only over the portrait's own ink. Reading the cell here rather than
-       inside drawLens means the same lookup decides both whether the glass is
-       out and what it is showing, so it can never be open over nothing. */
+       inside drawWell means the same lookup decides both whether the well is
+       open and what it is showing, so it can never open over nothing. */
     var hit = ptr.on ? cellUnder(px, py) : null;
-    lens += ((hit ? 1 : 0) - lens) * LENS_FADE;
+    lens += ((hit ? 1 : 0) - lens) * CODE_FADE;
     if (lens < 0.01) { lens = 0; lensLine = -1; }
-    if (lens > 0) drawLens(px, py, hit);
+
+    var moving = disturb(px, py, !!hit);
+    if (lens > 0) drawWell(px, py, hit);
 
     /* Ambient typing means there is always another frame owed, so the loop no
        longer stops when the cursor leaves — only when the portrait is offscreen,
        the tab is hidden, or motion is turned down. */
-    if (!reduced || lens > 0) pump();
-  }
+    if (!reduced || lens > 0 || moving) pump();  }
 
   /* ── the writing caret ──────────────────────────────────────────
      Cells were built row by row, so their index order is reading order and
@@ -443,6 +456,10 @@
       var idx = head - k;
       if (idx < 0) idx += cells.length;
       var c = cells[idx];
+      /* A displaced character is drawn by the field, at its displaced position.
+         Painting it here as well would leave a copy of it sitting in the cell
+         it has been pushed out of. */
+      if (c.ox || c.oy) continue;
       /* the trail cools back toward the tone the cell already holds, so the
          caret leaves no mark once it has gone */
       var heat = 1 - k / TRAIL;
@@ -459,26 +476,189 @@
     ctx.fillRect(h.x, h.y + 1, Math.max(1, cw - 0.5), LINE - 2);
   }
 
-  /* ── the reading glass ──────────────────────────────────────────
-     The cursor carries a lens that magnifies whatever cell is under it back into
-     the source it was drawn from — the cell knows its own stream index, the
-     stream knows which line each index came from, so what you read is genuinely
-     the code that character is part of, indented as written.
+  /* ── the field ──────────────────────────────────────────────────
+     The cursor pushes the characters aside, and they spring back when it
+     leaves. This is the same motion the headline has — the constants are
+     hero-particles.js's own, so the two answer the pointer in one hand — but
+     applied per character to a canvas rather than to spans, because there are
+     several thousand of these and each one is a glyph in a cached bitmap
+     rather than an element with a transform.
 
-     This replaces a scramble that re-rolled the characters near the pointer.
-     That was motion for its own sake: it flickered too fast to read and said
-     nothing about the picture. A portrait built out of a program should reward
-     looking closer by showing you the program. */
+     Only the characters the cursor can actually reach are simulated. That is
+     not an approximation: a glyph outside the radius takes zero force and is
+     already at rest, so computing it changes nothing. What it saves is not the
+     arithmetic but the redraw — the settled portrait stays a single blit, and
+     only the disturbed neighbourhood is re-typed.
+
+     A character is enlisted when the cursor comes near it and retires when it
+     has come to rest, so the work is bounded by the pointer rather than by the
+     size of the portrait. */
+
+  var awake = [], isAwake = null;
+  /* index, alpha, index, alpha … — flat because it is rebuilt every frame */
+  var fading = [];
+  var byTier = [];
+  for (var t0 = 0; t0 < TIERS; t0++) byTier.push([]);
+
+  function disturb(px, py, on) {
+    if (!cells.length) return false;
+    if (!isAwake || isAwake.length !== cells.length) {
+      isAwake = new Uint8Array(cells.length);
+      awake.length = 0;
+    }
+
+    /* enlist everything the cursor can reach, walking the grid rather than the
+       cell list so the cost is the size of the neighbourhood, not the portrait */
+    if (on) {
+      var gx0 = Math.max(0, ((px - PUSH_R) / cw) | 0),
+          gx1 = Math.min(cols - 1, ((px + PUSH_R) / cw) | 0),
+          gy0 = Math.max(0, ((py - PUSH_R) / LINE) | 0),
+          gy1 = Math.min(rows - 1, ((py + PUSH_R) / LINE) | 0);
+      for (var gy = gy0; gy <= gy1; gy++) {
+        var rowOff = gy * cols;
+        for (var gx = gx0; gx <= gx1; gx++) {
+          var ci = at[rowOff + gx];
+          if (ci === undefined || isAwake[ci]) continue;
+          isAwake[ci] = 1;
+          awake.push(ci);
+        }
+      }
+    }
+    if (!awake.length) return false;
+
+    var minX = 1e9, minY = 1e9, maxX = -1e9, maxY = -1e9;
+    var kept = 0;
+
+    for (var k = 0; k < awake.length; k++) {
+      var i = awake[k], c = cells[i];
+
+      if (on) {
+        var dx = c.hx + c.ox - px, dy = c.hy + c.oy - py;
+        var d2 = dx * dx + dy * dy;
+        if (d2 < PUSH_R * PUSH_R) {
+          var d = Math.sqrt(d2) || 0.001;
+          var f = (1 - d / PUSH_R) * PUSH_F * c.m;
+          c.vx += (dx / d) * f;
+          c.vy += (dy / d) * f;
+        }
+      }
+
+      c.vx = (c.vx - c.ox * SPRING) * DAMP;
+      c.vy = (c.vy - c.oy * SPRING) * DAMP;
+      c.ox += c.vx;
+      c.oy += c.vy;
+
+      var off2 = c.ox * c.ox + c.oy * c.oy;
+      if (off2 > MAX_OFF * MAX_OFF) {
+        var s = MAX_OFF / Math.sqrt(off2);
+        c.ox *= s; c.oy *= s;
+        c.vx *= s; c.vy *= s;
+      }
+
+      /* Every character touched this frame is repainted, the retiring ones
+         included: the frame that puts a character back in its cell is the one
+         that has to draw it there. */
+      if (c.x < minX) minX = c.x;
+      if (c.y < minY) minY = c.y;
+      if (c.x > maxX) maxX = c.x;
+      if (c.y > maxY) maxY = c.y;
+
+      var settled = c.ox * c.ox + c.oy * c.oy < 0.02 &&
+                    c.vx * c.vx + c.vy * c.vy < 0.02;
+      if (settled && !on) {
+        c.ox = c.oy = c.vx = c.vy = 0;
+        isAwake[i] = 0;
+      } else {
+        awake[kept++] = i;
+      }
+    }
+    awake.length = kept;
+
+    /* The clear has to cover where the characters have been carried to as well
+       as the cells they came from, or the far side of a push is left smeared. */
+    var x0 = Math.max(-PAD, minX - MAX_OFF - cw),
+        y0 = Math.max(-PAD, minY - MAX_OFF - LINE),
+        x1 = Math.min(size + PAD, maxX + MAX_OFF + cw * 2),
+        y1 = Math.min(size + PAD, maxY + MAX_OFF + LINE * 2);
+    ctx.clearRect(x0, y0, x1 - x0, y1 - y0);
+
+    /* Everything inside the cleared box is re-typed, moved or not: the blit
+       underneath was wiped along with the displaced characters. Bucketed by
+       tone so the whole repaint costs eight fillStyle writes rather than one
+       per character. */
+    for (var t = 0; t < TIERS; t++) byTier[t].length = 0;
+    fading.length = 0;
+
+    var cx0 = Math.max(0, (x0 / cw) | 0), cx1 = Math.min(cols - 1, (x1 / cw) | 0),
+        cy0 = Math.max(0, (y0 / LINE) | 0), cy1 = Math.min(rows - 1, (y1 / LINE) | 0);
+    for (var yy = cy0; yy <= cy1; yy++) {
+      var off = yy * cols;
+      for (var xx = cx0; xx <= cx1; xx++) {
+        var idx = at[off + xx];
+        if (idx === undefined) continue;
+        if (on) {
+          var fc = cells[idx];
+          var fx = fc.hx + fc.ox - px, fy = fc.hy + fc.oy - py;
+          var fd2 = fx * fx + fy * fy;
+          if (fd2 < WELL_R * WELL_R) continue;
+          if (fd2 < (WELL_R + WELL_FADE) * (WELL_R + WELL_FADE)) {
+            fading.push(idx);
+            fading.push((Math.sqrt(fd2) - WELL_R) / WELL_FADE);
+            continue;
+          }
+        }
+        byTier[cells[idx].tier].push(idx);
+      }
+    }
+
+    ctx.font = gridFont;
+    ctx.textBaseline = 'top';
+    for (var tn = 0; tn < TIERS; tn++) {
+      var list = byTier[tn];
+      if (!list.length) continue;
+      ctx.fillStyle = tint[tn];
+      for (var q = 0; q < list.length; q++) {
+        var cc = cells[list[q]];
+        ctx.fillText(cc.ch, cc.x + cc.ox, cc.y + cc.oy);
+      }
+    }
+
+    /* The lip, one character at a time because each carries its own alpha.
+       There are only ever a couple of hundred of these — the band is thin. */
+    for (var fi = 0; fi < fading.length; fi += 2) {
+      var fcell = cells[fading[fi]];
+      ctx.globalAlpha = fading[fi + 1];
+      ctx.fillStyle = tint[fcell.tier];
+      ctx.fillText(fcell.ch, fcell.x + fcell.ox, fcell.y + fcell.oy);
+    }
+    ctx.globalAlpha = 1;
+
+    return awake.length > 0;
+  }
+
+  /* ── the well ───────────────────────────────────────────────────
+     What the push opens up, it also makes room to read. The characters clear a
+     disc around the cursor, and the source those characters came from is set
+     inside it at a size you can actually read — the cell knows its own stream
+     index, the stream knows which line each index came from, so what appears is
+     genuinely the code that character is part of, indented as written.
+
+     This replaces a magnifying glass: a rim, a bezel, a handle and a specular
+     arc, drawn over the portrait. The instrument was the wrong idea twice over.
+     It said the portrait was something to inspect rather than something to
+     disturb, and it had to paint its own ground because it was covering code
+     that was still there. Nothing needs covering now. The well is genuinely
+     empty, so the source is simply set into it. */
 
   var lens = 0, lensLine = -1, lensX = 0, lensY = 0;
 
   /* What is under the pointer, or null if that is background.
      It used to be the nearest cell within 84px, which meant pointing at empty
-     space beside the head still found a glyph most of a lens-width away and
-     magnified it — the lens opened over blank canvas and showed code that was
-     nowhere near the cursor. An exact lookup with a single ring of forgiveness
-     is both correct and cheaper: the ring keeps it from flickering as the
-     pointer crosses the gap between two characters. */
+     space beside the head still found a glyph most of a lens-width away — the
+     well opened over blank canvas and showed code that was nowhere near the
+     cursor. An exact lookup with a single ring of forgiveness is both correct
+     and cheaper: the ring keeps it from flickering as the pointer crosses the
+     gap between two characters. */
   function cellUnder(px, py) {
     if (px < 0 || py < 0) return null;
     var cx = (px / cw) | 0, cy = (py / LINE) | 0;
@@ -497,11 +677,11 @@
     return null;
   }
 
-  function drawLens(px, py, cell) {
+  function drawWell(px, py, cell) {
     if (!srcLines.length || !streamLine) return;
 
-    /* The glass keeps its last position and line while it fades out, so leaving
-       the portrait closes it where it was rather than snapping it elsewhere. */
+    /* The well keeps its last position and line while it closes, so leaving the
+       portrait fades it where it was rather than snapping it elsewhere. */
     if (cell) {
       lensLine = streamLine[cell.si] || 0;
       lensX = px; lensY = py;
@@ -510,89 +690,32 @@
 
     ctx.save();
     ctx.beginPath();
-    ctx.arc(lensX, lensY, LENS_R, 0, 6.283);
+    ctx.arc(lensX, lensY, WELL_R, 0, 6.283);
     ctx.clip();
 
-    /* A ground behind the code: the portrait underneath is dense text, and text
-       over text is unreadable however it is coloured. */
-    ctx.globalAlpha = lens * 0.94;
-    ctx.fillStyle = pageColor;
-    ctx.fill();
-    /* the faintest wash of the accent, so the disc reads as tinted glass rather
-       than as a hole punched through to the background */
+    /* A breath of the accent, no more. There is no ground to lay down: the
+       characters have moved out of this disc, so the page is already showing
+       through it. */
     ctx.globalAlpha = lens * 0.05;
     ctx.fillStyle = tint[TIERS - 1];
     ctx.fill();
 
-    ctx.globalAlpha = lens;
-    ctx.font = LENS_PX + 'px ' + fontStack;
+    ctx.font = CODE_PX + 'px ' + fontStack;
     ctx.textBaseline = 'middle';
 
-    var half = (LENS_ROWS - 1) / 2;
+    var half = (CODE_ROWS - 1) / 2;
     for (var r = -half; r <= half; r++) {
       var idx = lensLine + r;
       if (idx < 0 || idx >= srcLines.length) continue;
-      var text = srcLines[idx];
-      var y = lensY + r * LENS_LH;
+      var y = lensY + r * CODE_LH;
       /* the cell's own line is lit; its neighbours give it context and recede */
       ctx.fillStyle = r === 0 ? tint[TIERS - 1] : tint[2];
-      ctx.globalAlpha = lens * (r === 0 ? 1 : 0.55);
-      ctx.fillText(text, lensX - LENS_R + 10, y);
+      ctx.globalAlpha = lens * (r === 0 ? 1 : 0.5);
+      ctx.fillText(srcLines[idx], lensX - WELL_R + 6, y);
     }
 
     ctx.restore();
-
-    /* ── the instrument ──
-       A rim, a bezel and a handle, so it reads as a glass being held over the
-       code rather than as a circular hole cut in it. Drawn before the rim so
-       the rim caps the handle cleanly.
-
-       The handle is pinned to the lower right. It used to point away from the
-       portrait's centre, on the theory that is how one would be held — but a
-       handle that swings as the cursor moves reads as a spinning object rather
-       than as an object being carried, and a real glass keeps its handle where
-       the hand is. Fixed is what looks held. */
-    var ang = HANDLE_ANG;
-
-    ctx.globalAlpha = lens;
-    ctx.lineCap = 'round';
-
-    ctx.beginPath();
-    ctx.moveTo(lensX + Math.cos(ang) * (LENS_R + 1), lensY + Math.sin(ang) * (LENS_R + 1));
-    ctx.lineTo(lensX + Math.cos(ang) * (LENS_R + 30), lensY + Math.sin(ang) * (LENS_R + 30));
-    ctx.strokeStyle = tint[TIERS - 3];
-    ctx.lineWidth = 7;
-    ctx.stroke();
-    ctx.strokeStyle = tint[TIERS - 1];
-    ctx.lineWidth = 3;
-    ctx.stroke();
-
-    /* the rim: a heavy ring with a hairline bezel just inside it */
-    ctx.beginPath();
-    ctx.arc(lensX, lensY, LENS_R, 0, 6.283);
-    ctx.strokeStyle = tint[TIERS - 1];
-    ctx.lineWidth = 2.5;
-    ctx.stroke();
-
-    ctx.globalAlpha = lens * 0.45;
-    ctx.beginPath();
-    ctx.arc(lensX, lensY, LENS_R - 4, 0, 6.283);
-    ctx.strokeStyle = tint[TIERS - 3];
-    ctx.lineWidth = 1;
-    ctx.stroke();
-
-    /* a specular arc on the shoulder opposite the handle — the one cue that
-       says "glass" rather than "ring" */
-    ctx.globalAlpha = lens * 0.5;
-    ctx.beginPath();
-    ctx.arc(lensX, lensY, LENS_R - 9, ang + 2.5, ang + 3.7);
-    ctx.strokeStyle = tint[TIERS - 1];
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
     ctx.globalAlpha = 1;
-    ctx.lineCap = 'butt';
-    ctx.lineWidth = 1;
     ctx.font = gridFont;
     ctx.textBaseline = 'top';
   }

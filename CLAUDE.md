@@ -99,7 +99,7 @@ feature and nothing else.
 
 | File | What it does |
 |---|---|
-| `avatar-field.js` | The hero portrait, typeset from this file's own source. Includes the reading glass. |
+| `avatar-field.js` | The hero portrait, typeset from this file's own source. The cursor pushes its characters aside and the source shows in the clearing. |
 | `hero-particles.js` | Hero label, headline and lede split into glyphs the cursor pushes. |
 | `button-field.js` | Dot fields inside every CTA and the contact buttons. |
 | `section-ornaments.js` | Drift, trace and registration marks, Projects → footer. |
@@ -161,6 +161,13 @@ in more detail.
   zeroes the content box only. With the panel itself as the grid child, the
   showcase drawer bottomed out at the 72px of its own padding and the last frame
   of every close was a snap. The clip is a bare wrapper now, padding inside it.
+- **A cached canvas and per-glyph motion do not compose for free.** The
+  portrait is one blit of a pre-rendered bitmap, so a character that moves has
+  to be erased from the cache's copy of it as well as drawn in its new place.
+  That means clearing the disturbed box and re-typing *everything* in it, the
+  characters that did not move included — and clearing a box sized to where
+  they came from leaves the far side of the push smeared, because they have
+  been carried outside it.
 - **A page-width media query fires early inside a capped container.** The
   section's two-up image rule turns at 768px, which is right for a grid the width
   of the page and wrong inside a 600px figure — it doubled every output the
