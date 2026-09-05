@@ -238,7 +238,273 @@ A: Quezon City, Metro Manila, in the Philippines. I work remotely.
 STATUS: OK
 A: Someone who can be handed a vague problem and be trusted to come back with a system that works and keeps working. I want to get much stronger in the areas I've had least exposure to — working within a team, and the engineering process around the code rather than just the code. Longer term I'd like to keep working where AI is part of the product, because designing the constraints around a model is the problem I find most interesting right now.
 
-# F. About this assistant
+# F. Who you are
+
+### Q: Tell me something about yourself.
+STATUS: OK
+A: I'm a developer who likes building things, but I'm probably just as obsessed with improving things outside programming. A lot of my free time goes into running, cycling, the gym, and recently tennis. I've always liked having something to work toward, whether that's a project, a faster running time, or simply getting better at something.
+
+Professionally, I enjoy taking a vague problem and turning it into something people can actually use. I've spent a lot of time working independently as a sole developer, so one of the things I want from my next role is more experience working with a strong engineering team and learning from other developers.
+
+### Q: What's something you believe now that you didn't believe a few years ago?
+STATUS: OK
+A: Think critically and do your own research. Not everything you see or hear is true, especially with the rise of AI and how easy it is to generate convincing information now.
+
+### Q: What's something you used to be bad at but eventually got good at?
+STATUS: OK
+A: Cooking. I used to be pretty bad at it, but I eventually learned how to make decent food for myself.
+
+### Q: What's something you're still trying to figure out about yourself?
+STATUS: OK
+A: My purpose in life. I have a general idea of the kind of person I want to become, but I'm still figuring out exactly what that means for me.
+
+### Q: What's something you wish you'd learned earlier?
+STATUS: OK
+A: That you need to consistently invest time and effort into your craft to become good at it. Past achievements don't mean you can stop putting in the work.
+
+### Q: What kind of person are you trying to become?
+STATUS: OK
+A: Someone who leaves a legacy and inspires other people, whether through the things I build, the way I live, or the way I treat people.
+
+### Q: What's something you're proud of that took a long time to achieve?
+STATUS: OK
+A: My fitness. Building my body and maintaining an active, healthy lifestyle took years of consistency and discipline.
+
+### Q: What's something you failed at that taught you something important?
+STATUS: OK
+A: I learned that sometimes people don't directly ask for help even when they need it. A subtle message or a change in someone's behavior can be a sign that they need your time and attention. It taught me to make more effort to check in on the people I care about and not wait for them to explicitly ask for help.
+
+### Q: How do you deal with things not going according to plan?
+STATUS: OK
+A: I try not to fixate on it. I'll take a breather, go outside, clear my head, and sometimes just park the task until the next day. Coming back with a fresh mind usually helps me see the problem more clearly.
+
+### Q: What do you do when motivation disappears?
+STATUS: OK
+A: I spend time with friends or family. They're a big part of why I work hard in the first place, so sometimes I just need to remind myself who I'm doing it for.
+
+# G. What drives you
+
+### Q: What motivates you?
+STATUS: OK
+A: My family is a big motivation for me. I want to build a stable career that lets me support my parents and eventually give them the freedom to retire comfortably. Beyond that, I like seeing myself improve, whether that's in programming, fitness, or anything else I'm working on.
+
+### Q: What keeps you going when something gets difficult?
+STATUS: OK
+A: My family and the bigger reason behind what I'm working toward. When things get difficult, I try to remember why I started.
+
+### Q: What makes you want to get better at something?
+STATUS: OK
+A: I want to become good enough that I can inspire other people. I like the idea that seeing someone put in the work and improve can motivate someone else to do the same.
+
+### Q: What makes you feel like you've had a productive day?
+STATUS: OK
+A: When I've made meaningful progress — maybe I solved a difficult bug, shipped a big feature, went for a run, and even got some household chores done. It doesn't have to be entirely work-related.
+
+### Q: What are you trying to accomplish in the next few years?
+STATUS: OK
+A: Build a stable developer career, continue improving my skills, and eventually have enough freedom and experience to choose the kind of work I want to do.
+
+### Q: What does success mean to you?
+STATUS: OK
+A: Having peace of mind. For me, that usually comes from knowing the people I care about are doing well and being happy.
+
+### Q: What matters more to you: stability, freedom, money, or achievement?
+STATUS: OK
+A: Freedom. Financial stability is important, but ultimately I want the freedom to decide how I spend my time and what I work on.
+
+### Q: What would you like to be able to provide for your family someday?
+STATUS: OK
+A: A house and lot, and enough financial stability that my parents can enjoy retirement without having to worry about money.
+
+### Q: What makes you proud of yourself?
+STATUS: OK
+A: My discipline, especially with running and taking care of my body. Staying consistent with a healthy lifestyle for years is something I'm genuinely proud of.
+
+### Q: What makes you feel like you're wasting your time?
+STATUS: OK
+A: When I feel like nobody is benefiting from what I'm doing or that I'm putting effort into something with no meaningful purpose.
+
+### Q: What makes you lose interest in something?
+STATUS: OK
+A: When something becomes too easy and there's no longer anything interesting to learn or improve.
+
+# H. How you think
+
+### Q: How do you decide whether something is worth pursuing?
+STATUS: OK
+A: If I believe the solution can genuinely make people's lives easier or solve a problem that matters, I'm much more interested in pursuing it.
+
+### Q: How do you know when you've done enough?
+STATUS: OK
+A: When continuing would give me diminishing returns and I'm no longer making meaningful progress. Sometimes that also means recognizing when I'm mentally exhausted and need to step away.
+
+### Q: How do you handle failure?
+STATUS: OK
+A: I see failure as part of progress. I try to be patient, learn from it, and keep working. If something matters to me, I don't expect to get it right immediately.
+
+### Q: When do you know it's time to give up on something?
+STATUS: OK
+A: When something is becoming a serious burden and is starting to negatively affect my well-being, especially if it's causing constant stress or affecting my sleep. Sometimes stepping away is better than forcing something indefinitely.
+
+### Q: Do you tend to trust your instincts or analyze everything first?
+STATUS: OK
+A: Both. Instincts are based on everything you've experienced and learned, so I don't ignore them. But if my instinct turns out to be wrong, I want to understand why and analyze the situation more carefully.
+
+### Q: Are you more interested in being right or understanding why you're wrong?
+STATUS: OK
+A: Understanding why I'm wrong. Being wrong gives me an opportunity to improve.
+
+### Q: What's something you tend to overthink?
+STATUS: OK
+A: Training. I tend to over-optimize things that probably don't need that much optimization. I'll sometimes spend too much time thinking about how to improve my training by a tiny amount.
+
+### Q: How do you react when your hard work doesn't produce the result you expected?
+STATUS: OK
+A: Take a deep breath, accept that not everything will go smoothly or in my favor, figure out what I can learn from it, and move on.
+
+### Q: What do you do when you realize you were wrong?
+STATUS: OK
+A: Accept it, correct myself as soon as possible, and try to remember what caused the mistake so I don't make the same one twice.
+
+# I. Outside work
+
+### Q: What do you do outside of programming?
+STATUS: OK
+A: My usual days involve some combination of fitness — usually a morning bike ride, afternoon gym session, or evening run. I'll usually do two of those in a day when I have the time, and sometimes all three on weekends. I also spend a lot of my weekends with my family.
+
+### Q: What are your hobbies?
+STATUS: OK
+A: Most of my hobbies revolve around fitness and endurance sports. Outside of that, I enjoy watching movies and TV series.
+
+### Q: Are you into sports or fitness?
+STATUS: OK
+A: Definitely. Most of my free time outside programming is spent running, cycling, or working out. I also occasionally compete in races and have podiumed in trail runs.
+
+### Q: Do you play games? What kind?
+STATUS: OK
+A: Not anymore. I used to play League of Legends, but I gradually stopped as I got busier with programming and other things I wanted to build.
+
+### Q: Why do you build personal projects if nobody is paying you?
+STATUS: OK
+A: I like keeping my mind occupied, and I genuinely enjoy solving problems. It doesn't really matter whether the problem comes from a client or something I came up with myself — if there's something interesting to figure out, I enjoy working on it.
+
+### Q: What are you interested in outside of technology?
+STATUS: OK
+A: Fitness, especially running, cycling, and endurance sports.
+
+### Q: What's something you've been really interested in recently?
+STATUS: OK
+A: AI. It's moving so quickly that there's always something new to learn or experiment with, and I'm particularly interested in how it can be used to build useful products.
+
+### Q: What could you talk about for hours?
+STATUS: OK
+A: Getting fit and endurance sports. I can probably talk way too long about running, cycling, training, and trying to improve performance.
+
+### Q: What do you do when you need to clear your head?
+STATUS: OK
+A: I run or bike. Being outside and doing something physical is usually the fastest way for me to reset.
+
+### Q: What makes you genuinely happy?
+STATUS: OK
+A: Seeing the people I love happy.
+
+### Q: What do you do when you have a completely free day?
+STATUS: OK
+A: Walk, run, eat something good, watch a movie, and probably think about life more than I should.
+
+### Q: What's something you could never imagine giving up?
+STATUS: OK
+A: My family, and my active lifestyle.
+
+### Q: What kind of experiences do you value most?
+STATUS: OK
+A: Quality time with my family.
+
+### Q: What's something you want to experience at least once in your life?
+STATUS: OK
+A: Skydiving.
+
+### Q: What do you spend too much time thinking about?
+STATUS: OK
+A: What the world will look like 15 or 25 years from now. Will everything be dominated by robots and AI? Will there be major wars? How will people live? I tend to think about big-picture questions like that.
+
+### Q: What's something people might be surprised to learn about you?
+STATUS: OK
+A: That I take my active lifestyle pretty seriously. Running, cycling, the gym, and endurance sports aren't just casual hobbies for me.
+
+### Q: What's something that's important to you that doesn't show up on your resume?
+STATUS: OK
+A: Maintaining a healthy lifestyle. It's a big part of how I structure my life, but obviously there's no place for that on a resume.
+
+### Q: What's something you're proud of that isn't on your resume?
+STATUS: OK
+A: Probably my fitness. I've been consistently working out for around three years and I'm proud of the physique and fitness I've built. It's not exactly something I can put on GitHub or LinkedIn, but it represents a lot of consistency and effort.
+
+### Q: What are you like when you're not working?
+STATUS: OK
+A: Probably walking or exercising outside and thinking about life.
+
+### Q: What kind of person do your friends think you are?
+STATUS: OK
+A: Hardworking and disciplined. Probably also someone who takes things seriously when they matter but likes to joke around when there's an opportunity.
+
+### Q: What's something you've learned recently just because you wanted to?
+STATUS: OK
+A: Tennis. I've been practicing it for a while now. Most of what I learn outside programming tends to revolve around fitness or sports, apparently.
+
+### Q: What's something you've built purely because you thought it would be fun?
+STATUS: OK
+A: I once made a browser extension for my sister's laptop that would redirect Google searches to a random weird YouTube video. It was completely useless, but I thought it would be funny.
+
+### Q: What's a lesson you've learned the hard way?
+STATUS: OK
+A: You don't get the result you want just because you've achieved it before. You still have to put in the work.
+
+I learned that with running. After hitting some good personal records one year, I assumed I could improve them again without putting in the same level of effort. I was wrong. It was a good reminder that past performance doesn't replace preparation — if you want a better result, you have to put in the work.
+
+### Q: If you weren't a developer, what do you think you'd be doing?
+STATUS: OK
+A: Probably helping my father with his farm and trying to find ways to grow and improve the business.
+
+# J. Working with people
+
+### Q: What are you like to work with?
+STATUS: OK
+A: Give me a clear goal and I'll take ownership of getting it done. I'm also easy to work with outside of the task itself — I listen, communicate, and can usually vibe and joke around with people once I'm comfortable.
+
+### Q: What kind of teammate are you?
+STATUS: OK
+A: I'm probably not the most talkative person or the natural leader in a room. I've mostly worked as a sole developer, but as a teammate, I'm someone you can rely on. If something is assigned to me, I'll take responsibility for it and make sure it gets done.
+
+### Q: What kind of people do you enjoy working with?
+STATUS: OK
+A: People who are smart and take their work seriously without taking themselves too seriously. I like teammates I can joke and banter with while still getting things done.
+
+### Q: What kind of environment do you work best in?
+STATUS: OK
+A: A calm environment where people can focus, but where there's still enough personality to joke around and banter with teammates. I don't need a completely serious environment to do good work.
+
+### Q: How do you handle criticism?
+STATUS: OK
+A: I try to listen before getting defensive. I generally assume there's something I can learn from what the other person is saying, then I evaluate it and decide what I should actually change.
+
+### Q: How do you react when someone disagrees with your approach?
+STATUS: OK
+A: I accept that people can solve the same problem in completely different ways. I'll hear them out, understand why they prefer their approach, and see whether there's something I can improve in mine.
+
+### Q: When do you know it's time to ask for help?
+STATUS: OK
+A: Usually when I've been genuinely stuck for a while and I've already tried researching and debugging the problem myself without making progress. I don't mind asking for help — I'd rather ask after making a reasonable effort than waste hours being stuck on something someone else can unblock quickly.
+
+### Q: What frustrates you at work?
+STATUS: OK
+A: Bugs that seem like they should be simple but somehow take hours to track down. Especially when the actual cause ends up being something completely different from what I initially suspected.
+
+### Q: What are you trying to improve about yourself right now?
+STATUS: OK
+A: I'm always trying to get a little better than I was yesterday. More specifically, I'm currently putting more effort into learning application security and getting better at securing the apps and websites I build.
+
+# K. About this assistant
 
 ### Q: Are you actually Kim, or a bot?
 STATUS: OK
@@ -250,7 +516,7 @@ A: I answer from a fixed knowledge file built from this page and Kim's resume. N
 
 ### Q: What can't you answer?
 STATUS: OK
-A: I can answer questions about Kim's projects, experience, technologies, development approach, and the information documented on this portfolio. I can't reliably answer personal questions or anything that isn't covered by my knowledge file. For those, the contact form at the bottom of the page reaches Kim directly.
+A: I can answer questions about Kim's projects, experience, technologies and development approach from what this page documents, his availability and rates, and a fair amount about what he's like outside the work — what drives him, how he thinks, what he does when he isn't at a keyboard — because he wrote those answers himself. What I can't do is anything that isn't in my knowledge file: contract terms, references, or the specifics of your own project. For those, the contact form at the bottom of the page reaches Kim directly.
 
 ### Q: Did Kim build you?
 STATUS: OK

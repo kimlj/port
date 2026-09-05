@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-05T09:38:29.323Z",
+  "generatedAt": "2026-09-05T14:49:21.331Z",
   "generatedBy": "scripts/build-kb.mjs",
   "sources": {
     "page": "798536395f18",
@@ -808,6 +808,321 @@
       "section": "Background"
     },
     {
+      "q": "Tell me something about yourself.",
+      "a": "I'm a developer who likes building things, but I'm probably just as obsessed with improving things outside programming. A lot of my free time goes into running, cycling, the gym, and recently tennis. I've always liked having something to work toward, whether that's a project, a faster running time, or simply getting better at something.\nProfessionally, I enjoy taking a vague problem and turning it into something people can actually use. I've spent a lot of time working independently as a sole developer, so one of the things I want from my next role is more experience working with a strong engineering team and learning from other developers.",
+      "section": "Who you are"
+    },
+    {
+      "q": "What's something you believe now that you didn't believe a few years ago?",
+      "a": "Think critically and do your own research. Not everything you see or hear is true, especially with the rise of AI and how easy it is to generate convincing information now.",
+      "section": "Who you are"
+    },
+    {
+      "q": "What's something you used to be bad at but eventually got good at?",
+      "a": "Cooking. I used to be pretty bad at it, but I eventually learned how to make decent food for myself.",
+      "section": "Who you are"
+    },
+    {
+      "q": "What's something you're still trying to figure out about yourself?",
+      "a": "My purpose in life. I have a general idea of the kind of person I want to become, but I'm still figuring out exactly what that means for me.",
+      "section": "Who you are"
+    },
+    {
+      "q": "What's something you wish you'd learned earlier?",
+      "a": "That you need to consistently invest time and effort into your craft to become good at it. Past achievements don't mean you can stop putting in the work.",
+      "section": "Who you are"
+    },
+    {
+      "q": "What kind of person are you trying to become?",
+      "a": "Someone who leaves a legacy and inspires other people, whether through the things I build, the way I live, or the way I treat people.",
+      "section": "Who you are"
+    },
+    {
+      "q": "What's something you're proud of that took a long time to achieve?",
+      "a": "My fitness. Building my body and maintaining an active, healthy lifestyle took years of consistency and discipline.",
+      "section": "Who you are"
+    },
+    {
+      "q": "What's something you failed at that taught you something important?",
+      "a": "I learned that sometimes people don't directly ask for help even when they need it. A subtle message or a change in someone's behavior can be a sign that they need your time and attention. It taught me to make more effort to check in on the people I care about and not wait for them to explicitly ask for help.",
+      "section": "Who you are"
+    },
+    {
+      "q": "How do you deal with things not going according to plan?",
+      "a": "I try not to fixate on it. I'll take a breather, go outside, clear my head, and sometimes just park the task until the next day. Coming back with a fresh mind usually helps me see the problem more clearly.",
+      "section": "Who you are"
+    },
+    {
+      "q": "What do you do when motivation disappears?",
+      "a": "I spend time with friends or family. They're a big part of why I work hard in the first place, so sometimes I just need to remind myself who I'm doing it for.",
+      "section": "Who you are"
+    },
+    {
+      "q": "What motivates you?",
+      "a": "My family is a big motivation for me. I want to build a stable career that lets me support my parents and eventually give them the freedom to retire comfortably. Beyond that, I like seeing myself improve, whether that's in programming, fitness, or anything else I'm working on.",
+      "section": "What drives you"
+    },
+    {
+      "q": "What keeps you going when something gets difficult?",
+      "a": "My family and the bigger reason behind what I'm working toward. When things get difficult, I try to remember why I started.",
+      "section": "What drives you"
+    },
+    {
+      "q": "What makes you want to get better at something?",
+      "a": "I want to become good enough that I can inspire other people. I like the idea that seeing someone put in the work and improve can motivate someone else to do the same.",
+      "section": "What drives you"
+    },
+    {
+      "q": "What makes you feel like you've had a productive day?",
+      "a": "When I've made meaningful progress — maybe I solved a difficult bug, shipped a big feature, went for a run, and even got some household chores done. It doesn't have to be entirely work-related.",
+      "section": "What drives you"
+    },
+    {
+      "q": "What are you trying to accomplish in the next few years?",
+      "a": "Build a stable developer career, continue improving my skills, and eventually have enough freedom and experience to choose the kind of work I want to do.",
+      "section": "What drives you"
+    },
+    {
+      "q": "What does success mean to you?",
+      "a": "Having peace of mind. For me, that usually comes from knowing the people I care about are doing well and being happy.",
+      "section": "What drives you"
+    },
+    {
+      "q": "What matters more to you: stability, freedom, money, or achievement?",
+      "a": "Freedom. Financial stability is important, but ultimately I want the freedom to decide how I spend my time and what I work on.",
+      "section": "What drives you"
+    },
+    {
+      "q": "What would you like to be able to provide for your family someday?",
+      "a": "A house and lot, and enough financial stability that my parents can enjoy retirement without having to worry about money.",
+      "section": "What drives you"
+    },
+    {
+      "q": "What makes you proud of yourself?",
+      "a": "My discipline, especially with running and taking care of my body. Staying consistent with a healthy lifestyle for years is something I'm genuinely proud of.",
+      "section": "What drives you"
+    },
+    {
+      "q": "What makes you feel like you're wasting your time?",
+      "a": "When I feel like nobody is benefiting from what I'm doing or that I'm putting effort into something with no meaningful purpose.",
+      "section": "What drives you"
+    },
+    {
+      "q": "What makes you lose interest in something?",
+      "a": "When something becomes too easy and there's no longer anything interesting to learn or improve.",
+      "section": "What drives you"
+    },
+    {
+      "q": "How do you decide whether something is worth pursuing?",
+      "a": "If I believe the solution can genuinely make people's lives easier or solve a problem that matters, I'm much more interested in pursuing it.",
+      "section": "How you think"
+    },
+    {
+      "q": "How do you know when you've done enough?",
+      "a": "When continuing would give me diminishing returns and I'm no longer making meaningful progress. Sometimes that also means recognizing when I'm mentally exhausted and need to step away.",
+      "section": "How you think"
+    },
+    {
+      "q": "How do you handle failure?",
+      "a": "I see failure as part of progress. I try to be patient, learn from it, and keep working. If something matters to me, I don't expect to get it right immediately.",
+      "section": "How you think"
+    },
+    {
+      "q": "When do you know it's time to give up on something?",
+      "a": "When something is becoming a serious burden and is starting to negatively affect my well-being, especially if it's causing constant stress or affecting my sleep. Sometimes stepping away is better than forcing something indefinitely.",
+      "section": "How you think"
+    },
+    {
+      "q": "Do you tend to trust your instincts or analyze everything first?",
+      "a": "Both. Instincts are based on everything you've experienced and learned, so I don't ignore them. But if my instinct turns out to be wrong, I want to understand why and analyze the situation more carefully.",
+      "section": "How you think"
+    },
+    {
+      "q": "Are you more interested in being right or understanding why you're wrong?",
+      "a": "Understanding why I'm wrong. Being wrong gives me an opportunity to improve.",
+      "section": "How you think"
+    },
+    {
+      "q": "What's something you tend to overthink?",
+      "a": "Training. I tend to over-optimize things that probably don't need that much optimization. I'll sometimes spend too much time thinking about how to improve my training by a tiny amount.",
+      "section": "How you think"
+    },
+    {
+      "q": "How do you react when your hard work doesn't produce the result you expected?",
+      "a": "Take a deep breath, accept that not everything will go smoothly or in my favor, figure out what I can learn from it, and move on.",
+      "section": "How you think"
+    },
+    {
+      "q": "What do you do when you realize you were wrong?",
+      "a": "Accept it, correct myself as soon as possible, and try to remember what caused the mistake so I don't make the same one twice.",
+      "section": "How you think"
+    },
+    {
+      "q": "What do you do outside of programming?",
+      "a": "My usual days involve some combination of fitness — usually a morning bike ride, afternoon gym session, or evening run. I'll usually do two of those in a day when I have the time, and sometimes all three on weekends. I also spend a lot of my weekends with my family.",
+      "section": "Outside work"
+    },
+    {
+      "q": "What are your hobbies?",
+      "a": "Most of my hobbies revolve around fitness and endurance sports. Outside of that, I enjoy watching movies and TV series.",
+      "section": "Outside work"
+    },
+    {
+      "q": "Are you into sports or fitness?",
+      "a": "Definitely. Most of my free time outside programming is spent running, cycling, or working out. I also occasionally compete in races and have podiumed in trail runs.",
+      "section": "Outside work"
+    },
+    {
+      "q": "Do you play games? What kind?",
+      "a": "Not anymore. I used to play League of Legends, but I gradually stopped as I got busier with programming and other things I wanted to build.",
+      "section": "Outside work"
+    },
+    {
+      "q": "Why do you build personal projects if nobody is paying you?",
+      "a": "I like keeping my mind occupied, and I genuinely enjoy solving problems. It doesn't really matter whether the problem comes from a client or something I came up with myself — if there's something interesting to figure out, I enjoy working on it.",
+      "section": "Outside work"
+    },
+    {
+      "q": "What are you interested in outside of technology?",
+      "a": "Fitness, especially running, cycling, and endurance sports.",
+      "section": "Outside work"
+    },
+    {
+      "q": "What's something you've been really interested in recently?",
+      "a": "AI. It's moving so quickly that there's always something new to learn or experiment with, and I'm particularly interested in how it can be used to build useful products.",
+      "section": "Outside work"
+    },
+    {
+      "q": "What could you talk about for hours?",
+      "a": "Getting fit and endurance sports. I can probably talk way too long about running, cycling, training, and trying to improve performance.",
+      "section": "Outside work"
+    },
+    {
+      "q": "What do you do when you need to clear your head?",
+      "a": "I run or bike. Being outside and doing something physical is usually the fastest way for me to reset.",
+      "section": "Outside work"
+    },
+    {
+      "q": "What makes you genuinely happy?",
+      "a": "Seeing the people I love happy.",
+      "section": "Outside work"
+    },
+    {
+      "q": "What do you do when you have a completely free day?",
+      "a": "Walk, run, eat something good, watch a movie, and probably think about life more than I should.",
+      "section": "Outside work"
+    },
+    {
+      "q": "What's something you could never imagine giving up?",
+      "a": "My family, and my active lifestyle.",
+      "section": "Outside work"
+    },
+    {
+      "q": "What kind of experiences do you value most?",
+      "a": "Quality time with my family.",
+      "section": "Outside work"
+    },
+    {
+      "q": "What's something you want to experience at least once in your life?",
+      "a": "Skydiving.",
+      "section": "Outside work"
+    },
+    {
+      "q": "What do you spend too much time thinking about?",
+      "a": "What the world will look like 15 or 25 years from now. Will everything be dominated by robots and AI? Will there be major wars? How will people live? I tend to think about big-picture questions like that.",
+      "section": "Outside work"
+    },
+    {
+      "q": "What's something people might be surprised to learn about you?",
+      "a": "That I take my active lifestyle pretty seriously. Running, cycling, the gym, and endurance sports aren't just casual hobbies for me.",
+      "section": "Outside work"
+    },
+    {
+      "q": "What's something that's important to you that doesn't show up on your resume?",
+      "a": "Maintaining a healthy lifestyle. It's a big part of how I structure my life, but obviously there's no place for that on a resume.",
+      "section": "Outside work"
+    },
+    {
+      "q": "What's something you're proud of that isn't on your resume?",
+      "a": "Probably my fitness. I've been consistently working out for around three years and I'm proud of the physique and fitness I've built. It's not exactly something I can put on GitHub or LinkedIn, but it represents a lot of consistency and effort.",
+      "section": "Outside work"
+    },
+    {
+      "q": "What are you like when you're not working?",
+      "a": "Probably walking or exercising outside and thinking about life.",
+      "section": "Outside work"
+    },
+    {
+      "q": "What kind of person do your friends think you are?",
+      "a": "Hardworking and disciplined. Probably also someone who takes things seriously when they matter but likes to joke around when there's an opportunity.",
+      "section": "Outside work"
+    },
+    {
+      "q": "What's something you've learned recently just because you wanted to?",
+      "a": "Tennis. I've been practicing it for a while now. Most of what I learn outside programming tends to revolve around fitness or sports, apparently.",
+      "section": "Outside work"
+    },
+    {
+      "q": "What's something you've built purely because you thought it would be fun?",
+      "a": "I once made a browser extension for my sister's laptop that would redirect Google searches to a random weird YouTube video. It was completely useless, but I thought it would be funny.",
+      "section": "Outside work"
+    },
+    {
+      "q": "What's a lesson you've learned the hard way?",
+      "a": "You don't get the result you want just because you've achieved it before. You still have to put in the work.\nI learned that with running. After hitting some good personal records one year, I assumed I could improve them again without putting in the same level of effort. I was wrong. It was a good reminder that past performance doesn't replace preparation — if you want a better result, you have to put in the work.",
+      "section": "Outside work"
+    },
+    {
+      "q": "If you weren't a developer, what do you think you'd be doing?",
+      "a": "Probably helping my father with his farm and trying to find ways to grow and improve the business.",
+      "section": "Outside work"
+    },
+    {
+      "q": "What are you like to work with?",
+      "a": "Give me a clear goal and I'll take ownership of getting it done. I'm also easy to work with outside of the task itself — I listen, communicate, and can usually vibe and joke around with people once I'm comfortable.",
+      "section": "Working with people"
+    },
+    {
+      "q": "What kind of teammate are you?",
+      "a": "I'm probably not the most talkative person or the natural leader in a room. I've mostly worked as a sole developer, but as a teammate, I'm someone you can rely on. If something is assigned to me, I'll take responsibility for it and make sure it gets done.",
+      "section": "Working with people"
+    },
+    {
+      "q": "What kind of people do you enjoy working with?",
+      "a": "People who are smart and take their work seriously without taking themselves too seriously. I like teammates I can joke and banter with while still getting things done.",
+      "section": "Working with people"
+    },
+    {
+      "q": "What kind of environment do you work best in?",
+      "a": "A calm environment where people can focus, but where there's still enough personality to joke around and banter with teammates. I don't need a completely serious environment to do good work.",
+      "section": "Working with people"
+    },
+    {
+      "q": "How do you handle criticism?",
+      "a": "I try to listen before getting defensive. I generally assume there's something I can learn from what the other person is saying, then I evaluate it and decide what I should actually change.",
+      "section": "Working with people"
+    },
+    {
+      "q": "How do you react when someone disagrees with your approach?",
+      "a": "I accept that people can solve the same problem in completely different ways. I'll hear them out, understand why they prefer their approach, and see whether there's something I can improve in mine.",
+      "section": "Working with people"
+    },
+    {
+      "q": "When do you know it's time to ask for help?",
+      "a": "Usually when I've been genuinely stuck for a while and I've already tried researching and debugging the problem myself without making progress. I don't mind asking for help — I'd rather ask after making a reasonable effort than waste hours being stuck on something someone else can unblock quickly.",
+      "section": "Working with people"
+    },
+    {
+      "q": "What frustrates you at work?",
+      "a": "Bugs that seem like they should be simple but somehow take hours to track down. Especially when the actual cause ends up being something completely different from what I initially suspected.",
+      "section": "Working with people"
+    },
+    {
+      "q": "What are you trying to improve about yourself right now?",
+      "a": "I'm always trying to get a little better than I was yesterday. More specifically, I'm currently putting more effort into learning application security and getting better at securing the apps and websites I build.",
+      "section": "Working with people"
+    },
+    {
       "q": "Are you actually Kim, or a bot?",
       "a": "A bot — I'm the assistant on Kim's site, answering in his voice from what this page and his resume say. If you want Kim himself, the form at the bottom reaches him directly.",
       "section": "About this assistant"
@@ -819,7 +1134,7 @@
     },
     {
       "q": "What can't you answer?",
-      "a": "I can answer questions about Kim's projects, experience, technologies, development approach, and the information documented on this portfolio. I can't reliably answer personal questions or anything that isn't covered by my knowledge file. For those, the contact form at the bottom of the page reaches Kim directly.",
+      "a": "I can answer questions about Kim's projects, experience, technologies and development approach from what this page documents, his availability and rates, and a fair amount about what he's like outside the work — what drives him, how he thinks, what he does when he isn't at a keyboard — because he wrote those answers himself. What I can't do is anything that isn't in my knowledge file: contract terms, references, or the specifics of your own project. For those, the contact form at the bottom of the page reaches Kim directly.",
       "section": "About this assistant"
     },
     {
