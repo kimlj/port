@@ -176,9 +176,22 @@ in more detail.
 
 ## Data
 
-`assets/contributions.json` and `assets/claude-usage.json` are **static snapshots
-generated 1 Sep 2026** by the scripts in `scripts/`. Neither can be fetched from
-the browser — see `TODO.md` for why, and for the routes to refreshing them.
+`assets/contributions.json` and `assets/claude-usage.json` are **committed
+snapshots**, not live reads — neither can be fetched from the browser, and
+`TODO.md` says why. The GitHub half refreshes itself daily through
+`.github/workflows/refresh-activity.yml`; the Claude half is still
+`node scripts/fetch-claude-usage.mjs` by hand, because the transcripts it reads
+only exist on the machine that did the work.
+
+Both payloads carry `generatedAt`, and the panel prints it. **A figure on this
+page states its own date** — keep it that way when editing the section, since
+the two halves refresh on different schedules and neither is today's by default.
+
+**Nothing under `assets/` may be served `immutable`.** No path here is
+content-hashed, so the scripts and these two files are edited in place; caching
+them for a year froze both the figures and the site's behaviour for anyone who
+had already visited. `vercel.json` splits the rule by file type — media long,
+scripts and JSON revalidating.
 
 `assets/ai-showcase/` holds 66 generated avatars used by the Avatar pipeline
 walkthrough.
