@@ -6,51 +6,43 @@ and the traps it has already sprung.
 
 ## Site assistant for kimlj.dev
 
-Build a scoped chatbot for this portfolio, modelled on the one already running on
-mdsprosolutions.com. The point is not that it answers — it is that it **cannot
-answer outside what it was given**, which is the part worth showing on a
-developer's portfolio.
+**Built, not yet live.** Everything is in the repo and tested against a stubbed
+upstream; it needs `ANTHROPIC_API_KEY` in Vercel and a look at a real answer
+before the widget is trustworthy.
 
-**Knowledge base:** the projects, the skills, the resume, the experience timeline
-and the build-activity figures — the same facts the page already states, kept in
-one file so the site and the assistant can never disagree.
+  api/chat-ticket.js    short-lived signed ticket, IP-bound
+  api/chat.js           the endpoint. No tools, no database. Haiku 4.5.
+  lib/kb.json           generated corpus — never edit, re-run the script
+  lib/knowledge.js      generated facts + hand-written rules
+  lib/guards.js         origin, ticket, per-IP, per-ticket, spend cap
+  assets/js/chat.js     the widget, textContent only
+  scripts/build-kb.mjs  regenerates the corpus from the page and the resume
 
-### What to copy from the MDS Pro build
+### Before it goes live
 
-Read `chat.js` on mdsprosolutions.com and its `api/chat.js`. The parts that make
-it trustworthy rather than merely working:
+- **Set `ANTHROPIC_API_KEY` in Vercel.** Nothing works without it and both routes
+  return 503 rather than pretending. `CHAT_TICKET_SECRET` is optional and worth
+  setting — without it the ticket secret is derived from the API key, so rotating
+  the key invalidates every live session.
+- **Set a billing alert on the Anthropic account.** The rolling hourly cap in
+  `lib/guards.js` is in-memory and resets on a cold start, so it is the only
+  guard that survives one. `CHAT_HOURLY_USD` defaults to $1.00.
+- **Consider a WAF rate limit at the edge.** Traffic blocked there costs nothing;
+  traffic blocked in the function has already paid for an invocation.
+- **Ask it real questions before showing anyone.** Every gap in the MDS Pro
+  build surfaced from a real question, never from reading the prompt. Red-team
+  the innocent framing too — the phrasing that gets correctly refused is not the
+  one that leaks.
 
-- **No tools and no database.** It answers from a fixed knowledge file, so there
-  is nothing for it to invent from. This is the whole design, not a limitation.
-- **Out of scope hands off** instead of guessing. There, the question goes to the
-  team with a name and email. Here the equivalent is the existing pitch form —
-  the assistant should offer it, not improvise an answer about availability,
-  rates or anything else not in the file.
-- **Never render model output as HTML.** `createElement` and `textContent`
-  throughout. Plain text by instruction is not a guarantee worth betting a script
-  injection on.
-- **A short-lived signed ticket per session** (`/api/chat-ticket`), so the
-  endpoint answers this page rather than anyone who found the URL.
-- **Load-event deferred, self-injected stylesheet.** The widget must never
-  compete with the hero for bandwidth.
+### Known gaps
 
-### Extra care needed here that MDS Pro did not need
-
-- **Spend caps.** A public portfolio is a spam target in a way a clinic site is
-  not. Per-session and per-day ceilings, plus the Turnstile already wired up for
-  the pitch form.
-- **Prompt-injection surface.** The knowledge file is authored, so the risk is
-  the visitor's question, not the corpus — but the reply still gets rendered, so
-  the no-innerHTML rule is load-bearing.
-- **Keep the knowledge file generated from the page** if practical, rather than
-  hand-maintained beside it. Two copies of the same facts drift.
-
-### Then
-
-Once it is live, it becomes the honest centrepiece of the AI section — a working
-scoped assistant on the page itself beats any description of one. See the section
-study for the shape that would take.
-
+- **Turnstile is not wired to the chat.** The pitch form has it; the chat has the
+  ticket instead. Worth adding if the spend cap ever actually trips.
+- **The 66 avatars, the transcripts and the process logs are not in the corpus.**
+  Only what the markup states as text. If a reader should be able to ask about
+  them, they need to be in the page as text first.
+- **No eval.** There is no set of questions with expected answers, so a prompt
+  change is currently judged by reading it rather than by running it.
 
 ## Live figures for Build Activity
 

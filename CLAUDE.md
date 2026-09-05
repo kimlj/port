@@ -108,7 +108,49 @@ feature and nothing else.
 | `activity-motion.js` | Build Activity animation and the chart tooltip. |
 | `project-visuals.js` | Shader backgrounds behind project cards. |
 | `horizon-glow.js` | WebGL glow behind the contact section. |
+| `chat.js` | The site assistant widget. Deferred to the load event, styles injected by itself. |
 | `semantic-bloom.js` | **Untracked and unreferenced.** Predates the current site. |
+
+## The site assistant
+
+The only part of the site with a server behind it, and the only part where a
+stranger's text reaches the page. `api/chat.js` answers from a fixed corpus and
+**has no tools, no database and no network beyond the one call to Anthropic.**
+That is the design rather than a limitation of it: the worst case of a visitor
+talking their way past every rule in the prompt is a wrong sentence, which is a
+copy bug. Give it one tool and the worst case becomes a reached system. Do not
+add one.
+
+`lib/kb.json` is **generated, never edited** — `scripts/build-kb.mjs` reads
+`index.html` and the resume `.docx` and writes it, so the page and the assistant
+cannot disagree. Re-run it after any content change; `--check` fails if it is
+stale. Two extraction traps it already hit: a class regex bounded by `\b` matches
+`skill-aside-head` when asked for `skill-aside`, and reading an element's text by
+slicing to the next sibling of the same class runs to the end of the block when
+there is only one of them.
+
+The resume is authoritative on employment. MDS Pro is a role with dates there and
+a project card here, so the two are merged rather than compared — the assistant
+answers "where does he work now" from the resume even though section 05 does not
+list it.
+
+`lib/knowledge.js` holds the facts and the rules separately. The facts are
+generated; the rules are hand-written, because a rule is a judgement and there is
+nothing to generate it from. They are written as tests rather than descriptions —
+a named sentence the model must not produce, with the wrong output quoted beside
+it — because a described distinction is not something a model can check itself
+against. The prompt is a constant with no clock in it: caching is a prefix match,
+and one changing byte would invalidate the whole corpus on every request.
+
+`lib/guards.js` holds every counter in one object so swapping Maps for Redis is a
+change to that file alone. **All of it is in-memory and dies with the instance.**
+It is real protection against one impatient visitor and weak protection against a
+distributed one; the guards that actually close it are a WAF rate limit at the
+edge and a billing alert on the account, neither of which is application code.
+
+**Model output never reaches `innerHTML`.** `createElement` and `textContent`
+throughout `assets/js/chat.js`. The model is told to answer in plain text and
+does, but "asked nicely" is not a guarantee worth betting a script injection on.
 
 ## Conventions that are load-bearing
 
