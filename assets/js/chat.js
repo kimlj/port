@@ -59,6 +59,11 @@
     '.kchat-msg.is-you{color:var(--text,#eee);align-self:flex-end;background:var(--bg,#0c0c0f);',
     'border:1px solid var(--border,#2a2a30);border-radius:14px;padding:.6rem .85rem}',
     '.kchat-msg.is-err{color:#ef4444}',
+    // overflow-wrap:anywhere is already on .kchat-msg, which is what stops a long
+    // App Store URL widening the panel past its own border.
+    '.kchat-link{color:var(--accent,#7c5cff);text-decoration:underline;',
+    'text-underline-offset:2px;text-decoration-thickness:1px}',
+    '.kchat-link:hover{text-decoration-thickness:2px}',
 
     '.kchat-note{font-family:var(--mono,ui-monospace,monospace);font-size:.62rem;letter-spacing:.08em;',
     'color:var(--text-dim,#8a8a95);line-height:1.6}',
@@ -87,8 +92,6 @@
     'transition:opacity .2s}',
     '.kchat-send:disabled{opacity:.35;cursor:not-allowed}',
     '.kchat-send svg{width:14px;height:14px}',
-    '.kchat-scope{margin-top:.5rem;font-family:var(--mono,ui-monospace,monospace);font-size:.58rem;',
-    'letter-spacing:.1em;color:var(--text-dim,#8a8a95);text-align:center}',
 
     '@media (max-width:520px){.kchat{right:16px;bottom:16px;left:16px}',
     '.kchat-panel{width:100%;height:min(70vh,520px)}',
@@ -194,9 +197,6 @@
     form.appendChild(input);
     form.appendChild(send);
     foot.appendChild(form);
-    // Kept to one line at the narrowest the panel gets. The greeting already
-    // says where the answers come from; this is the standing reminder.
-    foot.appendChild(el('p', 'kchat-scope', 'No tools, no database — this page only'));
 
     panel.appendChild(head);
     panel.appendChild(log);
@@ -211,8 +211,48 @@
       log.scrollTop = log.scrollHeight;
     }
 
+    // A URL in a reply was arriving as dead text, so "here's the link" gave the
+    // reader something to retype. This makes them clickable WITHOUT relaxing the
+    // rule the whole widget is built on: the text is still never assigned to
+    // innerHTML. Each run is a text node, each link an <a> built by createElement
+    // with its href assigned as a property, so a crafted string cannot become
+    // markup. The scheme is matched literally as http:// or https://, which is
+    // what keeps javascript: and data: out — they cannot match the pattern.
+    var URL_RE = /https?:\/\/[^\s<>"']+/g;
+
+    function linkify(node, text) {
+      var at = 0;
+      var m;
+      URL_RE.lastIndex = 0;
+      while ((m = URL_RE.exec(text))) {
+        // Trailing sentence punctuation belongs to the sentence, not the URL.
+        // A closing bracket only belongs to the URL if an opening one opened it.
+        var url = m[0];
+        var trail = '';
+        for (;;) {
+          var last = url.charAt(url.length - 1);
+          if ('.,;:!?'.indexOf(last) >= 0 || (last === ')' && url.indexOf('(') < 0)) {
+            trail = last + trail;
+            url = url.slice(0, -1);
+          } else break;
+        }
+        if (m.index > at) node.appendChild(document.createTextNode(text.slice(at, m.index)));
+        var a = document.createElement('a');
+        a.href = url;
+        a.textContent = url;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.className = 'kchat-link';
+        node.appendChild(a);
+        if (trail) node.appendChild(document.createTextNode(trail));
+        at = m.index + m[0].length;
+      }
+      if (at < text.length) node.appendChild(document.createTextNode(text.slice(at)));
+    }
+
     function say(text, kind) {
-      var n = el('div', 'kchat-msg ' + kind, text);
+      var n = el('div', 'kchat-msg ' + kind);
+      linkify(n, String(text == null ? '' : text));
       log.appendChild(n);
       scroll();
       return n;
