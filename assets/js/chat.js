@@ -158,7 +158,7 @@
     open.type = 'button';
     open.setAttribute('aria-expanded', 'false');
     open.appendChild(el('span', 'kchat-dot'));
-    open.appendChild(document.createTextNode('Ask about this work'));
+    open.appendChild(document.createTextNode('Talk to Me'));
 
     // panel
     var panel = el('div', 'kchat-panel');
