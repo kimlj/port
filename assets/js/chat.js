@@ -37,7 +37,8 @@
     '.kchat-open .kchat-dot{width:6px;height:6px;border-radius:50%;background:var(--accent,#0891b2);flex:none}',
 
     '.kchat-panel{display:none;flex-direction:column;width:min(380px,calc(100vw - 32px));',
-    'height:min(540px,calc(100vh - 120px));border:1px solid var(--border,#2a2a30);border-radius:18px;',
+    'height:min(540px,calc(100dvh - 120px),var(--kchat-vh,100dvh));',
+    'border:1px solid var(--border,#2a2a30);border-radius:18px;',
     'background:var(--bg-card,#141418);box-shadow:0 12px 48px rgba(0,0,0,.28);overflow:hidden}',
     '.kchat.is-open .kchat-panel{display:flex}',
     '.kchat.is-open .kchat-open{display:none}',
@@ -93,8 +94,13 @@
     '.kchat-send:disabled{opacity:.35;cursor:not-allowed}',
     '.kchat-send svg{width:14px;height:14px}',
 
+    // 16px is the threshold under which iOS Safari zooms the whole page when an
+    // input takes focus. At .875rem the fixed panel scaled up past the visual
+    // viewport and carried the send button off the right of the screen, which
+    // reads as the component being too big to use rather than as a zoom.
     '@media (max-width:520px){.kchat{right:16px;bottom:16px;left:16px}',
-    '.kchat-panel{width:100%;height:min(70vh,520px)}',
+    '.kchat-input{font-size:16px}',
+    '.kchat-panel{width:100%;height:min(70dvh,520px,var(--kchat-vh,100dvh))}',
     '.kchat-open{margin-left:auto}}',
 
     reduced ? '.kchat-typing i{animation:none;opacity:.6}' : ''
@@ -204,6 +210,25 @@
     root.appendChild(open);
     root.appendChild(panel);
     document.body.appendChild(root);
+
+    // Neither vh nor dvh shrinks when the software keyboard opens: dvh tracks
+    // the collapsing address bar, and that is all it tracks. So a panel sized in
+    // either keeps its full height with the keyboard up and pushes its own input
+    // underneath it, which is the state where you can see the field and cannot
+    // reach the send button. visualViewport is the only thing that reports the
+    // space actually left, and --kchat-vh caps the panel to it.
+    (function trackKeyboard() {
+      var vv = window.visualViewport;
+      if (!vv) return; // no visualViewport: dvh alone, same as before
+      var apply = function () {
+        // 32px covers the panel's own 16px bottom offset and leaves a margin.
+        // The floor stops a landscape keyboard collapsing it to nothing.
+        root.style.setProperty('--kchat-vh', Math.max(220, vv.height - 32) + 'px');
+      };
+      vv.addEventListener('resize', apply);
+      vv.addEventListener('scroll', apply);
+      apply();
+    })();
 
     // ---------------------------------------------------------- messages
 
