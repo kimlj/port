@@ -17,6 +17,7 @@
 // everything, which looks like a model problem and is not one.
 
 import { execFileSync } from 'node:child_process';
+import { cpSync, existsSync, mkdirSync, rmSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -41,5 +42,45 @@ const run = (script, args = []) => {
 
 run('sync-assistant.mjs');
 run('build-kb.mjs');
+
+// ---------------------------------------------------------------- publish
+//
+// Vercel served the repository root, which meant it served the repository: the
+// whole corpus, the system prompt and the guard thresholds were downloadable
+// from the site itself at /lib/knowledge.js and friends, along with CLAUDE.md,
+// TODO.md and the scripts. Making the source repo private would not have
+// touched that, because the exposure was the deploy and not the repo.
+//
+// So the build now names what is public instead of publishing whatever happens
+// to be in the tree. Everything not on this list stays out of the served
+// output, and a new file is public only because somebody added it here.
+//
+// The functions in api/ are unaffected: Vercel builds those from the project
+// root and traces their imports, so lib/ still reaches them. It is only the
+// static serving that is scoped.
+
+const PUBLIC = [
+  'index.html',
+  'favicon.svg',
+  'assets',
+  'Kim_Julongbayan_Resume.pdf',
+  'Kim_Julongbayan_Resume.docx'
+];
+
+const OUT = join(ROOT, 'dist');
+
+console.log('\n> publish');
+rmSync(OUT, { recursive: true, force: true });
+mkdirSync(OUT, { recursive: true });
+
+for (const entry of PUBLIC) {
+  const from = join(ROOT, entry);
+  if (!existsSync(from)) {
+    console.error(`  ! ${entry} is missing — the page references it`);
+    process.exit(1);
+  }
+  cpSync(from, join(OUT, entry), { recursive: true });
+  console.log(`  ${entry}`);
+}
 
 console.log('\nbuild complete.');

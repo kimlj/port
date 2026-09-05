@@ -18,3 +18,4 @@ scripts/devserver.mjs
 # Generated during the build from index.html, the resume and lib/owner.json.
 # A generated file with a copy in git is a file that goes stale.
 lib/kb.json
+dist
