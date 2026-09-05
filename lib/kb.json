@@ -1,0 +1,595 @@
+{
+  "generatedAt": "2026-09-05T07:34:33.861Z",
+  "generatedBy": "scripts/build-kb.mjs",
+  "sources": {
+    "page": "32db330cece7",
+    "resume": "4c3e573310be"
+  },
+  "identity": {
+    "name": "Kim Julongbayan",
+    "title": "Full Stack Developer | AI Developer | Backend Systems",
+    "summary": "Full Stack Developer with 5+ years of on-and-off experience building independent projects — scalable web, mobile, and AI-integrated systems. Specialized in LLM integration, real-time WebSocket systems, Dockerized cloud deployments, and CI/CD automation.",
+    "location": "Quezon City, Metro Manila, Philippines",
+    "email": "kljulongbayan@gmail.com",
+    "site": "https://kimlj.dev",
+    "github": "https://github.com/kimlj",
+    "linkedin": "https://www.linkedin.com/in/kimjulongbayan",
+    "resume": "https://kimlj.dev/Kim_Julongbayan_Resume.pdf"
+  },
+  "projects": [
+    {
+      "name": "WordWarz.io",
+      "category": "Web & Mobile",
+      "tag": "Web & Mobile App",
+      "status": "Live on the App Store · Android in review",
+      "url": "https://wordwarz.io",
+      "summary": "A real-time multiplayer word game with a Shannon entropy–based AI bot engine that maximizes information gain per guess. Features a constraint-satisfaction solver for edge cases, 5-tier ELO matchmaking (600–2000) with probabilistic human imperfection modeling, adaptive difficulty scaling, and 60+ AI-generated avatars via custom ComfyUI pipelines.",
+      "role": "",
+      "points": [],
+      "tech": [
+        "React",
+        "Capacitor",
+        "Node.js",
+        "WebSocket",
+        "Shannon Entropy",
+        "AI Bot Engine"
+      ],
+      "metrics": [
+        {
+          "value": "570",
+          "of": "Players reached a game"
+        },
+        {
+          "value": "1,045",
+          "of": "Multiplayer games 2+ players"
+        },
+        {
+          "value": "39%",
+          "of": "Came back a later day"
+        },
+        {
+          "value": "176",
+          "of": "Active last 30 days"
+        }
+      ],
+      "note": "As of Aug 2026 — shipped to the iOS App Store, with the Android build in review. Grown entirely by word of mouth, with no ads and no marketing spend."
+    },
+    {
+      "name": "MDS Pro Solutions",
+      "category": "Healthcare SaaS",
+      "tag": "Healthcare SaaS & Ops",
+      "status": "",
+      "url": "https://mdsprosolutions.com",
+      "summary": "Sole developer on the internal system a US healthcare company runs its payroll and billing on — used every workday by its nursing team across the Philippines and its owner in the US.",
+      "role": "Sole developer on the internal system a US healthcare company runs its payroll and billing on — used every workday by its nursing team across the Philippines and its owner in the US.",
+      "points": [
+        "Built the admin dashboard — 6,000+ lines of vanilla JS across seven surfaces, no framework and no build step.",
+        "Live tracking overview — nurse status streams over Postgres realtime as punches land, with payroll charts and benchmark adherence.",
+        "Automated client invoicing end to end — billable-hours ceiling, preview-then-issue flow, generated letterhead documents.",
+        "Automated the owners' Google Sheet over the Sheets API, with P&L and margin panels in Apps Script — fills blank cells only, never a human's figure.",
+        "One shared pay calculation behind the timesheet, payroll and invoice workbooks, so no two surfaces disagree by a cent.",
+        "Shipped plain-English querying on the Claude API via a read-only Postgres role, plus the nurses' Chrome MV3 extension and 37 RLS migrations."
+      ],
+      "tech": [
+        "TypeScript",
+        "Fastify",
+        "Supabase / Postgres",
+        "Chrome MV3",
+        "Postgres RLS",
+        "Google Sheets API",
+        "Apps Script",
+        "ExcelJS",
+        "Claude API"
+      ],
+      "metrics": [
+        {
+          "value": "13",
+          "of": "Daily active users remote nurses, admins, owner"
+        },
+        {
+          "value": "100%",
+          "of": "Timestamps server-set never client-supplied"
+        },
+        {
+          "value": "0",
+          "of": "Rows edited in place every change attributed"
+        }
+      ],
+      "note": "In production and used every workday — headcount rises as the company keeps hiring."
+    },
+    {
+      "name": "RecodeAI",
+      "category": "AI & Automation",
+      "tag": "AI & Automation",
+      "status": "",
+      "url": "https://recode.kimlj.dev",
+      "summary": "AI-powered website redesigner that crawls any site, analyzes brand identity with Claude, generates a premium redesign, and deploys it to a live URL — all in real time via Server-Sent Events streaming.",
+      "role": "",
+      "points": [],
+      "tech": [
+        "Next.js",
+        "Claude API",
+        "SSE",
+        "AI Pipeline",
+        "Netlify API"
+      ],
+      "metrics": [],
+      "note": ""
+    },
+    {
+      "name": "AI Job Matcher",
+      "category": "AI & Automation",
+      "tag": "AI & Automation",
+      "status": "In Development",
+      "url": "",
+      "summary": "A web extension that scrapes job listings, parses structured data, and matches roles using resume-aware LLM analysis. Generates personalized cold emails with tone control via OpenAI API. Full automation pipeline: scrape → parse → match → generate → review.",
+      "role": "",
+      "points": [],
+      "tech": [
+        "Web Extension",
+        "OpenAI API",
+        "LLM",
+        "Automation"
+      ],
+      "metrics": [],
+      "note": ""
+    },
+    {
+      "name": "Job Email Watcher",
+      "category": "AI & Automation",
+      "tag": "AI & Automation",
+      "status": "",
+      "url": "",
+      "summary": "An end-to-end n8n automation pipeline that monitors Gmail for job alerts (Indeed, Upwork, JobStreet), scores listings against my resume using GPT-4o with a hybrid AI + code salary algorithm, logs everything to Google Sheets, and sends Telegram notifications for high-scoring matches.",
+      "role": "",
+      "points": [],
+      "tech": [
+        "n8n",
+        "OpenAI GPT-4o",
+        "Gmail API",
+        "Google Sheets API",
+        "Telegram Bot API",
+        "JavaScript"
+      ],
+      "metrics": [],
+      "note": ""
+    },
+    {
+      "name": "Casinore.io",
+      "category": "Blockchain",
+      "tag": "Blockchain & Web3",
+      "status": "",
+      "url": "https://casinore.io",
+      "summary": "A hobby experiment — I wanted to explore Web3 by tinkering with open-source blockchain code and see how far I could push it.",
+      "role": "",
+      "points": [],
+      "tech": [
+        "Blockchain",
+        "Privy",
+        "Web3",
+        "Node.js",
+        "Decentralized"
+      ],
+      "metrics": [],
+      "note": ""
+    }
+  ],
+  "activity": {
+    "isSnapshot": true,
+    "asOf": "2026-09-01",
+    "contributions": {
+      "thisYear": 2253,
+      "byYear": {
+        "2024": 132,
+        "2025": 1326,
+        "2026": 2253
+      },
+      "includesPrivate": true
+    },
+    "claudeCode": {
+      "totalHours": 730,
+      "sessions": 817,
+      "longestSessionHours": 5.9,
+      "hoursPerWorkingDay": 6.7
+    }
+  },
+  "aiSystems": [
+    {
+      "name": "MDS Pro site assistant",
+      "model": "Claude API",
+      "guard": "No tools, no database",
+      "context": "mdsprosolutions.com · site assistant",
+      "summary": "A public assistant that answers about the company and the remote nurse role from a fixed knowledge file. It has no tools and no database, so there is nothing for it to invent from — and when a question falls outside what it was given, it offers to send it to the team rather than guessing.",
+      "points": [
+        "No tools and no database. Answers come from a knowledge file, not a live system.",
+        "Scope follows the page. The careers assistant answers about the role, the home one about the company.",
+        "Out of scope hands off to a human instead of guessing.",
+        "Never rendered as HTML. No visitor text or model output touches innerHTML — plain text by instruction is not a guarantee worth betting a script injection on.",
+        "A short-lived signed ticket per session, so the endpoint answers the real page."
+      ]
+    },
+    {
+      "name": "Plain-English DB querying",
+      "model": "Claude API",
+      "guard": "Read-only Postgres role",
+      "context": "MDS Pro admin · ask the database",
+      "summary": "Inside the admin system, a question in English becomes a query the model composes and a read-only role executes. The answer is built only from the rows that came back, and every question carries its own cost.",
+      "points": [
+        "Read-only Postgres role. The model can compose a query; it cannot write, drop or escalate.",
+        "Row-level security underneath , so the role cannot reach what the asker could not.",
+        "Answers only from rows returned. No figure appears that a query did not produce.",
+        "Per-question cost tracking , so an expensive question is a visible one."
+      ]
+    },
+    {
+      "name": "RecodeAI",
+      "model": "Claude API · SSE",
+      "guard": "Crawled source only",
+      "context": "recode.kimlj.dev · redesign run",
+      "summary": "Paste a URL and it crawls the real site, reads its brand identity, generates a redesign and deploys it to a live link — streamed to the browser over Server-Sent Events as each step completes. The sequence below is what runs.",
+      "points": []
+    },
+    {
+      "name": "AI Job Matcher",
+      "model": "OpenAI API",
+      "guard": "Resume as the ground truth",
+      "context": "browser extension · listing run",
+      "summary": "A browser extension that reads a job listing off the page, structures it, and scores the role against the resume rather than against a keyword list — then drafts a cold email with the tone under control.",
+      "points": []
+    },
+    {
+      "name": "Job Email Watcher",
+      "model": "GPT-4o",
+      "guard": "Hybrid AI + code scoring",
+      "context": "n8n · inbox pipeline",
+      "summary": "An n8n pipeline that watches Gmail for job alerts, scores each against the resume, and values the salary with a hybrid of model judgement and deterministic code — then logs it and reports to Telegram. It has run unattended since it shipped.",
+      "points": []
+    },
+    {
+      "name": "Avatar pipeline",
+      "model": "ComfyUI · SD",
+      "guard": "Fixed seed + node graph",
+      "context": "WordWarz.io · 60+ generated avatars",
+      "summary": "",
+      "points": []
+    },
+    {
+      "name": "Style transfer",
+      "model": "IPAdapter",
+      "guard": "One illustration as the source",
+      "context": "showcase · consistency across poses",
+      "summary": "",
+      "points": []
+    },
+    {
+      "name": "Fashion generation",
+      "model": "ControlNet",
+      "guard": "Depth map locks the pose",
+      "context": "showcase · mannequin to product shots",
+      "summary": "",
+      "points": []
+    }
+  ],
+  "skills": [
+    {
+      "group": "Languages",
+      "items": [
+        {
+          "name": "TypeScript",
+          "usedIn": [
+            "MDS Pro",
+            "RecodeAI"
+          ]
+        },
+        {
+          "name": "JavaScript",
+          "usedIn": [
+            "WordWarz.io",
+            "MDS Pro",
+            "Casinore.io",
+            "this page"
+          ]
+        },
+        {
+          "name": "Python",
+          "usedIn": [
+            "Avatar pipeline"
+          ]
+        }
+      ]
+    },
+    {
+      "group": "Interface",
+      "items": [
+        {
+          "name": "React",
+          "usedIn": [
+            "WordWarz.io",
+            "RecodeAI"
+          ]
+        },
+        {
+          "name": "Next.js",
+          "usedIn": [
+            "RecodeAI"
+          ]
+        },
+        {
+          "name": "Capacitor",
+          "usedIn": [
+            "WordWarz.io — iOS and Android"
+          ]
+        },
+        {
+          "name": "Tailwind CSS",
+          "usedIn": [
+            "WordWarz.io",
+            "RecodeAI"
+          ]
+        },
+        {
+          "name": "Chrome MV3",
+          "usedIn": [
+            "MDS Pro",
+            "AI Job Matcher"
+          ]
+        }
+      ]
+    },
+    {
+      "group": "Runtime",
+      "items": [
+        {
+          "name": "Node.js · Express",
+          "usedIn": [
+            "WordWarz.io"
+          ]
+        },
+        {
+          "name": "Fastify",
+          "usedIn": [
+            "MDS Pro"
+          ]
+        },
+        {
+          "name": "Socket.IO",
+          "usedIn": [
+            "WordWarz.io — real-time play"
+          ]
+        }
+      ]
+    },
+    {
+      "group": "Models & pipelines",
+      "items": [
+        {
+          "name": "Claude API",
+          "usedIn": [
+            "MDS Pro site assistant",
+            "Plain-English DB querying",
+            "RecodeAI"
+          ]
+        },
+        {
+          "name": "OpenAI · GPT-4o",
+          "usedIn": [
+            "AI Job Matcher",
+            "Job Email Watcher"
+          ]
+        },
+        {
+          "name": "ComfyUI · Stable Diffusion",
+          "usedIn": [
+            "Avatar pipeline",
+            "Style transfer",
+            "Fashion generation"
+          ]
+        },
+        {
+          "name": "IPAdapter",
+          "usedIn": [
+            "Style transfer"
+          ]
+        },
+        {
+          "name": "ControlNet",
+          "usedIn": [
+            "Fashion generation"
+          ]
+        },
+        {
+          "name": "n8n",
+          "usedIn": [
+            "Job Email Watcher"
+          ]
+        }
+      ]
+    },
+    {
+      "group": "Data & services",
+      "items": [
+        {
+          "name": "Supabase · Postgres",
+          "usedIn": [
+            "MDS Pro",
+            "WordWarz.io"
+          ]
+        },
+        {
+          "name": "Postgres RLS",
+          "usedIn": [
+            "MDS Pro — 37 migrations"
+          ]
+        },
+        {
+          "name": "Google Sheets API · Apps Script",
+          "usedIn": [
+            "MDS Pro",
+            "Job Email Watcher"
+          ]
+        },
+        {
+          "name": "ExcelJS",
+          "usedIn": [
+            "MDS Pro — payroll workbooks"
+          ]
+        },
+        {
+          "name": "Privy · Web3",
+          "usedIn": [
+            "Casinore.io"
+          ]
+        }
+      ]
+    },
+    {
+      "group": "Delivery",
+      "items": [
+        {
+          "name": "Docker",
+          "usedIn": [
+            "WordWarz.io — containerised server"
+          ]
+        },
+        {
+          "name": "Linux VPS · Nginx",
+          "usedIn": [
+            "WordWarz.io"
+          ]
+        },
+        {
+          "name": "Codemagic CI",
+          "usedIn": [
+            "WordWarz.io — App Store and Play builds"
+          ]
+        },
+        {
+          "name": "Google Cloud",
+          "usedIn": [
+            "Casinore.io"
+          ]
+        },
+        {
+          "name": "Vercel",
+          "usedIn": [
+            "this page"
+          ]
+        }
+      ]
+    }
+  ],
+  "alsoFamiliar": {
+    "claim": "comfort only — no project on this site demonstrates these",
+    "note": "Stacks I'm comfortable working in that the work above doesn't happen to show — ask me about any of them.",
+    "items": [
+      "React Native",
+      "Expo",
+      "Zustand",
+      "TanStack Query",
+      "shadcn/ui",
+      "Framer Motion",
+      "Astro",
+      "SvelteKit",
+      "Prisma",
+      "Drizzle",
+      "tRPC",
+      "GraphQL",
+      "Redis",
+      "MongoDB",
+      "NextAuth",
+      "LangChain",
+      "RAG",
+      "pgvector",
+      "Ollama",
+      "Hugging Face",
+      "MCP",
+      "GitHub Actions",
+      "AWS",
+      "Cloudflare Workers",
+      "Playwright",
+      "Vitest",
+      "Solana · web3.js",
+      "Figma"
+    ]
+  },
+  "experience": [
+    {
+      "when": "June 2026 - Present",
+      "role": "Full Stack Developer (Contract)",
+      "at": "MDS Pro Solutions",
+      "detail": "",
+      "points": [
+        "Sole engineer on the internal timekeeping and billing platform (TypeScript, Fastify, Supabase/Postgres, Chrome MV3 extension) used every workday by 13 people: a nursing team working remotely across the Philippines, and the owner in the US.",
+        "Eliminated an editable payroll spreadsheet: punches are stamped by Postgres, records are append-only, and every change flows through an approved, attributed correction trail.",
+        "Built the admin dashboard in vanilla JS - 6,000+ lines across seven surfaces (live overview, timesheets, payroll, invoicing, corrections, team) with nurse status streaming in over Postgres realtime.",
+        "Automated billing into the owners' Google Sheet via the Sheets API - a scheduled sync fills only blank cells and reports mismatches rather than overwriting typed figures - plus Apps Script reporting panels.",
+        "Generated timesheet, payroll and client-invoice Excel workbooks with ExcelJS from one shared pay calculation, so every surface agrees to the cent.",
+        "Shipped natural-language database querying on the Claude API with generated SQL executed through a read-only Postgres role, per-question cost tracking, and nightly encrypted off-site backups."
+      ],
+      "source": "resume",
+      "onPage": false
+    },
+    {
+      "when": "2018 – Present",
+      "role": "Independent Full Stack Developer",
+      "at": "",
+      "detail": "Self-directed, on-and-off development across frontend, backend and database layers. Built and deployed independent projects including REST APIs, real-time systems and AI-integrated applications. Managed Docker containers, Linux VPS infrastructure and CI/CD deployment workflows.",
+      "points": [
+        "Built REST APIs and real-time systems; optimized database queries and backend performance."
+      ],
+      "source": "resume",
+      "onPage": true
+    },
+    {
+      "when": "3 of 4 years completed",
+      "role": "BS Information Technology",
+      "at": "AMA Computer College Makati",
+      "detail": "Coursework covering software development, database management, networking and system analysis. Degree not yet conferred; one year of study remains.",
+      "points": [],
+      "source": "page",
+      "onPage": true
+    }
+  ],
+  "availability": "Open to remote work — flexible schedule, reliable setup",
+  "about": [
+    "I'm a Full Stack Developer with 5+ years of on-and-off experience building independent projects — web, mobile and AI-integrated systems. Every project above was built solo, which means the architecture, the deployment and the bugs were all mine to answer for.",
+    "Working on my own means I'm also the only person checking my work, so I've got careful about the unglamorous parts. If a payroll figure turns up on three screens, I want it worked out once. If a timestamp matters, the server sets it, not the browser. If a record changes, the old one stays put so you can see who changed what. None of that is clever — it's just the difference between software people trust and software they end up double-checking by hand.",
+    "Most of what I know came from building something that broke and then working out why. I'd rather ship something small that holds up than something impressive that doesn't, and I'd rather tell you what a thing can't do than find out later that you assumed it could."
+  ],
+  "resume": {
+    "summary": [
+      "Full Stack Developer with 5+ years of on-and-off experience building independent projects and one production system in daily use - scalable web, mobile, and AI-integrated systems.",
+      "Specialized in LLM integration, real-time WebSocket systems, Dockerized cloud deployments, and CI/CD automation.",
+      "Hands of experience with end-to-end system architecture, backend performance optimization, and production infrastructure."
+    ],
+    "technicalSkills": [
+      "JavaScript, TypeScript, Python | React, Next.js, Capacitor | Node.js, Express | PostgreSQL | REST APIs",
+      "LLM Integration (Claude, GPT), Stable Diffusion, ComfyUI, Prompt Engineering, AI Workflow Automation",
+      "Docker, CI/CD, Google Cloud, Linux VPS, Nginx, Git"
+    ],
+    "experience": [
+      "MDS Pro Solutions - Full Stack Developer (Contract) | June 2026 - Present",
+      "Sole engineer on the internal timekeeping and billing platform (TypeScript, Fastify, Supabase/Postgres, Chrome MV3 extension) used every workday by 13 people: a nursing team working remotely across the Philippines, and the owner in the US.",
+      "Eliminated an editable payroll spreadsheet: punches are stamped by Postgres, records are append-only, and every change flows through an approved, attributed correction trail.",
+      "Built the admin dashboard in vanilla JS - 6,000+ lines across seven surfaces (live overview, timesheets, payroll, invoicing, corrections, team) with nurse status streaming in over Postgres realtime.",
+      "Automated billing into the owners' Google Sheet via the Sheets API - a scheduled sync fills only blank cells and reports mismatches rather than overwriting typed figures - plus Apps Script reporting panels.",
+      "Generated timesheet, payroll and client-invoice Excel workbooks with ExcelJS from one shared pay calculation, so every surface agrees to the cent.",
+      "Shipped natural-language database querying on the Claude API with generated SQL executed through a read-only Postgres role, per-question cost tracking, and nightly encrypted off-site backups.",
+      "Independent Full Stack Developer | 2018 – Present",
+      "Built REST APIs and real-time systems; optimized database queries and backend performance."
+    ],
+    "projects": [
+      "WordWarz.io - Real-Time Multiplayer Game with AI Bot System",
+      "Architected full-stack web and mobile game (React, Capacitor, Node.js/Socket.IO) on a sub-100ms WebSocket backend; plays in the browser on desktop and as a native iOS app, Android in review; 570 players have reached a game since launch across 1,045 multiplayer matches, with 40-70 playing daily, grown by word of mouth alone.",
+      "Designed multi-tier AI bot system with ELO-based matchmaking and dynamic difficulty scaling.",
+      "Implemented constraint-based Wordle solver and entropy-driven guess selection for intelligent gameplay.",
+      "Built automated ComfyUI pipelines generating 60+ AI assets, reducing manual creation time by 60%.",
+      "Job Email Watcher - AI Job Alert Automation Pipeline",
+      "Built end-to-end n8n job alert pipeline automating Gmail extraction, GPT-4o resume scoring with hybrid AI + code salary algorithm, Google Sheets logging, and Telegram notifications"
+    ],
+    "education": [
+      "Bachelor of Science in Information Technology — AMA Computer College Makati (3 of 4 years completed)"
+    ]
+  },
+  "conflicts": []
+}
