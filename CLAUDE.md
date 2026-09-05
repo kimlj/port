@@ -64,6 +64,12 @@ The list is written out in the markup rather than generated: unlike the showcase
 rows there is no second copy to drift from, and the provenance is prose that has
 to be read and checked rather than derived.
 
+The list runs three columns and is deliberately tight: it is a reference table,
+and a reference table you have to scroll is a worse one. All 27 rows, the chips
+and the familiar block fit one screen together. Groups do not break across a
+column, so the columns land uneven rather than stranding a heading at the foot of
+one.
+
 `skills-filter.js` puts chips above it so the reader can run the check the other
 way round — pick a piece of work, see what it was built with. Each mention
 carries the project it belongs to as `data-proj` and each row the set as
