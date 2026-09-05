@@ -251,18 +251,25 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 .section-title em { font-family: var(--serif); font-style: italic; color: var(--accent); }
 .divider { width: 100%; height: 1px; background: var(--border); margin: 0; }
 
-.about-avatar { display: none; margin-bottom: 2rem; text-align: center; }
-.about-avatar img { width: 100px; height: 100px; object-fit: cover; object-position: top; border-radius: 50%; border: 1px solid rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.08); box-shadow: 0 0 30px var(--shadow); }
-/* One measured column now: with the technology list living in Skills with
-   receipts, About has nothing to sit beside. */
-.about-grid { display: block; }
-#about .section-label, #about .section-title { text-align: center; }
-.about-text { font-size: 1.05rem; line-height: 1.8; color: var(--text-muted); font-weight: 300; max-width: 64ch; margin-left: auto; margin-right: auto; }
+/* Prose left on the page's spine, the portrait and the figures in the column
+   beside it. Left as a measured column on its own the section left half the
+   width empty, which read as an unfinished grid rather than as white space. */
+.about-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 290px); gap: 4.5rem; align-items: start; }
+.about-text { font-size: 1.05rem; line-height: 1.8; color: var(--text-muted); font-weight: 300; max-width: 62ch; }
 .about-text p + p { margin-top: 1.25rem; }
 /* The figures that replaced the four stat cards, two of which held "Full" and
    "AI" in a number slot. Every one is counted out of the DOM at load, so the
    line cannot drift away from the page it describes. */
-.about-figures { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem 1.9rem; max-width: 860px; margin-left: auto; margin-right: auto; margin-top: 2.75rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.07em; color: var(--text-dim); }
+.about-aside { display: flex; flex-direction: column; }
+/* No frame: the file is a cut-out, so a border would box three empty corners.
+   The source is cropped mid-torso, and left alone that bottom edge reads as a
+   photograph cut off rather than as a figure standing in the page, so it is
+   dissolved instead of ended. */
+.about-portrait { display: block; width: 100%; height: auto;
+  -webkit-mask-image: linear-gradient(to bottom, #000 68%, transparent 99%);
+  mask-image: linear-gradient(to bottom, #000 68%, transparent 99%); }
+.about-figures { display: flex; flex-direction: column; gap: 0.55rem; margin-top: 1.9rem; padding-top: 1.35rem; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.06em; color: var(--text-dim); }
+.about-figures span { display: block; }
 .about-figures b { font-weight: 400; color: var(--accent); }
 
 /* -- 04 / Skills ------------------------------------------------------------
@@ -906,7 +913,6 @@ footer .footer-accent { color: var(--accent); }
 }
 @media (max-width: 768px) {
   .hero-avatar { display: none; }
-  .about-avatar { display: block; }
 }
 
 /* Mobile tap states for cards */
@@ -917,6 +923,17 @@ footer .footer-accent { color: var(--accent); }
   .status-text { font-size: 0.58rem; }
 }
 
+@media (max-width: 1024px) {
+  .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .about-aside { flex-direction: row; align-items: flex-end; gap: 2rem; }
+  .about-portrait { width: 190px; flex: none; }
+  .about-figures { flex: 1; margin-top: 0; border-top: 0; padding-top: 0; }
+}
+@media (max-width: 560px) {
+  .about-aside { flex-direction: column; align-items: stretch; gap: 1.5rem; }
+  .about-portrait { width: 160px; }
+  .about-figures { padding-top: 1.2rem; border-top: 1px solid var(--border); }
+}
 @media (max-width: 1024px) { .project-card { grid-template-columns: 1fr; } .project-visual { min-height: 200px; } }
 @media (max-width: 768px) { nav { padding: 1rem 1.5rem; } .nav-links { display: none; } .nav-hamburger { display: flex; } section { padding: 4rem 1.5rem; } .hero { padding: 7rem 1.5rem 3rem; } footer { flex-direction: column; gap: 0.75rem; text-align: center; } .contact-section { padding: 5rem 1.5rem; } .pitch-card { padding: 1.35rem; border-radius: 16px; } .pitch-footer { flex-direction: column-reverse; align-items: stretch; } .pitch-submit { justify-content: center; width: 100%; } .pitch-count { text-align: center; } }
 @media (max-width: 1240px) { .skill-ledger { columns: 2; column-gap: 4rem; } }
@@ -2731,9 +2748,6 @@ footer .footer-accent { color: var(--accent); }
 <section id="about">
   <p class="section-label reveal">06 / About</p>
   <h2 class="section-title reveal">Building things that <em>matter</em></h2>
-  <div class="about-avatar reveal">
-    <img src="assets/profile.webp" alt="Kim Julongbayan" width="120" height="120">
-  </div>
   <div class="about-grid">
     <div class="about-text reveal">
       <p class="char-reveal">I'm a Full Stack Developer with 5+ years of on-and-off experience
@@ -2750,7 +2764,11 @@ footer .footer-accent { color: var(--accent); }
         rather ship something small that holds up than something impressive that doesn't, and I'd
         rather tell you what a thing can't do than find out later that you assumed it could.</p>
     </div>
-    <p class="about-figures" id="aboutFigures" hidden></p>
+    <div class="about-aside reveal">
+      <img class="about-portrait" src="assets/profile.webp" alt="Kim Julongbayan"
+           width="1024" height="1024" loading="lazy" decoding="async">
+      <p class="about-figures" id="aboutFigures" hidden></p>
+    </div>
   </div>
 </section>
 
