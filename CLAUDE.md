@@ -64,6 +64,21 @@ The list is written out in the markup rather than generated: unlike the showcase
 rows there is no second copy to drift from, and the provenance is prose that has
 to be read and checked rather than derived.
 
+`skills-filter.js` puts chips above it so the reader can run the check the other
+way round — pick a piece of work, see what it was built with. Each mention
+carries the project it belongs to as `data-proj` and each row the set as
+`data-projs`, so the filter reads its index off the markup and there is no second
+copy of the mapping. The chips and the tally under the list are **built by the
+script, not written in the markup**, so with the script gone the section is
+exactly the list it was. Non-matching rows are dimmed rather than removed: pulling
+rows out would change the height of the section under the reader's cursor, and
+what did not match is still the answer to "what else is there".
+
+Below the list, **Also familiar** is the one block that makes no provenance claim.
+It is deliberately worded as a comfort claim rather than a specific one — a
+narrow factual assertion nobody can check, sitting under a heading promising that
+everything can be, is the one thing that would cost the section its argument.
+
 ## The scripts
 
 Each is a self-contained IIFE that finds its own elements and returns quietly if
@@ -77,6 +92,7 @@ feature and nothing else.
 | `button-field.js` | Dot fields inside every CTA and the contact buttons. |
 | `section-ornaments.js` | Drift, trace and registration marks, Projects → footer. |
 | `ai-ledger.js` | The AI Showcase rows, transcripts and process logs, plus the Avatar pipeline's stage tabs. Two IIFEs. |
+| `skills-filter.js` | Section 04's project chips — filters the technology list to one piece of work. |
 | `activity-motion.js` | Build Activity animation and the chart tooltip. |
 | `project-visuals.js` | Shader backgrounds behind project cards. |
 | `horizon-glow.js` | WebGL glow behind the contact section. |

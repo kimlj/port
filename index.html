@@ -285,6 +285,36 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 .skill-row:hover .skill-name { color: var(--accent); }
 .skill-row:hover .skill-where { color: var(--text-muted); }
 
+/* The list, filtered by the work rather than by category. On a section whose
+   whole claim is that every line can be checked, letting the reader run the
+   check is the argument -- so the chips are the point, not decoration.
+   skills-filter.js builds them; with no JS the list is exactly what it was. */
+.skill-filters { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
+.skill-chip {
+  font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.06em;
+  color: var(--text-muted); background: transparent; cursor: pointer;
+  border: 1px solid var(--border); border-radius: 100px; padding: 0.4rem 0.9rem;
+  transition: color 0.25s, border-color 0.25s, background-color 0.25s;
+}
+.skill-chip:hover { color: var(--text); border-color: var(--border-hover); }
+.skill-chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.skill-chip[aria-pressed="true"] {
+  color: var(--accent); border-color: rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.3);
+  background: var(--accent-dim);
+}
+/* Dimmed, not hidden: a filter that removes rows changes the height of the
+   section under the reader's cursor, and the rows that did not match are still
+   the answer to "what else is there". */
+.skill-row { transition: opacity 0.3s; }
+.skill-row.is-out { opacity: 0.16; }
+.skill-where span.is-hit { color: var(--accent); }
+.skill-tally {
+  max-width: 1300px; margin-top: 1.25rem; padding-top: 1.1rem;
+  border-top: 1px solid var(--border); font-family: var(--mono);
+  font-size: 0.66rem; letter-spacing: 0.06em; color: var(--text-dim);
+}
+.skill-tally b { font-weight: 400; color: var(--accent); }
+
 /* Stacks used in work that is not on this page. Kept apart from the list above
    rather than mixed into it: the list's whole claim is that every line can be
    checked against a section, and these cannot be. Saying so is the honest
@@ -292,7 +322,20 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 .skill-aside { max-width: 1300px; margin-top: 1rem; padding-top: 1.75rem; border-top: 1px solid var(--border); }
 .skill-aside-note { font-size: 0.85rem; line-height: 1.65; color: var(--text-dim); font-weight: 300; max-width: 60ch; margin: 0.7rem 0 1.1rem; }
 .skill-aside-list { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; }
-.skill-aside-list span { font-family: var(--serif); font-size: 0.98rem; color: var(--text-muted); }
+.skill-aside-list span {
+  font-family: var(--serif); font-size: 0.98rem; color: var(--text-muted);
+  padding-bottom: 2px; border-bottom: 1px solid transparent;
+  transition: color 0.25s, border-color 0.25s;
+}
+/* Nothing here is clickable, so the hover is a reading aid rather than an
+   affordance -- and it is behind a hover query because a touch device would
+   otherwise leave the last-tapped name lit. */
+@media (hover: hover) {
+  .skill-aside-list span:hover {
+    color: var(--accent);
+    border-bottom-color: rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.35);
+  }
+}
 
 .projects-grid { display: grid; gap: 1.5rem; }
 
@@ -2569,45 +2612,45 @@ footer .footer-accent { color: var(--accent); }
   <div class="skill-ledger stagger-children">
     <div class="skill-group reveal">
       <div class="skill-group-title">Languages</div>
-      <div class="skill-row"><span class="skill-name">TypeScript</span><span class="skill-where"><span>MDS Pro</span><span>RecodeAI</span></span></div>
-      <div class="skill-row"><span class="skill-name">JavaScript</span><span class="skill-where"><span>WordWarz.io</span><span>MDS Pro</span><span>Casinore.io</span><span>this page</span></span></div>
-      <div class="skill-row"><span class="skill-name">Python</span><span class="skill-where"><span>Avatar pipeline</span></span></div>
+      <div class="skill-row" data-projs="mds rcd"><span class="skill-name">TypeScript</span><span class="skill-where"><span data-proj="mds">MDS Pro</span><span data-proj="rcd">RecodeAI</span></span></div>
+      <div class="skill-row" data-projs="csn mds site ww"><span class="skill-name">JavaScript</span><span class="skill-where"><span data-proj="ww">WordWarz.io</span><span data-proj="mds">MDS Pro</span><span data-proj="csn">Casinore.io</span><span data-proj="site">this page</span></span></div>
+      <div class="skill-row" data-projs="pipe"><span class="skill-name">Python</span><span class="skill-where"><span data-proj="pipe">Avatar pipeline</span></span></div>
     </div>
     <div class="skill-group reveal">
       <div class="skill-group-title">Interface</div>
-      <div class="skill-row"><span class="skill-name">React</span><span class="skill-where"><span>WordWarz.io</span><span>RecodeAI</span></span></div>
-      <div class="skill-row"><span class="skill-name">Next.js</span><span class="skill-where"><span>RecodeAI</span></span></div>
-      <div class="skill-row"><span class="skill-name">Capacitor</span><span class="skill-where"><span>WordWarz.io &mdash; iOS and Android</span></span></div>
-      <div class="skill-row"><span class="skill-name">Tailwind CSS</span><span class="skill-where"><span>WordWarz.io</span><span>RecodeAI</span></span></div>
-      <div class="skill-row"><span class="skill-name">Chrome MV3</span><span class="skill-where"><span>MDS Pro</span><span>AI Job Matcher</span></span></div>
+      <div class="skill-row" data-projs="rcd ww"><span class="skill-name">React</span><span class="skill-where"><span data-proj="ww">WordWarz.io</span><span data-proj="rcd">RecodeAI</span></span></div>
+      <div class="skill-row" data-projs="rcd"><span class="skill-name">Next.js</span><span class="skill-where"><span data-proj="rcd">RecodeAI</span></span></div>
+      <div class="skill-row" data-projs="ww"><span class="skill-name">Capacitor</span><span class="skill-where"><span data-proj="ww">WordWarz.io &mdash; iOS and Android</span></span></div>
+      <div class="skill-row" data-projs="rcd ww"><span class="skill-name">Tailwind CSS</span><span class="skill-where"><span data-proj="ww">WordWarz.io</span><span data-proj="rcd">RecodeAI</span></span></div>
+      <div class="skill-row" data-projs="jm mds"><span class="skill-name">Chrome MV3</span><span class="skill-where"><span data-proj="mds">MDS Pro</span><span data-proj="jm">AI Job Matcher</span></span></div>
     </div>
     <div class="skill-group reveal">
       <div class="skill-group-title">Server &amp; data</div>
-      <div class="skill-row"><span class="skill-name">Node.js &middot; Express</span><span class="skill-where"><span>WordWarz.io</span></span></div>
-      <div class="skill-row"><span class="skill-name">Fastify</span><span class="skill-where"><span>MDS Pro</span></span></div>
-      <div class="skill-row"><span class="skill-name">Socket.IO</span><span class="skill-where"><span>WordWarz.io &mdash; real-time play</span></span></div>
-      <div class="skill-row"><span class="skill-name">Supabase &middot; Postgres</span><span class="skill-where"><span>MDS Pro</span><span>WordWarz.io</span></span></div>
-      <div class="skill-row"><span class="skill-name">Postgres RLS</span><span class="skill-where"><span>MDS Pro &mdash; 37 migrations</span></span></div>
-      <div class="skill-row"><span class="skill-name">Google Sheets API &middot; Apps Script</span><span class="skill-where"><span>MDS Pro</span><span>Job Email Watcher</span></span></div>
-      <div class="skill-row"><span class="skill-name">ExcelJS</span><span class="skill-where"><span>MDS Pro &mdash; payroll workbooks</span></span></div>
-      <div class="skill-row"><span class="skill-name">Privy &middot; Web3</span><span class="skill-where"><span>Casinore.io</span></span></div>
+      <div class="skill-row" data-projs="ww"><span class="skill-name">Node.js &middot; Express</span><span class="skill-where"><span data-proj="ww">WordWarz.io</span></span></div>
+      <div class="skill-row" data-projs="mds"><span class="skill-name">Fastify</span><span class="skill-where"><span data-proj="mds">MDS Pro</span></span></div>
+      <div class="skill-row" data-projs="ww"><span class="skill-name">Socket.IO</span><span class="skill-where"><span data-proj="ww">WordWarz.io &mdash; real-time play</span></span></div>
+      <div class="skill-row" data-projs="mds ww"><span class="skill-name">Supabase &middot; Postgres</span><span class="skill-where"><span data-proj="mds">MDS Pro</span><span data-proj="ww">WordWarz.io</span></span></div>
+      <div class="skill-row" data-projs="mds"><span class="skill-name">Postgres RLS</span><span class="skill-where"><span data-proj="mds">MDS Pro &mdash; 37 migrations</span></span></div>
+      <div class="skill-row" data-projs="jew mds"><span class="skill-name">Google Sheets API &middot; Apps Script</span><span class="skill-where"><span data-proj="mds">MDS Pro</span><span data-proj="jew">Job Email Watcher</span></span></div>
+      <div class="skill-row" data-projs="mds"><span class="skill-name">ExcelJS</span><span class="skill-where"><span data-proj="mds">MDS Pro &mdash; payroll workbooks</span></span></div>
+      <div class="skill-row" data-projs="csn"><span class="skill-name">Privy &middot; Web3</span><span class="skill-where"><span data-proj="csn">Casinore.io</span></span></div>
     </div>
     <div class="skill-group reveal">
       <div class="skill-group-title">Models &amp; pipelines</div>
-      <div class="skill-row"><span class="skill-name">Claude API</span><span class="skill-where"><span>MDS Pro site assistant</span><span>Plain-English DB querying</span><span>RecodeAI</span></span></div>
-      <div class="skill-row"><span class="skill-name">OpenAI &middot; GPT-4o</span><span class="skill-where"><span>AI Job Matcher</span><span>Job Email Watcher</span></span></div>
-      <div class="skill-row"><span class="skill-name">ComfyUI &middot; Stable Diffusion</span><span class="skill-where"><span>Avatar pipeline</span><span>Style transfer</span><span>Fashion generation</span></span></div>
-      <div class="skill-row"><span class="skill-name">IPAdapter</span><span class="skill-where"><span>Style transfer</span></span></div>
-      <div class="skill-row"><span class="skill-name">ControlNet</span><span class="skill-where"><span>Fashion generation</span></span></div>
-      <div class="skill-row"><span class="skill-name">n8n</span><span class="skill-where"><span>Job Email Watcher</span></span></div>
+      <div class="skill-row" data-projs="mds rcd"><span class="skill-name">Claude API</span><span class="skill-where"><span data-proj="mds">MDS Pro site assistant</span><span data-proj="mds">Plain-English DB querying</span><span data-proj="rcd">RecodeAI</span></span></div>
+      <div class="skill-row" data-projs="jew jm"><span class="skill-name">OpenAI &middot; GPT-4o</span><span class="skill-where"><span data-proj="jm">AI Job Matcher</span><span data-proj="jew">Job Email Watcher</span></span></div>
+      <div class="skill-row" data-projs="pipe"><span class="skill-name">ComfyUI &middot; Stable Diffusion</span><span class="skill-where"><span data-proj="pipe">Avatar pipeline</span><span data-proj="pipe">Style transfer</span><span data-proj="pipe">Fashion generation</span></span></div>
+      <div class="skill-row" data-projs="pipe"><span class="skill-name">IPAdapter</span><span class="skill-where"><span data-proj="pipe">Style transfer</span></span></div>
+      <div class="skill-row" data-projs="pipe"><span class="skill-name">ControlNet</span><span class="skill-where"><span data-proj="pipe">Fashion generation</span></span></div>
+      <div class="skill-row" data-projs="jew"><span class="skill-name">n8n</span><span class="skill-where"><span data-proj="jew">Job Email Watcher</span></span></div>
     </div>
     <div class="skill-group reveal">
       <div class="skill-group-title">Delivery</div>
-      <div class="skill-row"><span class="skill-name">Docker</span><span class="skill-where"><span>WordWarz.io &mdash; containerised server</span></span></div>
-      <div class="skill-row"><span class="skill-name">Linux VPS &middot; Nginx</span><span class="skill-where"><span>WordWarz.io</span></span></div>
-      <div class="skill-row"><span class="skill-name">Codemagic CI</span><span class="skill-where"><span>WordWarz.io &mdash; App Store and Play builds</span></span></div>
-      <div class="skill-row"><span class="skill-name">Google Cloud</span><span class="skill-where"><span>Casinore.io</span></span></div>
-      <div class="skill-row"><span class="skill-name">Vercel</span><span class="skill-where"><span>this page</span></span></div>
+      <div class="skill-row" data-projs="ww"><span class="skill-name">Docker</span><span class="skill-where"><span data-proj="ww">WordWarz.io &mdash; containerised server</span></span></div>
+      <div class="skill-row" data-projs="ww"><span class="skill-name">Linux VPS &middot; Nginx</span><span class="skill-where"><span data-proj="ww">WordWarz.io</span></span></div>
+      <div class="skill-row" data-projs="ww"><span class="skill-name">Codemagic CI</span><span class="skill-where"><span data-proj="ww">WordWarz.io &mdash; App Store and Play builds</span></span></div>
+      <div class="skill-row" data-projs="csn"><span class="skill-name">Google Cloud</span><span class="skill-where"><span data-proj="csn">Casinore.io</span></span></div>
+      <div class="skill-row" data-projs="site"><span class="skill-name">Vercel</span><span class="skill-where"><span data-proj="site">this page</span></span></div>
     </div>
   </div>
   <div class="skill-aside reveal">
@@ -3415,6 +3458,7 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
 <script src="assets/js/button-field.js" defer></script>
 <script src="assets/js/section-ornaments.js" defer></script>
 <script src="assets/js/ai-ledger.js" defer></script>
+<script src="assets/js/skills-filter.js" defer></script>
 <script src="assets/js/activity-motion.js" defer></script>
 <script>
   /* Assemble email links at runtime so the raw address never sits in the HTML

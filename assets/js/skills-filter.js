@@ -1,0 +1,123 @@
+/* Section 04 — the skills list, filtered by the work it came from.
+ *
+ * The list's whole claim is that every line can be checked against a section
+ * above it. Chips let the reader run that check the other way round: pick a
+ * piece of work, see what it was built with. On a page arguing for verifiable
+ * claims, handing over the query is the argument rather than a flourish.
+ *
+ * The index is read off the markup — each mention carries the project it
+ * belongs to as data-proj, each row the set as data-projs — so there is no
+ * second copy of the mapping to fall out of step with the list, the same
+ * reason ai-ledger.js builds its rows from the panels.
+ *
+ * Nothing here is required to read the section. The chips and the tally are
+ * created by this file, so with the script gone or failed the list is exactly
+ * the list, which is why they are not in the markup.
+ */
+(function () {
+  'use strict';
+
+  var ledger = document.querySelector('#skills .skill-ledger');
+  if (!ledger) return;
+
+  var rows = Array.prototype.slice.call(ledger.querySelectorAll('.skill-row[data-projs]'));
+  if (!rows.length) return;
+
+  /* Display names for the keys, in the order Selected Work introduces them, so
+     the chips read down the page in the order the reader met the work. A key
+     with no name here simply gets no chip. */
+  var NAMES = {
+    ww: 'WordWarz.io',
+    mds: 'MDS Pro',
+    rcd: 'RecodeAI',
+    jm: 'AI Job Matcher',
+    jew: 'Job Email Watcher',
+    csn: 'Casinore.io',
+    pipe: 'AI pipelines',
+    site: 'this page'
+  };
+  var ORDER = ['ww', 'mds', 'rcd', 'jm', 'jew', 'csn', 'pipe', 'site'];
+
+  /* Only offer a chip for work the list actually mentions — a filter that can
+     return nothing is a filter that shouldn't have been offered. */
+  var present = {};
+  rows.forEach(function (row) {
+    row.getAttribute('data-projs').split(' ').forEach(function (k) {
+      if (k) present[k] = (present[k] || 0) + 1;
+    });
+  });
+  var keys = ORDER.filter(function (k) { return present[k] && NAMES[k]; });
+  if (keys.length < 2) return;
+
+  var bar = document.createElement('div');
+  bar.className = 'skill-filters';
+  bar.setAttribute('role', 'group');
+  bar.setAttribute('aria-label', 'Filter technologies by project');
+
+  var tally = document.createElement('p');
+  tally.className = 'skill-tally';
+  /* aria-live so the count is announced when a chip changes it; the dimming
+     itself carries no information a screen reader can use. */
+  tally.setAttribute('aria-live', 'polite');
+
+  var active = null;
+  var chips = keys.map(function (k) {
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'skill-chip';
+    btn.textContent = NAMES[k];
+    btn.setAttribute('data-proj', k);
+    btn.setAttribute('aria-pressed', 'false');
+    btn.addEventListener('click', function () {
+      active = (active === k) ? null : k;
+      apply();
+    });
+    bar.appendChild(btn);
+    return btn;
+  });
+
+  function apply() {
+    rows.forEach(function (row) {
+      var on = !active ||
+        row.getAttribute('data-projs').split(' ').indexOf(active) > -1;
+      row.classList.toggle('is-out', !on);
+      Array.prototype.forEach.call(
+        row.querySelectorAll('.skill-where span'),
+        function (span) {
+          span.classList.toggle('is-hit',
+            !!active && span.getAttribute('data-proj') === active);
+        });
+    });
+
+    chips.forEach(function (btn) {
+      btn.setAttribute('aria-pressed',
+        btn.getAttribute('data-proj') === active ? 'true' : 'false');
+    });
+
+    setTally();
+  }
+
+  /* The resting line states the whole set rather than sitting empty, so the
+     section still says something true to a reader who never clicks. */
+  function setTally() {
+    while (tally.firstChild) tally.removeChild(tally.firstChild);
+    var b = document.createElement('b');
+    if (active) {
+      b.textContent = present[active];
+      tally.appendChild(b);
+      tally.appendChild(document.createTextNode(
+        ' of ' + rows.length + ' used in ' + NAMES[active] +
+        ' · click again to clear'));
+    } else {
+      b.textContent = rows.length;
+      tally.appendChild(b);
+      tally.appendChild(document.createTextNode(
+        ' technologies across ' + keys.length +
+        ' pieces of work · pick one to filter'));
+    }
+  }
+
+  ledger.parentNode.insertBefore(bar, ledger);
+  ledger.parentNode.insertBefore(tally, ledger.nextSibling);
+  apply();
+})();
