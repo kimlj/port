@@ -32,7 +32,7 @@ Only entries marked `OK` are imported.
 
 ### Q: Are you available for work right now?
 STATUS: OK
-A: Yes — I'm available for full-time remote work. My recent contract with MDS Pro Solutions is now largely in maintenance and bug-fixing mode, so I'm able to take on new work while continuing to support the system when needed.
+A: Yes, I'm available for full-time remote work. My recent contract with MDS Pro Solutions is now largely in maintenance and bug-fixing mode, so I'm able to take on new work while continuing to support the system when needed.
 
 ### Q: What kind of work are you looking for next?
 STATUS: OK
@@ -48,7 +48,7 @@ A: Both. Full-time remote is what I'm looking for, and I'm open to contract enga
 
 ### Q: Can you start soon?
 STATUS: OK
-A: Yes — I can start soon. MDS Pro is in maintenance rather than active build now, so there's nothing blocking a new engagement.
+A: Yes, I can start soon. MDS Pro is in maintenance rather than active build now, so there's nothing blocking a new engagement.
 
 ### Q: What time zone are you in, and how do you handle overlap?
 STATUS: OK
@@ -56,11 +56,11 @@ A: I'm in Manila, so UTC+8. I've been working daily with an owner in the US on M
 
 ### Q: Do you work with a team, or solo?
 STATUS: OK
-A: So far, most of my work has been independent, where I've handled projects end to end — architecture, development, deployment, debugging, and maintenance. I'm comfortable owning a system myself, and I'm also looking forward to getting more experience working within a larger engineering team.
+A: So far, most of my work has been independent, where I've handled projects end to end: architecture, development, deployment, debugging, and maintenance. I'm comfortable owning a system myself, and I'm also looking forward to getting more experience working within a larger engineering team.
 
 ### Q: Can you work independently?
 STATUS: OK
-A: Yes — that's been most of my experience so far. Every project on this page I built end to end, which means when something broke there was nobody to escalate it to. I'm used to deciding what to build next, researching my way through problems I haven't seen before, and being accountable for the result.
+A: Yes, that's been most of my experience so far. Every project on this page I built end to end, which means when something broke there was nobody to escalate it to. I'm used to deciding what to build next, researching my way through problems I haven't seen before, and being accountable for the result.
 
 ### Q: What's your experience working with clients?
 STATUS: OK
@@ -68,25 +68,25 @@ A: My main experience is MDS Pro, where I work directly with the business owner 
 
 ### Q: How do you communicate when requirements are unclear?
 STATUS: OK
-A: I ask rather than guess — usually by describing back what I think is wanted and what it would actually do, so it can be corrected against something concrete instead of an abstract question. If it's still unclear, I'll build the smallest version that shows the idea and let people react to that. A wrong assumption caught early is much cheaper than one found after it's built.
+A: I ask rather than guess, usually by describing back what I think is wanted and what it would actually do, so it can be corrected against something concrete instead of an abstract question. If it's still unclear, I'll build the smallest version that shows the idea and let people react to that. A wrong assumption caught early is much cheaper than one found after it's built.
 
 ### Q: What does a good brief look like to you?
 STATUS: OK
-A: The problem, who has it, and what people do today instead. I'd rather have a rough description of the actual pain than a detailed spec for a solution — if the spec is already written I usually end up asking what it was meant to fix anyway.
+A: The problem, who has it, and what people do today instead. I'd rather have a rough description of the actual pain than a detailed spec for a solution. If the spec is already written I usually end up asking what it was meant to fix anyway.
 
 ### Q: Why should we hire you?
 STATUS: OK
-A: I think my biggest strength is ownership. I don't just like building individual features — I like understanding the whole system, from the user's problem and database design to the application, deployment, testing, and maintenance. I'm still growing as an engineer, especially in larger team environments, but I've already had to take real responsibility for software that people depend on every day. I also learn quickly and use AI and research heavily to get through problems I haven't encountered before.
+A: I think my biggest strength is ownership. I don't just like building individual features. I like understanding the whole system, from the user's problem and database design to the application, deployment, testing, and maintenance. I'm still growing as an engineer, especially in larger team environments, but I've already had to take real responsibility for software that people depend on every day. I also learn quickly and use AI and research heavily to get through problems I haven't encountered before.
 
 ### Q: Why should we choose you over another junior developer?
 STATUS: OK
-A: Because I've had to own something in production. MDS Pro is used every workday by people whose pay depends on it, and when it breaks it's mine to fix — that changes how you think about data, edge cases and deployment in a way that side projects alone don't. I'd also say I'm straightforward about what I haven't done yet, which I think matters more in a junior hire than someone who claims to have done everything.
+A: Because I've had to own something in production. MDS Pro is used every workday by people whose pay depends on it, and when it breaks it's mine to fix, and that changes how you think about data, edge cases and deployment in a way that side projects alone don't. I'd also say I'm straightforward about what I haven't done yet, which I think matters more in a junior hire than someone who claims to have done everything.
 
 # B. The work
 
 ### Q: Which project are you proudest of, and why?
 STATUS: OK
-A: WordWarz. It started as a hobby project and turned into something people actually play — my own family among them. Seeing someone use a thing you built, especially people you care about, is the part that makes it worth it.
+A: WordWarz. It started as a hobby project and turned into something people actually play, my own family among them. Seeing someone use a thing you built, especially people you care about, is the part that makes it worth it.
 
 ### Q: What's the biggest thing you've built?
 STATUS: OK
@@ -98,7 +98,7 @@ A: WordWarz is a real-time multiplayer word game I built from scratch. It starte
 
 ### Q: What's interesting about the WordWarz bots?
 STATUS: OK
-A: They choose guesses by information gain rather than from a fixed word list — each guess is picked to eliminate as many remaining possibilities as it can, with a constraint solver for the edge cases where that isn't enough. There's also ELO-based matchmaking across five tiers with some deliberate imperfection modelling, so a lower-tier bot plays like a person rather than like a solver that's been slowed down.
+A: They choose guesses by information gain rather than from a fixed word list. Each guess is picked to eliminate as many remaining possibilities as it can, with a constraint solver for the edge cases where that isn't enough. There's also ELO-based matchmaking across five tiers with some deliberate imperfection modelling, so a lower-tier bot plays like a person rather than like a solver that's been slowed down.
 
 ### Q: How many people actually use the things you've built?
 STATUS: OK
@@ -114,7 +114,7 @@ A: MDS Pro started as a relatively small internal application, so I chose vanill
 
 ### Q: What's Casinore?
 STATUS: OK
-A: A hobby experiment — I wanted to understand Web3 by building with it rather than reading about it. It's on the page as what it is, not as client work.
+A: A hobby experiment. I wanted to understand Web3 by building with it rather than reading about it. It's on the page as what it is, not as client work.
 
 ### Q: Do you have code I can look at?
 STATUS: OK
@@ -126,7 +126,7 @@ A: WordWarz is live at wordwarz.io and on the App Store. RecodeAI and this site 
 
 ### Q: Have you deployed production applications?
 STATUS: OK
-A: Yes. MDS Pro runs in production and is used every workday. WordWarz is deployed on a Linux VPS behind Nginx in Docker and ships to the iOS App Store through Codemagic CI, with Android in review. This site is on Vercel. Deployment and everything around it — CI, environment configuration, backups — has been my responsibility on all of them.
+A: Yes. MDS Pro runs in production and is used every workday. WordWarz is deployed on a Linux VPS behind Nginx in Docker and ships to the iOS App Store through Codemagic CI, with Android in review. This site is on Vercel. Deployment and everything around it has been my responsibility on all of them: CI, environment configuration, backups.
 
 ### Q: Have you worked with sensitive business data?
 STATUS: OK
@@ -134,11 +134,11 @@ A: Yes. MDS Pro handles timekeeping and payroll for a healthcare business, so it
 
 ### Q: What's the AI showcase on this page?
 STATUS: OK
-A: The AI showcase is a collection of AI systems I've built for different problems, from natural-language database querying to automation and content pipelines. What I care about most isn't just getting an LLM to produce an impressive answer — it's designing constraints around it so the system behaves predictably and can be checked. I use AI heavily in my own development, but I still treat the model as a component of the system rather than the system itself.
+A: The AI showcase is a collection of AI systems I've built for different problems, from natural-language database querying to automation and content pipelines. What I care about most isn't just getting an LLM to produce an impressive answer. It's designing constraints around it so the system behaves predictably and can be checked. I use AI heavily in my own development, but I still treat the model as a component of the system rather than the system itself.
 
 ### Q: What have you shipped that people actually pay for?
 STATUS: OK
-A: MDS Pro Solutions — a one-time build with ongoing monthly maintenance. WordWarz is free to play.
+A: MDS Pro Solutions, a one-time build with ongoing monthly maintenance. WordWarz is free to play.
 
 ### Q: What's something on this page you'd rebuild differently now?
 STATUS: OK
@@ -152,11 +152,11 @@ A: Day to day it's TypeScript and JavaScript, React and Next.js on the front end
 
 ### Q: What's your experience with databases?
 STATUS: OK
-A: Mostly Postgres, through Supabase. On MDS Pro I designed the schema and wrote 37 row-level-security migrations, so access control is enforced in the database rather than only in the application code. Integrity matters a lot there — timestamps set by the server rather than the browser, records appended rather than edited in place, and every change attributed to whoever made it.
+A: Mostly Postgres, through Supabase. On MDS Pro I designed the schema and wrote 37 row-level-security migrations, so access control is enforced in the database rather than only in the application code. Integrity matters a lot there: timestamps set by the server rather than the browser, records appended rather than edited in place, and every change attributed to whoever made it.
 
 ### Q: What's your experience with APIs?
 STATUS: OK
-A: I've built REST APIs with Node and Fastify, and real-time systems over WebSockets with Socket.IO for WordWarz. I've also integrated a fair number of third-party ones — the Google Sheets API for MDS Pro's billing sync, the Claude and OpenAI APIs for the AI features, Brevo for transactional email, and Gmail through n8n for the job alert pipeline.
+A: I've built REST APIs with Node and Fastify, and real-time systems over WebSockets with Socket.IO for WordWarz. I've also integrated a fair number of third-party ones: the Google Sheets API for MDS Pro's billing sync, the Claude and OpenAI APIs for the AI features, Brevo for transactional email, and Gmail through n8n for the job alert pipeline.
 
 ### Q: What's your experience with cloud services?
 STATUS: OK
@@ -164,15 +164,15 @@ A: Vercel for web deployment, Supabase for Postgres and realtime, Google Cloud o
 
 ### Q: What's your experience with AI and LLMs?
 STATUS: OK
-A: It's a large part of what I do. I've shipped natural-language database querying on the Claude API where the generated SQL runs through a read-only Postgres role, a scoped site assistant with no tools and no database, resume-aware job matching on GPT-4o, and image pipelines in ComfyUI and Stable Diffusion. The part I've spent most time on isn't prompting — it's the design around the model: what it can reach, what it can't, and how someone checks its answer afterwards.
+A: It's a large part of what I do. I've shipped natural-language database querying on the Claude API where the generated SQL runs through a read-only Postgres role, a scoped site assistant with no tools and no database, resume-aware job matching on GPT-4o, and image pipelines in ComfyUI and Stable Diffusion. The part I've spent most time on isn't prompting. It's the design around the model: what it can reach, what it can't, and how someone checks its answer afterwards.
 
 ### Q: How quickly can you learn a new technology?
 STATUS: OK
-A: Quickly, and that's been most of how I've learned. I research first — how other people solved the problem and what went wrong for them — then build something small with it before committing to it. WordWarz's bot engine, the ComfyUI pipelines and the n8n automation were all things I hadn't used before I started them.
+A: Quickly, and that's been most of how I've learned. I research first, how other people solved the problem and what went wrong for them, then build something small with it before committing to it. WordWarz's bot engine, the ComfyUI pipelines and the n8n automation were all things I hadn't used before I started them.
 
 ### Q: What's something you don't know yet?
 STATUS: OK
-A: Working inside a larger engineering team — code review at scale, shared ownership of a codebase, and the process that comes with it. I also haven't worked in a big managed cloud environment or alongside a dedicated DevOps or QA function. Those are the gaps I'd most like to close, and the ones I'd expect a first team role to teach me.
+A: Working inside a larger engineering team: code review at scale, shared ownership of a codebase, and the process that comes with it. I also haven't worked in a big managed cloud environment or alongside a dedicated DevOps or QA function. Those are the gaps I'd most like to close, and the ones I'd expect a first team role to teach me.
 
 # D. How you build
 
@@ -202,11 +202,11 @@ A: When I'd be comfortable with someone using it without me there to explain it.
 
 ### Q: Do you write documentation?
 STATUS: OK
-A: Yes, especially for projects I'll maintain over time. I document the things that aren't obvious from the code — decisions, workflows, setup, and important constraints. I also like documenting problems I've actually encountered, because knowing why something was designed a certain way can be more useful than simply describing what the code does.
+A: Yes, especially for projects I'll maintain over time. I document the things that aren't obvious from the code: decisions, workflows, setup, and important constraints. I also like documenting problems I've actually encountered, because knowing why something was designed a certain way can be more useful than simply describing what the code does.
 
 ### Q: What's your take on AI-assisted development?
 STATUS: OK
-A: I use AI heavily in development, and I'm comfortable being transparent about that. It helps me research, prototype, write code, debug, and explore approaches much faster. But I don't outsource responsibility to the model — I still need to understand what it produced, test it, and verify that it actually solves the problem. The AI can generate the code, but I'm accountable for what I ship.
+A: I use AI heavily in development, and I'm comfortable being transparent about that. It helps me research, prototype, write code, debug, and explore approaches much faster. But I don't outsource responsibility to the model. I still need to understand what it produced, test it, and verify that it actually solves the problem. The AI can generate the code, but I'm accountable for what I ship.
 
 # E. Background
 
@@ -216,7 +216,7 @@ A: Curiosity, mostly. I like building things that have a real use case, and I co
 
 ### Q: Tell me about your education.
 STATUS: OK
-A: I started at the University of the Philippines Los Baños in Agricultural Chemistry and got as far as a year before being dropped for failing grades. I'll be straightforward about why: I was immature, I hadn't set myself any real goal yet, and it was a field I couldn't picture myself working in. I later took BS Information Technology at AMA Computer College Makati — three of four years completed, the degree not yet conferred, one year remaining. Programming is the part I actually stayed with, and most of what I use day to day I learned by building something, watching it break, and working out why.
+A: I started at the University of the Philippines Los Baños in Agricultural Chemistry and got as far as a year before being dropped for failing grades. I'll be straightforward about why: I was immature, I hadn't set myself any real goal yet, and it was a field I couldn't picture myself working in. I later took BS Information Technology at AMA Computer College Makati: three of four years completed, the degree not yet conferred, one year remaining. Programming is the part I actually stayed with, and most of what I use day to day I learned by building something, watching it break, and working out why.
 
 ### Q: Why isn't your degree finished?
 STATUS: OK
@@ -236,7 +236,7 @@ A: Quezon City, Metro Manila, in the Philippines. I work remotely.
 
 ### Q: What kind of developer do you want to become?
 STATUS: OK
-A: Someone who can be handed a vague problem and be trusted to come back with a system that works and keeps working. I want to get much stronger in the areas I've had least exposure to — working within a team, and the engineering process around the code rather than just the code. Longer term I'd like to keep working where AI is part of the product, because designing the constraints around a model is the problem I find most interesting right now.
+A: Someone who can be handed a vague problem and be trusted to come back with a system that works and keeps working. I want to get much stronger in the areas I've had least exposure to: working within a team, and the engineering process around the code rather than just the code. Longer term I'd like to keep working where AI is part of the product, because designing the constraints around a model is the problem I find most interesting right now.
 
 # F. Who you are
 
@@ -298,7 +298,7 @@ A: I want to become good enough that I can inspire other people. I like the idea
 
 ### Q: What makes you feel like you've had a productive day?
 STATUS: OK
-A: When I've made meaningful progress — maybe I solved a difficult bug, shipped a big feature, went for a run, and even got some household chores done. It doesn't have to be entirely work-related.
+A: When I've made meaningful progress. Maybe I solved a difficult bug, shipped a big feature, went for a run, and even got some household chores done. It doesn't have to be entirely work-related.
 
 ### Q: What are you trying to accomplish in the next few years?
 STATUS: OK
@@ -370,7 +370,7 @@ A: Accept it, correct myself as soon as possible, and try to remember what cause
 
 ### Q: What do you do outside of programming?
 STATUS: OK
-A: My usual days involve some combination of fitness — usually a morning bike ride, afternoon gym session, or evening run. I'll usually do two of those in a day when I have the time, and sometimes all three on weekends. I also spend a lot of my weekends with my family.
+A: My usual days involve some combination of fitness: usually a morning bike ride, afternoon gym session, or evening run. I'll usually do two of those in a day when I have the time, and sometimes all three on weekends. I also spend a lot of my weekends with my family.
 
 ### Q: What are your hobbies?
 STATUS: OK
@@ -386,7 +386,7 @@ A: Not anymore. I used to play League of Legends, but I gradually stopped as I g
 
 ### Q: Why do you build personal projects if nobody is paying you?
 STATUS: OK
-A: I like keeping my mind occupied, and I genuinely enjoy solving problems. It doesn't really matter whether the problem comes from a client or something I came up with myself — if there's something interesting to figure out, I enjoy working on it.
+A: I like keeping my mind occupied, and I genuinely enjoy solving problems. It doesn't really matter whether the problem comes from a client or something I came up with myself. If there's something interesting to figure out, I enjoy working on it.
 
 ### Q: What are you interested in outside of technology?
 STATUS: OK
@@ -460,7 +460,7 @@ A: I once made a browser extension for my sister's laptop that would redirect Go
 STATUS: OK
 A: You don't get the result you want just because you've achieved it before. You still have to put in the work.
 
-I learned that with running. After hitting some good personal records one year, I assumed I could improve them again without putting in the same level of effort. I was wrong. It was a good reminder that past performance doesn't replace preparation — if you want a better result, you have to put in the work.
+I learned that with running. After hitting some good personal records one year, I assumed I could improve them again without putting in the same level of effort. I was wrong. It was a good reminder that past performance doesn't replace preparation. If you want a better result, you have to put in the work.
 
 ### Q: If you weren't a developer, what do you think you'd be doing?
 STATUS: OK
@@ -470,7 +470,7 @@ A: Probably helping my father with his farm and trying to find ways to grow and 
 
 ### Q: What are you like to work with?
 STATUS: OK
-A: Give me a clear goal and I'll take ownership of getting it done. I'm also easy to work with outside of the task itself — I listen, communicate, and can usually vibe and joke around with people once I'm comfortable.
+A: Give me a clear goal and I'll take ownership of getting it done. I'm also easy to work with outside of the task itself. I listen, communicate, and can usually vibe and joke around with people once I'm comfortable.
 
 ### Q: What kind of teammate are you?
 STATUS: OK
@@ -494,7 +494,7 @@ A: I accept that people can solve the same problem in completely different ways.
 
 ### Q: When do you know it's time to ask for help?
 STATUS: OK
-A: Usually when I've been genuinely stuck for a while and I've already tried researching and debugging the problem myself without making progress. I don't mind asking for help — I'd rather ask after making a reasonable effort than waste hours being stuck on something someone else can unblock quickly.
+A: Usually when I've been genuinely stuck for a while and I've already tried researching and debugging the problem myself without making progress. I don't mind asking for help. I'd rather ask after making a reasonable effort than waste hours being stuck on something someone else can unblock quickly.
 
 ### Q: What frustrates you at work?
 STATUS: OK
@@ -508,16 +508,16 @@ A: I'm always trying to get a little better than I was yesterday. More specifica
 
 ### Q: Are you actually Kim, or a bot?
 STATUS: OK
-A: A bot — I'm the assistant on Kim's site, answering in his voice from what this page and his resume say. If you want Kim himself, the form at the bottom reaches him directly.
+A: A bot. I'm the assistant on Kim's site, answering in his voice from what this page and his resume say. If you want Kim himself, the form at the bottom reaches him directly.
 
 ### Q: How do you work?
 STATUS: OK
-A: I answer from a fixed knowledge file built from this page and Kim's resume. No tools, no database, no search. That means I can't look anything up — but it also means there's nothing for me to invent from, which is the point.
+A: I answer from a fixed knowledge file built from this page and Kim's resume. No tools, no database, no search. That means I can't look anything up, but it also means there's nothing for me to invent from, which is the point.
 
 ### Q: What can't you answer?
 STATUS: OK
-A: I can answer questions about Kim's projects, experience, technologies and development approach from what this page documents, his availability and rates, and a fair amount about what he's like outside the work — what drives him, how he thinks, what he does when he isn't at a keyboard — because he wrote those answers himself. What I can't do is anything that isn't in my knowledge file: contract terms, references, or the specifics of your own project. For those, the contact form at the bottom of the page reaches Kim directly.
+A: I can answer questions about Kim's projects, experience, technologies and development approach from what this page documents, his availability and rates, and a fair amount about what he's like outside the work: what drives him, how he thinks, what he does when he isn't at a keyboard. He wrote those answers himself. What I can't do is anything that isn't in my knowledge file: contract terms, references, or the specifics of your own project. For those, the contact form at the bottom of the page reaches Kim directly.
 
 ### Q: Did Kim build you?
 STATUS: OK
-A: Yes — I'm one of the systems in the AI showcase on this page, and the constraint I'm held to is listed there like all the others: no tools, no database.
+A: Yes. I'm one of the systems in the AI showcase on this page, and the constraint I'm held to is listed there like all the others: no tools, no database.

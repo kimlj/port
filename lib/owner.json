@@ -4,7 +4,7 @@
   "answers": [
     {
       "q": "Are you available for work right now?",
-      "a": "Yes — I'm available for full-time remote work. My recent contract with MDS Pro Solutions is now largely in maintenance and bug-fixing mode, so I'm able to take on new work while continuing to support the system when needed.",
+      "a": "Yes, I'm available for full-time remote work. My recent contract with MDS Pro Solutions is now largely in maintenance and bug-fixing mode, so I'm able to take on new work while continuing to support the system when needed.",
       "section": "Working with you"
     },
     {
@@ -24,7 +24,7 @@
     },
     {
       "q": "Can you start soon?",
-      "a": "Yes — I can start soon. MDS Pro is in maintenance rather than active build now, so there's nothing blocking a new engagement.",
+      "a": "Yes, I can start soon. MDS Pro is in maintenance rather than active build now, so there's nothing blocking a new engagement.",
       "section": "Working with you"
     },
     {
@@ -34,12 +34,12 @@
     },
     {
       "q": "Do you work with a team, or solo?",
-      "a": "So far, most of my work has been independent, where I've handled projects end to end — architecture, development, deployment, debugging, and maintenance. I'm comfortable owning a system myself, and I'm also looking forward to getting more experience working within a larger engineering team.",
+      "a": "So far, most of my work has been independent, where I've handled projects end to end: architecture, development, deployment, debugging, and maintenance. I'm comfortable owning a system myself, and I'm also looking forward to getting more experience working within a larger engineering team.",
       "section": "Working with you"
     },
     {
       "q": "Can you work independently?",
-      "a": "Yes — that's been most of my experience so far. Every project on this page I built end to end, which means when something broke there was nobody to escalate it to. I'm used to deciding what to build next, researching my way through problems I haven't seen before, and being accountable for the result.",
+      "a": "Yes, that's been most of my experience so far. Every project on this page I built end to end, which means when something broke there was nobody to escalate it to. I'm used to deciding what to build next, researching my way through problems I haven't seen before, and being accountable for the result.",
       "section": "Working with you"
     },
     {
@@ -49,27 +49,27 @@
     },
     {
       "q": "How do you communicate when requirements are unclear?",
-      "a": "I ask rather than guess — usually by describing back what I think is wanted and what it would actually do, so it can be corrected against something concrete instead of an abstract question. If it's still unclear, I'll build the smallest version that shows the idea and let people react to that. A wrong assumption caught early is much cheaper than one found after it's built.",
+      "a": "I ask rather than guess, usually by describing back what I think is wanted and what it would actually do, so it can be corrected against something concrete instead of an abstract question. If it's still unclear, I'll build the smallest version that shows the idea and let people react to that. A wrong assumption caught early is much cheaper than one found after it's built.",
       "section": "Working with you"
     },
     {
       "q": "What does a good brief look like to you?",
-      "a": "The problem, who has it, and what people do today instead. I'd rather have a rough description of the actual pain than a detailed spec for a solution — if the spec is already written I usually end up asking what it was meant to fix anyway.",
+      "a": "The problem, who has it, and what people do today instead. I'd rather have a rough description of the actual pain than a detailed spec for a solution. If the spec is already written I usually end up asking what it was meant to fix anyway.",
       "section": "Working with you"
     },
     {
       "q": "Why should we hire you?",
-      "a": "I think my biggest strength is ownership. I don't just like building individual features — I like understanding the whole system, from the user's problem and database design to the application, deployment, testing, and maintenance. I'm still growing as an engineer, especially in larger team environments, but I've already had to take real responsibility for software that people depend on every day. I also learn quickly and use AI and research heavily to get through problems I haven't encountered before.",
+      "a": "I think my biggest strength is ownership. I don't just like building individual features. I like understanding the whole system, from the user's problem and database design to the application, deployment, testing, and maintenance. I'm still growing as an engineer, especially in larger team environments, but I've already had to take real responsibility for software that people depend on every day. I also learn quickly and use AI and research heavily to get through problems I haven't encountered before.",
       "section": "Working with you"
     },
     {
       "q": "Why should we choose you over another junior developer?",
-      "a": "Because I've had to own something in production. MDS Pro is used every workday by people whose pay depends on it, and when it breaks it's mine to fix — that changes how you think about data, edge cases and deployment in a way that side projects alone don't. I'd also say I'm straightforward about what I haven't done yet, which I think matters more in a junior hire than someone who claims to have done everything.",
+      "a": "Because I've had to own something in production. MDS Pro is used every workday by people whose pay depends on it, and when it breaks it's mine to fix, and that changes how you think about data, edge cases and deployment in a way that side projects alone don't. I'd also say I'm straightforward about what I haven't done yet, which I think matters more in a junior hire than someone who claims to have done everything.",
       "section": "Working with you"
     },
     {
       "q": "Which project are you proudest of, and why?",
-      "a": "WordWarz. It started as a hobby project and turned into something people actually play — my own family among them. Seeing someone use a thing you built, especially people you care about, is the part that makes it worth it.",
+      "a": "WordWarz. It started as a hobby project and turned into something people actually play, my own family among them. Seeing someone use a thing you built, especially people you care about, is the part that makes it worth it.",
       "section": "The work"
     },
     {
@@ -84,7 +84,7 @@
     },
     {
       "q": "What's interesting about the WordWarz bots?",
-      "a": "They choose guesses by information gain rather than from a fixed word list — each guess is picked to eliminate as many remaining possibilities as it can, with a constraint solver for the edge cases where that isn't enough. There's also ELO-based matchmaking across five tiers with some deliberate imperfection modelling, so a lower-tier bot plays like a person rather than like a solver that's been slowed down.",
+      "a": "They choose guesses by information gain rather than from a fixed word list. Each guess is picked to eliminate as many remaining possibilities as it can, with a constraint solver for the edge cases where that isn't enough. There's also ELO-based matchmaking across five tiers with some deliberate imperfection modelling, so a lower-tier bot plays like a person rather than like a solver that's been slowed down.",
       "section": "The work"
     },
     {
@@ -104,7 +104,7 @@
     },
     {
       "q": "What's Casinore?",
-      "a": "A hobby experiment — I wanted to understand Web3 by building with it rather than reading about it. It's on the page as what it is, not as client work.",
+      "a": "A hobby experiment. I wanted to understand Web3 by building with it rather than reading about it. It's on the page as what it is, not as client work.",
       "section": "The work"
     },
     {
@@ -119,7 +119,7 @@
     },
     {
       "q": "Have you deployed production applications?",
-      "a": "Yes. MDS Pro runs in production and is used every workday. WordWarz is deployed on a Linux VPS behind Nginx in Docker and ships to the iOS App Store through Codemagic CI, with Android in review. This site is on Vercel. Deployment and everything around it — CI, environment configuration, backups — has been my responsibility on all of them.",
+      "a": "Yes. MDS Pro runs in production and is used every workday. WordWarz is deployed on a Linux VPS behind Nginx in Docker and ships to the iOS App Store through Codemagic CI, with Android in review. This site is on Vercel. Deployment and everything around it has been my responsibility on all of them: CI, environment configuration, backups.",
       "section": "The work"
     },
     {
@@ -129,12 +129,12 @@
     },
     {
       "q": "What's the AI showcase on this page?",
-      "a": "The AI showcase is a collection of AI systems I've built for different problems, from natural-language database querying to automation and content pipelines. What I care about most isn't just getting an LLM to produce an impressive answer — it's designing constraints around it so the system behaves predictably and can be checked. I use AI heavily in my own development, but I still treat the model as a component of the system rather than the system itself.",
+      "a": "The AI showcase is a collection of AI systems I've built for different problems, from natural-language database querying to automation and content pipelines. What I care about most isn't just getting an LLM to produce an impressive answer. It's designing constraints around it so the system behaves predictably and can be checked. I use AI heavily in my own development, but I still treat the model as a component of the system rather than the system itself.",
       "section": "The work"
     },
     {
       "q": "What have you shipped that people actually pay for?",
-      "a": "MDS Pro Solutions — a one-time build with ongoing monthly maintenance. WordWarz is free to play.",
+      "a": "MDS Pro Solutions, a one-time build with ongoing monthly maintenance. WordWarz is free to play.",
       "section": "The work"
     },
     {
@@ -149,12 +149,12 @@
     },
     {
       "q": "What's your experience with databases?",
-      "a": "Mostly Postgres, through Supabase. On MDS Pro I designed the schema and wrote 37 row-level-security migrations, so access control is enforced in the database rather than only in the application code. Integrity matters a lot there — timestamps set by the server rather than the browser, records appended rather than edited in place, and every change attributed to whoever made it.",
+      "a": "Mostly Postgres, through Supabase. On MDS Pro I designed the schema and wrote 37 row-level-security migrations, so access control is enforced in the database rather than only in the application code. Integrity matters a lot there: timestamps set by the server rather than the browser, records appended rather than edited in place, and every change attributed to whoever made it.",
       "section": "Technologies"
     },
     {
       "q": "What's your experience with APIs?",
-      "a": "I've built REST APIs with Node and Fastify, and real-time systems over WebSockets with Socket.IO for WordWarz. I've also integrated a fair number of third-party ones — the Google Sheets API for MDS Pro's billing sync, the Claude and OpenAI APIs for the AI features, Brevo for transactional email, and Gmail through n8n for the job alert pipeline.",
+      "a": "I've built REST APIs with Node and Fastify, and real-time systems over WebSockets with Socket.IO for WordWarz. I've also integrated a fair number of third-party ones: the Google Sheets API for MDS Pro's billing sync, the Claude and OpenAI APIs for the AI features, Brevo for transactional email, and Gmail through n8n for the job alert pipeline.",
       "section": "Technologies"
     },
     {
@@ -164,17 +164,17 @@
     },
     {
       "q": "What's your experience with AI and LLMs?",
-      "a": "It's a large part of what I do. I've shipped natural-language database querying on the Claude API where the generated SQL runs through a read-only Postgres role, a scoped site assistant with no tools and no database, resume-aware job matching on GPT-4o, and image pipelines in ComfyUI and Stable Diffusion. The part I've spent most time on isn't prompting — it's the design around the model: what it can reach, what it can't, and how someone checks its answer afterwards.",
+      "a": "It's a large part of what I do. I've shipped natural-language database querying on the Claude API where the generated SQL runs through a read-only Postgres role, a scoped site assistant with no tools and no database, resume-aware job matching on GPT-4o, and image pipelines in ComfyUI and Stable Diffusion. The part I've spent most time on isn't prompting. It's the design around the model: what it can reach, what it can't, and how someone checks its answer afterwards.",
       "section": "Technologies"
     },
     {
       "q": "How quickly can you learn a new technology?",
-      "a": "Quickly, and that's been most of how I've learned. I research first — how other people solved the problem and what went wrong for them — then build something small with it before committing to it. WordWarz's bot engine, the ComfyUI pipelines and the n8n automation were all things I hadn't used before I started them.",
+      "a": "Quickly, and that's been most of how I've learned. I research first, how other people solved the problem and what went wrong for them, then build something small with it before committing to it. WordWarz's bot engine, the ComfyUI pipelines and the n8n automation were all things I hadn't used before I started them.",
       "section": "Technologies"
     },
     {
       "q": "What's something you don't know yet?",
-      "a": "Working inside a larger engineering team — code review at scale, shared ownership of a codebase, and the process that comes with it. I also haven't worked in a big managed cloud environment or alongside a dedicated DevOps or QA function. Those are the gaps I'd most like to close, and the ones I'd expect a first team role to teach me.",
+      "a": "Working inside a larger engineering team: code review at scale, shared ownership of a codebase, and the process that comes with it. I also haven't worked in a big managed cloud environment or alongside a dedicated DevOps or QA function. Those are the gaps I'd most like to close, and the ones I'd expect a first team role to teach me.",
       "section": "Technologies"
     },
     {
@@ -209,12 +209,12 @@
     },
     {
       "q": "Do you write documentation?",
-      "a": "Yes, especially for projects I'll maintain over time. I document the things that aren't obvious from the code — decisions, workflows, setup, and important constraints. I also like documenting problems I've actually encountered, because knowing why something was designed a certain way can be more useful than simply describing what the code does.",
+      "a": "Yes, especially for projects I'll maintain over time. I document the things that aren't obvious from the code: decisions, workflows, setup, and important constraints. I also like documenting problems I've actually encountered, because knowing why something was designed a certain way can be more useful than simply describing what the code does.",
       "section": "How you build"
     },
     {
       "q": "What's your take on AI-assisted development?",
-      "a": "I use AI heavily in development, and I'm comfortable being transparent about that. It helps me research, prototype, write code, debug, and explore approaches much faster. But I don't outsource responsibility to the model — I still need to understand what it produced, test it, and verify that it actually solves the problem. The AI can generate the code, but I'm accountable for what I ship.",
+      "a": "I use AI heavily in development, and I'm comfortable being transparent about that. It helps me research, prototype, write code, debug, and explore approaches much faster. But I don't outsource responsibility to the model. I still need to understand what it produced, test it, and verify that it actually solves the problem. The AI can generate the code, but I'm accountable for what I ship.",
       "section": "How you build"
     },
     {
@@ -224,7 +224,7 @@
     },
     {
       "q": "Tell me about your education.",
-      "a": "I started at the University of the Philippines Los Baños in Agricultural Chemistry and got as far as a year before being dropped for failing grades. I'll be straightforward about why: I was immature, I hadn't set myself any real goal yet, and it was a field I couldn't picture myself working in. I later took BS Information Technology at AMA Computer College Makati — three of four years completed, the degree not yet conferred, one year remaining. Programming is the part I actually stayed with, and most of what I use day to day I learned by building something, watching it break, and working out why.",
+      "a": "I started at the University of the Philippines Los Baños in Agricultural Chemistry and got as far as a year before being dropped for failing grades. I'll be straightforward about why: I was immature, I hadn't set myself any real goal yet, and it was a field I couldn't picture myself working in. I later took BS Information Technology at AMA Computer College Makati: three of four years completed, the degree not yet conferred, one year remaining. Programming is the part I actually stayed with, and most of what I use day to day I learned by building something, watching it break, and working out why.",
       "section": "Background"
     },
     {
@@ -249,7 +249,7 @@
     },
     {
       "q": "What kind of developer do you want to become?",
-      "a": "Someone who can be handed a vague problem and be trusted to come back with a system that works and keeps working. I want to get much stronger in the areas I've had least exposure to — working within a team, and the engineering process around the code rather than just the code. Longer term I'd like to keep working where AI is part of the product, because designing the constraints around a model is the problem I find most interesting right now.",
+      "a": "Someone who can be handed a vague problem and be trusted to come back with a system that works and keeps working. I want to get much stronger in the areas I've had least exposure to: working within a team, and the engineering process around the code rather than just the code. Longer term I'd like to keep working where AI is part of the product, because designing the constraints around a model is the problem I find most interesting right now.",
       "section": "Background"
     },
     {
@@ -319,7 +319,7 @@
     },
     {
       "q": "What makes you feel like you've had a productive day?",
-      "a": "When I've made meaningful progress — maybe I solved a difficult bug, shipped a big feature, went for a run, and even got some household chores done. It doesn't have to be entirely work-related.",
+      "a": "When I've made meaningful progress. Maybe I solved a difficult bug, shipped a big feature, went for a run, and even got some household chores done. It doesn't have to be entirely work-related.",
       "section": "What drives you"
     },
     {
@@ -404,7 +404,7 @@
     },
     {
       "q": "What do you do outside of programming?",
-      "a": "My usual days involve some combination of fitness — usually a morning bike ride, afternoon gym session, or evening run. I'll usually do two of those in a day when I have the time, and sometimes all three on weekends. I also spend a lot of my weekends with my family.",
+      "a": "My usual days involve some combination of fitness: usually a morning bike ride, afternoon gym session, or evening run. I'll usually do two of those in a day when I have the time, and sometimes all three on weekends. I also spend a lot of my weekends with my family.",
       "section": "Outside work"
     },
     {
@@ -424,7 +424,7 @@
     },
     {
       "q": "Why do you build personal projects if nobody is paying you?",
-      "a": "I like keeping my mind occupied, and I genuinely enjoy solving problems. It doesn't really matter whether the problem comes from a client or something I came up with myself — if there's something interesting to figure out, I enjoy working on it.",
+      "a": "I like keeping my mind occupied, and I genuinely enjoy solving problems. It doesn't really matter whether the problem comes from a client or something I came up with myself. If there's something interesting to figure out, I enjoy working on it.",
       "section": "Outside work"
     },
     {
@@ -514,7 +514,7 @@
     },
     {
       "q": "What's a lesson you've learned the hard way?",
-      "a": "You don't get the result you want just because you've achieved it before. You still have to put in the work.\nI learned that with running. After hitting some good personal records one year, I assumed I could improve them again without putting in the same level of effort. I was wrong. It was a good reminder that past performance doesn't replace preparation — if you want a better result, you have to put in the work.",
+      "a": "You don't get the result you want just because you've achieved it before. You still have to put in the work.\nI learned that with running. After hitting some good personal records one year, I assumed I could improve them again without putting in the same level of effort. I was wrong. It was a good reminder that past performance doesn't replace preparation. If you want a better result, you have to put in the work.",
       "section": "Outside work"
     },
     {
@@ -524,7 +524,7 @@
     },
     {
       "q": "What are you like to work with?",
-      "a": "Give me a clear goal and I'll take ownership of getting it done. I'm also easy to work with outside of the task itself — I listen, communicate, and can usually vibe and joke around with people once I'm comfortable.",
+      "a": "Give me a clear goal and I'll take ownership of getting it done. I'm also easy to work with outside of the task itself. I listen, communicate, and can usually vibe and joke around with people once I'm comfortable.",
       "section": "Working with people"
     },
     {
@@ -554,7 +554,7 @@
     },
     {
       "q": "When do you know it's time to ask for help?",
-      "a": "Usually when I've been genuinely stuck for a while and I've already tried researching and debugging the problem myself without making progress. I don't mind asking for help — I'd rather ask after making a reasonable effort than waste hours being stuck on something someone else can unblock quickly.",
+      "a": "Usually when I've been genuinely stuck for a while and I've already tried researching and debugging the problem myself without making progress. I don't mind asking for help. I'd rather ask after making a reasonable effort than waste hours being stuck on something someone else can unblock quickly.",
       "section": "Working with people"
     },
     {
@@ -569,22 +569,22 @@
     },
     {
       "q": "Are you actually Kim, or a bot?",
-      "a": "A bot — I'm the assistant on Kim's site, answering in his voice from what this page and his resume say. If you want Kim himself, the form at the bottom reaches him directly.",
+      "a": "A bot. I'm the assistant on Kim's site, answering in his voice from what this page and his resume say. If you want Kim himself, the form at the bottom reaches him directly.",
       "section": "About this assistant"
     },
     {
       "q": "How do you work?",
-      "a": "I answer from a fixed knowledge file built from this page and Kim's resume. No tools, no database, no search. That means I can't look anything up — but it also means there's nothing for me to invent from, which is the point.",
+      "a": "I answer from a fixed knowledge file built from this page and Kim's resume. No tools, no database, no search. That means I can't look anything up, but it also means there's nothing for me to invent from, which is the point.",
       "section": "About this assistant"
     },
     {
       "q": "What can't you answer?",
-      "a": "I can answer questions about Kim's projects, experience, technologies and development approach from what this page documents, his availability and rates, and a fair amount about what he's like outside the work — what drives him, how he thinks, what he does when he isn't at a keyboard — because he wrote those answers himself. What I can't do is anything that isn't in my knowledge file: contract terms, references, or the specifics of your own project. For those, the contact form at the bottom of the page reaches Kim directly.",
+      "a": "I can answer questions about Kim's projects, experience, technologies and development approach from what this page documents, his availability and rates, and a fair amount about what he's like outside the work: what drives him, how he thinks, what he does when he isn't at a keyboard. He wrote those answers himself. What I can't do is anything that isn't in my knowledge file: contract terms, references, or the specifics of your own project. For those, the contact form at the bottom of the page reaches Kim directly.",
       "section": "About this assistant"
     },
     {
       "q": "Did Kim build you?",
-      "a": "Yes — I'm one of the systems in the AI showcase on this page, and the constraint I'm held to is listed there like all the others: no tools, no database.",
+      "a": "Yes. I'm one of the systems in the AI showcase on this page, and the constraint I'm held to is listed there like all the others: no tools, no database.",
       "section": "About this assistant"
     }
   ]
