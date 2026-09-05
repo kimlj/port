@@ -59,30 +59,28 @@ jobs:
           GH_TOKEN: ${{ secrets.CONTRIBUTIONS_TOKEN }}
         run: node scripts/fetch-contributions.mjs
 
-      - name: Refuse to publish a public-only count
-        env:
-          GH_TOKEN: ${{ secrets.CONTRIBUTIONS_TOKEN }}
+      - name: Refuse to publish a collapsed count
         run: |
-          # The private count is the figure that matters, and a token that cannot
-          # see it still returns a perfectly valid-looking payload with 0 in it.
-          # Better to fail than to quietly publish a number a twentieth the size.
-          private=$(node -e "const y=require('./assets/contributions.json').years;const k=Object.keys(y).sort().pop();process.stdout.write(String(y[k].private))")
-          echo "private contributions this year: $private"
-          if [ "$private" != "0" ]; then
-            exit 0
+          # What actually has to be true is that the figure did not fall off a
+          # cliff, which is what a token that has lost sight of the private
+          # repositories looks like: ~93% of this account's contributions are in
+          # them, so a blinded run reports a number a fourteenth the size.
+          #
+          # An earlier version of this checked restrictedContributionsCount
+          # instead, and blocked a perfectly good run. That field is not "how
+          # many are private" - it is "how many the caller cannot see" - so a
+          # token with repo scope correctly reports 0 while still counting every
+          # one of them in the total. The totals are what the page draws.
+          read_total() {
+            node -e "const y=JSON.parse(require('fs').readFileSync(0,'utf8')).years;const k=Object.keys(y).sort().pop();process.stdout.write(String(y[k].total))"
+          }
+          new=$(read_total < assets/contributions.json)
+          old=$(git show HEAD:assets/contributions.json | read_total)
+          echo "this year: $old committed -> $new fetched"
+          if [ "$new" -lt "$(( old * 9 / 10 ))" ]; then
+            echo "::error::Fetched $new against $old already committed. A drop that size means this token cannot see the private repositories, not that the work vanished. Not committing."
+            exit 1
           fi
-
-          # Say what is actually wrong rather than leaving someone to guess.
-          # Scopes come back in a response header, so this reports what the token
-          # can do without ever printing the token.
-          scopes=$(gh api -i user 2>/dev/null | grep -i '^x-oauth-scopes:' | cut -d' ' -f2- | tr -d '\r')
-          echo "::error::0 private contributions - this token cannot see them, so the figure would be ~7% of the real one. Not committing."
-          if [ -z "$scopes" ]; then
-            echo "::error::The token reports no OAuth scopes at all. That is what a fine-grained PAT looks like here, and fine-grained tokens cannot read the contributions calendar's private counts. Create a classic token instead: github.com/settings/tokens -> Generate new token (classic), tick repo AND read:user."
-          else
-            echo "::error::Token scopes are: $scopes - 'read:user' is the one that is missing. Regenerate at github.com/settings/tokens with both repo and read:user ticked, then update the CONTRIBUTIONS_TOKEN secret."
-          fi
-          exit 1
 
       - name: Commit and push
         run: |

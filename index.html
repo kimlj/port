@@ -3638,10 +3638,18 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
         '×' + Math.round(b / a) + ' vs ' + first;
     }
 
+    /* The split is only stated when it is known. `private` is GitHub's
+       restrictedContributionsCount, which counts what the CALLER cannot see
+       rather than what is private -- a token with repo scope reads every one
+       of them and correctly reports 0. The totals are identical either way,
+       so the claim that matters survives; only the breakdown drops out. */
+    var priv = data.years[last].private;
     document.getElementById('aiActivityNote').textContent =
-      'Includes private repositories, where ' +
-      data.years[last].private.toLocaleString() + ' of ' + b.toLocaleString() +
-      ' of this year\u2019s contributions live. Generated from the GitHub API' +
+      (priv > 0
+        ? 'Includes private repositories, where ' + priv.toLocaleString() +
+          ' of ' + b.toLocaleString() + ' of this year\u2019s contributions live.'
+        : 'Includes private repositories, where most of this work lives.') +
+      ' Generated from the GitHub API' +
       (asOf(data.generatedAt) ? ' on ' + asOf(data.generatedAt) : '') + '.';
 
     host.hidden = false;
