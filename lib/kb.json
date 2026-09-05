@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-09-05T14:49:21.331Z",
+  "generatedAt": "2026-09-05T14:52:20.814Z",
   "generatedBy": "scripts/build-kb.mjs",
   "sources": {
-    "page": "798536395f18",
+    "page": "eaa77b8b64e0",
     "resume": "4c3e573310be"
   },
   "identity": {
@@ -176,19 +176,19 @@
   ],
   "activity": {
     "isSnapshot": true,
-    "asOf": "2026-09-01",
+    "asOf": "2026-09-05",
     "contributions": {
-      "thisYear": 2253,
+      "thisYear": 2314,
       "byYear": {
         "2024": 132,
         "2025": 1326,
-        "2026": 2253
+        "2026": 2314
       },
       "includesPrivate": true
     },
     "claudeCode": {
-      "totalHours": 730,
-      "sessions": 817,
+      "totalHours": 741,
+      "sessions": 834,
       "longestSessionHours": 5.9,
       "hoursPerWorkingDay": 6.7
     }

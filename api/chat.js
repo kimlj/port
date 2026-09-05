@@ -128,10 +128,14 @@ module.exports = async (req, res) => {
       body: JSON.stringify({
         model: MODEL,
         max_tokens: MAX_TOKENS,
-        // The corpus is ~4.7k tokens and identical on every request, so it is
+        // The corpus is ~16k tokens and identical on every request, so it is
         // cached. Anything that varies per request must stay after this
         // breakpoint — caching is a prefix match and one changing byte above it
         // would invalidate the whole thing on every single call.
+        //
+        // It grew from ~4.7k when the owner's own answers went in, which is
+        // what makes the caching load-bearing rather than a nicety: uncached,
+        // every question would pay full input price for the whole corpus.
         system: [
           {
             type: 'text',
