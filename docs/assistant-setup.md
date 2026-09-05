@@ -103,7 +103,29 @@ anything else.
 - Environments: **Production, Preview and Development** — all three. A preview
   deploy runs the same build and fails the same way without it.
 
-**3. Redeploy.** The next build will clone the private repo. The log shows:
+**3. Set `CHAT_TICKET_SECRET`.** Same place, same three environments. Any long
+random string; 32 bytes of hex is plenty:
+
+    node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+
+This one is worth understanding rather than pasting. `lib/guards.js` signs each
+ticket with it, and when it is unset it falls back to deriving a secret from the
+Anthropic API key:
+
+    sha256("chat-ticket:" + ANTHROPIC_API_KEY)
+
+That is not forgeable — the construction is public but the key is not — and it
+has the useful property of being identical on every instance without any extra
+configuration. It has one real cost: **the ticket secret and the API key become
+the same secret.** Rotating the key silently invalidates every live chat session,
+and any future reason to rotate one is now a reason to rotate both. Setting this
+explicitly separates them.
+
+Setting it also invalidates tickets issued under the derived secret, so anyone
+with the panel open mid-conversation gets one "my ticket expired" and a fresh
+one on the next message. That is the whole cost, and it is paid once.
+
+**4. Redeploy.** The next build will clone the private repo. The log shows:
 
     > node scripts/sync-assistant.mjs
     7/7 files in place from kimlj/port-assistant.
