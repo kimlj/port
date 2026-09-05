@@ -1,10 +1,5 @@
 {
   "_note": "Kim's own answers. THE ONE AUTHORED FILE IN THE CORPUS — every other fact is generated from index.html or the resume. Rules: every line is his, in his words, nobody else drafts one. Anything here is answerable to a stranger on a public page. An entry whose answer still starts with TODO is skipped by the generator, so half-finished ones are safe to leave. If a line would be better said on the page itself, say it there and delete it from here. Re-run: node scripts/build-kb.mjs",
-  "answers": [
-    { "q": "Which project are you proudest of, and why?", "a": "TODO" },
-    { "q": "What kind of work are you looking for next?", "a": "TODO" },
-    { "q": "What did you learn the hard way / what would you do differently?", "a": "TODO" },
-    { "q": "How do you like to work with people — what does a good brief look like?", "a": "TODO" },
-    { "q": "What got you into building software?", "a": "TODO" }
-  ]
+  "_from": "docs/assistant-answers.md",
+  "answers": []
 }
