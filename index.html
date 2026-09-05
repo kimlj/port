@@ -261,9 +261,9 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
    "AI" in a number slot. Every one is counted out of the DOM at load, so the
    line cannot drift away from the page it describes. */
 .about-aside { display: flex; flex-direction: column; }
-.about-figures { display: grid; grid-template-columns: 1fr 1fr; gap: 1.15rem 1.25rem; margin-top: 1.9rem; padding-top: 1.4rem; border-top: 1px solid var(--border); }
-.about-figures > span { display: flex; flex-direction: column; gap: 0.2rem; }
-.about-figures i { font-style: normal; line-height: 1.45; }
+.about-figures { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem 1.1rem; margin-top: 1.6rem; padding-top: 1.15rem; border-top: 1px solid var(--border); }
+.about-figures > span { display: flex; align-items: baseline; gap: 0.35rem; }
+.about-figures i { font-style: normal; line-height: 1.4; }
 /* No frame: the file is a cut-out, so a border would box three empty corners.
    The source is cropped mid-torso, and left alone that bottom edge reads as a
    photograph cut off rather than as a figure standing in the page, so it is
@@ -271,8 +271,8 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 .about-portrait { display: block; width: 100%; height: auto;
   -webkit-mask-image: linear-gradient(to bottom, #000 68%, transparent 99%);
   mask-image: linear-gradient(to bottom, #000 68%, transparent 99%); }
-.about-figures { font-family: var(--mono); font-size: 0.63rem; letter-spacing: 0.06em; color: var(--text-dim); }
-.about-figures b { font-weight: 400; font-size: 1.15rem; line-height: 1; color: var(--accent); }
+.about-figures { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.05em; color: var(--text-dim); }
+.about-figures b { font-weight: 400; font-size: 0.8rem; line-height: 1.1; color: var(--accent); flex: none; }
 
 /* -- 04 / Skills ------------------------------------------------------------
    The legend for the rest of the page. Every technology names the work on this
