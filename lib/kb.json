@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-05T09:31:38.779Z",
+  "generatedAt": "2026-09-05T09:38:29.323Z",
   "generatedBy": "scripts/build-kb.mjs",
   "sources": {
     "page": "798536395f18",
@@ -573,6 +573,21 @@
       "section": "Working with you"
     },
     {
+      "q": "Are you open to full-time roles, or contract only?",
+      "a": "Both. Full-time remote is what I'm looking for, and I'm open to contract engagements depending on the scope and the fit.",
+      "section": "Working with you"
+    },
+    {
+      "q": "Can you start soon?",
+      "a": "Yes — I can start soon. MDS Pro is in maintenance rather than active build now, so there's nothing blocking a new engagement.",
+      "section": "Working with you"
+    },
+    {
+      "q": "What time zone are you in, and how do you handle overlap?",
+      "a": "I'm in Manila, so UTC+8. I've been working daily with an owner in the US on MDS Pro, so a few hours of overlap is normal for me rather than something I'd need to adjust to.",
+      "section": "Working with you"
+    },
+    {
       "q": "Do you work with a team, or solo?",
       "a": "So far, most of my work has been independent, where I've handled projects end to end — architecture, development, deployment, debugging, and maintenance. I'm comfortable owning a system myself, and I'm also looking forward to getting more experience working within a larger engineering team.",
       "section": "Working with you"
@@ -593,6 +608,11 @@
       "section": "Working with you"
     },
     {
+      "q": "What does a good brief look like to you?",
+      "a": "The problem, who has it, and what people do today instead. I'd rather have a rough description of the actual pain than a detailed spec for a solution — if the spec is already written I usually end up asking what it was meant to fix anyway.",
+      "section": "Working with you"
+    },
+    {
       "q": "Why should we hire you?",
       "a": "I think my biggest strength is ownership. I don't just like building individual features — I like understanding the whole system, from the user's problem and database design to the application, deployment, testing, and maintenance. I'm still growing as an engineer, especially in larger team environments, but I've already had to take real responsibility for software that people depend on every day. I also learn quickly and use AI and research heavily to get through problems I haven't encountered before.",
       "section": "Working with you"
@@ -601,6 +621,11 @@
       "q": "Why should we choose you over another junior developer?",
       "a": "Because I've had to own something in production. MDS Pro is used every workday by people whose pay depends on it, and when it breaks it's mine to fix — that changes how you think about data, edge cases and deployment in a way that side projects alone don't. I'd also say I'm straightforward about what I haven't done yet, which I think matters more in a junior hire than someone who claims to have done everything.",
       "section": "Working with you"
+    },
+    {
+      "q": "Which project are you proudest of, and why?",
+      "a": "WordWarz. It started as a hobby project and turned into something people actually play — my own family among them. Seeing someone use a thing you built, especially people you care about, is the part that makes it worth it.",
+      "section": "The work"
     },
     {
       "q": "What's the biggest thing you've built?",
@@ -633,6 +658,11 @@
       "section": "The work"
     },
     {
+      "q": "What's Casinore?",
+      "a": "A hobby experiment — I wanted to understand Web3 by building with it rather than reading about it. It's on the page as what it is, not as client work.",
+      "section": "The work"
+    },
+    {
       "q": "Do you have code I can look at?",
       "a": "Some of my work is private because it belongs to clients or contains internal business data, so I can't simply make those repositories public. However, I'm happy to give a live walkthrough or demo of projects such as WordWarz and, where appropriate, demonstrate the MDS Pro dashboard and explain the architecture and features I personally built.",
       "section": "The work"
@@ -655,6 +685,11 @@
     {
       "q": "What's the AI showcase on this page?",
       "a": "The AI showcase is a collection of AI systems I've built for different problems, from natural-language database querying to automation and content pipelines. What I care about most isn't just getting an LLM to produce an impressive answer — it's designing constraints around it so the system behaves predictably and can be checked. I use AI heavily in my own development, but I still treat the model as a component of the system rather than the system itself.",
+      "section": "The work"
+    },
+    {
+      "q": "What have you shipped that people actually pay for?",
+      "a": "MDS Pro Solutions — a one-time build with ongoing monthly maintenance. WordWarz is free to play.",
       "section": "The work"
     },
     {
@@ -743,6 +778,11 @@
       "section": "Background"
     },
     {
+      "q": "Tell me about your education.",
+      "a": "I started at the University of the Philippines Los Baños in Agricultural Chemistry and got as far as a year before being dropped for failing grades. I'll be straightforward about why: I was immature, I hadn't set myself any real goal yet, and it was a field I couldn't picture myself working in. I later took BS Information Technology at AMA Computer College Makati — three of four years completed, the degree not yet conferred, one year remaining. Programming is the part I actually stayed with, and most of what I use day to day I learned by building something, watching it break, and working out why.",
+      "section": "Background"
+    },
+    {
       "q": "Why isn't your degree finished?",
       "a": "I had to pause my education for financial and family reasons and prioritize working while helping support my family. I eventually returned to school and completed most of the degree, but one year remains. During that time I've continued developing independently and building real software, which has become a major part of my practical education.",
       "section": "Background"
@@ -758,13 +798,33 @@
       "section": "Background"
     },
     {
+      "q": "Where are you based?",
+      "a": "Quezon City, Metro Manila, in the Philippines. I work remotely.",
+      "section": "Background"
+    },
+    {
       "q": "What kind of developer do you want to become?",
       "a": "Someone who can be handed a vague problem and be trusted to come back with a system that works and keeps working. I want to get much stronger in the areas I've had least exposure to — working within a team, and the engineering process around the code rather than just the code. Longer term I'd like to keep working where AI is part of the product, because designing the constraints around a model is the problem I find most interesting right now.",
       "section": "Background"
     },
     {
+      "q": "Are you actually Kim, or a bot?",
+      "a": "A bot — I'm the assistant on Kim's site, answering in his voice from what this page and his resume say. If you want Kim himself, the form at the bottom reaches him directly.",
+      "section": "About this assistant"
+    },
+    {
+      "q": "How do you work?",
+      "a": "I answer from a fixed knowledge file built from this page and Kim's resume. No tools, no database, no search. That means I can't look anything up — but it also means there's nothing for me to invent from, which is the point.",
+      "section": "About this assistant"
+    },
+    {
       "q": "What can't you answer?",
       "a": "I can answer questions about Kim's projects, experience, technologies, development approach, and the information documented on this portfolio. I can't reliably answer personal questions or anything that isn't covered by my knowledge file. For those, the contact form at the bottom of the page reaches Kim directly.",
+      "section": "About this assistant"
+    },
+    {
+      "q": "Did Kim build you?",
+      "a": "Yes — I'm one of the systems in the AI showcase on this page, and the constraint I'm held to is listed there like all the others: no tools, no database.",
       "section": "About this assistant"
     }
   ],

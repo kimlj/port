@@ -43,15 +43,15 @@ STATUS: OK
 A: For full-stack work where I'm responsible for building the system end to end, I'd be comfortable starting at around $25/hour. I'm flexible depending on the scope, complexity, and length of the engagement.
 
 ### Q: Are you open to full-time roles, or contract only?
-STATUS: NEEDS-REVIEW
+STATUS: OK
 A: Both. Full-time remote is what I'm looking for, and I'm open to contract engagements depending on the scope and the fit.
 
 ### Q: Can you start soon?
-STATUS: NEEDS-REVIEW
+STATUS: OK
 A: Yes — I can start soon. MDS Pro is in maintenance rather than active build now, so there's nothing blocking a new engagement.
 
 ### Q: What time zone are you in, and how do you handle overlap?
-STATUS: NEEDS-REVIEW
+STATUS: OK
 A: I'm in Manila, so UTC+8. I've been working daily with an owner in the US on MDS Pro, so a few hours of overlap is normal for me rather than something I'd need to adjust to.
 
 ### Q: Do you work with a team, or solo?
@@ -71,7 +71,7 @@ STATUS: OK
 A: I ask rather than guess — usually by describing back what I think is wanted and what it would actually do, so it can be corrected against something concrete instead of an abstract question. If it's still unclear, I'll build the smallest version that shows the idea and let people react to that. A wrong assumption caught early is much cheaper than one found after it's built.
 
 ### Q: What does a good brief look like to you?
-STATUS: GUESS
+STATUS: OK
 A: The problem, who has it, and what people do today instead. I'd rather have a rough description of the actual pain than a detailed spec for a solution — if the spec is already written I usually end up asking what it was meant to fix anyway.
 
 ### Q: Why should we hire you?
@@ -85,7 +85,7 @@ A: Because I've had to own something in production. MDS Pro is used every workda
 # B. The work
 
 ### Q: Which project are you proudest of, and why?
-STATUS: NEEDS-REVIEW
+STATUS: OK
 A: WordWarz. It started as a hobby project and turned into something people actually play — my own family among them. Seeing someone use a thing you built, especially people you care about, is the part that makes it worth it.
 
 ### Q: What's the biggest thing you've built?
@@ -113,7 +113,7 @@ STATUS: OK
 A: MDS Pro started as a relatively small internal application, so I chose vanilla JavaScript to keep the stack simple and avoid adding framework overhead that the project didn't need at the time. As the system grew, I focused on keeping the code modular and maintainable. For a new project with different requirements or a larger development team, I'd be open to using a framework where it provides a real benefit.
 
 ### Q: What's Casinore?
-STATUS: NEEDS-REVIEW
+STATUS: OK
 A: A hobby experiment — I wanted to understand Web3 by building with it rather than reading about it. It's on the page as what it is, not as client work.
 
 ### Q: Do you have code I can look at?
@@ -137,7 +137,7 @@ STATUS: OK
 A: The AI showcase is a collection of AI systems I've built for different problems, from natural-language database querying to automation and content pipelines. What I care about most isn't just getting an LLM to produce an impressive answer — it's designing constraints around it so the system behaves predictably and can be checked. I use AI heavily in my own development, but I still treat the model as a component of the system rather than the system itself.
 
 ### Q: What have you shipped that people actually pay for?
-STATUS: NEEDS-REVIEW
+STATUS: OK
 A: MDS Pro Solutions — a one-time build with ongoing monthly maintenance. WordWarz is free to play.
 
 ### Q: What's something on this page you'd rebuild differently now?
@@ -215,8 +215,8 @@ STATUS: OK
 A: Curiosity, mostly. I like building things that have a real use case, and I constantly think about things I could improve or build myself. Even when I'm just walking or running, I'll catch myself thinking, "What if I built this?" Programming gives me a way to actually turn those ideas into something people can use.
 
 ### Q: Tell me about your education.
-STATUS: NEEDS-REVIEW
-A: BS Information Technology at AMA Computer College Makati — three of four years completed. The degree isn't conferred yet; one year remains. A lot of what I use day to day I learned by building something, having it break, and working out why.
+STATUS: OK
+A: I started at the University of the Philippines Los Baños in Agricultural Chemistry and got as far as a year before being dropped for failing grades. I'll be straightforward about why: I was immature, I hadn't set myself any real goal yet, and it was a field I couldn't picture myself working in. I later took BS Information Technology at AMA Computer College Makati — three of four years completed, the degree not yet conferred, one year remaining. Programming is the part I actually stayed with, and most of what I use day to day I learned by building something, watching it break, and working out why.
 
 ### Q: Why isn't your degree finished?
 STATUS: OK
@@ -231,7 +231,7 @@ STATUS: OK
 A: Mostly because of education and other responsibilities. When I was in school, my focus naturally shifted between studying and building projects, but I've continued coming back to programming because I genuinely enjoy it. Since 2024 in particular, I've spent a lot of time building projects and deliberately improving how I think about software, not just learning syntax.
 
 ### Q: Where are you based?
-STATUS: NEEDS-REVIEW
+STATUS: OK
 A: Quezon City, Metro Manila, in the Philippines. I work remotely.
 
 ### Q: What kind of developer do you want to become?
@@ -241,11 +241,11 @@ A: Someone who can be handed a vague problem and be trusted to come back with a 
 # F. About this assistant
 
 ### Q: Are you actually Kim, or a bot?
-STATUS: NEEDS-REVIEW
+STATUS: OK
 A: A bot — I'm the assistant on Kim's site, answering in his voice from what this page and his resume say. If you want Kim himself, the form at the bottom reaches him directly.
 
 ### Q: How do you work?
-STATUS: NEEDS-REVIEW
+STATUS: OK
 A: I answer from a fixed knowledge file built from this page and Kim's resume. No tools, no database, no search. That means I can't look anything up — but it also means there's nothing for me to invent from, which is the point.
 
 ### Q: What can't you answer?
@@ -253,5 +253,5 @@ STATUS: OK
 A: I can answer questions about Kim's projects, experience, technologies, development approach, and the information documented on this portfolio. I can't reliably answer personal questions or anything that isn't covered by my knowledge file. For those, the contact form at the bottom of the page reaches Kim directly.
 
 ### Q: Did Kim build you?
-STATUS: NEEDS-REVIEW
+STATUS: OK
 A: Yes — I'm one of the systems in the AI showcase on this page, and the constraint I'm held to is listed there like all the others: no tools, no database.
