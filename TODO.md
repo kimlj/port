@@ -83,55 +83,68 @@ After changing page content or any answer:
 
 ## Live figures for Build Activity
 
-Both charts are **static snapshots**, not live. `assets/contributions.json` and
-`assets/claude-usage.json` were both generated on **1 Sep 2026** by the scripts
-in `scripts/`, and neither has moved since — the numbers on the page are the
-numbers as of that day, and they will stay that way until someone runs the
-scripts and commits the result.
+Half automated, half not. The two charts are still **committed snapshots** — the
+page reads `assets/contributions.json` and `assets/claude-usage.json` and talks
+to nothing — but the GitHub half now refreshes itself, and both halves say on the
+page when they were taken.
 
 Neither can be fetched from the browser, and that is a constraint rather than an
 oversight:
 
 - **GitHub contributions** need the GraphQL calendar API, which requires an
   authenticated token. A token that reaches the browser is a token that has
-  leaked. `scripts/fetch-contributions.mjs` uses the `gh` CLI's own auth, so
-  there is nothing to paste or rotate — but it has to run somewhere trusted.
+  leaked. `scripts/fetch-contributions.mjs` uses the `gh` CLI's own auth.
 - **Claude Code hours** only exist as session transcripts under
   `~/.claude/projects/**/*.jsonl` on the machine that did the work. There is no
   API to ask: the Usage & Cost Admin API covers API keys, not a subscription,
   and returns 401 for an individual account. `scripts/fetch-claude-usage.mjs`
   reads those transcripts locally.
 
-So "real time" means *automatically refreshed*, not *fetched live by the page*.
-Three ways to get there, cheapest first:
+So "live" means *automatically refreshed*, not *fetched by the page*.
 
-1. **A scheduled GitHub Action.** Runs both scripts on a cron, commits the two
-   JSON files, Vercel redeploys on the push. Free, no server, no new secret
-   beyond a repo-scoped token. This gets the GitHub half fully automatic.
-   It cannot get the Claude half — the transcripts are on this machine, not in
-   the repo, and should not be.
+### Done
 
-2. **A push from this machine.** A scheduled task runs the usage script and
-   POSTs the JSON to an endpoint, which stores it and serves it to the page.
-   Needs somewhere to receive it — a Vercel function plus a store, or the VPS.
-   The endpoint must be authenticated, or anyone can rewrite the figures on the
-   page.
+- **`.github/workflows/refresh-activity.yml`** runs the contributions script
+  daily at 16:10 UTC (00:10 Manila, so it picks up the day GitHub just closed),
+  commits the file if it moved, and lets Vercel redeploy on the push.
+- **A dateline on each half**, built from the `generatedAt` both payloads
+  already carried. The halves refresh on different schedules, so each states its
+  own date rather than sharing one that would describe the older of them.
+- **The cache headers**, which would have silently defeated all of this:
+  everything under `assets/` was `immutable` for a year, so a returning visitor
+  would never have seen a refreshed figure. Scripts and JSON revalidate now.
 
-3. **The VPS as the source of truth for both.** A cron there pulls contributions
-   and receives the pushed usage; the page fetches from it instead of from
-   static JSON. Most moving parts, and it puts a runtime dependency in front of
-   a section that currently cannot fail — worth it only if the figures should be
-   genuinely current rather than genuinely recent.
+### Still to do
 
-Whichever way, two things the page needs either way:
+**The workflow needs its secret before it can run.** `CONTRIBUTIONS_TOKEN`, a
+PAT with `repo` and `read:user`, under Settings → Secrets and variables →
+Actions. The workflow's own `GITHUB_TOKEN` cannot stand in: it is scoped to this
+repository, and ~93% of this account's contributions are in private repos it
+cannot see. The run fails loudly rather than publishing a number 20x too small —
+there is an explicit check for a zero private count.
 
-- **Say when.** A dateline on the panel — "as of 1 Sep 2026" — so a stale figure
-  is honest rather than wrong. This is worth doing today, independently of any
-  of the above.
-- **Keep the static file as the fallback.** If a fetch fails the section should
-  fall back to the committed JSON, not disappear. The panels already remove
-  themselves on a failed fetch; that is the right instinct for a missing chart
-  and the wrong one for a chart that has a slightly old copy on disk.
+**The Claude Code half now refreshes from this machine.**
+`scripts/sync-claude-usage.mjs` reads the local transcripts, commits only
+`assets/claude-usage.json` and pushes; `scripts/install-usage-sync.ps1`
+registers it as a scheduled task at 22:00 daily, and at logon so a day the
+machine was off is caught up rather than skipped.
+
+It works in a clone of its own under `LOCALAPPDATA`, never in a working tree.
+A task that ran `git commit` in a checkout would eventually fire in the middle
+of an edit, on the wrong branch, or over a half-finished rebase; in its own
+clone it can hard-reset to `origin/main` every run without asking what state
+anything was left in. It runs the copy of itself inside that clone, so it
+always runs whatever is on `main`.
+
+The honest limit: it only fires while someone is signed in to this machine, so
+the figure is genuinely recent rather than genuinely current. That is inherent
+— the transcripts are here and nowhere else — and it is what the dateline on
+the panel is for.
+
+**The fallback only matters once something is fetched at runtime.** Today both
+files ship with the deploy, so a failed fetch means a failed deploy. If option 2
+is ever built, the page must fall back to the committed JSON rather than
+removing the panel, which is what the four `.catch` handlers do now.
 
 
 ## Smaller, unscheduled

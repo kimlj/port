@@ -243,6 +243,14 @@ in more detail.
   zeroes the content box only. With the panel itself as the grid child, the
   showcase drawer bottomed out at the 72px of its own padding and the last frame
   of every close was a snap. The clip is a bare wrapper now, padding inside it.
+- **`restrictedContributionsCount` is not the private-contribution count.**
+  It is how many contributions the *caller cannot see*, so it depends on the
+  token, not on the data. The `gh` CLI token on this machine reports ~2,135 of
+  them; the workflow's PAT has `repo` scope, reads every private repo, and
+  correctly reports 0 — with identical totals. A guard built on it blocked two
+  perfectly good runs, and the panel's note would have published "where 0 of
+  2,314 of this year's contributions live". Anything derived from that field
+  has to survive it being 0; the totals are what the charts draw.
 - **A cached canvas and per-glyph motion do not compose for free.** The
   portrait is one blit of a pre-rendered bitmap, so a character that moves has
   to be erased from the cache's copy of it as well as drawn in its new place.
@@ -258,9 +266,22 @@ in more detail.
 
 ## Data
 
-`assets/contributions.json` and `assets/claude-usage.json` are **static snapshots
-generated 1 Sep 2026** by the scripts in `scripts/`. Neither can be fetched from
-the browser — see `TODO.md` for why, and for the routes to refreshing them.
+`assets/contributions.json` and `assets/claude-usage.json` are **committed
+snapshots**, not live reads — neither can be fetched from the browser, and
+`TODO.md` says why. The GitHub half refreshes itself daily through
+`.github/workflows/refresh-activity.yml`; the Claude half is still
+`node scripts/fetch-claude-usage.mjs` by hand, because the transcripts it reads
+only exist on the machine that did the work.
+
+Both payloads carry `generatedAt`, and the panel prints it. **A figure on this
+page states its own date** — keep it that way when editing the section, since
+the two halves refresh on different schedules and neither is today's by default.
+
+**Nothing under `assets/` may be served `immutable`.** No path here is
+content-hashed, so the scripts and these two files are edited in place; caching
+them for a year froze both the figures and the site's behaviour for anyone who
+had already visited. `vercel.json` splits the rule by file type — media long,
+scripts and JSON revalidating.
 
 `assets/ai-showcase/` holds 66 generated avatars used by the Avatar pipeline
 walkthrough.

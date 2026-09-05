@@ -1,0 +1,100 @@
+# Keeps the GitHub half of Build Activity current.
+#
+# The page loads a committed JSON file rather than calling GitHub, because the
+# contribution calendar is GraphQL-only and needs an authenticated token, and a
+# token that reaches the browser is a token that has leaked. So the fetch runs
+# here, on a runner, and the RESULT is what ships: this commits the file, Vercel
+# redeploys on the push, and the page keeps knowing nothing about GitHub.
+#
+# This cannot do the Claude Code half. Those figures only exist as session
+# transcripts on the machine that did the work, so scripts/fetch-claude-usage.mjs
+# has to run there. See TODO.md.
+#
+# Requires one secret, CONTRIBUTIONS_TOKEN: a personal access token with `repo`
+# and `read:user`. The workflow's own GITHUB_TOKEN cannot stand in for it — it is
+# scoped to this repository, and roughly 93% of the contributions on this account
+# are in private repos it cannot see. Reading them is the entire point of the
+# figure, so a run without the secret fails loudly rather than silently
+# publishing a number 20x too small.
+
+name: Refresh build activity
+
+on:
+  schedule:
+    # 16:10 UTC is 00:10 in Manila, so this picks up the day that just ended in
+    # the timezone GitHub buckets the contribution days by. GitHub delays cron
+    # under load; nothing here needs it to be punctual.
+    - cron: "10 16 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Never let two runs race for the same push.
+concurrency:
+  group: refresh-activity
+  cancel-in-progress: false
+
+jobs:
+  contributions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+
+      - name: Check the token is present
+        env:
+          GH_TOKEN: ${{ secrets.CONTRIBUTIONS_TOKEN }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::error::CONTRIBUTIONS_TOKEN is not set. Add a PAT with repo + read:user scopes under Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+
+      - name: Fetch the contribution calendar
+        env:
+          GH_TOKEN: ${{ secrets.CONTRIBUTIONS_TOKEN }}
+        run: node scripts/fetch-contributions.mjs
+
+      - name: Refuse to publish a collapsed count
+        run: |
+          # What actually has to be true is that the figure did not fall off a
+          # cliff, which is what a token that has lost sight of the private
+          # repositories looks like: ~93% of this account's contributions are in
+          # them, so a blinded run reports a number a fourteenth the size.
+          #
+          # An earlier version of this checked restrictedContributionsCount
+          # instead, and blocked a perfectly good run. That field is not "how
+          # many are private" - it is "how many the caller cannot see" - so a
+          # token with repo scope correctly reports 0 while still counting every
+          # one of them in the total. The totals are what the page draws.
+          read_total() {
+            node -e "const y=JSON.parse(require('fs').readFileSync(0,'utf8')).years;const k=Object.keys(y).sort().pop();process.stdout.write(String(y[k].total))"
+          }
+          new=$(read_total < assets/contributions.json)
+          old=$(git show HEAD:assets/contributions.json | read_total)
+          echo "this year: $old committed -> $new fetched"
+          if [ "$new" -lt "$(( old * 9 / 10 ))" ]; then
+            echo "::error::Fetched $new against $old already committed. A drop that size means this token cannot see the private repositories, not that the work vanished. Not committing."
+            exit 1
+          fi
+
+      - name: Commit and push
+        run: |
+          if git diff --quiet -- assets/contributions.json; then
+            echo "no change"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/contributions.json
+          git commit -m "Refresh GitHub contribution figures
+
+          Written by .github/workflows/refresh-activity.yml."
+          # Someone may have pushed while this ran; the data file is only ever
+          # written here, so a rebase cannot conflict over it.
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
