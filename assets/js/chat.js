@@ -218,7 +218,11 @@
     // with its href assigned as a property, so a crafted string cannot become
     // markup. The scheme is matched literally as http:// or https://, which is
     // what keeps javascript: and data: out — they cannot match the pattern.
-    var URL_RE = /https?:\/\/[^\s<>"']+/g;
+    // Two alternatives, URL first so an address inside a path stays part of the
+    // URL rather than being torn out of it. An email gets a mailto: href built
+    // here rather than matched from the text, so the only two schemes this can
+    // ever produce are http(s) and mailto.
+    var URL_RE = /(https?:\/\/[^\s<>"']+)|([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})/g;
 
     function linkify(node, text) {
       var at = 0;
@@ -238,10 +242,14 @@
         }
         if (m.index > at) node.appendChild(document.createTextNode(text.slice(at, m.index)));
         var a = document.createElement('a');
-        a.href = url;
+        a.href = m[1] ? url : 'mailto:' + url;
         a.textContent = url;
-        a.target = '_blank';
-        a.rel = 'noopener noreferrer';
+        // Only web links open a tab. A mailto: with target=_blank leaves an
+        // empty tab behind in some browsers once the mail client takes over.
+        if (m[1]) {
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+        }
         a.className = 'kchat-link';
         node.appendChild(a);
         if (trail) node.appendChild(document.createTextNode(trail));
