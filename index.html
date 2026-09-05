@@ -254,13 +254,16 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 /* Prose left on the page's spine, the portrait and the figures in the column
    beside it. Left as a measured column on its own the section left half the
    width empty, which read as an unfinished grid rather than as white space. */
-.about-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 290px); gap: 4.5rem; align-items: start; }
+.about-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 330px); gap: 4.5rem; align-items: start; }
 .about-text { font-size: 1.05rem; line-height: 1.8; color: var(--text-muted); font-weight: 300; max-width: 62ch; }
 .about-text p + p { margin-top: 1.25rem; }
 /* The figures that replaced the four stat cards, two of which held "Full" and
    "AI" in a number slot. Every one is counted out of the DOM at load, so the
    line cannot drift away from the page it describes. */
-.about-figures { display: flex; flex-wrap: wrap; gap: 0.5rem 1.9rem; margin-top: 2.75rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+.about-aside { display: flex; flex-direction: column; }
+.about-figures { display: grid; grid-template-columns: 1fr 1fr; gap: 1.15rem 1.25rem; margin-top: 1.9rem; padding-top: 1.4rem; border-top: 1px solid var(--border); }
+.about-figures > span { display: flex; flex-direction: column; gap: 0.2rem; }
+.about-figures i { font-style: normal; line-height: 1.45; }
 /* No frame: the file is a cut-out, so a border would box three empty corners.
    The source is cropped mid-torso, and left alone that bottom edge reads as a
    photograph cut off rather than as a figure standing in the page, so it is
@@ -268,8 +271,8 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 .about-portrait { display: block; width: 100%; height: auto;
   -webkit-mask-image: linear-gradient(to bottom, #000 68%, transparent 99%);
   mask-image: linear-gradient(to bottom, #000 68%, transparent 99%); }
-.about-figures { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.07em; color: var(--text-dim); }
-.about-figures b { font-weight: 400; color: var(--accent); }
+.about-figures { font-family: var(--mono); font-size: 0.63rem; letter-spacing: 0.06em; color: var(--text-dim); }
+.about-figures b { font-weight: 400; font-size: 1.15rem; line-height: 1; color: var(--accent); }
 
 /* -- 04 / Skills ------------------------------------------------------------
    The legend for the rest of the page. Every technology names the work on this
@@ -2758,10 +2761,12 @@ footer .footer-accent { color: var(--accent); }
         rather ship something small that holds up than something impressive that doesn't, and I'd
         rather tell you what a thing can't do than find out later that you assumed it could.</p>
     </div>
-    <p class="about-figures reveal" id="aboutFigures" hidden></p>
     </div>
-    <img class="about-portrait reveal" src="assets/profile.webp" alt="Kim Julongbayan"
-         width="1024" height="1024" loading="lazy" decoding="async">
+    <div class="about-aside reveal">
+      <img class="about-portrait" src="assets/profile.webp" alt="Kim Julongbayan"
+           width="1024" height="1024" loading="lazy" decoding="async">
+      <p class="about-figures" id="aboutFigures" hidden></p>
+    </div>
   </div>
 </section>
 
@@ -3069,8 +3074,12 @@ if (window.innerWidth > 768) {
     var span = document.createElement('span');
     var num = document.createElement('b');
     num.textContent = pair[0];
+    /* the label is its own element now that it sits under the figure rather
+       than running on from it */
+    var lab = document.createElement('i');
+    lab.textContent = pair[1];
     span.appendChild(num);
-    span.appendChild(document.createTextNode(' ' + pair[1]));
+    span.appendChild(lab);
     host.appendChild(span);
   });
 
