@@ -161,6 +161,14 @@ in more detail.
   zeroes the content box only. With the panel itself as the grid child, the
   showcase drawer bottomed out at the 72px of its own padding and the last frame
   of every close was a snap. The clip is a bare wrapper now, padding inside it.
+- **`restrictedContributionsCount` is not the private-contribution count.**
+  It is how many contributions the *caller cannot see*, so it depends on the
+  token, not on the data. The `gh` CLI token on this machine reports ~2,135 of
+  them; the workflow's PAT has `repo` scope, reads every private repo, and
+  correctly reports 0 — with identical totals. A guard built on it blocked two
+  perfectly good runs, and the panel's note would have published "where 0 of
+  2,314 of this year's contributions live". Anything derived from that field
+  has to survive it being 0; the totals are what the charts draw.
 - **A cached canvas and per-glyph motion do not compose for free.** The
   portrait is one blit of a pre-rendered bitmap, so a character that moves has
   to be erased from the cache's copy of it as well as drawn in its new place.
