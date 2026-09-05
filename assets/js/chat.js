@@ -46,10 +46,10 @@
     'padding:.95rem 1.1rem;border-bottom:1px solid var(--border,#2a2a30);flex:none}',
     '.kchat-title{font-family:var(--mono,ui-monospace,monospace);font-size:.66rem;letter-spacing:.2em;',
     'text-transform:uppercase;color:var(--text-dim,#8a8a95)}',
-    '.kchat-close{background:none;border:none;color:var(--text-dim,#8a8a95);cursor:pointer;padding:4px;',
+    '.kchat-min{background:none;border:none;color:var(--text-dim,#8a8a95);cursor:pointer;padding:4px;',
     'line-height:0;border-radius:6px}',
-    '.kchat-close:hover{color:var(--text,#eee)}',
-    '.kchat-close svg{width:16px;height:16px}',
+    '.kchat-min:hover{color:var(--text,#eee)}',
+    '.kchat-min svg{width:16px;height:16px}',
 
     '.kchat-log{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:1.1rem;',
     'display:flex;flex-direction:column;gap:.85rem}',
@@ -163,15 +163,18 @@
     // panel
     var panel = el('div', 'kchat-panel');
     panel.setAttribute('role', 'dialog');
-    panel.setAttribute('aria-label', 'Ask about Kim’s work');
+    panel.setAttribute('aria-label', 'Kim’s AI assistant');
 
     var head = el('div', 'kchat-head');
-    head.appendChild(el('span', 'kchat-title', 'Site assistant'));
-    var close = el('button', 'kchat-close');
-    close.type = 'button';
-    close.setAttribute('aria-label', 'Close');
-    close.appendChild(icon(['M18 6 6 18', 'm6 6 12 12']));
-    head.appendChild(close);
+    head.appendChild(el('span', 'kchat-title', 'AI assistant'));
+    // Minimize, not close: the panel folds back to the pill and the conversation
+    // is still there when it reopens. A cross would promise it was thrown away.
+    var min = el('button', 'kchat-min');
+    min.type = 'button';
+    min.setAttribute('aria-label', 'Minimize');
+    min.title = 'Minimize';
+    min.appendChild(icon(['m6 9 6 6 6-6']));
+    head.appendChild(min);
 
     var log = el('div', 'kchat-log');
     log.setAttribute('role', 'log');
@@ -229,14 +232,14 @@
 
     function greet() {
       say(
-        'I can answer questions about Kim’s projects, the technologies behind them and his experience — from what this page says and nothing else.',
+        'Ask me about my projects, the technologies behind them or my experience — I answer from what this page says and nothing else.',
         'is-bot'
       );
       var seeds = el('div', 'kchat-seed');
       [
-        'What is he working on now?',
-        'Where has he used TypeScript?',
-        'What is the AI showcase about?'
+        'What are you working on right now?',
+        'Where have you used TypeScript?',
+        'What’s the AI showcase about?'
       ].forEach(function (q) {
         var b = el('button', null, q);
         b.type = 'button';
@@ -340,7 +343,7 @@
     }
 
     open.addEventListener('click', show);
-    close.addEventListener('click', hide);
+    min.addEventListener('click', hide);
 
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && root.classList.contains('is-open')) hide();
