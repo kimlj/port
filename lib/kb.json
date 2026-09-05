@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-09-05T15:09:46.702Z",
+  "generatedAt": "2026-09-05T15:15:21.599Z",
   "generatedBy": "scripts/build-kb.mjs",
   "sources": {
-    "page": "eaa77b8b64e0",
+    "page": "41215cd499af",
     "resume": "4c3e573310be"
   },
   "identity": {
@@ -23,6 +23,8 @@
       "tag": "Web & Mobile App",
       "status": "Live on the App Store · Android in review",
       "url": "https://wordwarz.io",
+      "appStore": "https://apps.apple.com/us/app/word-warz-royale/id6758613687",
+      "appStoreName": "Word Warz: Royale",
       "summary": "A real-time multiplayer word game with a Shannon entropy–based AI bot engine that maximizes information gain per guess. Features a constraint-satisfaction solver for edge cases, 5-tier ELO matchmaking (600–2000) with probabilistic human imperfection modeling, adaptive difficulty scaling, and 60+ AI-generated avatars via custom ComfyUI pipelines.",
       "role": "",
       "points": [],
@@ -52,7 +54,7 @@
           "of": "Playing daily"
         }
       ],
-      "note": "As of Sep 2026 — shipped to the iOS App Store, with the Android build in review. Grown entirely by word of mouth, with no ads and no marketing spend."
+      "note": "As of Sep 2026 — shipped to the iOS App Store as Word Warz: Royale, with the Android build in review. Grown entirely by word of mouth, with no ads and no marketing spend."
     },
     {
       "name": "MDS Pro Solutions",
@@ -60,6 +62,8 @@
       "tag": "Healthcare SaaS & Ops",
       "status": "",
       "url": "https://mdsprosolutions.com",
+      "appStore": "",
+      "appStoreName": "",
       "summary": "Sole developer on the internal system a US healthcare company runs its payroll and billing on — used every workday by its nursing team across the Philippines and its owner in the US.",
       "role": "Sole developer on the internal system a US healthcare company runs its payroll and billing on — used every workday by its nursing team across the Philippines and its owner in the US.",
       "points": [
@@ -103,6 +107,8 @@
       "tag": "AI & Automation",
       "status": "",
       "url": "https://recode.kimlj.dev",
+      "appStore": "",
+      "appStoreName": "",
       "summary": "AI-powered website redesigner that crawls any site, analyzes brand identity with Claude, generates a premium redesign, and deploys it to a live URL — all in real time via Server-Sent Events streaming.",
       "role": "",
       "points": [],
@@ -122,6 +128,8 @@
       "tag": "AI & Automation",
       "status": "In Development",
       "url": "",
+      "appStore": "",
+      "appStoreName": "",
       "summary": "A web extension that scrapes job listings, parses structured data, and matches roles using resume-aware LLM analysis. Generates personalized cold emails with tone control via OpenAI API. Full automation pipeline: scrape → parse → match → generate → review.",
       "role": "",
       "points": [],
@@ -140,6 +148,8 @@
       "tag": "AI & Automation",
       "status": "",
       "url": "",
+      "appStore": "",
+      "appStoreName": "",
       "summary": "An end-to-end n8n automation pipeline that monitors Gmail for job alerts (Indeed, Upwork, JobStreet), scores listings against my resume using GPT-4o with a hybrid AI + code salary algorithm, logs everything to Google Sheets, and sends Telegram notifications for high-scoring matches.",
       "role": "",
       "points": [],
@@ -160,6 +170,8 @@
       "tag": "Blockchain & Web3",
       "status": "",
       "url": "https://casinore.io",
+      "appStore": "",
+      "appStoreName": "",
       "summary": "A hobby experiment — I wanted to explore Web3 by tinkering with open-source blockchain code and see how far I could push it.",
       "role": "",
       "points": [],

@@ -229,6 +229,12 @@ const projects = blocks(section(html, 'projects'), 'work-item')
       tag: firstOf(b, 'project-tag'),
       status: firstOf(b, 'project-status'),
       url: (/<a href="(https?:[^"]+)"[^>]*class="[^"]*project-card/.exec(b) || [, ''])[1],
+      // The card is one big anchor, so a second link cannot be nested inside it.
+      // The store URL rides on the work-item as a data attribute instead: the
+      // page still states the listing name in prose, and the assistant can hand
+      // over the exact link rather than telling someone to go and search.
+      appStore: attr(b, 'data-appstore'),
+      appStoreName: attr(b, 'data-appstore-name'),
       summary: tags(b.split('project-tech')[0], 'p').filter((p) => p.length > 60)[0] || '',
       role: firstOf(b, 'project-role'),
       points: tags(b, 'li'),
