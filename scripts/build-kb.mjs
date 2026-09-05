@@ -354,6 +354,33 @@ const activity = {
   }
 };
 
+// -- the owner's own words --------------------------------------------------
+
+// The one authored file in the corpus, and the only place a fact may come from
+// that is neither on the page nor in the resume. It exists because some fair
+// questions — what he is proudest of, what he wants next — have answers only he
+// has, and the alternative to writing them down is the assistant inventing them
+// in the first person.
+//
+// Rules for it: every line is his, nobody else drafts one, and anything in here
+// is answerable by a stranger on a public page. If a line would be better said
+// on the page itself, say it there instead and delete it from here.
+function readOwner() {
+  const p = join(ROOT, 'lib', 'owner.json');
+  if (!existsSync(p)) return null;
+  try {
+    const raw = JSON.parse(readFileSync(p, 'utf8'));
+    const answers = (raw.answers || []).filter((a) => a && a.q && a.a && !/^TODO\b/i.test(a.a));
+    return answers.length ? answers : null;
+  } catch {
+    warn('lib/owner.json is not valid JSON — the owner’s own answers are missing');
+    return null;
+  }
+}
+
+const owner = readOwner();
+if (!owner) warn('lib/owner.json absent or empty — the assistant will decline questions about favourites, plans and opinions');
+
 // -- resume -----------------------------------------------------------------
 
 const resumeFacts = resume
@@ -488,6 +515,7 @@ const kb = {
   experience,
   availability,
   about,
+  owner,
   resume: resumeFacts,
   conflicts
 };

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-05T07:43:36.890Z",
+  "generatedAt": "2026-09-05T08:07:27.402Z",
   "generatedBy": "scripts/build-kb.mjs",
   "sources": {
     "page": "915cd008c431",
@@ -556,6 +556,7 @@
     "Working on my own means I'm also the only person checking my work, so I've got careful about the unglamorous parts. If a payroll figure turns up on three screens, I want it worked out once. If a timestamp matters, the server sets it, not the browser. If a record changes, the old one stays put so you can see who changed what. None of that is clever — it's just the difference between software people trust and software they end up double-checking by hand.",
     "Most of what I know came from building something that broke and then working out why. I'd rather ship something small that holds up than something impressive that doesn't, and I'd rather tell you what a thing can't do than find out later that you assumed it could."
   ],
+  "owner": null,
   "resume": {
     "summary": [
       "Full Stack Developer with 5+ years of on-and-off experience building independent projects and one production system in daily use - scalable web, mobile, and AI-integrated systems.",
