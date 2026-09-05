@@ -39,9 +39,9 @@ jobs:
   contributions:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "24"
 
@@ -60,16 +60,29 @@ jobs:
         run: node scripts/fetch-contributions.mjs
 
       - name: Refuse to publish a public-only count
+        env:
+          GH_TOKEN: ${{ secrets.CONTRIBUTIONS_TOKEN }}
         run: |
-          # The private count is the figure that matters, and a token missing
-          # read:user still returns a valid-looking payload with 0 in it. Better
-          # to fail than to quietly halve the number on the page.
+          # The private count is the figure that matters, and a token that cannot
+          # see it still returns a perfectly valid-looking payload with 0 in it.
+          # Better to fail than to quietly publish a number a twentieth the size.
           private=$(node -e "const y=require('./assets/contributions.json').years;const k=Object.keys(y).sort().pop();process.stdout.write(String(y[k].private))")
           echo "private contributions this year: $private"
-          if [ "$private" = "0" ]; then
-            echo "::error::0 private contributions - the token is missing the read:user scope. Not committing."
-            exit 1
+          if [ "$private" != "0" ]; then
+            exit 0
           fi
+
+          # Say what is actually wrong rather than leaving someone to guess.
+          # Scopes come back in a response header, so this reports what the token
+          # can do without ever printing the token.
+          scopes=$(gh api -i user 2>/dev/null | grep -i '^x-oauth-scopes:' | cut -d' ' -f2- | tr -d '\r')
+          echo "::error::0 private contributions - this token cannot see them, so the figure would be ~7% of the real one. Not committing."
+          if [ -z "$scopes" ]; then
+            echo "::error::The token reports no OAuth scopes at all. That is what a fine-grained PAT looks like here, and fine-grained tokens cannot read the contributions calendar's private counts. Create a classic token instead: github.com/settings/tokens -> Generate new token (classic), tick repo AND read:user."
+          else
+            echo "::error::Token scopes are: $scopes - 'read:user' is the one that is missing. Regenerate at github.com/settings/tokens with both repo and read:user ticked, then update the CONTRIBUTIONS_TOKEN secret."
+          fi
+          exit 1
 
       - name: Commit and push
         run: |
