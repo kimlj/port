@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-05T14:52:20.814Z",
+  "generatedAt": "2026-09-05T15:00:42.856Z",
   "generatedBy": "scripts/build-kb.mjs",
   "sources": {
     "page": "eaa77b8b64e0",
@@ -187,8 +187,8 @@
       "includesPrivate": true
     },
     "claudeCode": {
-      "totalHours": 741,
-      "sessions": 834,
+      "totalHours": 742,
+      "sessions": 837,
       "longestSessionHours": 5.9,
       "hoursPerWorkingDay": 6.7
     }

@@ -523,7 +523,14 @@ const kb = {
 const json = JSON.stringify(kb, null, 2) + '\n';
 
 if (process.argv.includes('--check')) {
-  const strip = (s) => s.replace(/^\s*"generatedAt": "[^"]*",\n/m, '');
+  // Normalise the line endings before stripping. On Windows a checkout rewrites
+  // this file with CRLF, and the generatedAt pattern needs a bare \n to match —
+  // so without this the timestamp survives the strip, every comparison includes
+  // two different clocks, and a perfectly fresh file reports as stale after any
+  // git checkout. It fails closed, which is the safe direction, but it fails on
+  // every run and a check that always fails stops being read.
+  const strip = (s) =>
+    s.replace(/\r\n/g, '\n').replace(/^\s*"generatedAt": "[^"]*",\n/m, '');
   const current = existsSync(OUT) ? readFileSync(OUT, 'utf8') : '';
   if (strip(current) !== strip(json)) {
     console.error('lib/kb.json is stale — run: node scripts/build-kb.mjs');
