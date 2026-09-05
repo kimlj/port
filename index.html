@@ -274,14 +274,25 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
    list rather than rows, so 04 does not become a third index after Selected
    Work and the AI Showcase. */
 .skills-lede { color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; font-weight: 300; max-width: 640px; margin: -1.5rem 0 3rem; }
-.skill-ledger { max-width: 940px; }
-.skill-group + .skill-group { margin-top: 2.75rem; }
+.skill-ledger { columns: 2; column-gap: 5rem; max-width: 1300px; }
+/* A group that breaks across the column boundary splits its own heading off
+   from its rows, so each one stays whole and the columns land uneven instead. */
+.skill-group { break-inside: avoid; margin-bottom: 2.75rem; }
 .skill-group-title { font-family: var(--mono); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.16em; color: var(--accent); padding-bottom: 0.7rem; border-bottom: 1px solid var(--border); }
-.skill-row { display: grid; grid-template-columns: minmax(0, 12rem) minmax(0, 1fr); gap: 0.3rem 2rem; align-items: baseline; padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
+.skill-row { display: grid; grid-template-columns: minmax(0, 10rem) minmax(0, 1fr); gap: 0.3rem 2rem; align-items: baseline; padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
 .skill-name { font-family: var(--serif); font-size: 1.02rem; color: var(--text); transition: color 0.3s; }
 .skill-where { display: flex; flex-wrap: wrap; gap: 0.3rem 1.15rem; font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.05em; color: var(--text-dim); transition: color 0.3s; }
 .skill-row:hover .skill-name { color: var(--accent); }
 .skill-row:hover .skill-where { color: var(--text-muted); }
+
+/* Stacks used in work that is not on this page. Kept apart from the list above
+   rather than mixed into it: the list's whole claim is that every line can be
+   checked against a section, and these cannot be. Saying so is the honest
+   version of the marquee that used to assert them flat. */
+.skill-aside { max-width: 1300px; margin-top: 1rem; padding-top: 1.75rem; border-top: 1px solid var(--border); }
+.skill-aside-note { font-size: 0.85rem; line-height: 1.65; color: var(--text-dim); font-weight: 300; max-width: 60ch; margin: 0.7rem 0 1.1rem; }
+.skill-aside-list { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; }
+.skill-aside-list span { font-family: var(--serif); font-size: 0.98rem; color: var(--text-muted); }
 
 .projects-grid { display: grid; gap: 1.5rem; }
 
@@ -864,6 +875,7 @@ footer .footer-accent { color: var(--accent); }
 
 @media (max-width: 1024px) { .project-card { grid-template-columns: 1fr; } .project-visual { min-height: 200px; } }
 @media (max-width: 768px) { nav { padding: 1rem 1.5rem; } .nav-links { display: none; } .nav-hamburger { display: flex; } section { padding: 4rem 1.5rem; } .hero { padding: 7rem 1.5rem 3rem; } footer { flex-direction: column; gap: 0.75rem; text-align: center; } .contact-section { padding: 5rem 1.5rem; } .pitch-card { padding: 1.35rem; border-radius: 16px; } .pitch-footer { flex-direction: column-reverse; align-items: stretch; } .pitch-submit { justify-content: center; width: 100%; } .pitch-count { text-align: center; } }
+@media (max-width: 1024px) { .skill-ledger { columns: 1; } }
 @media (max-width: 640px) {
   .skill-row, .xp-row { grid-template-columns: 1fr; }
   .skill-row { padding: 0.85rem 0; }
@@ -2598,6 +2610,41 @@ footer .footer-accent { color: var(--accent); }
       <div class="skill-row"><span class="skill-name">Vercel</span><span class="skill-where"><span>this page</span></span></div>
     </div>
   </div>
+  <div class="skill-aside reveal">
+    <div class="skill-group-title">Also familiar</div>
+    <p class="skill-aside-note">Stacks I'm comfortable working in that the work above doesn't
+      happen to show. Ask me about any of them.</p>
+    <div class="skill-aside-list">
+      <span>React Native</span>
+      <span>Expo</span>
+      <span>Zustand</span>
+      <span>TanStack Query</span>
+      <span>shadcn/ui</span>
+      <span>Framer Motion</span>
+      <span>Astro</span>
+      <span>SvelteKit</span>
+      <span>Prisma</span>
+      <span>Drizzle</span>
+      <span>tRPC</span>
+      <span>GraphQL</span>
+      <span>Redis</span>
+      <span>MongoDB</span>
+      <span>NextAuth</span>
+      <span>LangChain</span>
+      <span>RAG</span>
+      <span>pgvector</span>
+      <span>Ollama</span>
+      <span>Hugging Face</span>
+      <span>MCP</span>
+      <span>GitHub Actions</span>
+      <span>AWS</span>
+      <span>Cloudflare Workers</span>
+      <span>Playwright</span>
+      <span>Vitest</span>
+      <span>Solana &middot; web3.js</span>
+      <span>Figma</span>
+    </div>
+  </div>
 </section>
 
 <div class="divider"></div>
@@ -2647,12 +2694,15 @@ footer .footer-accent { color: var(--accent); }
         building independent projects &mdash; web, mobile and AI-integrated systems. Every project
         above was built solo, which means the architecture, the deployment and the bugs were all
         mine to answer for.</p>
-      <p>What runs through the work is a refusal to let two things disagree. One pay calculation
-        behind the timesheet, the payroll and the invoice, so no two surfaces differ by a cent.
-        Timestamps set by the server rather than the client. Rows appended rather than edited in
-        place, so every change stays attributed. The AI systems above are the same instinct pointed
-        at a model: each one is listed with the constraint it is held to, because a system that can
-        reach anything will eventually claim anything.</p>
+      <p>Working on my own means I'm also the only person checking my work, so I've got
+        careful about the unglamorous parts. If a payroll figure turns up on three screens, I want
+        it worked out once. If a timestamp matters, the server sets it, not the browser. If a
+        record changes, the old one stays put so you can see who changed what. None of that is
+        clever &mdash; it's just the difference between software people trust and software they
+        end up double-checking by hand.</p>
+      <p>Most of what I know came from building something that broke and then working out why. I'd
+        rather ship something small that holds up than something impressive that doesn't, and I'd
+        rather tell you what a thing can't do than find out later that you assumed it could.</p>
     </div>
     <p class="about-figures" id="aboutFigures" hidden></p>
   </div>
