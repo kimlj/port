@@ -94,24 +94,23 @@ repository, and ~93% of this account's contributions are in private repos it
 cannot see. The run fails loudly rather than publishing a number 20x too small —
 there is an explicit check for a zero private count.
 
-**The Claude Code half is still manual.** `node scripts/fetch-claude-usage.mjs`,
-then commit. It cannot move to the runner, because the transcripts are on this
-machine and should not be in the repo. Two ways to automate it, and the choice
-has not been made:
+**The Claude Code half now refreshes from this machine.**
+`scripts/sync-claude-usage.mjs` reads the local transcripts, commits only
+`assets/claude-usage.json` and pushes; `scripts/install-usage-sync.ps1`
+registers it as a scheduled task at 22:00 daily, and at logon so a day the
+machine was off is caught up rather than skipped.
 
-1. **A scheduled task on this machine** that runs the script, commits the one
-   file and pushes. No new secret and no new infrastructure — this machine
-   already has the repo and a git remote. Only runs when the machine is on,
-   which makes the figure genuinely recent rather than genuinely current. Needs
-   care: it must touch only that file, and never fight a branch being worked on.
+It works in a clone of its own under `LOCALAPPDATA`, never in a working tree.
+A task that ran `git commit` in a checkout would eventually fire in the middle
+of an edit, on the wrong branch, or over a half-finished rebase; in its own
+clone it can hard-reset to `origin/main` every run without asking what state
+anything was left in. It runs the copy of itself inside that clone, so it
+always runs whatever is on `main`.
 
-2. **A push to an endpoint.** A scheduled task POSTs the JSON to a Vercel
-   function that stores it and serves it. Adds a store, an endpoint and a shared
-   secret, and puts a runtime dependency in front of a section that currently
-   cannot fail. Only worth it if the figure has to be current to the hour.
-
-If neither is built, the dateline is doing its job: the page says how old the
-number is instead of implying it is today's.
+The honest limit: it only fires while someone is signed in to this machine, so
+the figure is genuinely recent rather than genuinely current. That is inherent
+— the transcripts are here and nowhere else — and it is what the dateline on
+the panel is for.
 
 **The fallback only matters once something is fetched at runtime.** Today both
 files ship with the deploy, so a failed fetch means a failed deploy. If option 2
