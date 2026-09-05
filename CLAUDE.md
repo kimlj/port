@@ -66,9 +66,15 @@ to be read and checked rather than derived.
 
 The list runs three columns and is deliberately tight: it is a reference table,
 and a reference table you have to scroll is a worse one. All 27 rows, the chips
-and the familiar block fit one screen together. Groups do not break across a
-column, so the columns land uneven rather than stranding a heading at the foot of
-one.
+and the familiar block fit one screen together.
+
+**The group sizes are load-bearing.** A column cannot split a group — each
+heading stays with its own rows — so the column heights are decided entirely by
+how big the groups are and what order they come in, and the browser cannot fix a
+bad split. Six groups of 3/5/3/6/5/5 land one pair per column: Languages +
+Interface, Runtime + Models & pipelines, Data & services + Delivery. Merging two
+groups or moving a row between them will silently unbalance the columns, which is
+what an 8-row Server & data block did before it was split.
 
 `skills-filter.js` puts chips above it so the reader can run the check the other
 way round — pick a piece of work, see what it was built with. Each mention
