@@ -693,13 +693,11 @@
     ctx.arc(lensX, lensY, WELL_R, 0, 6.283);
     ctx.clip();
 
-    /* A breath of the accent, no more. There is no ground to lay down: the
-       characters have moved out of this disc, so the page is already showing
-       through it. */
-    ctx.globalAlpha = lens * 0.05;
-    ctx.fillStyle = tint[TIERS - 1];
-    ctx.fill();
-
+    /* Nothing is painted here at all. The characters have moved out of this
+       disc, so the canvas is transparent across it and what shows through is
+       the page's own ground — which is what the code should be read against.
+       A wash of the accent used to sit here and read as a grey disc laid over
+       the portrait, which is the one thing the glass was removed to stop. */
     ctx.font = CODE_PX + 'px ' + fontStack;
     ctx.textBaseline = 'middle';
 
