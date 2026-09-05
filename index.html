@@ -256,12 +256,13 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 /* One measured column now: with the technology list living in Skills with
    receipts, About has nothing to sit beside. */
 .about-grid { display: block; }
-.about-text { font-size: 1.05rem; line-height: 1.8; color: var(--text-muted); font-weight: 300; max-width: 64ch; }
+#about .section-label, #about .section-title { text-align: center; }
+.about-text { font-size: 1.05rem; line-height: 1.8; color: var(--text-muted); font-weight: 300; max-width: 64ch; margin-left: auto; margin-right: auto; }
 .about-text p + p { margin-top: 1.25rem; }
 /* The figures that replaced the four stat cards, two of which held "Full" and
    "AI" in a number slot. Every one is counted out of the DOM at load, so the
    line cannot drift away from the page it describes. */
-.about-figures { display: flex; flex-wrap: wrap; gap: 0.5rem 1.9rem; max-width: 880px; margin-top: 2.75rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.07em; color: var(--text-dim); }
+.about-figures { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem 1.9rem; max-width: 860px; margin-left: auto; margin-right: auto; margin-top: 2.75rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.07em; color: var(--text-dim); }
 .about-figures b { font-weight: 400; color: var(--accent); }
 
 /* -- 04 / Skills ------------------------------------------------------------
@@ -906,7 +907,6 @@ footer .footer-accent { color: var(--accent); }
 @media (max-width: 768px) {
   .hero-avatar { display: none; }
   .about-avatar { display: block; }
-  #about .section-label, #about .section-title { text-align: center; }
 }
 
 /* Mobile tap states for cards */
