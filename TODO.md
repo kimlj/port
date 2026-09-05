@@ -105,6 +105,91 @@ Whichever way, two things the page needs either way:
   and the wrong one for a chart that has a slightly old copy on disk.
 
 
+## Redesign Skills, Experience and About
+
+Sections 04, 05 and 06 are the last three still on the original design, and they
+read as template. Agreed 5 Sep 2026; not started.
+
+### What is actually wrong
+
+**Three box-grids in a row.** Skills is four icon cards, the Experience sidebar
+is six icon rows, About is four stat cards — the same atom (icon, bold label,
+grey blurb) three times running. That is why Skills and About feel like the same
+section: the page has one shape doing three different jobs.
+
+**They assert where the rest of the page shows.** The reader arrives straight out
+of an evidence ledger where every system carries the constraint it is held to,
+and lands on *"Attention to Detail — Meticulous in identifying bugs, edge cases,
+and quality issues."* That is a drop in rigour from the section directly above
+it. *Analytical Thinking* and *English Proficiency* are the same problem.
+
+**The tech list appears three times.** The marquee, the expertise cards restating
+it as prose, then About's second paragraph naming it again — three recitations
+within two sections.
+
+**Two of the four stat cards are not numbers.** `Full` and `AI` sit in a
+`stat-number` slot beside two that genuinely count up, so the row reads as
+padding.
+
+**The marquee is decorative rather than readable.** Scrolling text cannot be
+scanned, searched or linked to.
+
+### The shape to aim for
+
+Three different shapes, with density falling as the reader approaches the contact
+form — 04 a list, 05 two rows of prose, 06 a single measured column. Right now
+density stays flat and boxy the whole way down.
+
+**Skills becomes the legend for the rest of the page.** Marquee and cards go.
+In their place, a two-column typeset list where each technology names where on
+this site it was used:
+
+    TypeScript   ·  WordWarz.io   MDS Pro   RecodeAI   kimlj.dev
+    Python       ·  Avatar pipeline   Job Email Watcher
+    ComfyUI      ·  Avatar pipeline   Style transfer   Fashion generation
+
+Serif for the technology, mono for the provenance — the ledger's typography, but
+a list rather than rows, so section 04 does not become a third index after
+Selected Work and the AI Showcase. It ties 04 back to 01 and 03, and it answers
+the question a reader actually has (how much has this been used) rather than the
+one they do not (is the name known).
+
+**Experience loses the apparatus and keeps the substance.** Two entries do not
+need a progress rail, ripple dots and a sidebar; the chrome outweighs the
+content. Two rows: mono date column, serif role, prose underneath.
+
+Key Strengths comes out entirely. The claims are already made better elsewhere —
+the showcase demonstrates AI/LLM proficiency, Build Activity demonstrates
+consistency, the guard column demonstrates attention to detail. The *Open to
+remote work* badge stays; it is real and actionable.
+
+**About becomes one column of prose.** With the technology list living in Skills
+with receipts, About's second paragraph goes. Two paragraphs on how the work is
+done rather than what is known.
+
+The stat cards go with it. Either all four are real checkable figures or the row
+should not exist — and there are real ones on the page now (2,253 contributions
+this year, 817 sessions, 5.1 hrs per working day, 66 avatars, 8 AI systems). One
+quiet line of those under the portrait, which also ties 06 back to 02.
+
+### Settle before starting
+
+- **The technology → project mapping has to come from the owner.** It is the
+  whole value of the Skills idea and it cannot be guessed at. Invented provenance
+  on a page that argues against hallucination is the same own goal as the
+  illustrative transcripts below.
+- **Dropping Key Strengths and the stat cards is a content decision, not a layout
+  one.** If they are there because a recruiter asked for them, redesign them
+  instead of removing them.
+- The label reads `05 / Journey` while the heading reads `Experience`. Pick one.
+
+Cost is roughly 88 CSS references across `skills-marquee`, `skill-chip`,
+`expertise-`, `timeline`, `competency-`, `sidebar-card`, `availability-`,
+`about-` and `stat-card`, most of them deletions. Start with Skills — it carries
+the most weight in the plan, and Experience and About are partly subtraction once
+it exists.
+
+
 ## Smaller, unscheduled
 
 - **Two AI transcripts are illustrative.** The behaviour in `ai-ledger.js` is read

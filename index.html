@@ -911,6 +911,11 @@ footer .footer-accent { color: var(--accent); }
 
 /* AI Showcase Section */
 .ai-showcase-intro { color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; font-weight: 300; max-width: 700px; margin-bottom: 3.5rem; }
+/* Wider measure and a much smaller gap, but only where a stage strip follows:
+   700px broke this lede over three lines and 3.5rem then held it a third of a
+   screen away from the tabs it is introducing. The margin was sized for four
+   stacked blocks, which is not what is under it any more. */
+.has-stages .ai-showcase-intro { max-width: 860px; margin-bottom: 1.5rem; }
 .ai-showcase-intro code { font-family: var(--mono); font-size: 0.82rem; color: var(--accent); background: var(--accent-dim); padding: 0.15rem 0.45rem; border-radius: 4px; }
 
 .showcase-block { margin-bottom: 4rem; }
@@ -919,6 +924,39 @@ footer .footer-accent { color: var(--accent); }
 .showcase-step::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.2), transparent); max-width: 200px; }
 .showcase-header h3 { font-family: var(--serif); font-size: 1.5rem; font-weight: 400; }
 .showcase-caption { font-size: 0.82rem; color: var(--text-muted); font-weight: 300; font-style: italic; line-height: 1.6; }
+
+/* The Avatar pipeline panel is four stages of one process, and it used to be all
+   four stacked: 3,374px, against 377 for the panel below it. Opening it dropped
+   the reader into a scroll with no visible end, and the three stages they were
+   not reading cost them the one they were.
+
+   They are tabs now, so the panel is the height of a single stage. The strip is
+   built by ai-ledger.js out of the blocks themselves — a stage cannot appear in
+   the strip and not the panel, and a fifth one means adding a fifth block and
+   nothing else. */
+.ev-stages { display: flex; flex-wrap: wrap; gap: 0.35rem 1.9rem; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
+.ev-stage-tab {
+  display: inline-flex; align-items: baseline; gap: 0.5rem;
+  padding: 0 0 0.75rem; margin-bottom: -1px;
+  border: 0; border-bottom: 1px solid transparent; border-radius: 0;
+  background: none; font: inherit; color: var(--text-dim); cursor: pointer;
+  transition: color 0.25s ease, border-color 0.25s ease;
+}
+.ev-stage-tab .n { font-family: var(--mono); font-size: 0.58rem; letter-spacing: 0.1em; }
+.ev-stage-tab .t { font-size: 0.88rem; white-space: nowrap; }
+.ev-stage-tab:hover { color: var(--text-muted); }
+.ev-stage-tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+/* the open stage is marked the way the open row above it is: an accent underline */
+.ev-stage-tab.is-current { color: var(--text); border-bottom-color: var(--accent); }
+.ev-stage-tab.is-current .n { color: var(--accent); }
+
+/* is-stage is added by the script, so without it the four blocks simply stack as
+   they did before — the feature is the only thing lost */
+.showcase-block.is-stage { display: none; margin-bottom: 0; }
+.showcase-block.is-stage.is-current { display: block; }
+/* the tab carries the step number and name, so the block need not repeat them */
+.is-stage .showcase-step { display: none; }
+.is-stage .showcase-header { margin-bottom: 0.9rem; }
 
 .avatar-accordion { margin-bottom: 0.5rem; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; transition: border-color 0.3s; }
 .avatar-accordion:hover { border-color: var(--border-hover); }
@@ -941,7 +979,10 @@ footer .footer-accent { color: var(--accent); }
 .base-prompt-block code { font-family: var(--mono); font-size: 0.75rem; color: var(--text-muted); line-height: 1.6; word-break: break-word; }
 .prompt-hint { font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim); margin-bottom: 1.25rem; letter-spacing: 0.05em; }
 
-.workflow-image-wrap { border-radius: 16px; overflow: hidden; border: 1px solid var(--border); background: linear-gradient(135deg, rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.06) 0%, rgba(0,255,200,0.04) 50%, rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.06) 100%); padding: 1.25rem; }
+/* Capped and centred like the comparison in the stage before it. At the full
+   width of the panel the node graph was 602px tall for a screenshot nobody reads
+   node labels off anyway — it is an overview, and it costs less as one. */
+.workflow-image-wrap { border-radius: 16px; overflow: hidden; border: 1px solid var(--border); background: linear-gradient(135deg, rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.06) 0%, rgba(0,255,200,0.04) 50%, rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.06) 100%); padding: 1.25rem; max-width: 1100px; margin-left: auto; margin-right: auto; }
 .workflow-image-wrap img { width: 100%; display: block; border-radius: 10px; }
 
 .batch-flow { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 0.75rem; align-items: stretch; margin-top: 2rem; }
@@ -1020,6 +1061,71 @@ footer .footer-accent { color: var(--accent); }
 .fashion-before-after { display: flex; align-items: center; gap: 1.5rem; }
 .fashion-ba-item { display: flex; flex-direction: column; gap: 0.5rem; width: 180px; flex-shrink: 0; }
 .fashion-ba-item img { width: 100%; border-radius: 12px; border: 2px solid var(--border); background: var(--bg-card); }
+
+/* Style transfer and Fashion generation are the same figure twice — one source,
+   an arrow, and what came out of it — with almost no prose around it. Stacked
+   down the page at the section's default rhythm each opened at close to a screen
+   and a half, most of it the 4rem between blocks and a row of outputs stretched
+   to whatever the viewport happened to be: on a wide screen the four results
+   came out larger than the reference they were generated from, which inverts the
+   comparison the panel is making.
+
+   So the figure gets a column of its own beside the writing rather than under
+   it, and stays the one row it always was: the source next to what it produced
+   IS the comparison, and breaking it over two lines separates the two halves of
+   the claim. What the column does is cap it — the outputs can no longer grow
+   past the reference, because there is only so much column.
+
+   The right track is the wider of the two. The writing is a heading, three lines
+   of caption and four chips; the figure is five images and has more to do with
+   the room. Below 1200px there is not enough panel for both, so they stack and
+   the figure returns to the left edge — kept right it hangs off the end of the
+   writing. */
+.ev-figure { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: 2.5rem; align-items: start; }
+.ev-figure-note { display: flex; flex-direction: column; gap: 1.5rem; }
+.ev-compact .ai-showcase-intro { margin-bottom: 1.75rem; }
+/* the note column's own gap spaces these now */
+.ev-compact .showcase-header { margin-bottom: 0; }
+.ev-compact .showcase-caption { max-width: 62ch; }
+
+/* Aligned at the top rather than centred: the two labels then sit on one line,
+   and the reference hanging lower than the outputs is the size difference doing
+   the talking. Centring staggered the labels and read as a mistake. */
+.ev-figure .ipadapter-demo,
+.ev-figure .fashion-demo {
+  /* stated, not inherited: the section-wide rule turns these into a column at
+     768px, which inside a capped figure is 200px earlier than they need it */
+  flex-direction: row; align-items: flex-start; gap: 0.9rem; margin-bottom: 0;
+  width: 100%; max-width: 660px; justify-self: end;
+}
+.ev-figure .ipadapter-arrow { align-self: center; }
+/* the source stays the largest single image — it is what the rest are derived
+   from, and at the size of one of them that reading is lost */
+.ev-figure .ipadapter-ref,
+.ev-figure .fashion-source { width: 132px; }
+.ev-figure .ipadapter-outputs,
+.ev-figure .fashion-outputs { min-width: 0; }
+/* Four across for as long as they stay legible. The section-wide two-up rule
+   turns at 768px, which was written for a grid the width of the page; inside a
+   capped figure it doubles the size of an output the moment a tablet loads it. */
+.ev-figure .ipadapter-grid,
+.ev-figure .fashion-grid { grid-template-columns: repeat(4, 1fr); gap: 0.5rem; }
+/* No room to stand them side by side any more: the source goes above the
+   outputs, and the arrow that pointed across points down. Rotating the box, not
+   the svg — the svg's transform belongs to batchArrowPulse, whose nudge then
+   goes downward too, which is what it should do. */
+@media (max-width: 640px) {
+  .ev-figure .ipadapter-demo,
+  .ev-figure .fashion-demo { flex-direction: column; align-items: stretch; }
+  .ev-figure .ipadapter-ref,
+  .ev-figure .fashion-source { width: 148px; }
+  .ev-figure .ipadapter-arrow { width: 148px; display: flex; justify-content: center; transform: rotate(90deg); }
+}
+/* and two-up only once four would be thumbnails */
+@media (max-width: 480px) {
+  .ev-figure .ipadapter-grid,
+  .ev-figure .fashion-grid { grid-template-columns: repeat(2, 1fr); }
+}
 @media (max-width: 768px) {
   .ipadapter-two-col { grid-template-columns: 1fr; }
   .ipadapter-demo { flex-direction: column; }
@@ -1056,47 +1162,57 @@ footer .footer-accent { color: var(--accent); }
 
 .compare-pairs { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
 .compare-pair-label { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-dim); margin-bottom: 0.75rem; }
-.showcase-compare { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; align-items: center; }
-.showcase-compare-side { border: 1px dashed var(--border); border-radius: 20px; padding: 1.5rem; background: rgba(var(--bg-card-r),var(--bg-card-g),var(--bg-card-b),0.5); transition: transform, opacity, color, background-color, border-color, box-shadow; transition-duration: 0.4s; text-align: center; }
+/* Capped, and centred with everything that belongs to it — the seed, the two
+   prompts, the pager. The pair is the point, and across the full panel the two
+   halves of one comparison ended up 900px apart with a circle marooned in the
+   middle of each; capped but left-aligned it then sat off to one side of a stage
+   whose neighbours all run the full width. */
+.showcase-compare { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; align-items: center; max-width: 720px; margin-left: auto; margin-right: auto; }
+.showcase-compare-side { border: 1px dashed var(--border); border-radius: 20px; padding: 0.9rem; background: rgba(var(--bg-card-r),var(--bg-card-g),var(--bg-card-b),0.5); transition: transform, opacity, color, background-color, border-color, box-shadow; transition-duration: 0.4s; text-align: center; }
 .showcase-compare-side:hover { border-color: var(--border-hover); }
-.showcase-compare-label { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.75rem; display: inline-block; padding: 0.25rem 0.6rem; border-radius: 6px; }
+.showcase-compare-label { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.5rem; display: inline-block; padding: 0.25rem 0.6rem; border-radius: 6px; }
 .showcase-compare-label.before { color: var(--text-dim); background: var(--white-overlay); border: 1px solid var(--border); }
 .showcase-compare-label.after { color: var(--accent); background: var(--accent-dim); border: 1px solid rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.15); }
-.showcase-compare-side .compare-img { width: 140px; height: 140px; border-radius: 50%; background: var(--bg-card); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem; overflow: hidden; }
+.showcase-compare-side .compare-img { width: 104px; height: 104px; border-radius: 50%; background: var(--bg-card); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; overflow: hidden; }
 .showcase-compare-side .compare-img img { width: 100%; height: 100%; object-fit: cover; }
 .showcase-compare-side .compare-img svg { width: 28px; height: 28px; stroke: var(--text-dim); fill: none; stroke-width: 1; opacity: 0.3; }
 .showcase-compare-arrow { color: var(--text-dim); font-size: 1.25rem; }
 .showcase-compare-side p { font-size: 0.68rem; color: var(--text-dim); font-weight: 300; font-style: italic; line-height: 1.5; }
 
-.sampler-settings { margin-top: 2rem; }
+.sampler-settings { margin-top: 1.25rem; }
 .sampler-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
 .sampler-param { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.85rem; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-card); }
 .sampler-key { font-family: var(--mono); font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.04em; }
 .sampler-val { font-family: var(--mono); font-size: 0.72rem; color: var(--accent); font-weight: 500; }
-.sampler-note { font-size: 0.72rem; color: var(--text-dim); font-weight: 300; font-style: italic; line-height: 1.6; margin-top: 0.75rem; max-width: 600px; }
+/* 800 rather than 600 because the sentence needs 762 to stay on one line, and
+   broken over two it reads as a paragraph rather than the caption it is */
+.sampler-note { font-size: 0.72rem; color: var(--text-dim); font-weight: 300; font-style: italic; line-height: 1.6; margin-top: 0.75rem; max-width: 800px; }
 
-.prompt-tabs { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+.prompt-tabs { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
 .prompt-tab { font-family: var(--mono); font-size: 0.7rem; padding: 0.4rem 1rem; border-radius: 999px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); cursor: pointer; transition: transform, opacity, color, background-color, border-color, box-shadow; transition-duration: 0.25s; letter-spacing: 0.02em; }
 .prompt-tab:hover { border-color: var(--border-hover); color: var(--text); }
 .prompt-tab.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
 .prompt-category { display: none; }
 .prompt-category.active { display: block; }
 /* ============ AI Showcase — the evidence ledger ============ */
-/* Eight systems as rows; the open one proves itself below in whatever medium it
-   actually works in. The assistants transcribe, the pipelines run their steps,
+/* Eight systems as rows, each opening a drawer under itself in whatever medium
+   it actually works in. The assistants transcribe, the pipelines run their steps,
    the image systems keep the walkthrough they already had — the engineering
    there is the process, not the finished avatars, so flattening it to a grid of
    output would throw away the part worth showing.
 
-   .ai-tab / .ai-tab-content keep their names: the switching logic that drove the
-   old three-button strip is unchanged, and the rows are still tabs underneath. */
+   .ai-tab / .ai-tab-content keep their names from the three-button strip these
+   started as; only one row is ever open, so the switching logic underneath is
+   still the tab logic, with a click on the open row closing it. */
 .ev-intro { color: var(--text-muted); max-width: 62ch; margin: -1.5rem 0 1.75rem; font-size: 1rem; }
 
-.ai-tabs { display: flex; flex-direction: column; border-top: 1px solid var(--border); margin-bottom: 2rem; }
+.ai-tabs { display: block; border-top: 1px solid var(--border); margin-bottom: 2rem; }
 .ai-tab {
-  display: grid; grid-template-columns: 2.1rem 1fr auto auto;
+  display: grid; grid-template-columns: 2.1rem 1fr auto auto 0.8rem;
   align-items: baseline; gap: 0.9rem 1.3rem;
-  padding: 0.85rem 0; width: 100%;
+  /* right padding so the caret sits inside the row rather than on the rule that
+     ends it; only padding-left animates, so this stays put through hover */
+  padding: 0.85rem 0.75rem 0.85rem 0; width: 100%;
   border: 0; border-bottom: 1px solid var(--border);
   background: none; text-align: left; font: inherit; color: inherit; cursor: pointer;
   border-radius: 0;
@@ -1124,6 +1240,51 @@ footer .footer-accent { color: var(--accent); }
 .ai-tab.active .ev-num, .ai-tab.active .ev-guard { color: var(--accent); }
 .ai-tab.active .ev-name { color: var(--text); }
 .ai-tab:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+/* The one affordance that says a row opens rather than navigates. Drawn from two
+   borders rather than a glyph so it inherits colour with the row and rotates
+   about its own centre. */
+.ev-caret {
+  align-self: center; justify-self: end; width: 7px; height: 7px;
+  border-right: 1px solid var(--text-dim); border-bottom: 1px solid var(--text-dim);
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform 0.35s var(--ease-out), border-color 0.3s ease;
+}
+.ai-tab:hover .ev-caret { border-color: var(--text-muted); }
+.ai-tab.active .ev-caret { border-color: var(--accent); transform: translateY(1px) rotate(-135deg); }
+
+/* The open panel is a drawer under its own row, not one panel below all eight:
+   with the list this long the row you clicked had scrolled out of sight by the
+   time its evidence appeared, and nothing on screen said which claim you were
+   looking at the proof of.
+
+   The wrapper is a one-track grid because that is the only way to transition to
+   a height nobody has measured: 0fr to 1fr interpolates against the content's
+   own size, so a panel can grow while its transcript is still typing into it.
+   A measured max-height would have to be re-measured every time it did. */
+.ev-drawer {
+  display: grid; grid-template-rows: 0fr;
+  transition: grid-template-rows 0.5s var(--ease-out);
+}
+.ev-drawer.is-open { grid-template-rows: 1fr; }
+/* The grid child is what clips, and it is a bare wrapper rather than the panel
+   itself for one reason: a 0fr track still cannot shrink below its item's
+   minimum, and min-height only zeroes the content box. Padding on the item
+   survives it — with the panel as the grid child the drawer bottomed out at the
+   72px of its own padding and the last frame of every close was a snap. */
+.ev-drawer > .ev-clip {
+  min-height: 0; overflow: hidden;
+  opacity: 0; transition: opacity 0.4s ease;
+}
+.ev-drawer.is-open > .ev-clip { opacity: 1; }
+/* released once the slide is over, so nothing inside is clipped at its own edge
+   for the rest of the panel's life */
+.ev-drawer.is-settled > .ev-clip { overflow: visible; }
+/* the drawer closes the block the way a row's own border closes a row, and it
+   carries the line for as long as the panel is on screen — through the close,
+   so the line travels up with the content rather than vanishing ahead of it */
+.ev-drawer.is-live { border-bottom: 1px solid var(--border); }
+.ev-clip > .ai-tab-content.active { padding: 1.9rem 0 2.6rem 0.7rem; }
 
 .ev-lede { color: var(--text-muted); max-width: 68ch; font-size: 0.95rem; margin: 0 0 1.5rem; }
 .ev-split { display: grid; grid-template-columns: 1.05fr 1fr; gap: 2.25rem; align-items: start; }
@@ -1173,10 +1334,15 @@ footer .footer-accent { color: var(--accent); }
 @media (max-width: 900px) {
   .ev-split { grid-template-columns: 1fr; gap: 1.5rem; }
 }
+@media (max-width: 1200px) {
+  .ev-figure { grid-template-columns: 1fr; gap: 1.75rem; }
+  .ev-figure .ipadapter-demo,
+  .ev-figure .fashion-demo { justify-self: start; }
+}
 @media (max-width: 700px) {
   /* the model column is the first to go: the name and what holds it are the
      two a reader is actually scanning for */
-  .ai-tab { grid-template-columns: 1.9rem 1fr auto; gap: 0.7rem 0.9rem; }
+  .ai-tab { grid-template-columns: 1.9rem 1fr auto 0.8rem; gap: 0.7rem 0.9rem; }
   .ev-model { display: none; }
   .ev-name { font-size: 1rem; white-space: normal; }
   .ev-guard { font-size: 0.53rem; white-space: normal; }
@@ -1185,16 +1351,16 @@ footer .footer-accent { color: var(--accent); }
 .ai-tab:hover { border-color: var(--border-hover); color: var(--text); }
 .ai-tab-content { display: none; }
 .ai-tab-content.active { display: block; }
-.prompt-category-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1.5rem; font-weight: 300; }
-.prompt-display { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
+.prompt-category-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 0.85rem; font-weight: 300; }
+.prompt-display { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 0.9rem auto 0; max-width: 720px; }
 .prompt-block { padding: 0.85rem 1rem; border-radius: 10px; border: 1px solid var(--border); background: var(--bg-card); font-family: var(--mono); font-size: 0.65rem; line-height: 1.7; word-break: break-word; }
 .prompt-block-label { font-family: var(--sans); font-size: 0.6rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.5rem; }
 .prompt-block.before .prompt-block-label { color: var(--text-dim); }
 .prompt-block.before { color: var(--text-dim); }
 .prompt-block.after .prompt-block-label { color: var(--accent); }
 .prompt-block.after { color: var(--text-muted); border-color: rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.15); }
-.prompt-seed { text-align: center; margin-top: 0.75rem; font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim); letter-spacing: 0.04em; opacity: 0.7; }
-.prompt-nav { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: 1.25rem; }
+.prompt-seed { text-align: center; max-width: 720px; margin: 0.5rem auto 0; font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim); letter-spacing: 0.04em; opacity: 0.7; }
+.prompt-nav { display: flex; align-items: center; justify-content: center; gap: 1rem; margin: 0.75rem auto 0; max-width: 720px; }
 .prompt-nav-btn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border); background: transparent; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform, opacity, color, background-color, border-color, box-shadow; transition-duration: 0.25s; font-size: 0.85rem; }
 .prompt-nav-btn:hover { border-color: var(--accent); color: var(--accent); }
 .prompt-nav-counter { font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim); letter-spacing: 0.05em; min-width: 3rem; text-align: center; }
@@ -1218,8 +1384,8 @@ footer .footer-accent { color: var(--accent); }
   .prompt-nav { margin-top: 0.6rem; gap: 0.75rem; }
   .prompt-nav-btn { width: 28px; height: 28px; font-size: 0.75rem; }
   .prompt-nav-counter { font-size: 0.62rem; }
-  .ai-tabs { gap: 0.4rem; margin-bottom: 1.5rem; }
-  .ai-tab { font-size: 0.65rem; padding: 0.4rem 0.9rem; }
+  .ai-tabs { margin-bottom: 1.5rem; }
+  .ev-clip > .ai-tab-content.active { padding: 1.4rem 0 2rem 0.6rem; }
   .prompt-tabs { gap: 0.35rem; margin-bottom: 0.75rem; }
   .prompt-tab { font-size: 0.6rem; padding: 0.35rem 0.75rem; }
   .workflow-scroll-hint { display: none; }
@@ -1754,8 +1920,10 @@ footer .footer-accent { color: var(--accent); }
   <p class="ev-intro reveal">Eight AI systems, language and image. The column that matters is the last one &mdash; what each is held to, so it cannot answer past what it actually knows.</p>
   <!-- Rows are generated from the panels below by the ledger script, so a system
        cannot appear in one and not the other. Each panel carries its own row
-       text as data attributes. -->
-  <div class="ai-tabs reveal" role="tablist" aria-label="AI systems"></div>
+       text as data attributes, and the script moves the panel up into this strip
+       behind its own row — they are written as one block here only because that
+       is the readable place for them. -->
+  <div class="ai-tabs reveal" role="group" aria-label="AI systems"></div>
 
   <div class="ai-tab-content active" data-tab="site-assistant"
        data-name="MDS Pro site assistant" data-model="Claude API" data-guard="No tools, no database"
@@ -2271,42 +2439,40 @@ footer .footer-accent { color: var(--accent); }
 
   </div><!-- /pipeline tab -->
 
-  <div class="ai-tab-content" data-tab="style-transfer"
+  <div class="ai-tab-content ev-compact" data-tab="style-transfer"
        data-name="Style transfer" data-model="IPAdapter" data-guard="One illustration as the source"
        data-bar="showcase &middot; consistency across poses">
   <p class="ai-showcase-intro reveal">Style is extracted via <code>CLIP Vision</code> and injected through <code>IPAdapter Advanced</code>, while text prompts control pose and expression independently.</p>
 
-  <div class="showcase-block reveal">
-    <div class="ipadapter-tech">
-      <div class="ipadapter-tech-item">
-        <code>DreamShaper XL Lightning</code>
-        <span>Base model</span>
+  <!-- What it is on the left, the figure it describes in a column of its own on
+       the right: the reference above, the four angles it generated below. -->
+  <div class="ev-figure reveal">
+    <div class="ev-figure-note">
+      <div class="showcase-header">
+        <span class="showcase-step">Result</span>
+        <h3>Multi-Angle Generation</h3>
+        <p class="showcase-caption">Given a single character illustration, generate consistent poses and expressions using IPAdapter style transfer — preserving the original art style across every angle.</p>
       </div>
-      <div class="ipadapter-tech-item">
-        <code>IPAdapter SDXL ViT-H</code>
-        <span>Style transfer</span>
-      </div>
-      <div class="ipadapter-tech-item">
-        <code>CLIP-ViT-H-14</code>
-        <span>Vision encoder</span>
-      </div>
-      <div class="ipadapter-tech-item">
-        <code>Style Transfer Precise</code>
-        <span>Weight type</span>
+      <div class="ipadapter-tech">
+        <div class="ipadapter-tech-item">
+          <code>DreamShaper XL Lightning</code>
+          <span>Base model</span>
+        </div>
+        <div class="ipadapter-tech-item">
+          <code>IPAdapter SDXL ViT-H</code>
+          <span>Style transfer</span>
+        </div>
+        <div class="ipadapter-tech-item">
+          <code>CLIP-ViT-H-14</code>
+          <span>Vision encoder</span>
+        </div>
+        <div class="ipadapter-tech-item">
+          <code>Style Transfer Precise</code>
+          <span>Weight type</span>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="showcase-block reveal">
-    <div class="showcase-header">
-      <span class="showcase-step">Result</span>
-      <h3>Multi-Angle Generation</h3>
-      <p class="showcase-caption">Given a single character illustration, generate consistent poses and expressions using IPAdapter style transfer — preserving the original art style across every angle.</p>
-    </div>
-  </div>
-
-  <!-- Reference → Generated Angles -->
-  <div class="showcase-block reveal">
     <div class="ipadapter-demo">
       <div class="ipadapter-ref">
         <span class="prompt-label">Reference</span>
@@ -2340,38 +2506,38 @@ footer .footer-accent { color: var(--accent); }
   </div>
   </div><!-- /style-transfer tab -->
 
-  <div class="ai-tab-content" data-tab="fashion"
+  <div class="ai-tab-content ev-compact" data-tab="fashion"
        data-name="Fashion generation" data-model="ControlNet" data-guard="Depth map locks the pose"
        data-bar="showcase &middot; mannequin to product shots">
   <p class="ai-showcase-intro reveal">Using <code>ControlNet Depth</code> to preserve a mannequin's pose and body structure, then generating photorealistic clothing variations and tattoo removal from text prompts.</p>
 
-  <div class="showcase-block reveal">
-    <div class="ipadapter-tech">
-      <div class="ipadapter-tech-item">
-        <code>RealVisXL V5.0 Lightning</code>
-        <span>Base model</span>
+  <!-- Clothing generation: what it is on the left, the mannequin it started from
+       above the outfits it produced in a column of its own on the right. -->
+  <div class="ev-figure reveal">
+    <div class="ev-figure-note">
+      <div class="showcase-header">
+        <span class="showcase-step">Clothing Generation</span>
+        <h3>Mannequin to Product Shots</h3>
+        <p class="showcase-caption">A blank mannequin serves as the base pose. ControlNet extracts the depth map to lock the silhouette, while the model generates different outfits from text prompts with dynamic ControlNet strength per clothing type.</p>
       </div>
-      <div class="ipadapter-tech-item">
-        <code>ControlNet Depth SDXL</code>
-        <span>Pose preservation</span>
+      <div class="ipadapter-tech">
+        <div class="ipadapter-tech-item">
+          <code>RealVisXL V5.0 Lightning</code>
+          <span>Base model</span>
+        </div>
+        <div class="ipadapter-tech-item">
+          <code>ControlNet Depth SDXL</code>
+          <span>Pose preservation</span>
+        </div>
+        <div class="ipadapter-tech-item">
+          <code>Depth Anything V2</code>
+          <span>Depth preprocessor</span>
+        </div>
+        <div class="ipadapter-tech-item">
+          <code>DPM++ SDE Karras</code>
+          <span>Sampler</span>
+        </div>
       </div>
-      <div class="ipadapter-tech-item">
-        <code>Depth Anything V2</code>
-        <span>Depth preprocessor</span>
-      </div>
-      <div class="ipadapter-tech-item">
-        <code>DPM++ SDE Karras</code>
-        <span>Sampler</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Clothing Generation -->
-  <div class="showcase-block reveal">
-    <div class="showcase-header">
-      <span class="showcase-step">Clothing Generation</span>
-      <h3>Mannequin to Product Shots</h3>
-      <p class="showcase-caption">A blank mannequin serves as the base pose. ControlNet extracts the depth map to lock the silhouette, while the model generates different outfits from text prompts with dynamic ControlNet strength per clothing type.</p>
     </div>
 
     <div class="fashion-demo">

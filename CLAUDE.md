@@ -19,6 +19,36 @@ The `<style>` block has no nesting and no preprocessor. **Check brace balance
 after editing it**: an unclosed rule silently kills every rule after it, and the
 page renders as unstyled links rather than throwing anything.
 
+## The AI Showcase
+
+The most intricate part of the file, and the one place where the markup is not
+what the page shows. Two levels of switching, both generated rather than written
+out twice.
+
+The eight systems are rows in `.ai-tabs`. `ai-ledger.js` builds each row from its
+panel's `data-name` / `data-model` / `data-guard`, then **moves the panel up into
+the strip behind its own row** — the markup keeps all eight panels in one
+readable block below the strip, the page shows them as eight drawers. A system
+therefore cannot appear in the index and not the panel, and a ninth means adding
+one `.ai-tab-content` and nothing else.
+
+A drawer is a one-track grid transitioning `0fr → 1fr`. That is the only way to
+animate to a height nobody has measured, which matters because the panel is
+still typing a transcript into itself while it opens; a measured `max-height`
+would need re-measuring every time it grew.
+
+Inside the Avatar pipeline panel its four `.showcase-block`s are a second
+switcher — a real tablist this time, since the tabs are together and their
+panels follow. Built the same way, out of the `01 — …` text each block already
+carried, which is then hidden because the tab is saying it. One stage is in
+layout at a time; stacked, that panel was 3,374px.
+
+Both switchers pin the clicked row. With the height animated the page shift
+arrives over half a second rather than at the click, so the correction runs every
+frame until the slide ends, and releases early if the reader touches the wheel.
+
+Classes these scripts add are prefixed `ev-`.
+
 ## The scripts
 
 Each is a self-contained IIFE that finds its own elements and returns quietly if
@@ -31,7 +61,7 @@ feature and nothing else.
 | `hero-particles.js` | Hero label, headline and lede split into glyphs the cursor pushes. |
 | `button-field.js` | Dot fields inside every CTA and the contact buttons. |
 | `section-ornaments.js` | Drift, trace and registration marks, Projects → footer. |
-| `ai-ledger.js` | The AI Showcase rows, transcripts and process logs. |
+| `ai-ledger.js` | The AI Showcase rows, transcripts and process logs, plus the Avatar pipeline's stage tabs. Two IIFEs. |
 | `activity-motion.js` | Build Activity animation and the chart tooltip. |
 | `project-visuals.js` | Shader backgrounds behind project cards. |
 | `horizon-glow.js` | WebGL glow behind the contact section. |
@@ -84,6 +114,15 @@ in more detail.
 - **Animate-on-view must arm on create, not on release.** Otherwise the panel
   paints its real values, then resets to animate them, and every figure arrives
   twice.
+- **A `0fr` grid track cannot shrink past its item's padding.** `min-height: 0`
+  zeroes the content box only. With the panel itself as the grid child, the
+  showcase drawer bottomed out at the 72px of its own padding and the last frame
+  of every close was a snap. The clip is a bare wrapper now, padding inside it.
+- **A page-width media query fires early inside a capped container.** The
+  section's two-up image rule turns at 768px, which is right for a grid the width
+  of the page and wrong inside a 600px figure — it doubled every output the
+  moment a tablet loaded one, and turned a 528px panel into 792. Anything capped
+  states its own columns and direction rather than inheriting them.
 
 ## Data
 
@@ -97,9 +136,12 @@ walkthrough.
 ## Working here
 
 - **Branch, don't commit to `main`** — `main` is what Vercel deploys.
-- **Verify in a browser, not by reading.** Most bugs in this file are visual or
-  layout-order problems that reading the diff will not show. Check both themes,
-  a phone width, and reduced motion.
+- **Verify in a browser when the layout changes** — a new element in the flow, a
+  flex or grid direction, a cap, anything a media query or an inherited rule
+  might disagree with. Most bugs in this file are visual or layout-order problems
+  that reading the diff will not show. Check both themes, a phone width, and
+  reduced motion. One value on a rule you have already watched render does not
+  need a browser; opening one for that is cost with no information in it.
 - **Check for horizontal overflow** after any layout change:
   `documentElement.scrollWidth` should equal `clientWidth`.
 - Content is the owner's professional history. **Do not invent figures, dates or
