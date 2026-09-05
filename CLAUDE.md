@@ -121,93 +121,20 @@ talking their way past every rule in the prompt is a wrong sentence, which is a
 copy bug. Give it one tool and the worst case becomes a reached system. Do not
 add one.
 
-**Half of it is not in this repo.** The corpus, the system prompt, the guards and
-the three scripts that build them live in `kimlj/port-assistant`, which is
-private; `scripts/sync-assistant.mjs` clones it during the Vercel build and
-`scripts/build.mjs` runs the generator after it. The seven files are gitignored
-here so they cannot be committed back by accident, and `lib/kb.json` is in
-neither repo because it is generated on every build. `docs/assistant-setup.md`
-has the whole arrangement, the token it needs and what to do when it breaks.
+**Everything else about it is in `kimlj/port-assistant`, which is private.** The
+corpus, the system prompt, the guards, the three scripts that build them, and the
+notes describing all of it. `scripts/sync-assistant.mjs` clones that repo during
+the Vercel build and `scripts/build.mjs` runs the generator after it; the seven
+files are gitignored here so they cannot be committed back, and `lib/kb.json` is
+in neither repo because it is generated on every build.
 
 That pull is a **build** step and must stay one. A per-request fetch would put a
-second host inside the property this whole section rests on: whoever held it
-would be writing the system prompt for a page that answers in the first person
-as a real person. The paragraph above stops being true the moment the prompt
-arrives over the network.
+second host inside the property above: whoever held it would be writing the
+system prompt for a page that answers in the first person as a real person.
 
-Everything below describes those files wherever they happen to be checked out.
-
-`lib/kb.json` is **generated, never edited** — `scripts/build-kb.mjs` reads
-`index.html` and the resume `.docx` and writes it, so the page and the assistant
-cannot disagree. Re-run it after any content change; `--check` fails if it is
-stale. Two extraction traps it already hit: a class regex bounded by `\b` matches
-`skill-aside-head` when asked for `skill-aside`, and reading an element's text by
-slicing to the next sibling of the same class runs to the end of the block when
-there is only one of them.
-
-The resume is authoritative on employment. MDS Pro is a role with dates there and
-a project card here, so the two are merged rather than compared — the assistant
-answers "where does he work now" from the resume even though section 05 does not
-list it.
-
-`lib/owner.json` is the **one authored file** in the corpus, and the only place a
-fact may come from that is neither on the page nor in the resume. It exists
-because fair questions — what he is proudest of, what he wants next, why the
-degree stopped — have answers only the owner has, and the alternative is the
-assistant inventing them in the first person. Its 54 answers are the only
-sentences a reader cannot check against the page, which is the whole cost of it.
-**Do not edit it by hand.** It is written by `scripts/import-answers.mjs` from
-`docs/assistant-answers.md`, which is the file the owner edits; an answer is
-imported only when its `STATUS:` reads `OK`, so a draft cannot reach the page by
-being skimmed past. The importer reads every `docs/assistant-answers*.md` and
-de-dupes by question text, keeping the last approved copy.
-
-If an answer in there would be better said on the page itself, **say it on the
-page** and delete it from the doc. Then the generator picks it up and there is no
-second copy to drift.
-
-`lib/knowledge.js` holds the facts and the rules separately. The facts are
-generated; the rules are hand-written, because a rule is a judgement and there is
-nothing to generate it from. They are written as tests rather than descriptions —
-a named sentence the model must not produce, with the wrong output quoted beside
-it — because a described distinction is not something a model can check itself
-against. The prompt is a constant with no clock in it: caching is a prefix match,
-and one changing byte would invalidate the whole corpus on every request.
-
-**It answers as Kim, in the first person.** The launcher says "Talk to Me", so
-the replies come from him rather than about him — but it says plainly that it is
-software whenever a visitor asks whether they are talking to a person, and the
-panel header reads `AI assistant` because with first-person replies that label is
-what tells a reader this is not Kim typing. Two rules exist only because of the
-voice: declining is harder in the first person, since a model asked its own rate
-has something plausible to say; and modesty is not vagueness, because "I've done
-a bit of dashboard work" throws away a fact.
-
-**It must never invent a preference.** "Which project are you most proud of" was
-the first question a real visitor asked, and a fabricated favourite attributed to
-a real person is worse than a fabricated figure — nobody can check it and he has
-to live with having supposedly said it. Where `owner.json` answers the question
-it answers from there; where it does not, it gives the record and hands the
-ranking back. Same shape for favourites, regrets, ambitions, and anything asking
-what he would think about something the page does not cover.
-
-`lib/guards.js` holds every counter in one object so swapping Maps for Redis is a
-change to that file alone. **All of it is in-memory and dies with the instance.**
-It is real protection against one impatient visitor and weak protection against a
-distributed one; the guards that actually close it are a WAF rate limit at the
-edge and a billing alert on the account, neither of which is application code.
-
-**Model output never reaches `innerHTML`.** `createElement` and `textContent`
-throughout `assets/js/chat.js`. The model is told to answer in plain text and
-does, but "asked nicely" is not a guarantee worth betting a script injection on.
-
-**A static server cannot test any of this.** `python -m http.server` answers
-every POST with `501 Unsupported method`, which looks like a broken endpoint and
-is not one. `scripts/devserver.mjs` serves the page and runs the real handlers
-with the model call stubbed, so the guards and the widget can be exercised
-without a key or any spend; `REAL=1` makes the call live. `vercel dev` also
-works and is closer to production.
-
+`docs/assistant-setup.md` has the arrangement, the token it needs, the local
+workflow and what to do when it breaks. The design notes and the rules live in
+that repo's own CLAUDE.md, next to the files they describe.
 ## Conventions that are load-bearing
 
 **Colour comes from the tokens, never from a literal.** `--accent`, `--bg`,
