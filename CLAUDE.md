@@ -121,6 +121,22 @@ talking their way past every rule in the prompt is a wrong sentence, which is a
 copy bug. Give it one tool and the worst case becomes a reached system. Do not
 add one.
 
+**Half of it is not in this repo.** The corpus, the system prompt, the guards and
+the three scripts that build them live in `kimlj/port-assistant`, which is
+private; `scripts/sync-assistant.mjs` clones it during the Vercel build and
+`scripts/build.mjs` runs the generator after it. The seven files are gitignored
+here so they cannot be committed back by accident, and `lib/kb.json` is in
+neither repo because it is generated on every build. `docs/assistant-setup.md`
+has the whole arrangement, the token it needs and what to do when it breaks.
+
+That pull is a **build** step and must stay one. A per-request fetch would put a
+second host inside the property this whole section rests on: whoever held it
+would be writing the system prompt for a page that answers in the first person
+as a real person. The paragraph above stops being true the moment the prompt
+arrives over the network.
+
+Everything below describes those files wherever they happen to be checked out.
+
 `lib/kb.json` is **generated, never edited** — `scripts/build-kb.mjs` reads
 `index.html` and the resume `.docx` and writes it, so the page and the assistant
 cannot disagree. Re-run it after any content change; `--check` fails if it is

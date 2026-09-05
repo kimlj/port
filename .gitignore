@@ -2,3 +2,19 @@
 .env
 .env*.local
 node_modules
+
+# The assistant's private half. These live in kimlj/port-assistant and are
+# copied in by scripts/sync-assistant.mjs at build time. Ignored here so a
+# `git add -A` cannot put the corpus, the system prompt or the guard
+# thresholds back into the public repo by accident.
+lib/owner.json
+lib/knowledge.js
+lib/guards.js
+docs/assistant-answers.md
+scripts/build-kb.mjs
+scripts/import-answers.mjs
+scripts/devserver.mjs
+
+# Generated during the build from index.html, the resume and lib/owner.json.
+# A generated file with a copy in git is a file that goes stale.
+lib/kb.json
