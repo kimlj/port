@@ -3510,6 +3510,24 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
     // reads as "no activity" - the opposite of what the section is for.
     .catch(function () { host.remove(); });
 
+  /* A figure with no date on it is not a fact, it is a claim. Both payloads
+     record when they were built, and the two halves refresh on different
+     schedules -- the calendar from a runner, the hours from this machine --
+     so each states its own rather than sharing one line that would have to
+     quietly describe the older of them. */
+  var ASOF_MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  function asOf(iso) {
+    var t = iso ? new Date(iso) : null;
+    if (!t || isNaN(t.getTime())) return '';
+    /* Built rather than localised. toLocaleDateString('en-GB') renders this
+       month as 'Sept', against the 'Sep' every other date on the page uses,
+       and on a non-English browser it would render the dateline in a
+       language the sentence around it is not written in. */
+    return t.getUTCDate() + ' ' + ASOF_MON[t.getUTCMonth()] + ' ' +
+      t.getUTCFullYear();
+  }
+
   function level(n) {
     if (!n) return 0;
     if (n < 5) return 1;
@@ -3623,7 +3641,8 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
     document.getElementById('aiActivityNote').textContent =
       'Includes private repositories, where ' +
       data.years[last].private.toLocaleString() + ' of ' + b.toLocaleString() +
-      ' of this year\u2019s contributions live. Generated from the GitHub API.';
+      ' of this year\u2019s contributions live. Generated from the GitHub API' +
+      (asOf(data.generatedAt) ? ' on ' + asOf(data.generatedAt) : '') + '.';
 
     host.hidden = false;
     // Parked only now: the panel is [hidden] while it is built, and a hidden
@@ -3653,6 +3672,24 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
     .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
     .then(render)
     .catch(function () { strip.remove(); if (caption) caption.remove(); });
+
+  /* A figure with no date on it is not a fact, it is a claim. Both payloads
+     record when they were built, and the two halves refresh on different
+     schedules -- the calendar from a runner, the hours from this machine --
+     so each states its own rather than sharing one line that would have to
+     quietly describe the older of them. */
+  var ASOF_MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  function asOf(iso) {
+    var t = iso ? new Date(iso) : null;
+    if (!t || isNaN(t.getTime())) return '';
+    /* Built rather than localised. toLocaleDateString('en-GB') renders this
+       month as 'Sept', against the 'Sep' every other date on the page uses,
+       and on a non-English browser it would render the dateline in a
+       language the sentence around it is not written in. */
+    return t.getUTCDate() + ' ' + ASOF_MON[t.getUTCMonth()] + ' ' +
+      t.getUTCFullYear();
+  }
 
   function compact(n) {
     if (n >= 1e9) return (n / 1e9).toFixed(1) + 'B';
@@ -3721,7 +3758,8 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
         '; token counts cover ' + monthName(d.firstDay) + ' \u2013 ' + monthName(d.lastDay) +
         ' only, because Claude Code prunes older transcripts. Output tokens rather than ' +
         'total \u2014 most of the raw figure is cached context re-read each turn, ' +
-        'which measures conversation length, not work.';
+        'which measures conversation length, not work.' +
+        (asOf(d.generatedAt) ? ' Measured ' + asOf(d.generatedAt) + '.' : '');
       caption.hidden = false;
     }
   }
