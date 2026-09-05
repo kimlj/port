@@ -23,8 +23,28 @@
       "section": "Working with you"
     },
     {
+      "q": "Can you work independently?",
+      "a": "Yes — that's been most of my experience so far. Every project on this page I built end to end, which means when something broke there was nobody to escalate it to. I'm used to deciding what to build next, researching my way through problems I haven't seen before, and being accountable for the result.",
+      "section": "Working with you"
+    },
+    {
+      "q": "What's your experience working with clients?",
+      "a": "My main experience is MDS Pro, where I work directly with the business owner in the US and with the nursing team who use the system every day. That means gathering requirements from people who aren't technical, explaining trade-offs in plain terms, and handling bug reports and change requests from actual users. It's one client rather than an agency's worth, but it's ongoing and the users are real.",
+      "section": "Working with you"
+    },
+    {
+      "q": "How do you communicate when requirements are unclear?",
+      "a": "I ask rather than guess — usually by describing back what I think is wanted and what it would actually do, so it can be corrected against something concrete instead of an abstract question. If it's still unclear, I'll build the smallest version that shows the idea and let people react to that. A wrong assumption caught early is much cheaper than one found after it's built.",
+      "section": "Working with you"
+    },
+    {
       "q": "Why should we hire you?",
       "a": "I think my biggest strength is ownership. I don't just like building individual features — I like understanding the whole system, from the user's problem and database design to the application, deployment, testing, and maintenance. I'm still growing as an engineer, especially in larger team environments, but I've already had to take real responsibility for software that people depend on every day. I also learn quickly and use AI and research heavily to get through problems I haven't encountered before.",
+      "section": "Working with you"
+    },
+    {
+      "q": "Why should we choose you over another junior developer?",
+      "a": "Because I've had to own something in production. MDS Pro is used every workday by people whose pay depends on it, and when it breaks it's mine to fix — that changes how you think about data, edge cases and deployment in a way that side projects alone don't. I'd also say I'm straightforward about what I haven't done yet, which I think matters more in a junior hire than someone who claims to have done everything.",
       "section": "Working with you"
     },
     {
@@ -35,6 +55,11 @@
     {
       "q": "What is WordWarz?",
       "a": "WordWarz is a real-time multiplayer word game I built from scratch. It started as a hobby project and grew into a game that people actually play, with recent activity reaching roughly 40–70 players per day. I built the multiplayer system, matchmaking, bots, game modes, and the web/iOS versions myself.",
+      "section": "The work"
+    },
+    {
+      "q": "What's interesting about the WordWarz bots?",
+      "a": "They choose guesses by information gain rather than from a fixed word list — each guess is picked to eliminate as many remaining possibilities as it can, with a constraint solver for the edge cases where that isn't enough. There's also ELO-based matchmaking across five tiers with some deliberate imperfection modelling, so a lower-tier bot plays like a person rather than like a solver that's been slowed down.",
       "section": "The work"
     },
     {
@@ -58,6 +83,21 @@
       "section": "The work"
     },
     {
+      "q": "Can you show us your work?",
+      "a": "WordWarz is live at wordwarz.io and on the App Store. RecodeAI and this site are on github.com/kimlj, and this page walks through the AI systems in some detail. MDS Pro is a client's payroll system so the repository isn't mine to open, but I'm happy to give a live walkthrough of the dashboard and explain the parts I built.",
+      "section": "The work"
+    },
+    {
+      "q": "Have you deployed production applications?",
+      "a": "Yes. MDS Pro runs in production and is used every workday. WordWarz is deployed on a Linux VPS behind Nginx in Docker and ships to the iOS App Store through Codemagic CI, with Android in review. This site is on Vercel. Deployment and everything around it — CI, environment configuration, backups — has been my responsibility on all of them.",
+      "section": "The work"
+    },
+    {
+      "q": "Have you worked with sensitive business data?",
+      "a": "Yes. MDS Pro handles timekeeping and payroll for a healthcare business, so it holds people's hours, their pay and client billing. That shaped how it's built: access is enforced in the database with row-level security rather than only in the application, records are appended rather than edited so every change stays attributed, and there are nightly encrypted off-site backups. It's also why I'm careful about what I can show publicly.",
+      "section": "The work"
+    },
+    {
       "q": "What's the AI showcase on this page?",
       "a": "The AI showcase is a collection of AI systems I've built for different problems, from natural-language database querying to automation and content pipelines. What I care about most isn't just getting an LLM to produce an impressive answer — it's designing constraints around it so the system behaves predictably and can be checked. I use AI heavily in my own development, but I still treat the model as a component of the system rather than the system itself.",
       "section": "The work"
@@ -66,6 +106,41 @@
       "q": "What's something on this page you'd rebuild differently now?",
       "a": "Probably RecodeAI. AI development is moving so quickly that some of the assumptions I made when I built it are already outdated. If I rebuilt it today, I'd focus less on building a static showcase around a particular AI workflow and more on making the underlying system easier to change as models and tools evolve.",
       "section": "The work"
+    },
+    {
+      "q": "What technologies do you use most?",
+      "a": "Day to day it's TypeScript and JavaScript, React and Next.js on the front end, Node.js and Fastify on the back, and Postgres for data. Python for the AI and automation pipelines. The Skills section on this page lists each technology against the project it was actually used in, so you can see where every one of them comes from rather than taking my word for it.",
+      "section": "Technologies"
+    },
+    {
+      "q": "What's your experience with databases?",
+      "a": "Mostly Postgres, through Supabase. On MDS Pro I designed the schema and wrote 37 row-level-security migrations, so access control is enforced in the database rather than only in the application code. Integrity matters a lot there — timestamps set by the server rather than the browser, records appended rather than edited in place, and every change attributed to whoever made it.",
+      "section": "Technologies"
+    },
+    {
+      "q": "What's your experience with APIs?",
+      "a": "I've built REST APIs with Node and Fastify, and real-time systems over WebSockets with Socket.IO for WordWarz. I've also integrated a fair number of third-party ones — the Google Sheets API for MDS Pro's billing sync, the Claude and OpenAI APIs for the AI features, Brevo for transactional email, and Gmail through n8n for the job alert pipeline.",
+      "section": "Technologies"
+    },
+    {
+      "q": "What's your experience with cloud services?",
+      "a": "Vercel for web deployment, Supabase for Postgres and realtime, Google Cloud on Casinore, and a self-managed Linux VPS with Nginx and Docker for WordWarz. I'm comfortable running my own infrastructure when that's the right call and using a managed platform when it isn't. I haven't worked inside a large AWS or GCP environment with a dedicated infrastructure team, so that's somewhere I'd be learning.",
+      "section": "Technologies"
+    },
+    {
+      "q": "What's your experience with AI and LLMs?",
+      "a": "It's a large part of what I do. I've shipped natural-language database querying on the Claude API where the generated SQL runs through a read-only Postgres role, a scoped site assistant with no tools and no database, resume-aware job matching on GPT-4o, and image pipelines in ComfyUI and Stable Diffusion. The part I've spent most time on isn't prompting — it's the design around the model: what it can reach, what it can't, and how someone checks its answer afterwards.",
+      "section": "Technologies"
+    },
+    {
+      "q": "How quickly can you learn a new technology?",
+      "a": "Quickly, and that's been most of how I've learned. I research first — how other people solved the problem and what went wrong for them — then build something small with it before committing to it. WordWarz's bot engine, the ComfyUI pipelines and the n8n automation were all things I hadn't used before I started them.",
+      "section": "Technologies"
+    },
+    {
+      "q": "What's something you don't know yet?",
+      "a": "Working inside a larger engineering team — code review at scale, shared ownership of a codebase, and the process that comes with it. I also haven't worked in a big managed cloud environment or alongside a dedicated DevOps or QA function. Those are the gaps I'd most like to close, and the ones I'd expect a first team role to teach me.",
+      "section": "Technologies"
     },
     {
       "q": "How do you approach a new project?",
@@ -125,6 +200,11 @@
     {
       "q": "What does \"on-and-off\" mean?",
       "a": "Mostly because of education and other responsibilities. When I was in school, my focus naturally shifted between studying and building projects, but I've continued coming back to programming because I genuinely enjoy it. Since 2024 in particular, I've spent a lot of time building projects and deliberately improving how I think about software, not just learning syntax.",
+      "section": "Background"
+    },
+    {
+      "q": "What kind of developer do you want to become?",
+      "a": "Someone who can be handed a vague problem and be trusted to come back with a system that works and keeps working. I want to get much stronger in the areas I've had least exposure to — working within a team, and the engineering process around the code rather than just the code. Longer term I'd like to keep working where AI is part of the product, because designing the constraints around a model is the problem I find most interesting right now.",
       "section": "Background"
     },
     {
