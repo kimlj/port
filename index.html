@@ -1921,7 +1921,7 @@ footer .footer-accent { color: var(--accent); }
           <div class="project-info">
             <span class="project-tag">AI &amp; Automation</span>
             <h3>Job Email Watcher</h3>
-            <p>Started as an n8n pipeline and outgrew it. Now a self-hosted Python script: polls Gmail over IMAP, extracts listings with an LLM, and scores each against my resume. Hard filters &mdash; geography, salary floor, posting age, title &mdash; run <em>before</em> the enrich and score steps, so a job that fails a rule is dropped before it costs an LLM call. Opt-in adapters read a real JSON API where a board publishes one. Results land in SQLite, archive to Google Sheets, and anything over threshold sends a Telegram alert.</p>
+            <p>Started as an n8n pipeline and outgrew it. Now a self-hosted Python package drawing on three kinds of source: five boards' own JSON APIs, email alerts over IMAP for the auth-gated ones, and HTML only as a last resort. Listings are extracted with an LLM and scored against my resume. Hard filters &mdash; geography, salary floor, posting age, title &mdash; run <em>before</em> enrich and score, so a job that fails a rule is dropped before it costs an LLM call. SQLite store, Google Sheets archive, Telegram alert above threshold.</p>
             <div class="project-tech"><span class="hl">Python</span><span class="hl">Claude &amp; OpenAI APIs</span><span>Gmail IMAP</span><span class="hl">SQLite</span><span>Google Sheets API</span><span class="hl">Telegram Bot API</span><span>n8n &mdash; the version this replaced</span></div>
           </div>
           <div class="project-visual">
