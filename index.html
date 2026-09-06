@@ -1921,12 +1921,12 @@ footer .footer-accent { color: var(--accent); }
           <div class="project-info">
             <span class="project-tag">AI &amp; Automation</span>
             <h3>Job Email Watcher</h3>
-            <p>An end-to-end n8n automation pipeline that monitors Gmail for job alerts (Indeed, Upwork, JobStreet), scores listings against my resume using GPT-4o with a hybrid AI + code salary algorithm, logs everything to Google Sheets, and sends Telegram notifications for high-scoring matches.</p>
-            <div class="project-tech"><span class="hl">n8n</span><span class="hl">OpenAI GPT-4o</span><span>Gmail API</span><span>Google Sheets API</span><span class="hl">Telegram Bot API</span><span>JavaScript</span></div>
+            <p>Started as an n8n pipeline and outgrew it. Now a self-hosted Python script: polls Gmail over IMAP, extracts listings with an LLM, and scores each against my resume. Hard filters &mdash; geography, salary floor, posting age, title &mdash; run <em>before</em> the enrich and score steps, so a job that fails a rule is dropped before it costs an LLM call. Opt-in adapters read a real JSON API where a board publishes one. Results land in SQLite, archive to Google Sheets, and anything over threshold sends a Telegram alert.</p>
+            <div class="project-tech"><span class="hl">Python</span><span class="hl">Claude &amp; OpenAI APIs</span><span>Gmail IMAP</span><span class="hl">SQLite</span><span>Google Sheets API</span><span class="hl">Telegram Bot API</span><span>n8n &mdash; the version this replaced</span></div>
           </div>
           <div class="project-visual">
             <div class="project-visual-bg pv-6"></div>
-            <img src="assets/jobwatcher-preview.webp" alt="Job Email Watcher n8n workflow diagram" class="project-visual-img" loading="lazy">
+            <img src="assets/jobwatcher-preview.webp" alt="Job Email Watcher pipeline diagram" class="project-visual-img" loading="lazy">
           </div>
         </div>
       </div>
@@ -2696,7 +2696,7 @@ footer .footer-accent { color: var(--accent); }
       <div class="skill-group-title">Languages</div>
       <div class="skill-row" data-projs="mds rcd"><span class="skill-name">TypeScript</span><span class="skill-where"><span data-proj="mds">MDS Pro</span><span data-proj="rcd">RecodeAI</span></span></div>
       <div class="skill-row" data-projs="csn mds site ww"><span class="skill-name">JavaScript</span><span class="skill-where"><span data-proj="ww">WordWarz.io</span><span data-proj="mds">MDS Pro</span><span data-proj="csn">Casinore.io</span><span data-proj="site">this page</span></span></div>
-      <div class="skill-row" data-projs="pipe"><span class="skill-name">Python</span><span class="skill-where"><span data-proj="pipe">Avatar pipeline</span></span></div>
+      <div class="skill-row" data-projs="pipe jew"><span class="skill-name">Python</span><span class="skill-where"><span data-proj="pipe">Avatar pipeline</span><span data-proj="jew">Job Email Watcher</span></span></div>
     </div>
     <div class="skill-group reveal">
       <div class="skill-group-title">Interface</div>
