@@ -1635,6 +1635,13 @@ footer .footer-accent { color: var(--accent); }
 .ai-stat-value span { font-size: 0.9rem; color: var(--text-muted); }
 .ai-stat-label { font-family: var(--mono); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.16em; color: var(--text-dim); margin-top: 0.4rem; }
 .ai-stats-caption { font-size: 0.78rem; color: var(--text-dim); line-height: 1.5; margin: -0.75rem 0 1.75rem; }
+/* On a phone the methodology is six lines of prose sitting above the charts it
+   explains — most of a screen spent before a single figure appears. It comes
+   out. The "Claude Code." label and the "Measured <date>." after it stay: a
+   figure that does not state its own date is the one thing this section may not
+   ship, and the two payloads refresh on different schedules so neither is
+   today's by default. The full note is still there on any wider screen. */
+@media (max-width: 640px) { .ai-caption-method { display: none; } }
 
 /* ---- charts ----
    Two charts, one hue each. Deliberately NOT three: the model split is 94/6/0.03,
@@ -3819,8 +3826,13 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
       // The hours figure is the headline now, so the method behind it belongs
       // here: a reader who cannot tell how it was derived is right to discount it.
       var gap = (d.hours && d.hours.idleGapMinutes) || 15;
-      caption.textContent =
-        'Claude Code. ' +
+      // The method is the long half and the first thing to go on a phone, so it
+      // is its own element rather than one run of text. The date must NOT go with
+      // it: every figure on this page states when it was taken, and the two
+      // payloads refresh on different schedules, so neither is today's by default.
+      var method = document.createElement('span');
+      method.className = 'ai-caption-method';
+      method.textContent =
         (d.hours ? 'Hours are measured from prompt timestamps, not estimated: ' +
                    'consecutive prompts form a session that closes after ' + gap +
                    ' minutes of silence, so an editor left open counts as nothing. ' : '') +
@@ -3831,8 +3843,12 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
         '; token counts cover ' + monthName(d.firstDay) + ' \u2013 ' + monthName(d.lastDay) +
         ' only, because Claude Code prunes older transcripts. Output tokens rather than ' +
         'total \u2014 most of the raw figure is cached context re-read each turn, ' +
-        'which measures conversation length, not work.' +
-        (asOf(d.generatedAt) ? ' Measured ' + asOf(d.generatedAt) + '.' : '');
+        'which measures conversation length, not work.';
+      caption.textContent = 'Claude Code. ';
+      caption.appendChild(method);
+      if (asOf(d.generatedAt)) {
+        caption.appendChild(document.createTextNode(' Measured ' + asOf(d.generatedAt) + '.'));
+      }
       caption.hidden = false;
     }
   }
