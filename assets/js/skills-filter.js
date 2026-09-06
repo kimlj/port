@@ -121,3 +121,132 @@
   ledger.parentNode.insertBefore(tally, ledger.nextSibling);
   apply();
 })();
+
+/* Section 04 on a phone — the names two-up, the provenance one tap away.
+ *
+ * Below 640px the list ran to about three and a half screens: one column of 27
+ * rows, each stacking its name over the work it was used in. Here the names go
+ * two to a line and every group carries a single drawer showing the provenance
+ * of whichever of its rows was last tapped.
+ *
+ * One drawer per group, not one for the list, and it sits after every row in
+ * its group — so the tapped row never moves and nothing above the reader's
+ * finger shifts. That is also why tapping in one group leaves another group's
+ * drawer open: closing a drawer higher up the page would pull the whole list
+ * up under the thumb that just tapped. Only what is below the group moves.
+ *
+ * The drawer's text is read off the row's own .skill-where, so there is no
+ * second copy of the provenance to fall out of step with the list — the same
+ * reason the chips above read their index off the markup.
+ *
+ * The structure is built at every width but only wired up below 640px, and the
+ * CSS that hides .skill-where is gated on the .ev-tappable class added here.
+ * With this file gone the section is exactly the list it always was.
+ */
+(function () {
+  'use strict';
+
+  var ledger = document.querySelector('#skills .skill-ledger');
+  if (!ledger) return;
+
+  var groups = Array.prototype.slice.call(ledger.querySelectorAll('.skill-group'));
+  if (!groups.length) return;
+
+  var mq = window.matchMedia('(max-width: 640px)');
+  var units = [];
+
+  groups.forEach(function (group) {
+    var rows = Array.prototype.slice.call(group.querySelectorAll('.skill-row'));
+    if (!rows.length) return;
+
+    /* The rows need a wrapper of their own before they can run two-up: the
+       group's heading is its sibling, and a grid on the group would column it
+       alongside the first row. */
+    var body = document.createElement('div');
+    body.className = 'ev-group-body';
+    group.insertBefore(body, rows[0]);
+    rows.forEach(function (row) { body.appendChild(row); });
+
+    var drawer = document.createElement('div');
+    drawer.className = 'ev-drawer';
+    var clip = document.createElement('div');
+    clip.className = 'ev-drawer-clip';
+    var inner = document.createElement('div');
+    inner.className = 'ev-drawer-inner';
+    clip.appendChild(inner);
+    drawer.appendChild(clip);
+    group.appendChild(drawer);
+
+    var open = null;
+
+    function close() {
+      drawer.classList.remove('is-open');
+      rows.forEach(function (r) { r.setAttribute('aria-expanded', 'false'); });
+      open = null;
+    }
+
+    function toggle(row) {
+      if (open === row) { close(); return; }
+      close();
+      row.setAttribute('aria-expanded', 'true');
+
+      while (inner.firstChild) inner.removeChild(inner.firstChild);
+      var name = row.querySelector('.skill-name');
+      var b = document.createElement('b');
+      b.textContent = (name ? name.textContent : '') + ' — ';
+      inner.appendChild(b);
+      inner.appendChild(document.createTextNode(
+        Array.prototype.map.call(
+          row.querySelectorAll('.skill-where span'),
+          function (s) { return s.textContent; }
+        ).join(' · ')));
+
+      drawer.classList.add('is-open');
+      open = row;
+    }
+
+    rows.forEach(function (row) {
+      row.addEventListener('click', function () {
+        if (mq.matches) toggle(row);
+      });
+      /* role="button" promises Enter and Space; the row is a div, so they have
+         to be answered here rather than inherited. */
+      row.addEventListener('keydown', function (e) {
+        if (!mq.matches) return;
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+          e.preventDefault();
+          toggle(row);
+        }
+      });
+    });
+
+    units.push({ rows: rows, close: close });
+  });
+
+  if (!units.length) return;
+
+  /* Nothing is a control above 640px, so the roles come off with the layout —
+     27 buttons that do nothing is worse than 27 rows that never claimed to. */
+  function sync() {
+    var on = mq.matches;
+    ledger.classList.toggle('ev-tappable', on);
+    units.forEach(function (u) {
+      u.close();
+      u.rows.forEach(function (row) {
+        if (on) {
+          row.setAttribute('role', 'button');
+          row.setAttribute('tabindex', '0');
+          row.setAttribute('aria-expanded', 'false');
+        } else {
+          row.removeAttribute('role');
+          row.removeAttribute('tabindex');
+          row.removeAttribute('aria-expanded');
+        }
+      });
+    });
+  }
+
+  if (mq.addEventListener) mq.addEventListener('change', sync);
+  else if (mq.addListener) mq.addListener(sync);
+  sync();
+})();

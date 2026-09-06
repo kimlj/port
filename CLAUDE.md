@@ -86,6 +86,23 @@ exactly the list it was. Non-matching rows are dimmed rather than removed: pulli
 rows out would change the height of the section under the reader's cursor, and
 what did not match is still the answer to "what else is there".
 
+**Below 640px the list is a different shape.** One column of 27 rows each
+stacking its name over its provenance ran the section to about three and a half
+screens, so the names go two to a line and each group grows a single drawer
+holding the provenance of whichever of its rows was last tapped. One drawer per
+*group*, not per list, and it sits after every row in its group — so the tapped
+row never moves and a tap in one group deliberately leaves another group's
+drawer open, because closing one higher up the page would pull the list up under
+the thumb that just tapped.
+
+The drawer is the showcase's `0fr → 1fr` grid, for the showcase's reason: nobody
+has measured the height and the text changes with every tap. Its text is read off
+the row's own `.skill-where`, so there is no second copy of the provenance. All
+of it is gated on `.ev-tappable`, which the script adds — the markup still
+carries every provenance line and the CSS only hides them once there is
+somewhere to put them, so with the script gone the section is the list it always
+was.
+
 Below the list, **Also familiar** is the one block that makes no provenance claim.
 It is deliberately worded as a comfort claim rather than a specific one — a
 narrow factual assertion nobody can check, sitting under a heading promising that
@@ -104,12 +121,11 @@ feature and nothing else.
 | `button-field.js` | Dot fields inside every CTA and the contact buttons. |
 | `section-ornaments.js` | Drift, trace and registration marks, Projects → footer. |
 | `ai-ledger.js` | The AI Showcase rows, transcripts and process logs, plus the Avatar pipeline's stage tabs. Two IIFEs. |
-| `skills-filter.js` | Section 04's project chips — filters the technology list to one piece of work. |
+| `skills-filter.js` | Section 04's project chips, plus the phone layout's tap-to-open provenance drawers. Two IIFEs. |
 | `activity-motion.js` | Build Activity animation and the chart tooltip. |
 | `project-visuals.js` | Shader backgrounds behind project cards. |
 | `horizon-glow.js` | WebGL glow behind the contact section. |
 | `chat.js` | The site assistant widget. Deferred to the load event, styles injected by itself. |
-| `semantic-bloom.js` | **Untracked and unreferenced.** Predates the current site. |
 
 ## The site assistant
 
@@ -201,6 +217,12 @@ in more detail.
   characters that did not move included — and clearing a box sized to where
   they came from leaves the far side of the push smeared, because they have
   been carried outside it.
+- **`display: contents` silently drops a `.reveal`.** Section 06's aside uses it
+  on mobile so the portrait and the figures can take their own places in the
+  one-column grid. The element still *computes* `opacity: 0` from `.reveal`, but
+  generates no box, so nothing paints it — the children arrive visible and
+  unanimated. That is the safe way round, and the fix nobody should apply is
+  moving `reveal` onto the children, which double-animates them on desktop.
 - **A page-width media query fires early inside a capped container.** The
   section's two-up image rule turns at 768px, which is right for a grid the width
   of the page and wrong inside a 600px figure — it doubled every output the

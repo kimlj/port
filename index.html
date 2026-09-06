@@ -925,9 +925,31 @@ footer .footer-accent { color: var(--accent); }
   .status-text { font-size: 0.58rem; }
 }
 
+/* On a phone the portrait belongs under the heading it illustrates rather than
+   trailing three paragraphs of prose, and the figures close the section as one
+   row. display:contents lets the aside's two children take their own places in
+   the single-column grid, so neither is written out twice to be moved.
+
+   It also costs the aside its own reveal: with no box generated the .reveal
+   opacity never paints, so the portrait and the figures arrive without the
+   fade the rest of the section gets. They arrive visible rather than stuck at
+   zero, which is the way round that matters -- do not "fix" it by moving the
+   reveal class onto the children, which double-animates them on desktop. */
 @media (max-width: 1024px) {
   .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-  .about-portrait { width: 220px; }
+  .about-aside { display: contents; }
+  .about-portrait { order: -1; width: 220px; aspect-ratio: 1; object-fit: cover;
+    border-radius: 50%; background: var(--bg-card); border: 1px solid var(--border);
+    /* The dissolve exists so a mid-torso crop does not read as a photograph cut
+       off. A circle ends the figure deliberately on its own, and a faded bottom
+       edge inside a ring reads as a rendering fault instead. */
+    -webkit-mask-image: none; mask-image: none; }
+  /* Four figures across, each number over its own label: the two-up grid read
+     as a block of text at the end of the section rather than as a tally. */
+  .about-figures { order: 1; grid-template-columns: repeat(4, 1fr);
+    gap: 0 0.9rem; margin-top: 0; }
+  .about-figures > span { display: block; }
+  .about-figures b { display: block; margin-bottom: 0.2rem; }
 }
 @media (max-width: 560px) { .about-portrait { width: 170px; } }
 @media (max-width: 1024px) { .project-card { grid-template-columns: 1fr; } .project-visual { min-height: 200px; } }
@@ -942,6 +964,32 @@ footer .footer-accent { color: var(--accent); }
      two-line box reads as a mistake rather than a shape */
   .availability-badge { display: flex; border-radius: 16px; }
 }
+/* Section 04 on a phone. One column of 27 rows, each stacking its name over
+   its provenance, ran the section to about three and a half screens -- so the
+   names go two to a line and each group keeps one drawer holding the
+   provenance of whichever of its rows was last tapped.
+
+   Gated on .ev-tappable, which skills-filter.js adds: the markup still carries
+   every provenance line and this only hides them once there is somewhere to
+   put them, so with the script gone the section is the list it always was. */
+@media (max-width: 640px) {
+  .ev-tappable .ev-group-body { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; }
+  .ev-tappable .skill-row { padding: 0.42rem 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .ev-tappable .skill-row:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .ev-tappable .skill-name { font-size: 0.88rem; transition: color 0.25s; }
+  .ev-tappable .skill-row[aria-expanded="true"] .skill-name { color: var(--accent); }
+  .ev-tappable .skill-where { display: none; }
+  .ev-drawer { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+  .ev-drawer.is-open { grid-template-rows: 1fr; }
+  /* The clip is a bare wrapper with the padding inside it: a 0fr track cannot
+     shrink past its own item's padding, which is what left the showcase drawer
+     snapping shut at the 72px of its panel padding. */
+  .ev-drawer-clip { overflow: hidden; min-height: 0; }
+  .ev-drawer-inner { padding: 0.55rem 0 0.15rem; font-family: var(--mono); font-size: 0.62rem;
+    line-height: 1.55; letter-spacing: 0.04em; color: var(--text-dim); }
+  .ev-drawer-inner b { color: var(--text-muted); font-weight: 400; }
+}
+@media (prefers-reduced-motion: reduce) { .ev-drawer { transition: none; } }
 @media (max-width: 480px) { .nav-links { gap: 0.75rem; } .hero-cta { flex-direction: column; } .btn-primary, .btn-ghost { justify-content: center; width: 100%; } .cv-dropdown { width: 100%; } .cv-dropdown-toggle { justify-content: center; width: 100%; } }
 
 /* AI Showcase Section */
