@@ -158,6 +158,13 @@ that repo's own CLAUDE.md, next to the files they describe.
 and canvas code reads them with `getComputedStyle` plus a `MutationObserver` on
 `data-theme`. A hardcoded hex is a light-theme bug waiting to happen.
 
+The one deliberate exception is `.pv-6`, the backdrop behind the Jobsift card.
+It frames a raster diagram whose own background is baked in at `#070709` and
+cannot follow `data-theme`, and the panel letterboxes on one axis or the other at
+every viewport, so the frame has to match the *image* rather than the theme or a
+seam shows. Both the dark and the light rule take that same literal, and say why.
+Anything not framing a fixed-colour image still takes a token.
+
 **Every animation is guarded.** `prefers-reduced-motion` renders the final state
 rather than a faster animation, and pointer effects check
 `(hover: none), (pointer: coarse)` — there is no cursor to answer on a phone, and
@@ -223,6 +230,13 @@ in more detail.
   generates no box, so nothing paints it — the children arrive visible and
   unanimated. That is the safe way round, and the fix nobody should apply is
   moving `reveal` onto the children, which double-animates them on desktop.
+- **`object-fit: cover` is wrong for a diagram.** `.work-stage .project-visual-img`
+  crops to fill the panel, which is right for a photograph and destructive for an
+  image carrying meaning at its edges. The Jobsift panel runs 1.08:1 on a tall
+  desktop against a 1.5:1 image, so cover was taking 14% off each side and cutting
+  into the first and last stage of the pipeline. `.is-diagram` opts into `contain`.
+  Stretching with `fill` is not the alternative: that diagram is mostly monospace
+  text and squashes visibly.
 - **A page-width media query fires early inside a capped container.** The
   section's two-up image rule turns at 768px, which is right for a grid the width
   of the page and wrong inside a 600px figure — it doubled every output the
@@ -242,11 +256,19 @@ Both payloads carry `generatedAt`, and the panel prints it. **A figure on this
 page states its own date** — keep it that way when editing the section, since
 the two halves refresh on different schedules and neither is today's by default.
 
-**Nothing under `assets/` may be served `immutable`.** No path here is
-content-hashed, so the scripts and these two files are edited in place; caching
-them for a year froze both the figures and the site's behaviour for anyone who
-had already visited. `vercel.json` splits the rule by file type — media long,
-scripts and JSON revalidating.
+**Nothing here is content-hashed, so the cache rule splits by file type and you
+have to know which half you are editing.** `vercel.json`: `assets/js/**` and
+`assets/*.json` revalidate on every request, because they are edited in place and
+caching them for a year froze both the figures and the site's behaviour for
+anyone who had already visited. `assets/*.webp` and `assets/*.mp4` are the other
+half, and they ARE `max-age=31536000, immutable`.
+
+So **a changed image needs a changed filename.** Overwriting a `.webp` leaves
+every returning visitor holding the old bytes for up to a year, and no deploy
+fixes it. Not hypothetical: the Jobsift card's diagram was replaced twice in one
+session and each version had to arrive as a new file (`jobwatcher-preview` ->
+`jobsift-preview` -> `jobsift-pipeline`), deleting the one before it. A stale
+reference 404s loudly; a year of the wrong picture is silent.
 
 `assets/ai-showcase/` holds 66 generated avatars used by the Avatar pipeline
 walkthrough.
