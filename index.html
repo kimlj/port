@@ -1915,18 +1915,18 @@ footer .footer-accent { color: var(--accent); }
         </div>
       </div>
     </div>
-    <div class="work-item" data-name="Job Email Watcher" data-class="AI &amp; Automation" data-fig="24/7" data-figlabel="unattended">
+    <div class="work-item" data-name="Jobsift" data-class="AI &amp; Automation" data-fig="24/7" data-figlabel="unattended">
       <div class="project-stuck">
         <div class="project-card reveal spotlight-card">
           <div class="project-info">
             <span class="project-tag">AI &amp; Automation</span>
-            <h3>Job Email Watcher</h3>
+            <h3>Jobsift</h3>
             <p>Started as an n8n pipeline and outgrew it. Now a self-hosted Python package drawing on three kinds of source: five boards' own JSON APIs, email alerts over IMAP for the auth-gated ones, and HTML only as a last resort. Listings are extracted with an LLM and scored against my resume. Hard filters &mdash; geography, salary floor, posting age, title &mdash; run <em>before</em> enrich and score, so a job that fails a rule is dropped before it costs an LLM call. SQLite store, Google Sheets archive, Telegram alert above threshold.</p>
             <div class="project-tech"><span class="hl">Python</span><span class="hl">Claude &amp; OpenAI APIs</span><span>Gmail IMAP</span><span class="hl">SQLite</span><span>Google Sheets API</span><span class="hl">Telegram Bot API</span><span>n8n &mdash; the version this replaced</span></div>
           </div>
           <div class="project-visual">
             <div class="project-visual-bg pv-6"></div>
-            <img src="assets/jobwatcher-preview.webp" alt="Job Email Watcher pipeline diagram" class="project-visual-img" loading="lazy">
+            <img src="assets/jobwatcher-preview.webp" alt="Jobsift pipeline diagram" class="project-visual-img" loading="lazy">
           </div>
         </div>
       </div>
@@ -2081,9 +2081,9 @@ footer .footer-accent { color: var(--accent); }
   </div>
 
   <div class="ai-tab-content" data-tab="email-watcher"
-       data-name="Job Email Watcher" data-model="GPT-4o" data-guard="Hybrid AI + code scoring"
-       data-bar="n8n &middot; inbox pipeline">
-    <p class="ev-lede reveal">An n8n pipeline that watches Gmail for job alerts, scores each against the resume, and values the salary with a hybrid of model judgement and deterministic code &mdash; then logs it and reports to Telegram. It has run unattended since it shipped.</p>
+       data-name="Jobsift" data-model="Claude or GPT-4o" data-guard="Hybrid AI + code scoring"
+       data-bar="Python &middot; source pipeline">
+    <p class="ev-lede reveal">A Python pipeline that pulls jobs from board APIs, inbox alerts and, last, HTML, scores each against the resume, and values the salary with a hybrid of model judgement and deterministic code &mdash; then logs it and reports to Telegram. The provider is a config line: Claude or GPT-4o. It has run unattended since it shipped.</p>
     <div class="ev-log" data-log="watcher"></div>
   </div>
 
@@ -2696,7 +2696,7 @@ footer .footer-accent { color: var(--accent); }
       <div class="skill-group-title">Languages</div>
       <div class="skill-row" data-projs="mds rcd"><span class="skill-name">TypeScript</span><span class="skill-where"><span data-proj="mds">MDS Pro</span><span data-proj="rcd">RecodeAI</span></span></div>
       <div class="skill-row" data-projs="csn mds site ww"><span class="skill-name">JavaScript</span><span class="skill-where"><span data-proj="ww">WordWarz.io</span><span data-proj="mds">MDS Pro</span><span data-proj="csn">Casinore.io</span><span data-proj="site">this page</span></span></div>
-      <div class="skill-row" data-projs="pipe jew"><span class="skill-name">Python</span><span class="skill-where"><span data-proj="pipe">Avatar pipeline</span><span data-proj="jew">Job Email Watcher</span></span></div>
+      <div class="skill-row" data-projs="pipe jew"><span class="skill-name">Python</span><span class="skill-where"><span data-proj="pipe">Avatar pipeline</span><span data-proj="jew">Jobsift</span></span></div>
     </div>
     <div class="skill-group reveal">
       <div class="skill-group-title">Interface</div>
@@ -2715,17 +2715,17 @@ footer .footer-accent { color: var(--accent); }
     <div class="skill-group reveal">
       <div class="skill-group-title">Models &amp; pipelines</div>
       <div class="skill-row" data-projs="mds rcd"><span class="skill-name">Claude API</span><span class="skill-where"><span data-proj="mds">MDS Pro site assistant</span><span data-proj="mds">Plain-English DB querying</span><span data-proj="rcd">RecodeAI</span></span></div>
-      <div class="skill-row" data-projs="jew jm"><span class="skill-name">OpenAI &middot; GPT-4o</span><span class="skill-where"><span data-proj="jm">AI Job Matcher</span><span data-proj="jew">Job Email Watcher</span></span></div>
+      <div class="skill-row" data-projs="jew jm"><span class="skill-name">OpenAI &middot; GPT-4o</span><span class="skill-where"><span data-proj="jm">AI Job Matcher</span><span data-proj="jew">Jobsift</span></span></div>
       <div class="skill-row" data-projs="pipe"><span class="skill-name">ComfyUI &middot; Stable Diffusion</span><span class="skill-where"><span data-proj="pipe">Avatar pipeline</span><span data-proj="pipe">Style transfer</span><span data-proj="pipe">Fashion generation</span></span></div>
       <div class="skill-row" data-projs="pipe"><span class="skill-name">IPAdapter</span><span class="skill-where"><span data-proj="pipe">Style transfer</span></span></div>
       <div class="skill-row" data-projs="pipe"><span class="skill-name">ControlNet</span><span class="skill-where"><span data-proj="pipe">Fashion generation</span></span></div>
-      <div class="skill-row" data-projs="jew"><span class="skill-name">n8n</span><span class="skill-where"><span data-proj="jew">Job Email Watcher</span></span></div>
+      <div class="skill-row" data-projs="jew"><span class="skill-name">n8n</span><span class="skill-where"><span data-proj="jew">Jobsift</span></span></div>
     </div>
     <div class="skill-group reveal">
       <div class="skill-group-title">Data &amp; services</div>
       <div class="skill-row" data-projs="mds ww"><span class="skill-name">Supabase &middot; Postgres</span><span class="skill-where"><span data-proj="mds">MDS Pro</span><span data-proj="ww">WordWarz.io</span></span></div>
       <div class="skill-row" data-projs="mds"><span class="skill-name">Postgres RLS</span><span class="skill-where"><span data-proj="mds">MDS Pro &mdash; 37 migrations</span></span></div>
-      <div class="skill-row" data-projs="jew mds"><span class="skill-name">Google Sheets API &middot; Apps Script</span><span class="skill-where"><span data-proj="mds">MDS Pro</span><span data-proj="jew">Job Email Watcher</span></span></div>
+      <div class="skill-row" data-projs="jew mds"><span class="skill-name">Google Sheets API &middot; Apps Script</span><span class="skill-where"><span data-proj="mds">MDS Pro</span><span data-proj="jew">Jobsift</span></span></div>
       <div class="skill-row" data-projs="mds"><span class="skill-name">ExcelJS</span><span class="skill-where"><span data-proj="mds">MDS Pro &mdash; payroll workbooks</span></span></div>
       <div class="skill-row" data-projs="csn"><span class="skill-name">Privy &middot; Web3</span><span class="skill-where"><span data-proj="csn">Casinore.io</span></span></div>
     </div>

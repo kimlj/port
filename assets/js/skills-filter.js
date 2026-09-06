@@ -31,7 +31,7 @@
     mds: 'MDS Pro',
     rcd: 'RecodeAI',
     jm: 'AI Job Matcher',
-    jew: 'Job Email Watcher',
+    jew: 'Jobsift',
     csn: 'Casinore.io',
     pipe: 'AI pipelines',
     site: 'this page'
