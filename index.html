@@ -466,6 +466,12 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 .work-stage .project-info::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 3px; }
 .work-stage .project-visual { height: 100%; min-height: 0; }
 .work-stage .project-visual-img { height: 100%; object-fit: cover; object-position: top; }
+/* A photograph survives being cropped to fill the panel; a diagram does not.
+   This one carries its meaning at both edges -- the source tiers on the left,
+   the outputs on the right -- and cover was taking 14% off each side at a
+   1080px viewport, cutting into both. `contain` letterboxes instead, and the
+   card's own backdrop fills what is left. */
+.work-stage .project-visual-img.is-diagram { object-fit: contain; object-position: center; }
 
 /* MDS Pro stacks a media panel over a block of figures in the right column, and
    inside a fixed-height card the two were competing for the same pixels: the
@@ -1926,7 +1932,7 @@ footer .footer-accent { color: var(--accent); }
           </div>
           <div class="project-visual">
             <div class="project-visual-bg pv-6"></div>
-            <img src="assets/jobwatcher-preview.webp" alt="Jobsift pipeline diagram" class="project-visual-img" loading="lazy">
+            <img src="assets/jobsift-preview.webp" alt="Jobsift pipeline diagram: sources, LLM extract, hard filters, score, outputs" class="project-visual-img is-diagram" loading="lazy">
           </div>
         </div>
       </div>
