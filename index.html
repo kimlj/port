@@ -943,13 +943,24 @@ footer .footer-accent { color: var(--accent); }
     /* The dissolve exists so a mid-torso crop does not read as a photograph cut
        off. A circle ends the figure deliberately on its own, and a faded bottom
        edge inside a ring reads as a rendering fault instead. */
-    -webkit-mask-image: none; mask-image: none; }
+    -webkit-mask-image: none; mask-image: none;
+    /* One column has no second track to sit against, so the portrait centres
+       rather than hugging the left edge of a full-width row. */
+    margin-inline: auto; }
   /* Four figures across, each number over its own label: the two-up grid read
      as a block of text at the end of the section rather than as a tally. */
   .about-figures { order: 1; grid-template-columns: repeat(4, 1fr);
     gap: 0 0.9rem; margin-top: 0; }
   .about-figures > span { display: block; }
   .about-figures b { display: block; margin-bottom: 0.2rem; }
+}
+/* Centred only at phone width, and deliberately not at the 1024px breakpoint
+   above: .about-text is capped at 62ch, so on a tablet the column is still wide
+   enough that centring gives every line two ragged edges and costs the reader
+   the left margin their eye returns to. Narrow enough and that stops mattering. */
+@media (max-width: 640px) {
+  .about-text, .about-text p { text-align: center; }
+  .about-aside-head, .about-aside-list { justify-content: center; text-align: center; }
 }
 @media (max-width: 560px) { .about-portrait { width: 170px; } }
 @media (max-width: 1024px) { .project-card { grid-template-columns: 1fr; } .project-visual { min-height: 200px; } }
