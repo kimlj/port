@@ -959,6 +959,10 @@ footer .footer-accent { color: var(--accent); }
    enough that centring gives every line two ragged edges and costs the reader
    the left margin their eye returns to. Narrow enough and that stops mattering. */
 @media (max-width: 640px) {
+  /* Scoped to #about on purpose: .section-label and .section-title are shared by
+     all seven sections, and centring them globally would break the page's rhythm
+     against the other six. */
+  #about .section-label, #about .section-title { text-align: center; }
   .about-text, .about-text p { text-align: center; }
   .about-aside-head, .about-aside-list { justify-content: center; text-align: center; }
 }
