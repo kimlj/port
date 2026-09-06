@@ -69,7 +69,7 @@
 [data-theme="light"] .pv-3 { background: linear-gradient(135deg, #e0d8f5, #d4c8f0, #dcd0f5); }
 [data-theme="light"] .pv-4 { background: linear-gradient(135deg, #f0eed0, #ead8b8, #e8dcc0); }
 [data-theme="light"] .pv-5 { background: linear-gradient(135deg, #d0ddf0, #b8c8ea, #c8d4f0); }
-[data-theme="light"] .pv-6 { background: linear-gradient(135deg, #f0d0d8, #eab8c8, #f0c8d4); }
+[data-theme="light"] .pv-6 { background: #070709; }   /* see the dark rule: matches the diagram, which cannot theme */
 [data-theme="light"] .pv-7 { background: linear-gradient(135deg, #cfe4f5, #b6d8ee, #d4ecf7); }
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; overflow-x: hidden; }
@@ -600,7 +600,15 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 .pv-3 { background: linear-gradient(135deg, #1a0d1a, #0d001a, #0a0d1a); }
 .pv-4 { background: linear-gradient(135deg, #1a1a0d, #1a0d00, #0d0a00); }
 .pv-5 { background: linear-gradient(135deg, #0d0d1a, #001a2e, #0a0d1a); }
-.pv-6 { background: linear-gradient(135deg, #1a0d0d, #2e001a, #1a0a0d); }
+/* Flat #070709, not the maroon gradient the other cards use, and deliberately a
+   literal rather than a token. This panel holds a diagram whose own background
+   is baked in at #070709; the frame has to match the image, not the theme,
+   because a raster cannot follow data-theme. The image is 1.50:1 while the panel
+   runs 1.08:1 on a tall desktop and about 1.8:1 on a phone, so it letterboxes on
+   one axis or the other at every size. Matching the colour makes that invisible
+   instead of chasing it with a ratio that cannot exist. Stretching to fit was the
+   alternative and it is worse: this diagram is mostly monospace text. */
+.pv-6 { background: #070709; }
 /* MDS Pro — navy into cyan, matching the product's own palette. */
 .pv-7 { background: linear-gradient(135deg, #001424, #002b3d, #00131f); }
 .project-visual-content { position: relative; z-index: 1; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; }
@@ -1932,7 +1940,7 @@ footer .footer-accent { color: var(--accent); }
           </div>
           <div class="project-visual">
             <div class="project-visual-bg pv-6"></div>
-            <img src="assets/jobsift-preview.webp" alt="Jobsift pipeline diagram: sources, LLM extract, hard filters, score, outputs" class="project-visual-img is-diagram" loading="lazy">
+            <img src="assets/jobsift-pipeline.webp" alt="Jobsift pipeline diagram: sources, LLM extract, hard filters, score, outputs" class="project-visual-img is-diagram" loading="lazy">
           </div>
         </div>
       </div>
