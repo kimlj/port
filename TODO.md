@@ -83,3 +83,24 @@ rather than removing the panel, which is what the four `.catch` handlers do now.
   labelled as such in the source. Replace both with captured exchanges before
   showing the page to anyone — a fabricated transcript on a section arguing
   against hallucination is the worst possible own goal.
+- **The assistant still says MDS Pro has 13 daily users; the card says 15.**
+  Fixed on the page 2026-09-06 in the two places that carry it — the work-item's
+  `data-fig` and the metric tile — but the figure is stated a third time in
+  `lib/owner.json` in `kimlj/port-assistant`, which is a different repo and
+  gitignored here, so it did not move with them. Two instances there: the Q&A
+  answer and the MDS Pro experience blurb. `lib/kb.json` regenerates from it on
+  the next build, so only `owner.json` needs editing.
+
+  Until then a visitor can read "15 daily users" on the card and be told "13" by
+  the widget beside it. That is a wrong sentence rather than a reached system —
+  the worst case `api/chat.js` is deliberately shaped around — but it is a wrong
+  sentence on the page that argues for checkable claims.
+
+  The standing question underneath it: **headcount keeps moving** (the card's own
+  note says so, and it has now changed once), while the other two metrics —
+  100% server-set timestamps, 0 rows edited in place — are invariants that never
+  will. So a live figure is stated by hand in two repositories and drifts the
+  moment one is edited alone. Worth deciding whether the assistant should stop
+  naming a number it cannot see and defer to the page instead, which is the same
+  rule the rest of this file already follows: one copy, or it disagrees with
+  itself eventually.
