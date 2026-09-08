@@ -76,6 +76,50 @@ is ever made to fetch either half, it must fall back to the committed JSON
 rather than removing the panel, which is what the four `.catch` handlers do now.
 
 
+## ChatGPT hours, beside the Claude Code ones
+
+**Waiting on the export.** Requested 2026-09-08; OpenAI emails a download link
+rather than serving it, so this starts when the zip arrives.
+
+There is no usage API for a ChatGPT subscription. OpenAI's usage endpoints cover
+API keys, which is the same wall the Claude Code half hit and for the same
+reason — a subscription is not an API account. The export is the only route:
+Settings → Data controls → Export data, which produces a zip whose
+`conversations.json` carries `create_time` and `update_time` on every
+conversation and every message.
+
+What that supports, and what it does not:
+
+- **Derivable**: active days, conversation and message counts, and hours under
+  the same session model `fetch-claude-usage.mjs` already uses — consecutive
+  activity, closed after 15 minutes of silence. The years are the point: heavy
+  ChatGPT use through 2023 sits exactly on the GitHub year restored on
+  2026-09-08, and the Build Activity panel currently has nothing to say about
+  2021–2023 beyond contribution counts.
+- **Not derivable**: tokens. The export carries no token accounting at all, so
+  there is no ChatGPT equivalent of "tokens written back". State it as absent
+  rather than estimating it — a made-up figure on the section that argues
+  against unfounded claims is the own goal already recorded above.
+
+Two rules any importer has to inherit:
+
+- **Read timestamps and nothing else.** `conversations.json` is the full text of
+  every conversation, which is far more sensitive than the Claude transcripts —
+  it is not scoped to one machine's work. The existing script's design is the
+  precedent: four fields per line, never `message.content`, output is numbers per
+  date with no text of any kind.
+- **Archive the per-day breakdown from the first run.** The Claude half shipped
+  a rate whose numerator came from disk and whose denominator came from the
+  merged archive, so tokens-per-day *fell* as more work was done. Whatever this
+  writes must total and count over the same map from day one — see the trap in
+  `CLAUDE.md`.
+
+The open question is framing, not code. The panel says "hours in Claude Code",
+and the honest options are a second figure beside it or a relabelled one that
+names both tools; a combined total that quietly folds in a different tool over a
+different period would be the same sleight of hand the token figure already
+refuses.
+
 ## Smaller, unscheduled
 
 - **Two AI transcripts are illustrative.** The behaviour in `ai-ledger.js` is read
