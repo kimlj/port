@@ -209,6 +209,18 @@ in more detail.
   zeroes the content box only. With the panel itself as the grid child, the
   showcase drawer bottomed out at the 72px of its own padding and the last frame
   of every close was a snap. The clip is a bare wrapper now, padding inside it.
+- **A rate needs its numerator and denominator to cover the same days.**
+  `fetch-claude-usage.mjs` archives days that Claude Code has pruned off disk, so
+  the published day count only grows. `totals` was recomputed from disk on every
+  run and the day count came from the merged map, so a pruned day stayed in the
+  denominator while its tokens left the numerator, and "tokens / active day"
+  went DOWN as more work was done — 1.3M to 1.2M across a week when hours and
+  total tokens both rose. The archive now keeps the per-day breakdown too
+  (`breakdown`), and totals, `activeDays`, `firstDay` and `lastDay` all come off
+  that one merged map. Six August days pre-date the breakdown and carry only a
+  combined figure: they still draw in the chart and can never rejoin a total,
+  which is the honest half of the loss. Anything added to this file that divides
+  one published figure by another has to take both from the same map.
 - **`restrictedContributionsCount` is not the private-contribution count.**
   It is how many contributions the *caller cannot see*, so it depends on the
   token, not on the data. The `gh` CLI token on this machine reports ~2,135 of

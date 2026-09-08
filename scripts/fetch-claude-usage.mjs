@@ -98,26 +98,13 @@ for await (const file of walk(SESSIONS)) {
   }
 }
 
-const dates = Object.keys(days).sort();
-const totals = dates.reduce(
-  (t, k) => {
-    const d = days[k];
-    t.in += d.in; t.out += d.out;
-    t.cacheRead += d.cacheRead; t.cacheWrite += d.cacheWrite;
-    t.messages += d.messages;
-    return t;
-  },
-  { in: 0, out: 0, cacheRead: 0, cacheWrite: 0, messages: 0 }
-);
-totals.all = totals.in + totals.out + totals.cacheRead + totals.cacheWrite;
-
-// Per-day total, which is all the grid needs. Kept separate from the breakdown
-// so the published file can be trimmed to just this if preferred.
-const daily = {};
-for (const k of dates) {
-  const d = days[k];
-  daily[k] = d.in + d.out + d.cacheRead + d.cacheWrite;
-}
+// The days this run actually found on disk. Reported in the console summary,
+// but deliberately NOT used for the totals or the published day count: the
+// archive merge below adds back days that have since been pruned, and a total
+// taken from one set of days over a count taken from another is exactly the bug
+// this file spent a release publishing. Everything published is computed after
+// the merge, further down.
+const diskDates = Object.keys(days).sort();
 
 // ---- history.jsonl: the long arc -------------------------------------------
 // Only `timestamp` is read. That file also carries `display` - the prompt text
@@ -232,6 +219,57 @@ function mergeDaily(oldMap, newMap) {
   return out;
 }
 
+// The per-day BREAKDOWN is archived too, field by field. Archiving only the
+// combined per-day figure was not enough: `totals` was recomputed from disk on
+// every run while the day count came from the merged map, so a day that aged
+// off disk kept its place in the denominator and took its output tokens out of
+// the numerator. Tokens per active day then FELL as more work was done - 1.3M
+// to 1.2M across a week where hours and total tokens both rose - which is the
+// opposite of what that figure claims to say.
+function mergeBreakdown(oldMap, newMap) {
+  const keys = new Set([...Object.keys(oldMap || {}), ...Object.keys(newMap || {})]);
+  const out = {};
+  for (const k of keys) {
+    const a = (oldMap || {})[k] || {};
+    const b = (newMap || {})[k] || {};
+    out[k] = {
+      in: Math.max(a.in || 0, b.in || 0),
+      out: Math.max(a.out || 0, b.out || 0),
+      cacheRead: Math.max(a.cacheRead || 0, b.cacheRead || 0),
+      cacheWrite: Math.max(a.cacheWrite || 0, b.cacheWrite || 0),
+      messages: Math.max(a.messages || 0, b.messages || 0),
+    };
+  }
+  return out;
+}
+
+const breakdown = prior ? mergeBreakdown(prior.breakdown, days) : { ...days };
+
+// Totals and the published day count both come off the merged breakdown, so the
+// numerator and the denominator of any rate describe the same set of days.
+const mergedTokenDates = Object.keys(breakdown).sort();
+const totals = mergedTokenDates.reduce(
+  (t, k) => {
+    const d = breakdown[k];
+    t.in += d.in; t.out += d.out;
+    t.cacheRead += d.cacheRead; t.cacheWrite += d.cacheWrite;
+    t.messages += d.messages;
+    return t;
+  },
+  { in: 0, out: 0, cacheRead: 0, cacheWrite: 0, messages: 0 }
+);
+totals.all = totals.in + totals.out + totals.cacheRead + totals.cacheWrite;
+
+// The chart's series, derived from the breakdown and then merged with the
+// previous file's own daily map: days archived before `breakdown` existed carry
+// a combined figure and nothing else, so the chart can still draw them even
+// though they can no longer contribute to a total.
+const daily = {};
+for (const k of mergedTokenDates) {
+  const d = breakdown[k];
+  daily[k] = d.in + d.out + d.cacheRead + d.cacheWrite;
+}
+
 if (prior) {
   const beforeTok = Object.keys(daily).length;
   const beforePr = Object.keys(promptDays).length;
@@ -240,13 +278,11 @@ if (prior) {
   const keptTok = Object.keys(daily).length - beforeTok;
   const keptPr = Object.keys(promptDays).length - beforePr;
   if (keptTok || keptPr) {
-    console.log(`archive: recovered ${keptTok} token-day(s) and ${keptPr} prompt-day(s) ` +
-                `that are no longer on disk`);
+    console.log(`archive: recovered ${keptTok} chart-only token-day(s) and ${keptPr} ` +
+                `prompt-day(s) that are no longer on disk`);
   }
 }
 
-// Recompute the summary fields from the MERGED maps, not just this run's read.
-const mergedTokenDates = Object.keys(daily).sort();
 const mergedPromptDates = Object.keys(promptDays).sort();
 
 mkdirSync(dirname(OUT), { recursive: true });
@@ -270,6 +306,7 @@ writeFileSync(
     totals,
     models,
     daily,
+    breakdown,
   }),
   "utf8"
 );
@@ -284,8 +321,10 @@ console.log(
   `${projectCount} projects
 ` +
   `read ${files} session files (${(bytes / 1e6).toFixed(0)} MB, ${fmt(lines)} lines)\n` +
-  `  ${fmt(messages)} assistant messages across ${dates.length} active days\n` +
-  `  ${dates[0]} -> ${dates[dates.length - 1]}\n` +
+  `  ${fmt(messages)} assistant messages across ${diskDates.length} days still on disk\n` +
+  `  ${diskDates[0]} -> ${diskDates[diskDates.length - 1]}
+` +
+  `  totals cover ${mergedTokenDates.length} days after the archive merge\n` +
   `  ${fmt(totals.all)} tokens total ` +
   `(in ${fmt(totals.in)}, out ${fmt(totals.out)}, ` +
   `cache read ${fmt(totals.cacheRead)}, cache write ${fmt(totals.cacheWrite)})\n` +
