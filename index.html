@@ -3797,6 +3797,20 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
       { month: 'short', year: 'numeric', timeZone: 'UTC' });
   }
 
+  // How wide the token window is, DERIVED. It was written into the label as
+  // "8wk" and drifted the moment the transcripts aged - the same fault as a
+  // rate whose denominator is not the days its numerator covers. Weeks up to
+  // half a year, then months, because "38wk" is not a span anybody reads.
+  function spanLabel(first, last) {
+    if (!first || !last) return '';
+    var days = Math.round(
+      (Date.parse(last + 'T00:00:00Z') - Date.parse(first + 'T00:00:00Z')) / 86400000
+    ) + 1;
+    if (days < 7) return days + 'd';
+    var wk = Math.round(days / 7);
+    return wk <= 26 ? wk + 'wk' : Math.round(days / 30.44) + 'mo';
+  }
+
   function render(d) {
     var t = d.totals || {};
     var top = Object.entries(d.models || {})
@@ -3815,7 +3829,9 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
       cells.push([pr.total.toLocaleString(), 'prompts sent']);
       if (pr.projects) cells.push([String(pr.projects), 'projects']);
     }
-    cells.push([compact(t.out || 0), 'tokens written back (8wk)']);
+    var span = spanLabel(d.firstDay, d.lastDay);
+    cells.push([compact(t.out || 0),
+                'tokens written back' + (span ? ' (' + span + ')' : '')]);
     // Rate rather than total: a per-day figure is the one that says how heavy a
     // working session actually is, and it is divided by the TOKEN window's active
     // days, not the prompt window's - dividing 8 weeks of tokens by 11 months of
