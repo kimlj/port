@@ -3675,16 +3675,23 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
       if (n > data.years[peak].total) peak = y;
     });
 
+    // The current year opens on load. A panel whose drawers are all shut asks
+    // the reader to guess what is behind them before anything has argued that
+    // it is worth opening; the newest year is both the answer to "is this
+    // person still building" and the one grid worth showing unprompted.
+    var openBy = years[years.length - 1];
+
     years.forEach(function (year) {
       var stats = data.years[year];
+      var isOpen = year === openBy;
       var wrap = document.createElement('div');
-      wrap.className = 'ai-year';
+      wrap.className = 'ai-year' + (isOpen ? ' is-open' : '');
 
       var head = document.createElement('button');
       head.type = 'button';
       head.className = 'ai-yearbar' + (year === peak ? ' is-peak' : '');
       head.id = 'aiYearHead' + year;
-      head.setAttribute('aria-expanded', 'false');
+      head.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
       head.setAttribute('aria-controls', 'aiYearPanel' + year);
       head.innerHTML =
         '<span class="ai-yearbar-label">' + year + '</span>' +
@@ -3752,6 +3759,46 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
 
     box.appendChild(frag);
 
+    /* Keeping the clicked row still for the length of the slide. Only one year
+       is open at a time, so opening a year below an open one closes the taller
+       thing above it and drags the whole list up under the cursor - a year grid
+       is most of a panel, so unpinned that is a real jump. Pinning is what makes
+       one drawer shutting and another opening read as a single movement.
+
+       Corrected every frame rather than once, because with the height animated
+       the shift arrives over the length of the transition and not at the click.
+       Lifted from the AI Showcase, which solves the same problem; the constant
+       tracks --dur-slow, which is what .ai-year-clip transitions on. */
+    var SLIDE_MS = 450, pinned = 0, unpin = null;
+
+    function pin(row) {
+      var top = row.getBoundingClientRect().top;
+      if (unpin) unpin();
+      var until = performance.now() + SLIDE_MS + 80;
+
+      function release() {
+        cancelAnimationFrame(pinned);
+        pinned = 0;
+        unpin = null;
+        removeEventListener('wheel', release);
+        removeEventListener('touchmove', release);
+        removeEventListener('keydown', release);
+      }
+      unpin = release;
+      /* the reader's own scroll wins: a page that fights the wheel for half a
+         second feels broken, however good its reason */
+      addEventListener('wheel', release, { passive: true });
+      addEventListener('touchmove', release, { passive: true });
+      addEventListener('keydown', release);
+
+      (function frame() {
+        var drift = row.getBoundingClientRect().top - top;
+        if (drift) window.scrollBy({ top: drift, behavior: 'instant' });
+        if (performance.now() < until) pinned = requestAnimationFrame(frame);
+        else release();
+      })();
+    }
+
     // Delegated, so the rows stay plain markup the script does not have to hold
     // references to. Parking is re-run on open: a drawer that has never been
     // opened has been laid out at zero height, and a measurement taken there is
@@ -3760,9 +3807,18 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
       var btn = e.target.closest ? e.target.closest('.ai-yearbar') : null;
       if (!btn || !box.contains(btn)) return;
       var row = btn.parentNode;
-      var open = row.classList.toggle('is-open');
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      if (open) requestAnimationFrame(park);
+      var opening = !row.classList.contains('is-open');
+
+      pin(row);
+
+      var all = box.querySelectorAll('.ai-year');
+      for (var i = 0; i < all.length; i++) {
+        var on = all[i] === row && opening;
+        all[i].classList.toggle('is-open', on);
+        var h = all[i].querySelector('.ai-yearbar');
+        if (h) h.setAttribute('aria-expanded', on ? 'true' : 'false');
+      }
+      if (opening) requestAnimationFrame(park);
     });
 
     // A year opens wherever its grid happens to start, and on a phone that is a
