@@ -1770,6 +1770,25 @@ footer .footer-accent { color: var(--accent); }
 @media (max-width: 900px) { .ai-spark { gap: 0; } }
 .ai-spark-col[data-zero="1"] { background: var(--white-overlay); }
 .ai-spark-cap { font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim); margin-top: 0.4rem; display: flex; justify-content: space-between; }
+
+/* Hours by weekday, which is the shape of the habit rather than its size.
+   Rows, not columns: the labels read straight down at this width, and the
+   column beside this one is already a field of squares.
+
+   Saturday and Sunday carry the accent because they are the point of the
+   chart - a total of 769 hours is consistent with a job, and 169 of them
+   landing on weekends is not. Each row states its own day count, since 142
+   hours over 24 days and over 8 would mean different things. */
+.ai-week { margin-top: 1.5rem; padding-top: 1.2rem; border-top: 1px solid var(--border); }
+.ai-week-row { display: grid; grid-template-columns: 2.1rem 1fr auto; align-items: center; gap: 0.55rem; margin-bottom: 0.32rem; }
+.ai-week-row:last-child { margin-bottom: 0; }
+.ai-week-day { font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); }
+.ai-week-track { display: block; height: 9px; background: var(--white-overlay); border-radius: 3px; overflow: hidden; }
+.ai-week-fill { display: block; height: 100%; border-radius: 3px; background: rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.42); }
+.ai-week-row.is-weekend .ai-week-fill { background: var(--accent); }
+.ai-week-val { font-family: var(--mono); font-size: 0.6rem; color: var(--text-muted); min-width: 5.4rem; text-align: right; }
+.ai-week-note { font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim); margin-top: 0.7rem; }
+.ai-meta { font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim); margin-top: 0.9rem; padding-top: 0.8rem; border-top: 1px solid var(--border); }
 </style>
 </head>
 <body>
@@ -2043,6 +2062,11 @@ footer .footer-accent { color: var(--accent); }
         <div class="ai-spark" id="aiCols"></div>
         <div class="ai-spark-cap" id="aiColsAxis"></div>
         <div class="ai-chart-sub" id="aiColsSub"></div>
+        <!-- The totals above say how much. This says when, and it is the one
+             claim on the panel that a weekday-shaped career cannot make. -->
+        <div class="ai-week" id="aiWeek"></div>
+        <div class="ai-week-note" id="aiWeekNote"></div>
+        <div class="ai-meta" id="aiMeta"></div>
       </div>
       <div class="ai-chart">
         <div class="ai-chart-title">GitHub contributions by year</div>
@@ -4147,6 +4171,67 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
       document.getElementById('aiColsAxis').innerHTML =
         '<span>daily prompt volume</span><span>' +
         (usePrompts ? d.prompts.activeDays : d.activeDays) + ' active days</span>';
+
+      /* Hours by weekday, off the same byDay map the headline totals. Derived
+         rather than stored: the date is already in the key, so a second field
+         in the payload would only be a copy that could disagree with it.
+         Monday-first, because a week that starts on Sunday puts the two days
+         this chart is actually about at opposite ends of it. */
+      var week = document.getElementById('aiWeek');
+      if (week && hrs.byDay) {
+        var DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        var wHours = [0, 0, 0, 0, 0, 0, 0], wDays = [0, 0, 0, 0, 0, 0, 0];
+        Object.keys(hrs.byDay).forEach(function (iso) {
+          // getUTCDay is 0=Sun; shift so 0=Mon and the weekend is the last two.
+          var i = (new Date(iso + 'T00:00:00Z').getUTCDay() + 6) % 7;
+          wHours[i] += hrs.byDay[iso];
+          wDays[i] += 1;
+        });
+        var wMax = Math.max.apply(null, wHours) || 1;
+
+        /* Rounded so the seven parts still add up to the whole. Rounding each
+           day on its own puts 768 in a column under a headline that says 769,
+           and a reader who adds it up is exactly the reader this section is
+           written for. Largest remainder: floor everything, then hand the lost
+           hours to the days that were cheated most by the floor. */
+        var floors = wHours.map(function (h) { return Math.floor(h); });
+        var short = Math.round(wHours.reduce(function (a, b) { return a + b; }, 0)) -
+                    floors.reduce(function (a, b) { return a + b; }, 0);
+        var order = wHours.map(function (h, i) { return [h - Math.floor(h), i]; })
+          .sort(function (a, b) { return b[0] - a[0]; });
+        for (var wi = 0; wi < short && wi < order.length; wi++) floors[order[wi][1]] += 1;
+
+        week.innerHTML = DAYS.map(function (name, i) {
+          var h = floors[i];
+          return '<div class="ai-week-row' + (i > 4 ? ' is-weekend' : '') + '"' +
+            ' data-tip="' + name + ': ' + h + ' hours over ' + wDays[i] +
+              (wDays[i] === 1 ? ' day' : ' days') + '">' +
+            '<span class="ai-week-day">' + name + '</span>' +
+            '<span class="ai-week-track"><span class="ai-week-fill" style="width:' +
+              Math.max(2, Math.round((wHours[i] / wMax) * 100)) + '%"></span></span>' +
+            '<span class="ai-week-val">' + h + 'h / ' + wDays[i] + 'd</span></div>';
+        }).join('');
+
+        var wknd = Math.round(wHours[5] + wHours[6]);
+        var note = document.getElementById('aiWeekNote');
+        if (note && hrs.total) {
+          note.textContent = 'weekends are ' + wknd.toLocaleString() + ' of ' +
+            hrs.total.toLocaleString() + ' hours';
+        }
+      }
+
+      /* The facts the panel already computed and never said. Sessions and the
+         per-day rate are in the line under the headline, so they are not
+         repeated here; the idle gap is, because it is the whole method behind
+         the hours figure and a number nobody can check is worth less. */
+      var meta = document.getElementById('aiMeta');
+      if (meta) {
+        var bits = [];
+        if (hrs.longestSessionHours) bits.push('longest session ' + hrs.longestSessionHours + 'h');
+        if (d.prompts && d.prompts.projects) bits.push(d.prompts.projects + ' projects');
+        if (hrs.idleGapMinutes) bits.push(hrs.idleGapMinutes + '-min idle gap');
+        meta.textContent = bits.join(' \u00b7 ');
+      }
     })
     .catch(function () {
       var c = cols.closest('.ai-chart'); if (c) c.remove();
