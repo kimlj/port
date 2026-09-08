@@ -28,7 +28,11 @@ const OUT = resolve(ROOT, "assets/contributions.json");
 const LOGIN = process.env.GH_LOGIN || "kimlj";
 
 // GitHub's calendar query caps at one year per call, so each year is its own.
-const FIRST_YEAR = 2024;
+// 2021 is where the account's real history starts. It read 2024 until the
+// repos behind 2021-2023 were restored from a local mirror - they had been
+// deleted, and deleting a repo retroactively strips its commits from the
+// contribution graph, so those years genuinely returned 0 until they came back.
+const FIRST_YEAR = 2021;
 const THIS_YEAR = new Date().getUTCFullYear();
 
 function graphql(query) {

@@ -229,7 +229,7 @@
         };
       } },
 
-    { key: 'years', trigger: '#aiYearBars', at: function () {
+    { key: 'years', trigger: '#aiActivityYears', at: function () {
         return section.querySelectorAll('.ai-yearbar-fill'); },
       arm: function () {
         var fills = section.querySelectorAll('.ai-yearbar-fill');
