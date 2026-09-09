@@ -19,3 +19,4 @@ letter points at.
 | Sent | Employer | URL | Built from |
 |---|---|---|---|
 | 2026-09-09 | HODL DEVS (onlinejobs.ph) | `/r/hodldevs-8db2ce1a.pdf` | `Kim_Julongbayan_Resume_HodlDevs.docx` |
+| 2026-09-09 | AI Agent Engineer (onlinejobs.ph, no company name) | `/r/aiagentengineer-9fef9cd1.pdf` | `Kim_Julongbayan_Resume_AIAgentEngineer.docx` |
