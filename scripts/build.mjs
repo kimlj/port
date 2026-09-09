@@ -64,7 +64,15 @@ const PUBLIC = [
   'favicon.svg',
   'assets',
   'Kim_Julongbayan_Resume.pdf',
-  'Kim_Julongbayan_Resume.docx'
+  'Kim_Julongbayan_Resume.docx',
+  // Per-application resume variants, each at an unguessable filename. Some job
+  // boards (onlinejobs.ph among them) accept no attachment at all, so the link
+  // IS the resume delivery and it has to be the tailored one. Listing the
+  // directory rather than each file means a new variant is a drop-and-push.
+  // The names carry a random suffix so an employer cannot enumerate the others,
+  // and /r/* is noindex in vercel.json. The ledger of which URL went where is
+  // docs/resume-links.md, which is NOT on this list and so is never served.
+  'r'
 ];
 
 const OUT = join(ROOT, 'dist');
