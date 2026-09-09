@@ -20,3 +20,4 @@ letter points at.
 |---|---|---|---|
 | 2026-09-09 | HODL DEVS (onlinejobs.ph) | `/r/hodldevs-8db2ce1a.pdf` | `Kim_Julongbayan_Resume_HodlDevs.docx` |
 | 2026-09-09 | AI Agent Engineer (onlinejobs.ph, no company name) | `/r/aiagentengineer-9fef9cd1.pdf` | `Kim_Julongbayan_Resume_AIAgentEngineer.docx` |
+| 2026-09-09 | AI Developer / Automation Engineer, AI lighting design tool (onlinejobs.ph, no company name) | `/r/lightingai-c50e39d9.pdf` | `Kim_Julongbayan_Resume_LightingAI.docx` |
