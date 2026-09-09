@@ -23,3 +23,6 @@ letter points at.
 | 2026-09-09 | AI Developer / Automation Engineer, AI lighting design tool (onlinejobs.ph, no company name) | `/r/lightingai-c50e39d9.pdf` | `Kim_Julongbayan_Resume_LightingAI.docx` |
 | 2026-09-09 | AI Automation Engineer / Solutions Architect, Pure Velocity LLC (onlinejobs.ph) | `/r/purevelocity-08d24f6a.pdf` | `Kim_Julongbayan_Resume_PureVelocity.pdf` |
 | 2026-09-10 | React Native / Expo iOS MVP, social planning app (onlinejobs.ph, no company name) | `/r/reactnative-5a472119.pdf` | `Kim_Julongbayan_Resume_ReactNativeMVP.pdf` |
+| 2026-09-10 | AI Automation Engineer, pest control company (onlinejobs.ph) | `/r/pestcontrol-f26a8ea9.pdf` | `Kim_Julongbayan_Resume_PestControlAI.pdf` |
+| 2026-09-10 | PM AI / Full-Stack, Fresh Fuel Marketing (onlinejobs.ph) | `/r/freshfuel-ddf529c6.pdf` | `Kim_Julongbayan_Resume_FreshFuel.pdf` |
+| 2026-09-10 | Design + AI-assisted developer, contract-to-hire (onlinejobs.ph) | `/r/aidesigndev-776059e2.pdf` | `Kim_Julongbayan_Resume_AIDesignDev.pdf` |
