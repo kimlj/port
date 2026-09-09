@@ -22,3 +22,4 @@ letter points at.
 | 2026-09-09 | AI Agent Engineer (onlinejobs.ph, no company name) | `/r/aiagentengineer-9fef9cd1.pdf` | `Kim_Julongbayan_Resume_AIAgentEngineer.docx` |
 | 2026-09-09 | AI Developer / Automation Engineer, AI lighting design tool (onlinejobs.ph, no company name) | `/r/lightingai-c50e39d9.pdf` | `Kim_Julongbayan_Resume_LightingAI.docx` |
 | 2026-09-09 | AI Automation Engineer / Solutions Architect, Pure Velocity LLC (onlinejobs.ph) | `/r/purevelocity-08d24f6a.pdf` | `Kim_Julongbayan_Resume_PureVelocity.pdf` |
+| 2026-09-10 | React Native / Expo iOS MVP, social planning app (onlinejobs.ph, no company name) | `/r/reactnative-5a472119.pdf` | `Kim_Julongbayan_Resume_ReactNativeMVP.pdf` |
