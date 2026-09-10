@@ -27,3 +27,4 @@ letter points at.
 | 2026-09-10 | PM AI / Full-Stack, Fresh Fuel Marketing (onlinejobs.ph) | `/r/freshfuel-ddf529c6.pdf` | `Kim_Julongbayan_Resume_FreshFuel.pdf` |
 | 2026-09-10 | Design + AI-assisted developer, contract-to-hire (onlinejobs.ph) | `/r/aidesigndev-776059e2.pdf` | `Kim_Julongbayan_Resume_AIDesignDev.pdf` |
 | 2026-09-10 | AI Systems & Automation Engineer, "Build Our AI Workforce" (onlinejobs.ph) | `/r/aiworkforce-184056ed.pdf` | `Kim_Julongbayan_Resume_AIWorkforce.pdf` |
+| 2026-09-10 | Scout (AI Private Investigator), Founding Full-Stack Developer, contract V1 (onlinejobs.ph) | `/r/scout-a5634adc.pdf` | `Kim_Julongbayan_Resume_Scout.pdf` |
