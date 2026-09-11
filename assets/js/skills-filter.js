@@ -34,9 +34,12 @@
     jew: 'Jobsift',
     csn: 'Casinore.io',
     pipe: 'AI pipelines',
-    site: 'this page'
+    site: 'this page',
+    /* Work whose repository is private. Last, because it has no card above to
+       check it against: the provenance exists and can be shown on request. */
+    priv: 'Private repos'
   };
-  var ORDER = ['ww', 'mds', 'rcd', 'jm', 'jew', 'csn', 'pipe', 'site'];
+  var ORDER = ['ww', 'mds', 'rcd', 'jm', 'jew', 'csn', 'pipe', 'site', 'priv'];
 
   /* Only offer a chip for work the list actually mentions — a filter that can
      return nothing is a filter that shouldn't have been offered. */

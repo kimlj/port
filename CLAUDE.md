@@ -64,15 +64,25 @@ The list is written out in the markup rather than generated: unlike the showcase
 rows there is no second copy to drift from, and the provenance is prose that has
 to be read and checked rather than derived.
 
+**Private work counts, and says so.** A mention can name a project whose repository
+is private (DailyLoad, Cadenz, Couchproof), written "— private repo" and filtered
+under a *Private repos* chip. The provenance exists and can be opened on a screen
+share; what stays off the list is a technology no repository shows at all. Before
+11 Sep 2026 these sat under Also familiar, which undersold them: React Native,
+Expo, Zustand, Prisma, Playwright, Vitest, Solana and GitHub Actions were all in
+real repos while the page called them unshown. `jobsift --index-repos` now flags
+any Also-familiar entry that a counted repo depends on.
+
 The list runs three columns and is deliberately tight: it is a reference table,
-and a reference table you have to scroll is a worse one. All 27 rows, the chips
+and a reference table you have to scroll is a worse one. All 31 rows, the chips
 and the familiar block fit one screen together.
 
 **The group sizes are load-bearing.** A column cannot split a group — each
 heading stays with its own rows — so the column heights are decided entirely by
 how big the groups are and what order they come in, and the browser cannot fix a
-bad split. Six groups of 3/5/3/6/5/5 land one pair per column: Languages +
-Interface, Runtime + Models & pipelines, Data & services + Delivery. Merging two
+bad split. Six groups of 3/7/4/6/6/5 land one pair per column, 10/10/11 rows:
+Languages + Interface, Runtime & testing + Models & pipelines, Data & services +
+Delivery. Merging two
 groups or moving a row between them will silently unbalance the columns, which is
 what an 8-row Server & data block did before it was split.
 
@@ -86,7 +96,7 @@ exactly the list it was. Non-matching rows are dimmed rather than removed: pulli
 rows out would change the height of the section under the reader's cursor, and
 what did not match is still the answer to "what else is there".
 
-**Below 640px the list is a different shape.** One column of 27 rows each
+**Below 640px the list is a different shape.** One column of 31 rows each
 stacking its name over its provenance ran the section to about three and a half
 screens, so the names go two to a line and each group grows a single drawer
 holding the provenance of whichever of its rows was last tapped. One drawer per

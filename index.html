@@ -1923,7 +1923,7 @@ footer .footer-accent { color: var(--accent); }
               <li><strong>Automated client invoicing</strong> end to end &mdash; billable-hours ceiling, preview-then-issue flow, generated letterhead documents.</li>
               <li><strong>Automated the owners' Google Sheet</strong> over the Sheets API, with P&amp;L and margin panels in Apps Script &mdash; fills blank cells only, never a human's figure.</li>
               <li><strong>One shared pay calculation</strong> behind the timesheet, payroll and invoice workbooks, so no two surfaces disagree by a cent.</li>
-              <li><strong>Shipped plain-English querying</strong> on the Claude API via a read-only Postgres role, plus 37 RLS migrations across the schema.</li>
+              <li><strong>Shipped plain-English querying</strong> on the Claude API via a read-only Postgres role, plus 35 RLS policies across 44 migrations.</li>
             </ul>
             <div class="project-link">Visit Site <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
           </div>
@@ -2779,14 +2779,17 @@ footer .footer-accent { color: var(--accent); }
       <div class="skill-row" data-projs="rcd ww"><span class="skill-name">React</span><span class="skill-where"><span data-proj="ww">WordWarz.io</span><span data-proj="rcd">RecodeAI</span></span></div>
       <div class="skill-row" data-projs="rcd"><span class="skill-name">Next.js</span><span class="skill-where"><span data-proj="rcd">RecodeAI</span></span></div>
       <div class="skill-row" data-projs="ww"><span class="skill-name">Capacitor</span><span class="skill-where"><span data-proj="ww">WordWarz.io &mdash; iOS and Android</span></span></div>
+      <div class="skill-row" data-projs="priv"><span class="skill-name">React Native &middot; Expo</span><span class="skill-where"><span data-proj="priv">DailyLoad &mdash; private repo</span><span data-proj="priv">Cadenz &mdash; private repo</span></span></div>
       <div class="skill-row" data-projs="rcd ww"><span class="skill-name">Tailwind CSS</span><span class="skill-where"><span data-proj="ww">WordWarz.io</span><span data-proj="rcd">RecodeAI</span></span></div>
+      <div class="skill-row" data-projs="priv ww"><span class="skill-name">Zustand</span><span class="skill-where"><span data-proj="ww">WordWarz.io</span><span data-proj="priv">DailyLoad &mdash; private repo</span></span></div>
       <div class="skill-row" data-projs="jm mds"><span class="skill-name">Chrome MV3</span><span class="skill-where"><span data-proj="mds">MDS Pro</span><span data-proj="jm">AI Job Matcher</span></span></div>
     </div>
     <div class="skill-group reveal">
-      <div class="skill-group-title">Runtime</div>
+      <div class="skill-group-title">Runtime &amp; testing</div>
       <div class="skill-row" data-projs="ww"><span class="skill-name">Node.js &middot; Express</span><span class="skill-where"><span data-proj="ww">WordWarz.io</span></span></div>
       <div class="skill-row" data-projs="mds"><span class="skill-name">Fastify</span><span class="skill-where"><span data-proj="mds">MDS Pro</span></span></div>
       <div class="skill-row" data-projs="ww"><span class="skill-name">Socket.IO</span><span class="skill-where"><span data-proj="ww">WordWarz.io &mdash; real-time play</span></span></div>
+      <div class="skill-row" data-projs="priv ww"><span class="skill-name">Playwright &middot; Vitest</span><span class="skill-where"><span data-proj="ww">WordWarz.io &mdash; Playwright end-to-end suite</span><span data-proj="priv">Cadenz &mdash; Vitest, private repo</span></span></div>
     </div>
     <div class="skill-group reveal">
       <div class="skill-group-title">Models &amp; pipelines</div>
@@ -2800,16 +2803,17 @@ footer .footer-accent { color: var(--accent); }
     <div class="skill-group reveal">
       <div class="skill-group-title">Data &amp; services</div>
       <div class="skill-row" data-projs="mds ww"><span class="skill-name">Supabase &middot; Postgres</span><span class="skill-where"><span data-proj="mds">MDS Pro</span><span data-proj="ww">WordWarz.io</span></span></div>
-      <div class="skill-row" data-projs="mds"><span class="skill-name">Postgres RLS</span><span class="skill-where"><span data-proj="mds">MDS Pro &mdash; 37 migrations</span></span></div>
+      <div class="skill-row" data-projs="mds"><span class="skill-name">Postgres RLS</span><span class="skill-where"><span data-proj="mds">MDS Pro &mdash; 35 policies, 44 migrations</span></span></div>
       <div class="skill-row" data-projs="jew mds"><span class="skill-name">Google Sheets API &middot; Apps Script</span><span class="skill-where"><span data-proj="mds">MDS Pro</span><span data-proj="jew">Jobsift</span></span></div>
       <div class="skill-row" data-projs="mds"><span class="skill-name">ExcelJS</span><span class="skill-where"><span data-proj="mds">MDS Pro &mdash; payroll workbooks</span></span></div>
-      <div class="skill-row" data-projs="csn"><span class="skill-name">Privy &middot; Web3</span><span class="skill-where"><span data-proj="csn">Casinore.io</span></span></div>
+      <div class="skill-row" data-projs="priv"><span class="skill-name">Prisma</span><span class="skill-where"><span data-proj="priv">Couchproof &mdash; private repo</span></span></div>
+      <div class="skill-row" data-projs="csn"><span class="skill-name">Solana &middot; Web3</span><span class="skill-where"><span data-proj="csn">Casinore.io &mdash; web3.js, Privy wallet auth</span></span></div>
     </div>
     <div class="skill-group reveal">
       <div class="skill-group-title">Delivery</div>
       <div class="skill-row" data-projs="ww"><span class="skill-name">Docker</span><span class="skill-where"><span data-proj="ww">WordWarz.io &mdash; containerised server</span></span></div>
       <div class="skill-row" data-projs="ww"><span class="skill-name">Linux VPS &middot; Nginx</span><span class="skill-where"><span data-proj="ww">WordWarz.io</span></span></div>
-      <div class="skill-row" data-projs="ww"><span class="skill-name">Codemagic CI</span><span class="skill-where"><span data-proj="ww">WordWarz.io &mdash; App Store and Play builds</span></span></div>
+      <div class="skill-row" data-projs="site ww"><span class="skill-name">Codemagic &middot; GitHub Actions</span><span class="skill-where"><span data-proj="ww">WordWarz.io &mdash; App Store and Play builds</span><span data-proj="site">this page &mdash; daily data refresh</span></span></div>
       <div class="skill-row" data-projs="csn"><span class="skill-name">Google Cloud</span><span class="skill-where"><span data-proj="csn">Casinore.io</span></span></div>
       <div class="skill-row" data-projs="site"><span class="skill-name">Vercel</span><span class="skill-where"><span data-proj="site">this page</span></span></div>
     </div>
@@ -2821,15 +2825,11 @@ footer .footer-accent { color: var(--accent); }
         happen to show &mdash; ask me about any of them.</p>
     </div>
     <div class="skill-aside-list">
-      <span>React Native</span>
-      <span>Expo</span>
-      <span>Zustand</span>
       <span>TanStack Query</span>
       <span>shadcn/ui</span>
       <span>Framer Motion</span>
       <span>Astro</span>
       <span>SvelteKit</span>
-      <span>Prisma</span>
       <span>Drizzle</span>
       <span>tRPC</span>
       <span>GraphQL</span>
@@ -2842,12 +2842,8 @@ footer .footer-accent { color: var(--accent); }
       <span>Ollama</span>
       <span>Hugging Face</span>
       <span>MCP</span>
-      <span>GitHub Actions</span>
       <span>AWS</span>
       <span>Cloudflare Workers</span>
-      <span>Playwright</span>
-      <span>Vitest</span>
-      <span>Solana &middot; web3.js</span>
       <span>Figma</span>
     </div>
   </div>
