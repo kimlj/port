@@ -1666,7 +1666,13 @@ footer .footer-accent { color: var(--accent); }
    context for the charts rather than competing with them. It is also the only
    line in the section that can never go stale, because nothing behind it moves. */
 .ai-prior { font-size: 0.78rem; color: var(--text-dim); line-height: 1.6; margin: -0.75rem 0 1.75rem; padding-left: 0.9rem; border-left: 1px solid var(--border); }
+/* Three steps, not two, because the line carries three kinds of thing and a
+   uniform highlight would flatten them: the claim (--text), the figures that
+   support it (--text-muted), and the method and the dateline, which are fine
+   print and stay at the line's own --text-dim. Weight is left alone — bolding
+   0.78rem prose in five places makes a texture rather than a hierarchy. */
 .ai-prior b { font-weight: 400; color: var(--text); }
+.ai-prior .ai-prior-n { color: var(--text-muted); }
 .ai-prior-label { display: block; font-family: var(--mono); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.16em; color: var(--text-muted); margin-bottom: 0.35rem; }
 
 /* ---- charts ----
@@ -4106,19 +4112,27 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
   function render(d) {
     if (!d || !d.firstDay || !d.conversations) { host.remove(); return; }
 
+    /* The date and the gap after it are the claim, so they are the two things
+       lifted clear of the prose. The counts get the middle step below: they are
+       what the claim rests on, but a reader who takes only "11 Dec 2022, eleven
+       days" away from this line has the whole of it. */
     var gap = d.daysAfterLaunch;
     var after = '';
     if (typeof gap === 'number' && gap >= 0) {
       after = gap === 0
-        ? ', the day it opened to the public'
-        : ', ' + (gap < WORDS.length ? WORDS[gap] : gap.toLocaleString()) +
-          ' day' + (gap === 1 ? '' : 's') + ' after it opened to the public';
+        ? ', <b>the day it opened</b> to the public'
+        : ', <b>' + (gap < WORDS.length ? WORDS[gap] : gap.toLocaleString()) +
+          ' day' + (gap === 1 ? '' : 's') + '</b> after it opened to the public';
+    }
+
+    function n(v) {
+      return '<span class="ai-prior-n">' + (v || 0).toLocaleString() + '</span>';
     }
 
     var text = 'First ChatGPT conversation <b>' + day(d.firstDay) + '</b>' + after +
-      '. ' + d.conversations.toLocaleString() + ' conversations on ' +
-      (d.activeDays || 0).toLocaleString() + ' separate days since' +
-      (d.withCode ? ', ' + d.withCode.toLocaleString() +
+      '. ' + n(d.conversations) + ' conversations on ' + n(d.activeDays) +
+      ' separate days since' +
+      (d.withCode ? ', ' + n(d.withCode) +
                     ' of them carrying a fenced code block' : '') + '. ';
 
     /* Why this half of the panel has no hours on it, which a reader who just
