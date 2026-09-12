@@ -267,16 +267,33 @@ in more detail.
 
 ## Data
 
-`assets/contributions.json` and `assets/claude-usage.json` are **committed
-snapshots**, not live reads — neither can be fetched from the browser, and
-`TODO.md` says why. The GitHub half refreshes itself daily through
+`assets/contributions.json`, `assets/claude-usage.json` and
+`assets/chatgpt-history.json` are **committed snapshots**, not live reads — none
+of them can be fetched from the browser, and `TODO.md` says why. The GitHub half
+refreshes itself daily through
 `.github/workflows/refresh-activity.yml`; the Claude half is still
 `node scripts/fetch-claude-usage.mjs` by hand, because the transcripts it reads
 only exist on the machine that did the work.
 
-Both payloads carry `generatedAt`, and the panel prints it. **A figure on this
-page states its own date** — keep it that way when editing the section, since
-the two halves refresh on different schedules and neither is today's by default.
+The third has **no refresh path at all**: a ChatGPT export is requested by hand and emailed, so
+`node scripts/fetch-chatgpt-history.mjs` can only be re-run when a new export
+arrives. It exists for one figure the other two cannot state — the Claude Code
+transcripts start on 2025-10-19 and the calendars start when the account did, so
+both date a tool rather than the practice, and the export dates the practice
+(11 Dec 2022, eleven days after ChatGPT opened). Everything else it offers is a
+weaker copy of a figure the panel already has, which is why the page draws one
+line and no chart: **no hours** (a chat tab left open is indistinguishable from
+work, so there is no defensible session boundary), no message count beside the
+prompt count (25,326 over 45 months next to 16,423 over 11 reads as decline
+rather than as a move between tools), and no per-year bars. That script has no
+archive merge and must not grow one — pass every export you still have in one
+run instead; it deduplicates by conversation id, so the figures always come off
+one set of ids rather than from max-merging two runs' aggregates.
+
+All three payloads carry `generatedAt`, and the panel prints it. **A figure on
+this page states its own date** — keep it that way when editing the section,
+since the three refresh on entirely different schedules and none is today's by
+default.
 
 **Nothing here is content-hashed, so the cache rule splits by file type and you
 have to know which half you are editing.** `vercel.json`: `assets/js/**` and
