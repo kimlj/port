@@ -1657,6 +1657,24 @@ footer .footer-accent { color: var(--accent); }
    today's by default. The full note is still there on any wider screen. */
 @media (max-width: 640px) { .ai-caption-method { display: none; } }
 
+/* The dateline, and deliberately not a fourth chart. A ChatGPT export can be
+   counted but it cannot be timed: the hours figure above is defensible because a
+   transcript is a dense stream of tool calls closing after 15 minutes of silence,
+   where a browser tab left open for a week is indistinguishable from work. So
+   this states the two things that survive — when it started, and how much of it
+   was code by a definition a reader can check — and stays quiet enough to read as
+   context for the charts rather than competing with them. It is also the only
+   line in the section that can never go stale, because nothing behind it moves. */
+.ai-prior { font-size: 0.78rem; color: var(--text-dim); line-height: 1.6; margin: -0.75rem 0 1.75rem; padding-left: 0.9rem; border-left: 1px solid var(--border); }
+/* Three steps, not two, because the line carries three kinds of thing and a
+   uniform highlight would flatten them: the claim (--text), the figures that
+   support it (--text-muted), and the method and the dateline, which are fine
+   print and stay at the line's own --text-dim. Weight is left alone — bolding
+   0.78rem prose in five places makes a texture rather than a hierarchy. */
+.ai-prior b { font-weight: 400; color: var(--text); }
+.ai-prior .ai-prior-n { color: var(--text-muted); }
+.ai-prior-label { display: block; font-family: var(--mono); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.16em; color: var(--text-muted); margin-bottom: 0.35rem; }
+
 /* ---- charts ----
    Two charts, one hue each. Deliberately NOT three: the model split is 94/6/0.03,
    which is a two-slice pie in disguise - it is already a stat tile above, and the
@@ -2051,6 +2069,12 @@ footer .footer-accent { color: var(--accent); }
          hard the tooling is used, that is what got shipped. -->
     <div class="ai-stats" id="aiStats" hidden></div>
     <p class="ai-stats-caption" id="aiStatsCaption" hidden></p>
+
+    <!-- Where the habit starts, which is the one thing neither chart below can
+         say: the Claude Code transcripts begin on 2025-10-19 and the calendars
+         begin when the account did, so both date a tool rather than the
+         practice. From assets/chatgpt-history.json. -->
+    <p class="ai-prior" id="aiPrior" hidden></p>
 
     <div class="ai-charts">
       <div class="ai-chart">
@@ -4038,6 +4062,94 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
       }
       caption.hidden = false;
     }
+  }
+})();
+</script>
+
+<script>
+/* Where the practice starts. Reads assets/chatgpt-history.json, produced by
+ * scripts/fetch-chatgpt-history.mjs from a ChatGPT data export.
+ *
+ * One line and no chart, because almost everything in that export is a weaker
+ * copy of a figure the panel already has. 25,326 messages over 45 months set
+ * beside 16,423 prompts over 11 months also reads as a decline to anyone
+ * scanning, when what it records is a move between tools. The start date is the
+ * one thing here that is both unique and unarguable.
+ *
+ * The per-year counts in the payload are deliberately not drawn either: 2024 is
+ * a fifth of 2023, and a bar inviting "what happened in 2024" answers nothing
+ * this section is about.
+ */
+(function () {
+  'use strict';
+  var host = document.getElementById('aiPrior');
+  if (!host) return;
+
+  fetch('assets/chatgpt-history.json', { cache: 'no-cache' })
+    .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+    .then(render)
+    .catch(function () { host.remove(); });
+
+  /* Same shape as every other date in the section, and built rather than
+     localised for the same reason: toLocaleDateString renders this month as
+     'Sept', and on a non-English browser it would date an English sentence in
+     another language. */
+  var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+             'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  function day(stamp) {
+    var t = stamp ? new Date(String(stamp).slice(0, 10) + 'T00:00:00Z') : null;
+    if (!t || isNaN(t.getTime())) return '';
+    return t.getUTCDate() + ' ' + MON[t.getUTCMonth()] + ' ' + t.getUTCFullYear();
+  }
+
+  /* Spelled out, because the clause it lands in already ends in a year: "11 Dec
+     2022, 11 days after it opened" makes a reader stop to check whether the two
+     numbers are the same one. */
+  var WORDS = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight',
+               'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen',
+               'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty'];
+
+  function render(d) {
+    if (!d || !d.firstDay || !d.conversations) { host.remove(); return; }
+
+    /* The date and the gap after it are the claim, so they are the two things
+       lifted clear of the prose. The counts get the middle step below: they are
+       what the claim rests on, but a reader who takes only "11 Dec 2022, eleven
+       days" away from this line has the whole of it. */
+    var gap = d.daysAfterLaunch;
+    var after = '';
+    if (typeof gap === 'number' && gap >= 0) {
+      after = gap === 0
+        ? ', <b>the day it opened</b> to the public'
+        : ', <b>' + (gap < WORDS.length ? WORDS[gap] : gap.toLocaleString()) +
+          ' day' + (gap === 1 ? '' : 's') + '</b> after it opened to the public';
+    }
+
+    function n(v) {
+      return '<span class="ai-prior-n">' + (v || 0).toLocaleString() + '</span>';
+    }
+
+    var text = 'First ChatGPT conversation <b>' + day(d.firstDay) + '</b>' + after +
+      '. ' + n(d.conversations) + ' conversations on ' + n(d.activeDays) +
+      ' separate days since' +
+      (d.withCode ? ', ' + n(d.withCode) +
+                    ' of them carrying a fenced code block' : '') + '. ';
+
+    /* Why this half of the panel has no hours on it, which a reader who just
+       read the hours above is entitled to ask. Same class as the Claude Code
+       methodology, so it drops on a phone with it rather than spending a third
+       of a small screen explaining an absence. */
+    text += '<span class="ai-caption-method">No hours figure for it: a chat tab ' +
+      'left open is indistinguishable from work, and the hours above are only ' +
+      'defensible because a session closes after fifteen minutes of silence. ' +
+      '</span>';
+
+    /* An export is requested by hand and emailed, so nothing refreshes this file
+       the way the runner refreshes the calendars. It says so, and says when. */
+    text += 'One-off export, measured ' + day(d.generatedAt) + '.';
+
+    host.innerHTML = '<span class="ai-prior-label">Before Claude Code</span>' + text;
+    host.hidden = false;
   }
 })();
 </script>
