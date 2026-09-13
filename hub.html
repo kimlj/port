@@ -411,6 +411,7 @@ body {
   .cols { grid-template-columns: 1fr; }
   .cols-3 { grid-template-columns: 1fr; }
   .bar-row { grid-template-columns: minmax(0, 9em) 1fr auto; }
+  .hist-label { font-size: 8px; }
   .panel-title { font-size: 28px; }
 }
 
@@ -620,6 +621,150 @@ body {
 .tbl .t-winner { color: var(--text); }
 .tbl .t-none { color: var(--text-dim); }
 
+/* ── the other mark types ──────────────────────────────────────────────
+
+   A bar list answers "which is biggest". These answer the other questions the
+   panel asks - how is it divided, what is the shape of the distribution, what
+   fraction of each group came back, how far apart are five close numbers - and
+   they exist because seven bar lists in a row read as one chart applied seven
+   times rather than as seven questions.
+
+   None of them is an SVG except the area curve. Percentage widths and heights
+   on ordinary boxes cannot stretch their own labels, which the SVG charts can
+   and did. */
+
+/* Part-to-whole: one bar, segmented, legend underneath carrying the numbers. */
+.seg {
+  display: flex;
+  height: 16px;
+  border-radius: 4px;
+  overflow: hidden;
+  gap: 1px;
+  margin-bottom: 12px;
+}
+/* A floor, so a 2% slice is still a visible piece of the bar rather than a
+   seam. It costs the wide slices a pixel or two of accuracy, which at this
+   size nobody can read anyway - and the legend carries the exact share. */
+.seg-part { min-width: 3px; }
+
+.seg-legend { display: grid; gap: 5px; font-family: var(--mono); font-size: 11px; }
+.seg-item { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 8px; }
+.seg-swatch { width: 8px; height: 8px; border-radius: 2px; }
+.seg-label { color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.seg-value { color: var(--text); font-variant-numeric: tabular-nums; }
+
+/* A distribution along an ordered axis, drawn vertically because the order of
+   the buckets IS the information. */
+.histogram { display: grid; gap: 4px; }
+.hist-max { font-family: var(--mono); font-size: 9.5px; color: var(--text-dim); }
+
+.hist {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 4px;
+  align-items: end;
+}
+.hist-col { display: grid; grid-template-rows: auto 1fr auto; gap: 3px; min-width: 0; height: 104px; }
+
+.hist-value {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+/* The wrapper is the full-height column and the bar sits at its foot, so every
+   bar in the row measures from one baseline. */
+.hist-bar-wrap { display: flex; align-items: flex-end; min-height: 0; }
+.hist-bar {
+  display: block;
+  width: 100%;
+  background: var(--series-1);
+  border-radius: 2px 2px 0 0;
+}
+.hist-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text-dim);
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* A dot on a shared axis that deliberately does not start at zero, for values
+   that differ by a quarter and would be near-identical lengths as bars. */
+/* ONE grid for the whole plot, with the rows flattened into it by
+   display:contents. A fixed em cap on the label column was the obvious version
+   and was wrong twice: it squeezes below its own maximum when the value column
+   is wide (7em, then 8.5em, and "battleRoyale" was still clipped by 2px), and
+   it leaves the axis underneath guessing at that width with a padding-left that
+   has to be kept in sync by hand. An `auto` column takes exactly what the
+   longest label needs, and the axis sits in column 2 of the same grid, so the
+   two cannot disagree. */
+.dots {
+  display: grid;
+  grid-template-columns: auto minmax(40px, 1fr) auto;
+  align-items: center;
+  gap: 6px 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+}
+.dot-row { display: contents; }
+.dot-label { color: var(--text-muted); white-space: nowrap; }
+
+.dot-track {
+  position: relative;
+  display: block;
+  height: 9px;
+  /* A hairline rather than a track: a filled track is a length, and a length
+     is the claim this chart is avoiding. */
+  background: linear-gradient(to bottom, transparent 46%, #1b1b1f 46%, #1b1b1f 54%, transparent 54%);
+}
+.dot-mark {
+  position: absolute;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  margin: -4.5px 0 0 -4.5px;
+  border-radius: 50%;
+  background: var(--series-1);
+}
+.dot-value { color: var(--text); font-variant-numeric: tabular-nums; }
+.dot-note { color: var(--text-dim); }
+
+/* The two ends of a non-zero axis, said out loud. A tight axis with no scale
+   printed on it is the chart that lies by omission. */
+.dot-axis {
+  /* Column 2 of the plot's own grid: exactly the track, whatever width the
+     labels ended up taking. */
+  grid-column: 2;
+  display: flex;
+  justify-content: space-between;
+  font-size: 9.5px;
+  color: var(--text-dim);
+}
+
+/* A total and the fraction of it still active, where the fraction is the
+   content and the two totals are context. */
+.shares { display: grid; gap: 6px; font-family: var(--mono); font-size: 11px; }
+.share-row {
+  display: grid;
+  grid-template-columns: minmax(0, 6em) auto 1fr 2.6em;
+  align-items: center;
+  gap: 8px;
+}
+.share-label { color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.share-total { color: var(--text); font-variant-numeric: tabular-nums; }
+.share-gauge { display: block; height: 7px; border-radius: 4px; background: #1b1b1f; overflow: hidden; }
+.share-fill { display: block; height: 100%; border-radius: 4px; background: var(--series-3); }
+.share-pct { color: var(--text-dim); text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Services lost the prose card beside it, so it lays its two rows out side by
+   side rather than stacking them down a full-width card. */
+.card-wide .svc-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
+
 /* ── the operator half ──────────────────────────────────────────────────
 
    Hidden by default and revealed by a flag the SERVER set, not by a class the
@@ -698,6 +843,8 @@ body {
   .stat { padding: 8px 10px; }
   .stat-value { font-size: 18px; }
   .chart svg { height: 74px; }
+  .hist-col { height: 84px; }
+  .seg { height: 13px; margin-bottom: 9px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -860,26 +1007,18 @@ body {
           <span class="metric-note">counted, not sampled</span>
         </div>
         <div class="metric" data-series="2">
-          <span class="metric-value">1,333</span>
+          <span class="metric-value">1,334</span>
           <span class="metric-label">Commits</span>
           <span class="metric-note">Dec 2025 to 13 Sep 2026</span>
         </div>
       </div>
 
-      <div class="cols">
-        <div class="card">
-          <h3>What is actually hard about it</h3>
-          <p><strong>Every client has to agree on one board.</strong> Socket.IO carries the round, the server owns the clock, and a player who closes the tab keeps their seat for ten minutes so a reconnect is not a forfeit.</p>
-          <p><strong>An empty lobby kills a multiplayer game.</strong> Bots are seeded by ELO tier and play on an entropy schedule so a first-time player gets a real match at 3am; they are not flagged in-game, and they are excluded from every number on this screen.</p>
-          <p><strong>Counting people is harder than counting rows.</strong> The live headcount ignores seats held for reconnects and the bots sitting in them, because a held seat is not a person in the room.</p>
-        </div>
-        <div class="card">
-          <h3>Services</h3>
-          <div class="svc-list" data-group-services="WordWarz"></div>
-          <div class="links">
-            <a href="https://wordwarz.io" target="_blank" rel="noopener">wordwarz.io</a>
-            <a href="https://dashboard.wordwarz.io" target="_blank" rel="noopener">dashboard</a>
-          </div>
+      <div class="card card-wide">
+        <h3>Services</h3>
+        <div class="svc-list" data-group-services="WordWarz"></div>
+        <div class="links">
+          <a href="https://wordwarz.io" target="_blank" rel="noopener">wordwarz.io</a>
+          <a href="https://dashboard.wordwarz.io" target="_blank" rel="noopener">dashboard</a>
         </div>
       </div>
 
@@ -1030,7 +1169,7 @@ body {
           <h3>Games per day</h3>
           <span class="dsec-note">last 30 days, from the games table — not sampled</span>
         </div>
-        <div class="chart" data-hub="chart-games"></div>
+        <div class="chart" data-hub="area-games"></div>
       </div>
 
       <div class="cols cols-3">
@@ -1039,21 +1178,22 @@ body {
             <h3>Games by mode</h3>
             <span class="dsec-note">share of all games</span>
           </div>
-          <div class="bars" data-hub="bars-modes"></div>
+          <div class="segments" data-hub="seg-modes"></div>
         </div>
         <div class="dsec">
           <div class="dsec-head">
             <h3>Ranked ELO</h3>
-            <span class="dsec-note">classic — accounts, simulated excluded</span>
+            <span class="dsec-note">classic — rated accounts, simulated excluded</span>
           </div>
-          <div class="bars" data-hub="bars-elo"></div>
+          <div class="histogram" data-hub="hist-elo"></div>
+          <p class="dsec-foot" data-hub="elo-unrated">—</p>
         </div>
         <div class="dsec">
           <div class="dsec-head">
             <h3>Platform</h3>
-            <span class="dsec-note">devices · active in 30d</span>
+            <span class="dsec-note">devices, and the share still active in 30d</span>
           </div>
-          <div class="bars" data-hub="bars-platform"></div>
+          <div class="shares" data-hub="share-platform"></div>
         </div>
       </div>
 
@@ -1061,9 +1201,9 @@ body {
         <div class="dsec">
           <div class="dsec-head">
             <h3>Lobby sizes</h3>
-            <span class="dsec-note">players per game, bots included</span>
+            <span class="dsec-note">games by number of players, bots included</span>
           </div>
-          <div class="bars" data-hub="bars-lobby"></div>
+          <div class="chart" data-hub="area-lobby"></div>
         </div>
         <div class="dsec">
           <div class="dsec-head">
@@ -1075,9 +1215,9 @@ body {
         <div class="dsec">
           <div class="dsec-head">
             <h3>Average solve time</h3>
-            <span class="dsec-note">seconds, by mode</span>
+            <span class="dsec-note">seconds by mode — the axis does not start at zero</span>
           </div>
-          <div class="bars" data-hub="bars-solvetime"></div>
+          <div class="dots" data-hub="dots-solvetime"></div>
         </div>
       </div>
 
@@ -1183,7 +1323,7 @@ body {
 
       <div class="metrics">
         <div class="metric" data-series="1">
-          <span class="metric-value">226</span>
+          <span class="metric-value">227</span>
           <span class="metric-label">Commits</span>
           <span class="metric-note">Feb 2026 to 13 Sep 2026</span>
         </div>

@@ -475,6 +475,305 @@
     host.appendChild(axis);
   }
 
+  // ── the other mark types ─────────────────────────────────────────────
+  //
+  // Seven blocks in a row were seven horizontal bar lists, which reads as one
+  // chart type applied seven times rather than as seven questions answered.
+  // Each of these is picked from the shape of its own data, and a bar list is
+  // still the right answer where the question is a RANKING - openers and
+  // busiest days keep theirs, because "which is biggest" is exactly what a
+  // sorted bar list says best.
+  //
+  // Only the area chart needs SVG. Everything else is HTML boxes with
+  // percentage widths and heights, which sidesteps the label-stretching trap
+  // in renderChart entirely: there is no non-uniform scale to distort text.
+
+  // Part-to-whole. One bar, segmented, with the legend carrying the numbers.
+  // Four slices of a single total is the one case where a shared baseline
+  // beats four separate bars, because the question is "how is it divided"
+  // rather than "which is biggest".
+  function renderSegments(name, rows, colors) {
+    var host = target(name);
+    if (!host) return;
+    host.textContent = '';
+    if (!rows || !rows.length) return;
+
+    var total = rows.reduce(function (sum, r) { return sum + (r.value || 0); }, 0);
+    if (total <= 0) return;
+
+    var bar = document.createElement('div');
+    bar.className = 'seg';
+    rows.forEach(function (row, i) {
+      var part = document.createElement('span');
+      part.className = 'seg-part';
+      part.style.width = (row.value / total) * 100 + '%';
+      part.style.background = colors[i % colors.length];
+      part.title = row.label + ' — ' + num(row.value);
+      bar.appendChild(part);
+    });
+    host.appendChild(bar);
+
+    var legend = document.createElement('div');
+    legend.className = 'seg-legend';
+    rows.forEach(function (row, i) {
+      var item = document.createElement('div');
+      item.className = 'seg-item';
+
+      var swatch = document.createElement('span');
+      swatch.className = 'seg-swatch';
+      swatch.style.background = colors[i % colors.length];
+      item.appendChild(swatch);
+
+      var label = document.createElement('span');
+      label.className = 'seg-label';
+      label.textContent = row.label;
+      item.appendChild(label);
+
+      var value = document.createElement('span');
+      value.className = 'seg-value';
+      // The share to a whole percent, and the count beside it. A 2% slice is
+      // unreadable as a length at this width, so the number is doing that work.
+      value.textContent = num(row.value) + ' · ' + Math.round((row.value / total) * 100) + '%';
+      item.appendChild(value);
+
+      legend.appendChild(item);
+    });
+    host.appendChild(legend);
+  }
+
+  // A distribution along an ordered axis. Vertical, because the order of the
+  // buckets is the information - reading a rating scale left to right is what
+  // a histogram is for, and a horizontal list of the same buckets throws that
+  // away and invites the reader to sort it by size instead.
+  function renderHistogram(name, rows, opts) {
+    var host = target(name);
+    if (!host) return;
+    host.textContent = '';
+    if (!rows || !rows.length) return;
+
+    var max = rows.reduce(function (m, r) { return Math.max(m, r.value || 0); }, 0);
+    if (max <= 0) max = 1;
+
+    var scale = document.createElement('span');
+    scale.className = 'hist-max';
+    scale.textContent = num(max);
+    host.appendChild(scale);
+
+    var plot = document.createElement('div');
+    plot.className = 'hist';
+    rows.forEach(function (row) {
+      var col = document.createElement('div');
+      col.className = 'hist-col';
+
+      var value = document.createElement('span');
+      value.className = 'hist-value';
+      value.textContent = num(row.value);
+      col.appendChild(value);
+
+      var barWrap = document.createElement('span');
+      barWrap.className = 'hist-bar-wrap';
+      var bar = document.createElement('span');
+      bar.className = 'hist-bar';
+      // A floor of 1% so a bucket with a real count is never invisible beside
+      // one 30x its size - the same reason the time charts tick a measured
+      // zero. An actual zero gets nothing.
+      bar.style.height = row.value > 0 ? Math.max((row.value / max) * 100, 1) + '%' : '0';
+      if (opts && opts.color) bar.style.background = opts.color;
+      barWrap.appendChild(bar);
+      col.appendChild(barWrap);
+
+      var label = document.createElement('span');
+      label.className = 'hist-label';
+      label.textContent = row.label;
+      label.title = row.label;
+      col.appendChild(label);
+
+      plot.appendChild(col);
+    });
+    host.appendChild(plot);
+  }
+
+  // A filled curve over an ordered axis. For a quantity that is continuous
+  // across its axis - days, or lobby size - where the SHAPE is the content and
+  // the individual columns are not being read one at a time.
+  //
+  // Absent entries are filled with zero rather than skipped, and that is only
+  // honest for these two series: a day with no games and a lobby size nobody
+  // played both genuinely are zero, because the row only exists when something
+  // happened. The concurrency chart must never do this - a missing sample there
+  // means nobody was watching, which is not a fact about players.
+  function renderArea(name, points, opts) {
+    var host = target(name);
+    if (!host) return;
+    host.textContent = '';
+    if (!points || !points.length) return;
+
+    var max = points.reduce(function (m, p) { return Math.max(m, p.value || 0); }, 0);
+    if (max <= 0) max = 1;
+
+    var scale = document.createElement('span');
+    scale.className = 'chart-max';
+    scale.textContent = num(max);
+    host.appendChild(scale);
+
+    var svg = svgEl('svg', {
+      viewBox: '0 0 100 100',
+      preserveAspectRatio: 'none',
+      role: 'img',
+      'aria-label': (opts && opts.label) || ''
+    });
+
+    [0, 50, 100].forEach(function (y) {
+      svg.appendChild(svgEl('line', {
+        class: 'chart-grid', x1: 0, x2: 100, y1: y, y2: y,
+        'vector-effect': 'non-scaling-stroke'
+      }));
+    });
+
+    var step = points.length > 1 ? 100 / (points.length - 1) : 0;
+    var coords = points.map(function (p, i) {
+      return [i * step, 100 - ((p.value || 0) / max) * 100];
+    });
+
+    var line = coords.map(function (c) { return c[0].toFixed(2) + ',' + c[1].toFixed(2); }).join(' ');
+    svg.appendChild(svgEl('polygon', {
+      points: '0,100 ' + line + ' 100,100',
+      fill: (opts && opts.fill) || 'var(--series-4)',
+      opacity: 0.22
+    }));
+    svg.appendChild(svgEl('polyline', {
+      points: line,
+      fill: 'none',
+      stroke: (opts && opts.color) || 'var(--series-4)',
+      'stroke-width': 1.5,
+      // Without this the stroke is scaled by the same non-uniform transform as
+      // the geometry, so the line is thick where the box is narrow.
+      'vector-effect': 'non-scaling-stroke',
+      'stroke-linejoin': 'round'
+    }));
+
+    host.appendChild(svg);
+
+    var axis = document.createElement('div');
+    axis.className = 'chart-x';
+    var a = document.createElement('span');
+    a.textContent = points[0].label || '';
+    var b = document.createElement('span');
+    b.textContent = points[points.length - 1].label || '';
+    axis.appendChild(a);
+    axis.appendChild(b);
+    host.appendChild(axis);
+  }
+
+  // Five magnitudes that differ by a quarter, on a shared axis that does not
+  // start at zero. Bars would have to start at zero or lie, and starting at
+  // zero renders 35.3 and 45.5 as near-identical lengths - the difference the
+  // block exists to show would be the one thing invisible in it. A dot carries
+  // no length, so it makes no claim about the origin and the axis can be tight.
+  function renderDotPlot(name, rows, opts) {
+    var host = target(name);
+    if (!host) return;
+    host.textContent = '';
+    if (!rows || !rows.length) return;
+
+    var values = rows.map(function (r) { return r.value || 0; });
+    var lo = Math.min.apply(null, values);
+    var hi = Math.max.apply(null, values);
+    // A little air at each end so the extremes are not pinned to the edges,
+    // and a guard for the case where every value is identical.
+    var pad = (hi - lo) * 0.15 || Math.max(hi * 0.1, 1);
+    lo -= pad;
+    hi += pad;
+    var span = hi - lo || 1;
+
+    rows.forEach(function (row) {
+      var line = document.createElement('div');
+      line.className = 'dot-row';
+
+      var label = document.createElement('span');
+      label.className = 'dot-label';
+      label.textContent = row.label;
+      label.title = row.label;
+      line.appendChild(label);
+
+      var track = document.createElement('span');
+      track.className = 'dot-track';
+      var dot = document.createElement('span');
+      dot.className = 'dot-mark';
+      dot.style.left = (((row.value || 0) - lo) / span) * 100 + '%';
+      if (opts && opts.color) dot.style.background = opts.color;
+      track.appendChild(dot);
+      line.appendChild(track);
+
+      var value = document.createElement('span');
+      value.className = 'dot-value';
+      value.textContent = row.display !== undefined ? row.display : num(row.value);
+      if (row.note) {
+        var note = document.createElement('span');
+        note.className = 'dot-note';
+        note.textContent = ' ' + row.note;
+        value.appendChild(note);
+      }
+      line.appendChild(value);
+
+      host.appendChild(line);
+    });
+
+    // The axis is not zero-based, so it says where it starts and ends. A tight
+    // axis with no scale on it is the chart that lies by omission.
+    var axis = document.createElement('div');
+    axis.className = 'dot-axis';
+    var a = document.createElement('span');
+    a.textContent = (opts && opts.format ? opts.format(lo) : num(Math.round(lo)));
+    var b = document.createElement('span');
+    b.textContent = (opts && opts.format ? opts.format(hi) : num(Math.round(hi)));
+    axis.appendChild(a);
+    axis.appendChild(b);
+    host.appendChild(axis);
+  }
+
+  // A total and the share of it still active. The RATIO is the content here -
+  // 1,434 devices of which 160 came back this month is a different fact from
+  // 150 of which 140 did - and two bars on one scale would have said only that
+  // the first number is bigger, which the reader can already see.
+  function renderShareTable(name, rows) {
+    var host = target(name);
+    if (!host) return;
+    host.textContent = '';
+    if (!rows || !rows.length) return;
+
+    rows.forEach(function (row) {
+      var line = document.createElement('div');
+      line.className = 'share-row';
+
+      var label = document.createElement('span');
+      label.className = 'share-label';
+      label.textContent = row.label;
+      line.appendChild(label);
+
+      var total = document.createElement('span');
+      total.className = 'share-total';
+      total.textContent = num(row.total);
+      line.appendChild(total);
+
+      var gauge = document.createElement('span');
+      gauge.className = 'share-gauge';
+      var fill = document.createElement('span');
+      fill.className = 'share-fill';
+      var share = row.total > 0 ? row.active / row.total : 0;
+      fill.style.width = share * 100 + '%';
+      gauge.appendChild(fill);
+      line.appendChild(gauge);
+
+      var pctEl = document.createElement('span');
+      pctEl.className = 'share-pct';
+      pctEl.textContent = row.total > 0 ? Math.round(share * 100) + '%' : '—';
+      line.appendChild(pctEl);
+
+      host.appendChild(line);
+    });
+  }
+
   // ── the panel ────────────────────────────────────────────────────────
 
   function renderWordWarz(data) {
@@ -506,52 +805,81 @@
 
     setText('peak24h-at', w.peak24h ? (clockTime(w.peak24h.at) || '') : null);
 
-    var total = (w.gamesByMode || []).reduce(function (sum, m) { return sum + (m.games || 0); }, 0);
-    renderBars('bars-modes', (w.gamesByMode || []).map(function (m) {
-      return {
-        label: m.mode,
-        value: m.games,
-        display: num(m.games),
-        share: total > 0 ? '(' + Math.round((m.games / total) * 100) + '%)' : ''
-      };
-    }), { series: 1 });
+    // Part-to-whole: one bar, four slices of a single total.
+    renderSegments('seg-modes', (w.gamesByMode || []).map(function (m) {
+      return { label: m.mode, value: m.games };
+    }), ['var(--series-1)', 'var(--series-3)', 'var(--series-4)', 'var(--series-2)']);
 
-    // Buckets in rating order rather than in count order, because the shape of
-    // a rating distribution is the thing being read and sorting by size
-    // destroys it. "never played" and "unrated" sit at the end: they are not
-    // points on the scale.
-    var ELO_ORDER = ['under 900', '900-999', 'never played (1000)', '1001-1099',
-                     '1100-1199', '1200+', 'unrated'];
-    renderBars('bars-elo', (w.elo || []).slice().sort(function (a, b) {
+    // A rating scale, so it is drawn as one: buckets in rating order, left to
+    // right, as columns. Sorting by count would destroy the only thing the
+    // block is for.
+    //
+    // The unrated pile is pulled OUT of the plot rather than drawn in it. It is
+    // not a point on the scale - it is everybody who has an account and has not
+    // played a ranked game - and at 590 against a busiest real bucket of 74 it
+    // would flatten all six into a baseline. It is stated beside the chart
+    // instead, which is both the readable answer and the honest one.
+    var ELO_ORDER = ['under 900', '900-999', '1001-1099', '1100-1199', '1200+'];
+    var eloRows = (w.elo || []).filter(function (e) {
+      return ELO_ORDER.indexOf(e.bucket) !== -1;
+    }).sort(function (a, b) {
       return ELO_ORDER.indexOf(a.bucket) - ELO_ORDER.indexOf(b.bucket);
-    }).map(function (e) {
-      return { label: e.bucket, value: e.accounts, display: num(e.accounts) };
-    }), { series: 3 });
+    });
+    renderHistogram('hist-elo', eloRows.map(function (e) {
+      return { label: e.bucket, value: e.accounts };
+    }), { color: 'var(--series-3)' });
 
-    renderBars('bars-platform', (w.platforms || []).map(function (p) {
-      return {
-        label: p.platform,
-        value: p.devices,
-        display: num(p.devices),
-        share: '(' + num(p.active30d) + ' active)'
-      };
-    }), { series: 4 });
+    var unrated = (w.elo || []).filter(function (e) {
+      return ELO_ORDER.indexOf(e.bucket) === -1;
+    }).reduce(function (sum, e) { return sum + (e.accounts || 0); }, 0);
+    var rated = eloRows.reduce(function (sum, e) { return sum + (e.accounts || 0); }, 0);
+    setText('elo-unrated', rated + unrated > 0
+      ? num(unrated) + ' of ' + num(rated + unrated) + ' accounts have never played a ranked game'
+      : null);
 
-    renderBars('bars-lobby', (w.lobbySizes || []).map(function (l) {
-      return { label: l.size + (l.size === 1 ? ' player' : ' players'), value: l.games, display: num(l.games) };
-    }), { series: 2 });
+    // The ratio is the content, not the two totals.
+    renderShareTable('share-platform', (w.platforms || []).map(function (p) {
+      return { label: p.platform, total: p.devices, active: p.active30d };
+    }));
 
+    // A unimodal curve over an integer axis. Absent sizes are filled with zero,
+    // which is true here: the row exists only when a game of that size was
+    // played.
+    var sizes = (w.lobbySizes || []);
+    var lobbyPoints = [];
+    if (sizes.length) {
+      var maxSize = sizes.reduce(function (m, l) { return Math.max(m, l.size); }, 0);
+      var bySize = {};
+      sizes.forEach(function (l) { bySize[l.size] = l.games; });
+      for (var size = 1; size <= maxSize; size++) {
+        lobbyPoints.push({ label: String(size), value: bySize[size] || 0 });
+      }
+    }
+    renderArea('area-lobby', lobbyPoints, {
+      label: 'Games by number of players in the lobby',
+      color: 'var(--series-2)', fill: 'var(--series-2)'
+    });
+
+    // Kept as horizontal bars, and not for want of an alternative: this is the
+    // shape every Wordle player has already read a hundred times, and a reader
+    // recognising a chart before reading it is worth more than variety.
     renderBars('bars-guesses', (w.guessDistribution || []).map(function (g) {
       return { label: g.guesses + (g.guesses === 1 ? ' guess' : ' guesses'), value: g.count, display: num(g.count) };
     }), { series: 3 });
 
-    // Sorted by time, not by volume: the question is which mode is slow, and a
-    // list ordered by how much it was played answers a different one.
-    renderBars('bars-solvetime', (w.solveTimeByMode || []).slice().sort(function (a, b) {
+    // Ordered by time, not by volume - the question is which mode is slow, and
+    // a list ordered by how much it was played answers a different one.
+    renderDotPlot('dots-solvetime', (w.solveTimeByMode || []).slice().sort(function (a, b) {
       return (a.avgSeconds || 0) - (b.avgSeconds || 0);
     }).map(function (s) {
-      return { label: s.mode, value: s.avgSeconds, display: s.avgSeconds + 's', share: '(' + num(s.solves) + ')' };
-    }), { series: 4 });
+      return {
+        label: s.mode, value: s.avgSeconds,
+        display: s.avgSeconds + 's', note: '(' + num(s.solves) + ')'
+      };
+    }), {
+      color: 'var(--series-4)',
+      format: function (v) { return v.toFixed(0) + 's'; }
+    });
 
     renderBars('bars-openers', (w.openers || []).map(function (o) {
       return { label: o.word.toUpperCase(), value: o.count, display: num(o.count) };
@@ -587,11 +915,30 @@
       labelAt: function (p) { return shortDate(p.day) || ''; }
     });
 
-    renderChart('chart-games', w.gamesPerDay, [{ key: 'games', color: 'var(--series-4)' }], {
+    // An area rather than columns: this is a continuous volume over contiguous
+    // days and the shape is what is being read, which also keeps it from being
+    // a third bar chart in a row.
+    //
+    // The window is filled in, so a day with no games draws as zero. Safe here
+    // and NOT safe on the concurrency chart above: the games table always
+    // exists, so a missing day really did have no games, whereas a missing
+    // concurrency sample means nobody was measuring.
+    var byDay = {};
+    (w.gamesPerDay || []).forEach(function (d) { byDay[d.day] = d.games; });
+    var days = Object.keys(byDay).sort();
+    var gamePoints = [];
+    if (days.length) {
+      var cursor = Date.parse(days[0] + 'T00:00:00Z');
+      var end = Date.parse(days[days.length - 1] + 'T00:00:00Z');
+      while (cursor <= end) {
+        var key = new Date(cursor).toISOString().slice(0, 10);
+        gamePoints.push({ label: shortDate(key) || key, value: byDay[key] || 0 });
+        cursor += DAY;
+      }
+    }
+    renderArea('area-games', gamePoints, {
       label: 'Games per day over the last 30 days',
-      stepMs: DAY,
-      timeOf: function (p) { return p.day; },
-      labelAt: function (p) { return shortDate(p.day) || ''; }
+      color: 'var(--series-4)', fill: 'var(--series-4)'
     });
 
     renderRecentGames(w.recentGames);
