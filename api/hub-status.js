@@ -126,24 +126,49 @@ async function fetchWordWarzStats() {
   }
 }
 
-// What a stranger may read. Lifetime players and games are already on the
-// portfolio and in the resume, and today's figure is the one the site quotes
-// alongside the lifetime one anyway - a lifetime total with no daily figure
-// beside it is the misleading version of that number.
+// What a stranger may read.
 //
-// Held back for the operator: the week and month curve, the live socket
-// headcount, and the maintenance flag. Polled daily, those three describe the
-// health of the game over time including the bad weeks, which is a thing to
-// publish on purpose rather than by default.
+// An ALLOWLIST, like the query upstream and for the same reason: the game
+// server's payload is the thing most likely to grow, and a denylist here would
+// publish whatever was added to it next. A field the owner has not decided
+// about does not reach a browser.
+//
+// The line is drawn around what the work looks like from outside rather than
+// around what is sensitive - none of this is sensitive, it is a word game. The
+// audience, conversion and platform figures are the argument the page is making
+// (people came back, 39% of installs reached a game, 8% attached an identity),
+// and they are the half worth showing to somebody deciding whether to read
+// further. What stays behind the unlock is the half that only means anything if
+// you are running it: the solve rate, the guess distribution, the openers, the
+// lobby-size curve, how long a solve takes. Those are operational, they invite
+// questions about game balance rather than about engineering, and on a screen
+// share they are where a walkthrough loses its thread.
+//
+// `maintenance` is operator-only for a different reason: it announces a window
+// in which the service can be expected to misbehave, and that is a thing to say
+// deliberately rather than to publish on a 30-second poll.
+const PUBLIC_FIELDS = [
+  // Headline.
+  'playersLifetime', 'playersToday', 'games', 'rounds',
+  // Audience and conversion. Each rate travels with its numerator and
+  // denominator, because a rate on its own hides which of the two moved.
+  'playersSignedIn', 'playersWeek', 'playersMonth', 'playersReturning',
+  'devicesTotal', 'displayNames', 'playRate', 'signInRate',
+  // Shape of the audience, not of the game.
+  'gamesByMode', 'elo', 'platforms',
+  // Live and time series.
+  'live', 'ccu', 'ccuSince', 'ccuSamplerStart', 'peak24h',
+  'gamesPerDay', 'dailyPlayers', 'recentGames',
+  'generatedAt'
+];
+
 function publicProjection(stats) {
   if (!stats || stats.error) return { error: (stats && stats.error) || 'unavailable' };
-  return {
-    playersLifetime: stats.playersLifetime,
-    playersToday: stats.playersToday,
-    games: stats.games,
-    rounds: stats.rounds,
-    generatedAt: stats.generatedAt
-  };
+  const out = {};
+  for (const field of PUBLIC_FIELDS) {
+    if (stats[field] !== undefined) out[field] = stats[field];
+  }
+  return out;
 }
 
 function constantTimeEquals(given, expected) {

@@ -214,6 +214,73 @@ not happening at all — `.metric-value[data-pending]` lost on specificity to
 `.metric[data-series] .metric-value`, so a figure the script had given up on
 kept painting in full blue beside a timestamp from that second.
 
+### The WordWarz panel
+
+**The one panel that scrolls, and the only one allowed to.** It carries the
+whole game dashboard — seventeen sections — and that cannot fit the fold and
+should not be cut down to fit: the figures *are* the walkthrough there, and the
+argument for the project is that there are that many of them and each has a
+denominator. The rule it breaks is stated on the panel itself (`the one panel
+that scrolls`, plus a fade at the live edge that switches off at the end),
+because a reader who has learned that panels end at the fold will otherwise
+read the bottom edge as the end of the content.
+
+**Every heading and every caveat is in the markup; only values come from
+`hub.js`.** With the script gone the panel is still the full list of what the
+game measures and every warning about how to read it — it just has no numbers.
+That ordering is not decoration: "inflated, kept for continuity" has to be on
+screen whenever 1,601 is, and a caveat that arrives with a fetch is a caveat
+that can fail to arrive.
+
+**The public/operator split is an allowlist at both ends.** `getPublicGameStats`
+in the WordWarz repo names its own columns, and `PUBLIC_FIELDS` in
+`api/hub-status.js` names what a stranger gets. Two allowlists rather than one
+because the game server's payload is the thing most likely to grow, and a
+denylist at either end would publish whatever was added to it next. Public is
+the headline four, audience and conversion, games-by-mode, ELO, platform, the
+live figures, the three charts and recent games; operator-only is the half that
+only means anything if you are running it — solve rate, largest lobby, lobby
+sizes, busiest days, openers, guesses-to-solve, solve time — plus the
+maintenance flag, which announces a window in which the service can be expected
+to misbehave.
+
+The operator blocks are **scaffolding in the markup and data nowhere**. They are
+hidden by `.panel:not([data-op="true"]) [data-operator]`, and there is nothing
+underneath to reveal: the figures never arrive for a reader who is not the
+owner, so deleting that rule in devtools shows empty rows and their captions.
+That is the opposite arrangement from writing figures into the markup and
+covering them with a class, and the difference is the whole point.
+
+**`recentGames[].winner` is the only per-row data in the payload, and it is a
+deliberate carve-out.** The owner decided a chosen display name beside a game
+number is a different thing from pairing a device id with every alias it has
+worn — which is what `/api/analytics` did when it was public, and why the stats
+query is an allowlist at all. It is narrow on purpose: the winner only, never
+the participant list, never a device or account id, and `getRecentGames` is NOT
+reused for it because that statement is `SELECT g.*` plus a concatenation of
+every player name in the game. `publicStats.test.js` walks the whole payload for
+key names that mean "person" and pins the recent-games row shape, so a second
+name has to be added to a test rather than to a query.
+
+Three things about the charts that were wrong in the first draft and are worth
+not re-doing:
+
+- **`preserveAspectRatio="none"` stretches text with the geometry.** The bars
+  have to fill whatever width the column has, so the scale is non-uniform, and
+  `<text>` inside it rendered the peak as a flat ellipse and the clock labels as
+  smears. The three labels are HTML around the SVG now, not inside it.
+- **Bars are placed on a TIME axis, not on their index in the array.** A missing
+  hour has no row, and spacing by index closes the gap up and draws a continuous
+  day — which is the exact claim the caption under the concurrency chart
+  disowns. An unallocated slot draws nothing, so a gap reads as a gap.
+- **A measured zero gets a floor tick.** Without one, a sampled hour in which
+  nobody was online draws exactly like an hour that was never sampled, and the
+  caption promises those are distinguishable. Three states, three appearances.
+
+A `.bar-track` is a `<span>`, and an inline box ignores `height` — the first
+draft drew every track as a hairline with no fill at all. Both it and
+`.bar-fill` set `display: block`.
+
 The four **Commits** tiles come from `node scripts/fetch-hub-figures.mjs`, by
 hand, because three of the four repositories exist only on this machine. It
 rewrites each tile's note along with its number — `Jun 2026 to 13 Sep 2026`, the

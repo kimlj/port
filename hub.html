@@ -409,8 +409,258 @@ body {
   .panel { position: static; display: none; }
   .panel[data-active="true"] { display: grid; }
   .cols { grid-template-columns: 1fr; }
+  .cols-3 { grid-template-columns: 1fr; }
+  .bar-row { grid-template-columns: minmax(0, 9em) 1fr auto; }
   .panel-title { font-size: 28px; }
 }
+
+/* ── the data sections ────────────────────────────────────────────────
+
+   Used only by the WordWarz panel today, and written so a second panel could
+   take them without changing anything: nothing below names a project.
+
+   The vocabulary is deliberately small - a section, a row of stats, a bar
+   list, a chart, a table - because the panel is long and a reader scrolling it
+   should recognise the shape of a block before reading it. Thirteen bespoke
+   layouts would be thirteen things to parse. */
+
+.dsec {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  min-width: 0;
+}
+
+.dsec-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.dsec-head h3 { margin: 0; }
+
+/* The caveat that travels with the heading. Muted rather than dim: it is the
+   part a reader most needs and least wants to read, and dimming it further
+   would be the page quietly arguing against its own disclosure. */
+.dsec-note {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  font-family: var(--mono);
+}
+
+.dsec-foot {
+  margin: 10px 0 0;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  max-width: 88ch;
+}
+
+/* A row of small figures. Smaller than .metric, which is the panel's headline
+   set - these are the supporting cast and should not compete with it. */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(156px, 1fr));
+  gap: 10px;
+}
+
+.stat {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  min-width: 0;
+}
+
+.stat-value {
+  display: block;
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+.stat[data-series="1"] .stat-value { color: var(--series-1); }
+.stat[data-series="2"] .stat-value { color: var(--series-2); }
+.stat[data-series="3"] .stat-value { color: var(--series-3); }
+.stat[data-series="4"] .stat-value { color: var(--series-4); }
+
+/* Same specificity trap as .metric-value, and the same answer. A figure the
+   script has given up on has to out-rank its series colour or the dimming
+   never renders. */
+.stat[data-series] .stat-value[data-pending="true"] { color: var(--text-dim); }
+
+.stat-label {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--text);
+}
+.stat-note {
+  display: block;
+  margin-top: 2px;
+  font-size: 10.5px;
+  line-height: 1.45;
+  color: var(--text-dim);
+}
+/* Inside a note the inline figures are the same weight as the prose around
+   them. They are part of a sentence, not values in their own right. */
+.stat-note [data-live] { color: var(--text-muted); font-family: var(--mono); }
+
+/* ── bar lists ──────────────────────────────────────────────────────── */
+
+.bars {
+  display: grid;
+  gap: 5px;
+  font-family: var(--mono);
+  font-size: 11px;
+}
+
+.bar-row {
+  display: grid;
+  /* 11em because the longest label in any of these blocks is the ELO bucket
+     "never played (1000)", and a truncated rating bucket is unreadable rather
+     than merely short. The title attribute is a fallback for a reader with a
+     pointer, and this page is often read by someone watching a recording who
+     has no pointer at all. */
+  grid-template-columns: minmax(0, 11em) 1fr auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.bar-label {
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* The track is always full width and the fill is a percentage of it, so a
+   reader compares lengths against one baseline rather than against whichever
+   row happened to be longest in a different block. */
+/* display:block on both, because these are spans and an inline box ignores
+   height - the first draft drew every track as a hairline and no fill at all. */
+.bar-track {
+  display: block;
+  height: 7px;
+  border-radius: 4px;
+  background: #1b1b1f;
+  overflow: hidden;
+}
+.bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: var(--series-1);
+}
+.bars[data-series="2"] .bar-fill { background: var(--series-2); }
+.bars[data-series="3"] .bar-fill { background: var(--series-3); }
+.bars[data-series="4"] .bar-fill { background: var(--series-4); }
+
+.bar-value { color: var(--text); font-variant-numeric: tabular-nums; }
+.bar-share { color: var(--text-dim); }
+
+/* ── charts ─────────────────────────────────────────────────────────── */
+
+/* A fixed height rather than an aspect ratio: these sit in a column whose
+   width changes with the viewport, and a ratio would make the tall charts on
+   a wide screen push the table below the fold for no extra information.
+
+   The scale and the two ends of the window are HTML rows above and below the
+   drawing, NOT <text> inside it. The SVG scales non-uniformly so that bars can
+   fill whatever width the column has, and that stretches glyphs with the
+   geometry - the first draft rendered the peak as a flat ellipse and the clock
+   labels as smears. Three labels rather than a full axis: at 108px tall an
+   axis is furniture. */
+.chart { display: grid; grid-template-rows: auto 1fr auto; gap: 3px; }
+.chart svg { display: block; width: 100%; height: 88px; }
+
+.chart-grid { stroke: #1b1b1f; stroke-width: 1; }
+
+.chart-max, .chart-x {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--text-dim);
+}
+.chart-x { display: flex; justify-content: space-between; }
+
+/* ── tables ─────────────────────────────────────────────────────────── */
+
+/* The one horizontal scroller allowed, and only for the table itself. The
+   page body must never scroll sideways; a six-column table on a phone has to
+   go somewhere. */
+.tbl-wrap { overflow-x: auto; }
+
+.tbl {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 11px;
+  white-space: nowrap;
+}
+.tbl th {
+  text-align: left;
+  font-weight: 500;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 9.5px;
+  padding: 0 12px 6px 0;
+  border-bottom: 1px solid var(--border);
+}
+.tbl td {
+  padding: 5px 12px 5px 0;
+  color: var(--text-muted);
+  border-bottom: 1px solid #161619;
+}
+.tbl tbody tr:last-child td { border-bottom: none; }
+.tbl td:first-child { color: var(--text-dim); font-variant-numeric: tabular-nums; }
+.tbl .t-winner { color: var(--text); }
+.tbl .t-none { color: var(--text-dim); }
+
+/* ── the operator half ──────────────────────────────────────────────────
+
+   Hidden by default and revealed by a flag the SERVER set, not by a class the
+   page was always able to remove. There is nothing underneath to reveal: the
+   figures these blocks hold never arrive for a reader who is not the owner, so
+   removing the rule in devtools shows empty scaffolding and its captions.
+
+   Written as :not() rather than as display:none plus an override, because each
+   of these elements has a different display - grid, flex, block - and the
+   override would have to know which. */
+.panel:not([data-op="true"]) [data-operator] { display: none; }
+
+/* ── the panel that scrolls ─────────────────────────────────────────────
+
+   Stated rather than discovered. Every other panel fits the fold, so a reader
+   who has learned that rule needs telling that this one does not - otherwise
+   the bottom edge reads as the end of the content. */
+.scroll-note {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+}
+
+/* And a fade at the live edge, so there is a second signal that is not words.
+   Pinned to the panel rather than the content so it does not travel up as the
+   reader scrolls - and off once they reach the end, which the script flags. */
+.panel[data-scrolls="true"]::after {
+  content: '';
+  position: sticky;
+  bottom: -28px;
+  display: block;
+  height: 40px;
+  margin: -40px -32px -28px;
+  background: linear-gradient(to top, var(--bg), transparent);
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.panel[data-scrolls="true"][data-at-end="true"]::after { opacity: 0; }
+
+.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 
 /* Short viewports.
 
@@ -443,6 +693,11 @@ body {
   .metric-label { margin-top: 4px; }
   .card { padding: 14px 16px; }
   .cols { gap: 14px; }
+  .dsec { padding: 12px 14px; }
+  .dsec-head { margin-bottom: 9px; }
+  .stat { padding: 8px 10px; }
+  .stat-value { font-size: 18px; }
+  .chart svg { height: 74px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -551,16 +806,40 @@ body {
     </section>
 
     <!-- ── WordWarz ─────────────────────────────────────────────────────
+         The one panel that scrolls, and the only one allowed to.
+
+         Every other panel fits the fold because a scroll on a recording is
+         where the viewer loses the thread. This one carries the whole
+         dashboard, which cannot fit and should not be cut down to fit: the
+         figures ARE the walkthrough here, and the argument for the project is
+         that there are this many of them and they all have a denominator. So
+         the rule it breaks is the rule, stated on the panel itself rather than
+         left for the reader to discover with a wheel.
+
          The lifetime player count and the daily figure are one claim and are
          rendered as adjacent tiles on purpose. A lifetime total on its own
          invites the reader to hear it as current, which is the misleading
          version of a true number - so these two do not get separated, and a
          layout change that drops one must drop both.
+
+         WHAT IS IN THE MARKUP AND WHAT IS NOT. Every heading and every caveat
+         below is written out here, and only values are filled in by hub.js.
+         With the script gone this panel is still the full list of what the
+         game measures and every warning about how to read it - it just has no
+         numbers. The caveats are the part that must never depend on a fetch:
+         "inflated, kept for continuity" has to be on screen whenever 1,601 is.
+
+         The operator-only sections are scaffolding here and data nowhere. The
+         server decides what it sends; these blocks stay empty and hidden for a
+         reader who is not the owner, and there is nothing in them to reveal by
+         unhiding - which is the opposite arrangement from writing the figures
+         into the markup and covering them with a class.
     -->
-    <section class="panel" id="panel-wordwarz" role="tabpanel" aria-labelledby="tab-wordwarz">
+    <section class="panel" id="panel-wordwarz" role="tabpanel" aria-labelledby="tab-wordwarz" data-scrolls="true">
       <div class="panel-head">
         <h1 class="panel-title">WordWarz.io</h1>
         <span class="badge" data-tone="live">Live on iOS</span>
+        <span class="scroll-note">the one panel that scrolls</span>
       </div>
       <p class="panel-sub">Real-time multiplayer word battle. Up to eleven people in a room, five ELO tiers, an entropy-driven bot that fills a lobby rather than leaving someone waiting.</p>
 
@@ -581,7 +860,7 @@ body {
           <span class="metric-note">counted, not sampled</span>
         </div>
         <div class="metric" data-series="2">
-          <span class="metric-value">1,332</span>
+          <span class="metric-value">1,333</span>
           <span class="metric-label">Commits</span>
           <span class="metric-note">Dec 2025 to 13 Sep 2026</span>
         </div>
@@ -601,6 +880,236 @@ body {
             <a href="https://wordwarz.io" target="_blank" rel="noopener">wordwarz.io</a>
             <a href="https://dashboard.wordwarz.io" target="_blank" rel="noopener">dashboard</a>
           </div>
+        </div>
+      </div>
+
+      <!-- Live. The only figures on this page that are true for one second at
+           a time, which is why they say how often they are taken. -->
+      <div class="dsec">
+        <div class="dsec-head">
+          <h3>Live</h3>
+          <span class="dsec-note">polled every 30s</span>
+        </div>
+        <div class="stat-row">
+          <div class="stat" data-series="2">
+            <span class="stat-value" data-live="wordwarz.live.online" data-pending="true">—</span>
+            <span class="stat-label">Online now</span>
+            <span class="stat-note"><span data-live="wordwarz.live.inRoom" data-pending="true">—</span> in a room · <span data-live="wordwarz.live.browsing" data-pending="true">—</span> browsing</span>
+          </div>
+          <div class="stat" data-series="1">
+            <span class="stat-value" data-live="wordwarz.peak24h.peak" data-pending="true">—</span>
+            <span class="stat-label">Peak concurrent (24h)</span>
+            <span class="stat-note" data-hub="peak24h-at">—</span>
+          </div>
+          <div class="stat" data-series="3">
+            <span class="stat-value" data-live="wordwarz.live.connected" data-pending="true">—</span>
+            <span class="stat-label">Sockets connected</span>
+            <span class="stat-note">a socket is a tab, not a person</span>
+          </div>
+          <div class="stat" data-series="4">
+            <span class="stat-value" data-live="wordwarz.live.matchesInProgress" data-pending="true">—</span>
+            <span class="stat-label">Matches in progress</span>
+            <span class="stat-note">mid-round, including the gaps between rounds</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Audience. Devices, not people - said here once so the six figures
+           below do not each have to repeat it. -->
+      <div class="dsec">
+        <div class="dsec-head">
+          <h3>Audience</h3>
+          <span class="dsec-note">who is actually here — a device is one install of one browser profile</span>
+        </div>
+        <div class="stat-row">
+          <div class="stat" data-series="1">
+            <span class="stat-value" data-live="wordwarz.playersLifetime" data-pending="true">—</span>
+            <span class="stat-label">Players who played</span>
+            <span class="stat-note"><span data-live="wordwarz.playersSignedIn" data-pending="true">—</span> signed in with Apple, Google or Discord</span>
+          </div>
+          <div class="stat" data-series="2">
+            <span class="stat-value" data-live="wordwarz.playersReturning" data-pending="true">—</span>
+            <span class="stat-label">Returning devices</span>
+            <span class="stat-note">came back on a later day than they arrived</span>
+          </div>
+          <div class="stat" data-series="3">
+            <span class="stat-value" data-live="wordwarz.playersToday" data-pending="true">—</span>
+            <span class="stat-label">Active today</span>
+            <span class="stat-note">seen in 24h</span>
+          </div>
+          <div class="stat" data-series="4">
+            <span class="stat-value" data-live="wordwarz.playersWeek" data-pending="true">—</span>
+            <span class="stat-label">Active this week</span>
+            <span class="stat-note">seen in 7d</span>
+          </div>
+          <div class="stat" data-series="1">
+            <span class="stat-value" data-live="wordwarz.playersMonth" data-pending="true">—</span>
+            <span class="stat-label">Active this month</span>
+            <span class="stat-note">seen in 30d</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Conversion. Both rates carry their own numerator and denominator,
+           because a percentage on its own hides which of the two moved. -->
+      <div class="dsec">
+        <div class="dsec-head">
+          <h3>Conversion</h3>
+          <span class="dsec-note">how far people get</span>
+        </div>
+        <div class="stat-row">
+          <div class="stat" data-series="2">
+            <span class="stat-value" data-hub="playRate">—</span>
+            <span class="stat-label">Play rate</span>
+            <span class="stat-note"><span data-live="wordwarz.playersLifetime" data-pending="true">—</span> of <span data-live="wordwarz.devicesTotal" data-pending="true">—</span> devices reached a game</span>
+          </div>
+          <div class="stat" data-series="4">
+            <span class="stat-value" data-hub="signInRate">—</span>
+            <span class="stat-label">Sign-in rate</span>
+            <span class="stat-note"><span data-live="wordwarz.playersSignedIn" data-pending="true">—</span> of <span data-live="wordwarz.playersLifetime" data-pending="true">—</span> — the rest lose stats on reinstall</span>
+          </div>
+          <div class="stat" data-series="3" data-operator="true">
+            <span class="stat-value" data-hub="solveRate">—</span>
+            <span class="stat-label">Solve rate</span>
+            <span class="stat-note"><span data-live="wordwarz.solves" data-pending="true">—</span> of <span data-live="wordwarz.attempts" data-pending="true">—</span> attempts — player-rounds, not rounds</span>
+          </div>
+          <div class="stat" data-series="1" data-operator="true">
+            <span class="stat-value" data-hub="largestLobby">—</span>
+            <span class="stat-label">Largest lobby (humans)</span>
+            <span class="stat-note" data-hub="largestLobby-note">a floor, not an exact count — see the note</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- The two inflated counts, kept because they are the denominators
+           above rather than because they flatter anything. -->
+      <div class="dsec">
+        <div class="dsec-head">
+          <h3>Raw counts</h3>
+          <span class="dsec-note">upper bounds — kept for continuity, not for decisions</span>
+        </div>
+        <div class="stat-row">
+          <div class="stat" data-series="1">
+            <span class="stat-value" data-live="wordwarz.devicesTotal" data-pending="true">—</span>
+            <span class="stat-label">Devices</span>
+            <span class="stat-note">browser storage, not people — one person clearing a cache is two</span>
+          </div>
+          <div class="stat" data-series="2">
+            <span class="stat-value" data-live="wordwarz.displayNames" data-pending="true">—</span>
+            <span class="stat-label">Display names</span>
+            <span class="stat-note">names that were used, not people who used them</span>
+          </div>
+          <div class="stat" data-series="4">
+            <span class="stat-value" data-live="wordwarz.rounds" data-pending="true">—</span>
+            <span class="stat-label">Rounds</span>
+            <span class="stat-note">a game is several rounds</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dsec">
+        <div class="dsec-head">
+          <h3>Concurrent players — peak per hour</h3>
+          <span class="dsec-note">last 24 hours</span>
+        </div>
+        <div class="chart" data-hub="chart-ccu"></div>
+        <p class="dsec-foot">Gaps are missing samples, which almost always means the server was down. They are not drawn as zero, because zero would say it was up and empty. Coverage is a weak uptime proxy at best: a server that is down cannot record its own downtime.</p>
+      </div>
+
+      <div class="dsec">
+        <div class="dsec-head">
+          <h3>New vs returning players — per day</h3>
+          <span class="dsec-note">last 30 days</span>
+        </div>
+        <div class="chart" data-hub="chart-daily"></div>
+        <p class="dsec-foot">Counts devices that reached a game, not devices that opened the app. Guests playing solo or in practice are under-counted, since rounds without an account are not recorded per player — multiplayer is well covered.</p>
+      </div>
+
+      <div class="dsec">
+        <div class="dsec-head">
+          <h3>Games per day</h3>
+          <span class="dsec-note">last 30 days, from the games table — not sampled</span>
+        </div>
+        <div class="chart" data-hub="chart-games"></div>
+      </div>
+
+      <div class="cols cols-3">
+        <div class="dsec">
+          <div class="dsec-head">
+            <h3>Games by mode</h3>
+            <span class="dsec-note">share of all games</span>
+          </div>
+          <div class="bars" data-hub="bars-modes"></div>
+        </div>
+        <div class="dsec">
+          <div class="dsec-head">
+            <h3>Ranked ELO</h3>
+            <span class="dsec-note">classic — accounts, simulated excluded</span>
+          </div>
+          <div class="bars" data-hub="bars-elo"></div>
+        </div>
+        <div class="dsec">
+          <div class="dsec-head">
+            <h3>Platform</h3>
+            <span class="dsec-note">devices · active in 30d</span>
+          </div>
+          <div class="bars" data-hub="bars-platform"></div>
+        </div>
+      </div>
+
+      <div class="cols cols-3" data-operator="true">
+        <div class="dsec">
+          <div class="dsec-head">
+            <h3>Lobby sizes</h3>
+            <span class="dsec-note">players per game, bots included</span>
+          </div>
+          <div class="bars" data-hub="bars-lobby"></div>
+        </div>
+        <div class="dsec">
+          <div class="dsec-head">
+            <h3>Guesses to solve</h3>
+            <span class="dsec-note"><span data-live="wordwarz.unsolved" data-pending="true">—</span> unsolved</span>
+          </div>
+          <div class="bars" data-hub="bars-guesses"></div>
+        </div>
+        <div class="dsec">
+          <div class="dsec-head">
+            <h3>Average solve time</h3>
+            <span class="dsec-note">seconds, by mode</span>
+          </div>
+          <div class="bars" data-hub="bars-solvetime"></div>
+        </div>
+      </div>
+
+      <div class="cols" data-operator="true">
+        <div class="dsec">
+          <div class="dsec-head">
+            <h3>Most used openers</h3>
+            <span class="dsec-note">mirror matches excluded — everyone opens on the same forced word there</span>
+          </div>
+          <div class="bars" data-hub="bars-openers"></div>
+        </div>
+        <div class="dsec">
+          <div class="dsec-head">
+            <h3>Busiest days</h3>
+            <span class="dsec-note">all time</span>
+          </div>
+          <div class="bars" data-hub="bars-busiest"></div>
+        </div>
+      </div>
+
+      <div class="dsec">
+        <div class="dsec-head">
+          <h3>Recent games</h3>
+          <span class="dsec-note">the last fifteen</span>
+        </div>
+        <div class="tbl-wrap">
+          <table class="tbl" data-hub="tbl-recent">
+            <thead>
+              <tr><th>#</th><th>Mode</th><th>Code</th><th>Players</th><th>Winner</th><th>When</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
         </div>
       </div>
 
@@ -674,7 +1183,7 @@ body {
 
       <div class="metrics">
         <div class="metric" data-series="1">
-          <span class="metric-value">225</span>
+          <span class="metric-value">226</span>
           <span class="metric-label">Commits</span>
           <span class="metric-note">Feb 2026 to 13 Sep 2026</span>
         </div>
