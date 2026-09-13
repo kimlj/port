@@ -454,7 +454,11 @@ walkthrough.
   `scripts/shot.mjs` is that browser, headless, so a check does not take over
   the screen you are working on:
 
-      node scripts/shot.mjs http://localhost:8081/hub.html         --size 390x844 --theme dark --reduced-motion         --click '.view-btn[data-view="demo"]'         --eval 'getComputedStyle(document.body).backgroundColor'         --out /tmp/check.png
+      node scripts/shot.mjs http://localhost:8081/hub.html
+        --size 390x844 --theme dark --reduced-motion
+        --click '.view-btn[data-view="demo"]'
+        --eval 'getComputedStyle(document.body).backgroundColor'
+        --out check.png
 
   It drives Chrome over the DevTools protocol with no dependencies — this repo
   has no package.json and should not grow one to take a screenshot. A repo that
