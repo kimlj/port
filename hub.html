@@ -925,6 +925,34 @@ body {
 .view-btn[aria-selected="true"] { color: var(--bg); background: var(--accent); }
 .head-link-icon { padding: 5px 7px; }
 
+/* Minimise the nurse panel. In the title line rather than floating over the
+   stage, because every position on the stage itself sits on top of one of the
+   two frames - and the top right corner of the panel, the obvious one, is
+   where its own help and sign-out controls are.
+
+   Shown only in the demo view: `data-view` is written by hub.js, so before it
+   runs, and on the overview, there is no button offering to minimise a frame
+   that is not on screen. */
+.panel-toggle {
+  align-self: baseline;
+  display: none;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 13px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg-card);
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.panel[data-view="demo"] .panel-toggle { display: inline-flex; }
+.panel-toggle svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.panel-toggle:hover { color: var(--text); border-color: rgba(200, 255, 0, 0.35); }
+.panel-toggle[aria-pressed="true"] { color: var(--accent); border-color: rgba(200, 255, 0, 0.35); background: var(--accent-dim); }
+
 /* The overview keeps the panel's own rhythm. `gap: inherit` rather than a
    number, so the short-viewport pass that tightens the panel tightens this
    too without a second rule to keep in step. */
@@ -942,10 +970,48 @@ body {
 .demo-frame { display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 8px; height: 100%; }
 
 /* Both halves of the system at once: the admin's dashboard and the nurse's
-   side panel, which is the point of showing the panel at all. The panel column
-   is fixed because it is a side panel - it has one width in Chrome and looks
-   wrong at any other - and the dashboard takes what is left. */
-.demo-stage { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 8px; min-height: 0; }
+   side panel, which is the point of showing the panel at all.
+
+   THE PANEL IS SCALED, NOT NARROWED. It is a side panel: it has one width in
+   Chrome and reflows into a layout it never actually has at any other, so
+   taking 60px off the column would be showing a panel that does not exist.
+   The frame stays 400px wide and the whole thing is scaled down, which is the
+   same panel, smaller - and it gives the dashboard back the difference, which
+   is the half of the screen the walkthrough is mostly pointing at. */
+.demo-stage {
+  --panel-w: 400px;
+  --panel-scale: 0.85;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) calc(var(--panel-w) * var(--panel-scale));
+  gap: 8px;
+  min-height: 0;
+  transition: grid-template-columns 0.35s cubic-bezier(0.22, 1, 0.36, 1), gap 0.35s;
+}
+
+/* Minimised: the column goes to nothing and the dashboard takes the whole
+   stage. The frame inside is NOT display:none - it keeps its layout and its
+   running clock, and is clipped by the pane instead, so bringing it back shows
+   the panel where the viewer left it rather than a panel booting on camera. */
+.demo-stage[data-panel="hidden"] { grid-template-columns: minmax(0, 1fr) 0px; gap: 0; }
+.demo-stage[data-panel="hidden"] .demo-panel { border-color: transparent; }
+
+.demo-panel { position: relative; overflow: hidden; min-width: 0; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-card); }
+/* Qualified by .demo-frame so it outranks the shared `.demo-frame iframe`
+   block below, which is at the same specificity and further down the file -
+   at a tie the later rule wins, and this one would have lost every property
+   it sets. */
+.demo-frame .demo-panel iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--panel-w);
+  /* Over the scale, so the scaled height lands back on the pane's exactly. */
+  height: calc(100% / var(--panel-scale));
+  border: 0;
+  border-radius: 0;
+  transform: scale(var(--panel-scale));
+  transform-origin: 0 0;
+}
 
 /* Immediately after the rule it overrides, NOT up in the narrow block with the
    rest of the breakpoint. That block is ~500 lines earlier in this file, so at
@@ -953,8 +1019,10 @@ body {
    dashboard column resolved to 375 - 400 - 8, i.e. nothing: a 2px sliver
    beside a full-width panel. A media query does not outrank source order. */
 @media (max-width: 860px) {
-  .demo-stage { grid-template-columns: minmax(0, 1fr); }
-  .demo-stage iframe:last-child { max-width: 400px; justify-self: center; }
+  .demo-stage, .demo-stage[data-panel="hidden"] { grid-template-columns: minmax(0, 1fr); }
+  .demo-stage .demo-panel { width: 100%; max-width: calc(var(--panel-w) * var(--panel-scale)); justify-self: center; }
+  /* Stacked, a zero-width column hides nothing - the pane is simply gone. */
+  .demo-stage[data-panel="hidden"] .demo-panel { display: none; }
 }
 .demo-frame iframe {
   display: block;
@@ -965,6 +1033,13 @@ body {
   background: var(--bg-card);
 }
 .demo-caption { margin: 0; font-size: 11.5px; color: var(--text-dim); }
+
+/* The caption says what is on the stage, so it has to change when half of it
+   is minimised away - a line reading "both halves of the system" over one half
+   is the page describing something the viewer cannot see. Both sentences are
+   in the markup and the stage's own state picks one. */
+.demo-stage:not([data-panel="hidden"]) ~ .demo-caption [data-when="dashboard"],
+.demo-stage[data-panel="hidden"] ~ .demo-caption [data-when="both"] { display: none; }
 
 /* ── the operator half ──────────────────────────────────────────────────
 
@@ -1107,6 +1182,10 @@ body {
           <button class="view-btn" type="button" role="tab" aria-selected="true" data-view="about">Overview</button>
           <button class="view-btn" type="button" role="tab" aria-selected="false" data-view="demo"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg><span>Live demo</span></button>
         </div>
+        <!-- Minimising the nurse panel gives the dashboard the whole stage.
+             Pressed = the panel is showing, so the button reads as a thing
+             that is currently on rather than as an action. -->
+        <button class="panel-toggle" type="button" data-panel-toggle aria-pressed="true" title="Minimise the nurse side panel"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M15 4v16"/></svg><span>Side panel</span></button>
         <a class="head-link head-link-icon" href="https://dashboard.mdsprosolutions.com/?demo=1" target="_blank" rel="noopener" title="Open the demo in its own tab" aria-label="Open the demo in its own tab"><svg class="arr" viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
       </div>
 
@@ -1186,12 +1265,14 @@ body {
                  run as a page by a shim in the dashboard repo. Not a mock and not
                  a screenshot: the buttons work, against an in-memory sandbox that
                  extension already had for its admin preview. -->
-            <iframe title="MDS Pro nurse side panel, demo mode"
-                    data-src="https://dashboard.mdsprosolutions.com/panel/"
-                    sandbox="allow-scripts allow-same-origin allow-popups"
-                    referrerpolicy="no-referrer"></iframe>
+            <div class="demo-panel">
+              <iframe title="MDS Pro nurse side panel, demo mode"
+                      data-src="https://dashboard.mdsprosolutions.com/panel/"
+                      sandbox="allow-scripts allow-same-origin allow-popups"
+                      referrerpolicy="no-referrer"></iframe>
+            </div>
           </div>
-          <p class="demo-caption">Both halves of the system, live: the admin's dashboard and the nurse's Chrome side panel. Invented nurses, hours and pay — neither signs in, and neither sends a request to the client's data.</p>
+          <p class="demo-caption"><span data-when="both">Both halves of the system, live: the admin's dashboard and the nurse's Chrome side panel.</span><span data-when="dashboard">The admin's dashboard, live. The nurse's side panel is minimised — <em>Side panel</em> in the title line brings it back.</span> Invented nurses, hours and pay — neither signs in, and neither sends a request to the client's data.</p>
         </div>
       </div>
     </section>

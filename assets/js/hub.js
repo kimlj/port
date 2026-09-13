@@ -150,6 +150,23 @@
     Array.prototype.forEach.call(buttons, function (b) {
       b.addEventListener('click', function () { show(b.getAttribute('data-view')); });
     });
+
+    // Minimise the nurse panel, giving the dashboard the whole stage. The
+    // state is written on the stage, not on the frame: the CSS animates the
+    // grid column and clips the frame, so the panel keeps its layout and its
+    // running clock and comes back where it was rather than booting on camera.
+    var stage = panel.querySelector('.demo-stage');
+    var toggle = panel.querySelector('[data-panel-toggle]');
+    if (stage && toggle) {
+      toggle.addEventListener('click', function () {
+        var showing = stage.getAttribute('data-panel') !== 'hidden';
+        stage.setAttribute('data-panel', showing ? 'hidden' : 'shown');
+        toggle.setAttribute('aria-pressed', showing ? 'false' : 'true');
+        toggle.setAttribute('title', showing
+          ? 'Show the nurse side panel'
+          : 'Minimise the nurse side panel');
+      });
+    }
   })();
 
   // ── live data ─────────────────────────────────────────────────────────
