@@ -115,6 +115,39 @@
   // something the address bar contradicts.
   window.addEventListener('hashchange', selectFromHash);
 
+  // ── MDS Pro: overview / live demo ─────────────────────────────────────
+  //
+  // Swaps the panel body for the real dashboard in demo mode. The frame's src
+  // is only set the first time the demo is opened, so the hub does not reach
+  // the client's site on every view - and after that the frame is kept, so
+  // switching back and forth mid-walkthrough does not reload the dashboard and
+  // lose where the viewer was in it.
+  (function demoView() {
+    var panel = document.getElementById('panel-mdspro');
+    if (!panel) return;
+    var buttons = panel.querySelectorAll('.view-btn');
+    var views = panel.querySelectorAll('.view');
+    var frame = panel.querySelector('.demo-frame iframe');
+    if (!buttons.length || !frame) return;
+
+    function show(view) {
+      Array.prototype.forEach.call(buttons, function (b) {
+        b.setAttribute('aria-selected', b.getAttribute('data-view') === view ? 'true' : 'false');
+      });
+      Array.prototype.forEach.call(views, function (v) {
+        v.hidden = v.getAttribute('data-view') !== view;
+      });
+      panel.setAttribute('data-view', view);
+      if (view === 'demo' && !frame.getAttribute('src')) {
+        frame.setAttribute('src', frame.getAttribute('data-src'));
+      }
+    }
+
+    Array.prototype.forEach.call(buttons, function (b) {
+      b.addEventListener('click', function () { show(b.getAttribute('data-view')); });
+    });
+  })();
+
   // ── live data ─────────────────────────────────────────────────────────
 
   function num(value) {

@@ -410,6 +410,8 @@ body {
   .panel[data-active="true"] { display: grid; }
   .cols { grid-template-columns: 1fr; }
   .cols-3 { grid-template-columns: 1fr; }
+  .panel[data-view="demo"] { overflow: visible; }
+  .demo-frame iframe { min-height: 75dvh; }
   .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .bento .stat[data-span="hero"] { grid-row: span 1; }
   .bento .stat[data-span="hero"] .stat-value { font-size: 40px; }
@@ -891,6 +893,55 @@ body {
   animation-delay: calc(260ms + var(--i, 0) * 50ms);
 }
 
+/* ── MDS Pro: overview / live demo ────────────────────────────────────── */
+
+.view-switch {
+  align-self: center;
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg-card);
+}
+.view-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+.view-btn svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.view-btn:hover { color: var(--text); }
+.view-btn[aria-selected="true"] { color: var(--bg); background: var(--accent); }
+.head-link-icon { padding: 5px 7px; }
+
+/* The overview keeps the panel's own rhythm. `gap: inherit` rather than a
+   number, so the short-viewport pass that tightens the panel tightens this
+   too without a second rule to keep in step. */
+.view[data-view="about"] { display: grid; gap: inherit; grid-auto-rows: min-content; }
+
+/* The demo fills whatever height the panel has, and the panel stops scrolling
+   while it does - a scrollbar around a scrollable app is two scrollbars. */
+.panel[data-view="demo"] { grid-template-rows: auto minmax(0, 1fr); overflow: hidden; }
+.view[data-view="demo"] { min-height: 0; }
+.demo-frame { display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 8px; height: 100%; }
+.demo-frame iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+}
+.demo-caption { margin: 0; font-size: 11.5px; color: var(--text-dim); }
+
 /* ── the operator half ──────────────────────────────────────────────────
 
    Hidden by default and revealed by a flag the SERVER set, not by a class the
@@ -1019,11 +1070,21 @@ body {
       <div class="panel-head">
         <h1 class="panel-title">MDS Pro</h1>
         <span class="badge" data-tone="prod">In production</span>
-        <!-- The real dashboard in demo mode, not a copy: ?demo=1 answers every
-             read from invented fixtures and never authenticates, so it can be
-             opened on camera. A link rather than an embed - the dashboard
-             refuses to be framed, and should. -->
-        <a class="head-link" href="https://dashboard.mdsprosolutions.com/?demo=1" target="_blank" rel="noopener" title="Demo mode — invented nurses and figures, no client data"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg><span>live demo</span><svg class="arr" viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
+        <!-- Overview or the product itself. "Live demo" puts the real MDS Pro
+             dashboard in this panel, in demo mode: ?demo=1 answers every read
+             from invented fixtures and never signs in, so it holds no token and
+             shows no client data. It is the same app, not a copy of it.
+
+             The dashboard sends no framing headers at all, so embedding needed
+             nothing changed on the client's system - which also means any site
+             can frame its login page today. That is a gap on the dashboard, not
+             something this page relies on. -->
+        <div class="view-switch" role="tablist" aria-label="MDS Pro view">
+          <button class="view-btn" type="button" role="tab" aria-selected="true" data-view="about">Overview</button>
+          <button class="view-btn" type="button" role="tab" aria-selected="false" data-view="demo"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg><span>Live demo</span></button>
+        </div>
+      <div class="view" data-view="about">
+        <a class="head-link head-link-icon" href="https://dashboard.mdsprosolutions.com/?demo=1" target="_blank" rel="noopener" title="Open the demo in its own tab" aria-label="Open the demo in its own tab"><svg class="arr" viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
       </div>
       <p class="panel-sub">Timekeeping, payroll and billing for a US nurse staffing company. Fifteen people open it every working day, and it is the system their pay runs through.</p>
 
@@ -1073,6 +1134,25 @@ body {
           <span class="chip">Row-level security</span><span class="chip">Chrome MV3</span><span class="chip">ExcelJS</span>
           <span class="chip">Apps Script</span><span class="chip">Anthropic SDK</span><span class="chip">DigitalOcean + Caddy</span>
           <span class="chip">Vercel</span>
+        </div>
+      </div>
+      </div>
+
+      <div class="view" data-view="demo" hidden>
+        <div class="demo-frame">
+          <!-- src is set on first open, not at load: the hub should not reach
+               the client's site on every view, only when asked to show it.
+
+               Sandboxed without allow-top-navigation or allow-forms, so the
+               framed page cannot navigate the hub or post anything.
+               allow-same-origin is required, not decorative: app.js reads
+               localStorage at load, and an opaque sandbox origin makes that
+               throw, which kills the script before demo mode can start. -->
+          <iframe title="MDS Pro dashboard, demo mode"
+                  data-src="https://dashboard.mdsprosolutions.com/?demo=1"
+                  sandbox="allow-scripts allow-same-origin allow-popups"
+                  referrerpolicy="no-referrer"></iframe>
+          <p class="demo-caption">The real MDS Pro dashboard in demo mode: invented nurses, hours and pay. It never signs in and sends no requests to the client's data.</p>
         </div>
       </div>
     </section>
