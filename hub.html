@@ -1279,13 +1279,21 @@ body {
 
                Sandboxed without allow-top-navigation or allow-forms, so the
                framed page cannot navigate the hub or post anything.
+               allow-downloads is there for the demo's Export buttons, which
+               build the workbook in the page and hand it over as a download;
+               a sandboxed frame without it drops the file silently.
+
+               allow-same-origin also lets the two frames share a
+               BroadcastChannel, which is how a task started in the nurse panel
+               shows on the dashboard beside it - in the browser, with no
+               request anywhere.
                allow-same-origin is required, not decorative: app.js reads
                localStorage at load, and an opaque sandbox origin makes that
                throw, which kills the script before demo mode can start. -->
           <div class="demo-stage">
             <iframe title="MDS Pro dashboard, demo mode"
                     data-src="https://dashboard.mdsprosolutions.com/?demo=1&amp;embed=hub"
-                    sandbox="allow-scripts allow-same-origin allow-popups"
+                    sandbox="allow-scripts allow-same-origin allow-popups allow-downloads"
                     referrerpolicy="no-referrer"></iframe>
             <!-- The nurse's side panel, the same popup.html the extension ships,
                  run as a page by a shim in the dashboard repo. Not a mock and not
@@ -1294,7 +1302,7 @@ body {
             <div class="demo-panel">
               <iframe title="MDS Pro nurse side panel, demo mode"
                       data-src="https://dashboard.mdsprosolutions.com/panel/"
-                      sandbox="allow-scripts allow-same-origin allow-popups"
+                      sandbox="allow-scripts allow-same-origin allow-popups allow-downloads"
                       referrerpolicy="no-referrer"></iframe>
             </div>
           </div>
