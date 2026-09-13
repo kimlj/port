@@ -120,6 +120,59 @@ names both tools; a combined total that quietly folds in a different tool over a
 different period would be the same sleight of hand the token figure already
 refuses.
 
+## Hub panel 6: the droplet
+
+A sixth panel on `/hub`, after Shift Ops: the backend itself. Every panel so far
+is a product; this one is the machine four of them run on, and a walkthrough
+that ends at "and it is deployed" has nothing to point at.
+
+**What it should show**, for DigitalOcean droplet `159.223.59.45`:
+
+- **Health.** Up or down per service, and how long for: the MDS Pro API
+  (`pm2 mdspro`, `127.0.0.1:8787/api/health`), the WordWarz game server, the
+  Casinore API, and Caddy in front of them. Uptime, restart count (mdspro sat at
+  158 on 2026-09-13), memory and CPU per process, and the box's own load, disk
+  and memory headroom.
+- **What is deployed.** For each repository on the box: the commit it is on,
+  whether that is `origin/main` or behind it and by how much, and whether the
+  working tree is dirty. The MDS Pro deploy script already logs a line per run
+  in `/root/deploy-mdspro.log` - the last few runs, their result and duration,
+  and whether they skipped the rebuild.
+- **What runs on a schedule.** The crontab and any systemd timers, each with
+  its last run, its exit status and its next run. The GitHub Actions that
+  reach the box (`deploy-api.yml`) belong here too, from the Actions API.
+- **What is happening.** A tail of recent log lines per service, and the TLS
+  certificates Caddy holds with their expiry dates.
+- **Project files.** Which directories on the box belong to which project, and
+  what is in them at the top level - enough to answer "where does this live"
+  without an SSH session on a recording.
+
+**How it has to be built**, because the hub's existing rules decide most of it:
+
+- **Probed server-side, never from the browser.** Same as `api/hub-status.js`:
+  CSP here is `connect-src 'self'`. The droplet needs a small read-only status
+  endpoint of its own, token-gated and answering a bad token with 404, the way
+  WordWarz's `/api/hub/stats` does. **Not SSH from a Vercel function** - that
+  puts a key able to open a shell on the droplet into a web deployment.
+- **The endpoint reports, it never acts.** No restart button, no "run this
+  cron now". A status page that can change what it reports on is a remote
+  control with a login screen in front of it.
+- **Logs and repo state are operator-only**, behind the same unlock as the
+  WordWarz operator half, and allowlisted at both ends. Log lines are the
+  likeliest thing on this page to carry a nurse's name, an email address, a
+  token in a URL or a stack trace with a path in it - redact at the droplet,
+  before anything leaves the box, and allowlist which services' logs are read
+  at all. The public half is health and versions only.
+- **Everything the page asserts is in the markup** before `hub.js` runs: the
+  list of services, crons and paths is written out, and only live values come
+  from the fetch. With the droplet down, the panel is still an accurate map of
+  what normally runs there - which is the moment it is most useful.
+- **It fits the fold.** Services, deploy state and schedules on one screen;
+  logs as a short tail rather than a scroller.
+
+Not started. Needs: the status endpoint on the droplet (and where its token
+lives), the panel's markup, and `api/hub-status.js` growing a fifth probe.
+
 ## Smaller, unscheduled
 
 - **Two AI transcripts are illustrative.** The behaviour in `ai-ledger.js` is read
