@@ -61,6 +61,7 @@ run('build-kb.mjs');
 
 const PUBLIC = [
   'index.html',
+  'hub.html',
   'favicon.svg',
   'assets',
   'Kim_Julongbayan_Resume.pdf',

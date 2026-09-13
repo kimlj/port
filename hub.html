@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Live — kimlj.dev</title>
+
+<link rel="icon" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!--
+  The hub. One screen, one project at a time, switched from the keyboard.
+
+  It exists so a walkthrough is not eight browser tabs. That purpose decides
+  nearly everything below: the whole panel fits the viewport without scrolling,
+  because a scroll on a screen recording is a moment where the viewer loses the
+  thread; switching is 1-5 or the arrow keys, because reaching for a mouse
+  mid-sentence reads as fumbling; and every figure that can be stale says when
+  it was taken, because a dashboard that cannot be wrong is not a dashboard.
+
+  Committed to dark. kimlj.dev itself carries both themes, and this page does
+  not, for the same reason the WordWarz dashboard does not: one look tuned
+  properly beats two tuned halfway, and this one is shown on a projector or a
+  recording rather than read at a desk.
+
+  Colours come from two places on purpose. The page chrome is kimlj.dev's
+  palette, because this is a page on kimlj.dev. The four series colours are
+  lifted from the WordWarz dashboard, where they were picked against a CVD
+  check - worst adjacent deltaE 8.4, every slot at least 3:1 on its surface -
+  and that work should not be re-done by eye here. They sit on #111113 rather
+  than the #1a1a19 they were validated against, which is slightly darker and so
+  slightly kinder to all four; nothing about the ordering changes.
+-->
+
+<style>
+:root {
+  /* kimlj.dev's own palette, dark side. */
+  --bg: #0a0a0b;
+  --bg-card: #111113;
+  --bg-card-hover: #18181b;
+  --border: #222225;
+  --border-hover: #333338;
+  --text: #f0f0f2;
+  --text-muted: #8a8a95;
+  --text-dim: #55555f;
+  --accent: #c8ff00;
+  --accent-dim: rgba(200, 255, 0, 0.08);
+  --accent-glow: rgba(200, 255, 0, 0.15);
+
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Carried over from the WordWarz dashboard. Fixed order, never cycled. */
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
+  --series-4: #c98500;
+
+  /* State. Not the series colours: a status dot is a judgement, a series
+     colour is an identity, and one palette doing both jobs means green
+     starts to imply "good" wherever it appears. */
+  --up: #0ca30c;
+  --degraded: #fab219;
+  --down: #d03b3b;
+  --unknown: #55555f;
+
+  --radius: 10px;
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden; /* the shell never scrolls; only a panel's overflow may */
+}
+
+/* ── shell ───────────────────────────────────────────────────────────── */
+
+.shell {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 232px 1fr;
+  grid-template-areas: "head head" "rail panel";
+  height: 100dvh;
+}
+
+/* ── header ──────────────────────────────────────────────────────────── */
+
+.head {
+  grid-area: head;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 0 24px;
+  height: 60px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-card);
+}
+
+.brand {
+  font-family: var(--serif);
+  font-size: 22px;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+.brand em { color: var(--accent); font-style: italic; }
+
+.strip {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-left: auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.svc {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--unknown);
+  flex: none;
+  position: relative;
+}
+.dot[data-state="up"]       { background: var(--up); }
+.dot[data-state="degraded"] { background: var(--degraded); }
+.dot[data-state="down"]     { background: var(--down); }
+
+/* Only a live, healthy service pulses. A red dot that pulses reads as
+   "working on it" when the truth is "it is off". */
+.dot[data-state="up"]::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid var(--up);
+  opacity: 0;
+  animation: ping 2.6s ease-out infinite;
+}
+@keyframes ping {
+  0%   { opacity: 0.5; transform: scale(0.7); }
+  70%  { opacity: 0;   transform: scale(1.5); }
+  100% { opacity: 0; }
+}
+
+.lat { color: var(--text-dim); font-family: var(--mono); font-size: 11.5px; }
+
+.stamp {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+/* ── rail ────────────────────────────────────────────────────────────── */
+
+.rail {
+  grid-area: rail;
+  border-right: 1px solid var(--border);
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--bg);
+  overflow-y: auto;
+}
+
+.rail-label {
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  padding: 4px 10px 10px;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 10px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: none;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.14s, color 0.14s, border-color 0.14s;
+}
+.tab:hover { background: var(--bg-card); color: var(--text); }
+.tab[aria-selected="true"] {
+  background: var(--accent-dim);
+  border-color: rgba(200, 255, 0, 0.22);
+  color: var(--text);
+}
+.tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.key {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  flex: none;
+}
+.tab[aria-selected="true"] .key { color: var(--accent); border-color: rgba(200, 255, 0, 0.3); }
+
+.tab-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+
+.tab-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--unknown); flex: none; }
+.tab-dot[data-state="up"]       { background: var(--up); }
+.tab-dot[data-state="degraded"] { background: var(--degraded); }
+.tab-dot[data-state="down"]     { background: var(--down); }
+
+.rail-foot {
+  margin-top: auto;
+  padding: 12px 10px 4px;
+  font-size: 11.5px;
+  color: var(--text-dim);
+  line-height: 1.7;
+  border-top: 1px solid var(--border);
+}
+.rail-foot kbd {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 4px;
+  color: var(--text-muted);
+}
+
+/* ── panel ───────────────────────────────────────────────────────────── */
+
+.panel-wrap { grid-area: panel; overflow: hidden; position: relative; }
+
+.panel {
+  position: absolute;
+  inset: 0;
+  padding: 28px 32px;
+  display: none;
+  gap: 22px;
+  overflow-y: auto;
+
+  /* Blocks keep their own height and pack to the top. A fixed row template
+     stretched whichever row happened to be third on the panels that carry a
+     fifth block, opening a hole above the stack card on some panels and not
+     others - and the panels have to look like one page. */
+  grid-auto-rows: min-content;
+  align-content: start;
+}
+.panel[data-active="true"] { display: grid; }
+
+.panel-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+
+.panel-title { font-family: var(--serif); font-size: 38px; line-height: 1.05; margin: 0; }
+
+.badge {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+.badge[data-tone="live"]      { color: var(--up); border-color: rgba(12, 163, 12, 0.4); }
+.badge[data-tone="prod"]      { color: var(--series-1); border-color: rgba(57, 135, 229, 0.4); }
+.badge[data-tone="simulated"] { color: var(--series-4); border-color: rgba(201, 133, 0, 0.45); }
+
+.panel-sub { margin: 0; color: var(--text-muted); font-size: 16px; max-width: 78ch; }
+
+/* Metrics. Four across at full width, and they are the first thing on the
+   screen because they are the argument; the prose underneath supports them. */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
+  gap: 12px;
+}
+
+.metric {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  min-width: 0;
+}
+
+.metric-value {
+  font-family: var(--mono);
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  display: block;
+  overflow-wrap: anywhere;
+}
+.metric[data-series="1"] .metric-value { color: var(--series-1); }
+.metric[data-series="2"] .metric-value { color: var(--series-2); }
+.metric[data-series="3"] .metric-value { color: var(--series-3); }
+.metric[data-series="4"] .metric-value { color: var(--series-4); }
+
+.metric-label {
+  display: block;
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: var(--text);
+}
+.metric-note {
+  display: block;
+  margin-top: 2px;
+  font-size: 11.5px;
+  color: var(--text-dim);
+  line-height: 1.45;
+}
+
+/* A value waiting on the network, or one whose upstream has stopped answering.
+   Never a spinner: this page is recorded, and a spinner that resolves
+   mid-sentence is worse than a number that was always there. The static facts
+   render immediately and only live values dim.
+
+   Selected through .metric[data-series] to beat the series colours above, which
+   are two steps more specific than a bare .metric-value and were silently
+   winning - a figure the script had given up on kept painting in full blue. */
+.metric[data-series] .metric-value[data-pending="true"] { color: var(--text-dim); }
+
+.cols {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 16px;
+  align-items: start;
+  min-height: 0;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+}
+
+.card h3 {
+  margin: 0 0 10px;
+  font-size: 11px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  font-weight: 500;
+}
+
+.card p { margin: 0 0 10px; color: var(--text-muted); font-size: 14px; }
+.card p:last-child { margin-bottom: 0; }
+.card strong { color: var(--text); font-weight: 500; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.svc-list { display: flex; flex-direction: column; gap: 10px; }
+.svc-row { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+.svc-row .svc-name { color: var(--text); }
+.svc-row .svc-note { color: var(--text-dim); font-size: 11.5px; }
+.svc-row .lat { margin-left: auto; }
+
+.links { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 12px; }
+.links a { color: var(--accent); font-size: 13px; text-decoration: none; border-bottom: 1px solid transparent; }
+.links a:hover { border-bottom-color: var(--accent); }
+
+/* ── narrow ──────────────────────────────────────────────────────────── */
+
+@media (max-width: 860px) {
+  body { overflow: auto; }
+  .shell { grid-template-columns: 1fr; grid-template-areas: "head" "rail" "panel"; height: auto; min-height: 100dvh; }
+  .rail { flex-direction: row; flex-wrap: wrap; border-right: none; border-bottom: 1px solid var(--border); }
+  .rail-label, .rail-foot { display: none; }
+  .tab { width: auto; }
+  .strip { display: none; }
+  .panel { position: static; display: none; }
+  .panel[data-active="true"] { display: grid; }
+  .cols { grid-template-columns: 1fr; }
+  .cols-3 { grid-template-columns: 1fr; }
+  .panel[data-view="demo"] { overflow: visible; }
+  .demo-frame iframe { min-height: 75dvh; }
+  .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .bento .stat[data-span="hero"] { grid-row: span 1; }
+  .bento .stat[data-span="hero"] .stat-value { font-size: 40px; }
+  .bar-row { grid-template-columns: minmax(0, 9em) 1fr auto; }
+  .hist-label { font-size: 8px; }
+  .panel-title { font-size: 28px; }
+}
+
+/* ── the data sections ────────────────────────────────────────────────
+
+   Used only by the WordWarz panel today, and written so a second panel could
+   take them without changing anything: nothing below names a project.
+
+   The vocabulary is deliberately small - a section, a row of stats, a bar
+   list, a chart, a table - because the panel is long and a reader scrolling it
+   should recognise the shape of a block before reading it. Thirteen bespoke
+   layouts would be thirteen things to parse. */
+
+.dsec {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  min-width: 0;
+}
+
+.dsec-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.dsec-head h3 { margin: 0; }
+
+/* The caveat that travels with the heading. Muted rather than dim: it is the
+   part a reader most needs and least wants to read, and dimming it further
+   would be the page quietly arguing against its own disclosure. */
+.dsec-note {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  font-family: var(--mono);
+}
+
+.dsec-foot {
+  margin: 10px 0 0;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  max-width: 88ch;
+}
+
+/* A row of small figures. Smaller than .metric, which is the panel's headline
+   set - these are the supporting cast and should not compete with it. */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(156px, 1fr));
+  gap: 10px;
+}
+
+.stat {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  min-width: 0;
+}
+
+.stat-value {
+  display: block;
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+.stat[data-series="1"] .stat-value { color: var(--series-1); }
+.stat[data-series="2"] .stat-value { color: var(--series-2); }
+.stat[data-series="3"] .stat-value { color: var(--series-3); }
+.stat[data-series="4"] .stat-value { color: var(--series-4); }
+
+/* Same specificity trap as .metric-value, and the same answer. A figure the
+   script has given up on has to out-rank its series colour or the dimming
+   never renders. */
+.stat[data-series] .stat-value[data-pending="true"] { color: var(--text-dim); }
+
+.stat-label {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--text);
+}
+.stat-note {
+  display: block;
+  margin-top: 2px;
+  font-size: 10.5px;
+  line-height: 1.45;
+  color: var(--text-dim);
+}
+/* Inside a note the inline figures are the same weight as the prose around
+   them. They are part of a sentence, not values in their own right. */
+.stat-note [data-live] { color: var(--text-muted); font-family: var(--mono); }
+
+/* ── bar lists ──────────────────────────────────────────────────────── */
+
+.bars {
+  display: grid;
+  gap: 5px;
+  font-family: var(--mono);
+  font-size: 11px;
+}
+
+.bar-row {
+  display: grid;
+  /* 11em because the longest label in any of these blocks is the ELO bucket
+     "never played (1000)", and a truncated rating bucket is unreadable rather
+     than merely short. The title attribute is a fallback for a reader with a
+     pointer, and this page is often read by someone watching a recording who
+     has no pointer at all. */
+  grid-template-columns: minmax(0, 11em) 1fr auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.bar-label {
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* The track is always full width and the fill is a percentage of it, so a
+   reader compares lengths against one baseline rather than against whichever
+   row happened to be longest in a different block. */
+/* display:block on both, because these are spans and an inline box ignores
+   height - the first draft drew every track as a hairline and no fill at all. */
+.bar-track {
+  display: block;
+  height: 7px;
+  border-radius: 4px;
+  background: #1b1b1f;
+  overflow: hidden;
+}
+.bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: var(--series-1);
+}
+.bars[data-series="2"] .bar-fill { background: var(--series-2); }
+.bars[data-series="3"] .bar-fill { background: var(--series-3); }
+.bars[data-series="4"] .bar-fill { background: var(--series-4); }
+
+.bar-value { color: var(--text); font-variant-numeric: tabular-nums; }
+.bar-share { color: var(--text-dim); }
+
+/* ── charts ─────────────────────────────────────────────────────────── */
+
+/* A fixed height rather than an aspect ratio: these sit in a column whose
+   width changes with the viewport, and a ratio would make the tall charts on
+   a wide screen push the table below the fold for no extra information.
+
+   The scale and the two ends of the window are HTML rows above and below the
+   drawing, NOT <text> inside it. The SVG scales non-uniformly so that bars can
+   fill whatever width the column has, and that stretches glyphs with the
+   geometry - the first draft rendered the peak as a flat ellipse and the clock
+   labels as smears. Three labels rather than a full axis: at 108px tall an
+   axis is furniture. */
+.chart { display: grid; grid-template-rows: auto 1fr auto; gap: 3px; }
+.chart svg { display: block; width: 100%; height: 88px; }
+
+.chart-grid { stroke: #1b1b1f; stroke-width: 1; }
+
+.chart-max, .chart-x {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--text-dim);
+}
+.chart-x { display: flex; justify-content: space-between; }
+
+/* ── tables ─────────────────────────────────────────────────────────── */
+
+/* The one horizontal scroller allowed, and only for the table itself. The
+   page body must never scroll sideways; a six-column table on a phone has to
+   go somewhere. */
+.tbl-wrap { overflow-x: auto; }
+
+.tbl {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 11px;
+  white-space: nowrap;
+}
+.tbl th {
+  text-align: left;
+  font-weight: 500;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 9.5px;
+  padding: 0 12px 6px 0;
+  border-bottom: 1px solid var(--border);
+}
+.tbl td {
+  padding: 5px 12px 5px 0;
+  color: var(--text-muted);
+  border-bottom: 1px solid #161619;
+}
+.tbl tbody tr:last-child td { border-bottom: none; }
+.tbl td:first-child { color: var(--text-dim); font-variant-numeric: tabular-nums; }
+.tbl .t-winner { color: var(--text); }
+.tbl .t-none { color: var(--text-dim); }
+
+/* ── bento ─────────────────────────────────────────────────────────────
+
+   Six columns, two rows, twelve cells: the hero takes four, the two wide
+   tiles two each, four singles one each. Explicit spans rather than
+   grid-auto-flow: dense, because dense packing reorders tiles to fill holes -
+   and the order here is the reading order, live figures first. */
+.bento {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-auto-rows: minmax(92px, auto);
+  gap: 10px;
+}
+.bento .stat { display: flex; flex-direction: column; }
+.bento .stat-note { margin-top: auto; padding-top: 6px; }
+.bento .stat[data-span="wide"] { grid-column: span 2; }
+.bento .stat[data-span="hero"] {
+  grid-column: span 2;
+  grid-row: span 2;
+  padding: 16px 18px;
+  background: color-mix(in srgb, var(--tone, var(--accent)) 7%, var(--bg-card));
+  border-color: color-mix(in srgb, var(--tone, var(--accent)) 30%, var(--border));
+}
+.bento .stat[data-span="hero"] .stat-value { font-size: 52px; line-height: 1; letter-spacing: -0.03em; }
+.bento .stat[data-span="hero"] .stat-label { font-size: 14px; margin-top: 8px; }
+.bento .stat[data-span="hero"] .stat-note { font-size: 12px; }
+.bento .stat[data-span="hero"] .tile-ico { width: 34px; height: 34px; top: 14px; right: 14px; }
+.bento .stat[data-span="hero"] .tile-ico svg { width: 18px; height: 18px; }
+
+/* ── the other mark types ──────────────────────────────────────────────
+
+   A bar list answers "which is biggest". These answer the other questions the
+   panel asks - how is it divided, what is the shape of the distribution, what
+   fraction of each group came back, how far apart are five close numbers - and
+   they exist because seven bar lists in a row read as one chart applied seven
+   times rather than as seven questions.
+
+   None of them is an SVG except the area curve. Percentage widths and heights
+   on ordinary boxes cannot stretch their own labels, which the SVG charts can
+   and did. */
+
+/* Part-to-whole: one bar, segmented, legend underneath carrying the numbers. */
+.seg {
+  display: flex;
+  height: 16px;
+  border-radius: 4px;
+  overflow: hidden;
+  gap: 1px;
+  margin-bottom: 12px;
+}
+/* A floor, so a 2% slice is still a visible piece of the bar rather than a
+   seam. It costs the wide slices a pixel or two of accuracy, which at this
+   size nobody can read anyway - and the legend carries the exact share. */
+.seg-part { min-width: 3px; }
+
+.seg-legend { display: grid; gap: 5px; font-family: var(--mono); font-size: 11px; }
+.seg-item { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 8px; }
+.seg-swatch { width: 8px; height: 8px; border-radius: 2px; }
+.seg-label { color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.seg-value { color: var(--text); font-variant-numeric: tabular-nums; }
+
+/* A distribution along an ordered axis, drawn vertically because the order of
+   the buckets IS the information. */
+.histogram { display: grid; gap: 4px; }
+.hist-max { font-family: var(--mono); font-size: 9.5px; color: var(--text-dim); }
+
+.hist {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 4px;
+  align-items: end;
+}
+.hist-col { display: grid; grid-template-rows: auto 1fr auto; gap: 3px; min-width: 0; height: 104px; }
+
+.hist-value {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+/* The wrapper is the full-height column and the bar sits at its foot, so every
+   bar in the row measures from one baseline. */
+.hist-bar-wrap { display: flex; align-items: flex-end; min-height: 0; }
+.hist-bar {
+  display: block;
+  width: 100%;
+  background: var(--series-1);
+  border-radius: 2px 2px 0 0;
+}
+.hist-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text-dim);
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* A dot on a shared axis that deliberately does not start at zero, for values
+   that differ by a quarter and would be near-identical lengths as bars. */
+/* ONE grid for the whole plot, with the rows flattened into it by
+   display:contents. A fixed em cap on the label column was the obvious version
+   and was wrong twice: it squeezes below its own maximum when the value column
+   is wide (7em, then 8.5em, and "battleRoyale" was still clipped by 2px), and
+   it leaves the axis underneath guessing at that width with a padding-left that
+   has to be kept in sync by hand. An `auto` column takes exactly what the
+   longest label needs, and the axis sits in column 2 of the same grid, so the
+   two cannot disagree. */
+.dots {
+  display: grid;
+  grid-template-columns: auto minmax(40px, 1fr) auto;
+  align-items: center;
+  gap: 6px 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+}
+.dot-row { display: contents; }
+.dot-label { color: var(--text-muted); white-space: nowrap; }
+
+.dot-track {
+  position: relative;
+  display: block;
+  height: 9px;
+  /* A hairline rather than a track: a filled track is a length, and a length
+     is the claim this chart is avoiding. */
+  background: linear-gradient(to bottom, transparent 46%, #1b1b1f 46%, #1b1b1f 54%, transparent 54%);
+}
+.dot-mark {
+  position: absolute;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  margin: -4.5px 0 0 -4.5px;
+  border-radius: 50%;
+  background: var(--series-1);
+}
+.dot-value { color: var(--text); font-variant-numeric: tabular-nums; }
+.dot-note { color: var(--text-dim); }
+
+/* The two ends of a non-zero axis, said out loud. A tight axis with no scale
+   printed on it is the chart that lies by omission. */
+.dot-axis {
+  /* Column 2 of the plot's own grid: exactly the track, whatever width the
+     labels ended up taking. */
+  grid-column: 2;
+  display: flex;
+  justify-content: space-between;
+  font-size: 9.5px;
+  color: var(--text-dim);
+}
+
+/* A total and the fraction of it still active, where the fraction is the
+   content and the two totals are context. */
+.shares { display: grid; gap: 6px; font-family: var(--mono); font-size: 11px; }
+.share-row {
+  display: grid;
+  grid-template-columns: minmax(0, 6em) auto 1fr 2.6em;
+  align-items: center;
+  gap: 8px;
+}
+.share-label { color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.share-total { color: var(--text); font-variant-numeric: tabular-nums; }
+.share-gauge { display: block; height: 7px; border-radius: 4px; background: #1b1b1f; overflow: hidden; }
+.share-fill { display: block; height: 100%; border-radius: 4px; background: var(--series-3); }
+.share-pct { color: var(--text-dim); text-align: right; font-variant-numeric: tabular-nums; }
+
+
+/* ── tile dressing ─────────────────────────────────────────────────────
+
+   Every piece here is absolutely positioned or a pseudo-element, so none of
+   it adds a pixel of height. That matters beyond tidiness: four of the five
+   panels are held under the fold of a 1366x768 laptop, and a decoration that
+   grew a tile would quietly break that for a panel nobody edited. */
+
+.metric[data-series="1"], .stat[data-series="1"] { --tone: var(--series-1); }
+.metric[data-series="2"], .stat[data-series="2"] { --tone: var(--series-2); }
+.metric[data-series="3"], .stat[data-series="3"] { --tone: var(--series-3); }
+.metric[data-series="4"], .stat[data-series="4"] { --tone: var(--series-4); }
+
+.metric, .stat {
+  position: relative;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.25s ease;
+}
+.metric:hover, .stat:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--tone, var(--accent)) 45%, var(--border));
+}
+
+.tile-ico {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 30px;
+  height: 30px;
+}
+.tile-ico {
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  color: var(--tone, var(--accent));
+  background: color-mix(in srgb, var(--tone, var(--accent)) 13%, transparent);
+}
+.tile-ico svg, .head-link svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.tile-ico svg { width: 16px; height: 16px; }
+.stat .tile-ico { top: 9px; right: 9px; width: 26px; height: 26px; }
+.stat .tile-ico svg { width: 14px; height: 14px; }
+
+
+/* The two outbound links, in the title row. They used to sit under a services
+   list that repeated the status strip in the header word for word. */
+/* Baseline-aligned like the badge beside it. Centering these in a row that
+   aligns on the text baseline lifted them a few pixels above "Live on iOS".
+   Inside the pill only the label takes part in baseline alignment - an svg has
+   no baseline, and as the first item it would make the pill's bottom edge the
+   baseline instead. */
+.head-link {
+  align-self: baseline;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 3px 10px 3px 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-muted);
+  font-size: 12px;
+  text-decoration: none;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.head-link svg { width: 13px; height: 13px; align-self: center; }
+.head-link .arr { width: 10px; height: 10px; opacity: 0.55; }
+.head-link:hover { color: var(--accent); border-color: rgba(200, 255, 0, 0.35); background: var(--accent-dim); }
+.dsec-head .dot { align-self: center; }
+
+/* Bars grow from their own foot. fill-box, because an SVG rect's default
+   transform origin is the viewport's corner and every bar would swing in from
+   the top-left. */
+.chart rect { transform-box: fill-box; transform-origin: 50% 100%; }
+
+/* Arriving on a panel. `backwards`, not `both`: a finished animation left
+   holding transform:none would out-rank the hover lift above for the life of
+   the page, and the tiles would stop responding to the pointer. */
+@keyframes tile-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+.panel[data-active="true"] .panel-head,
+.panel[data-active="true"] .panel-sub {
+  animation: tile-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+.panel[data-active="true"] .metric {
+  animation: tile-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: calc(80ms + var(--i, 0) * 60ms);
+}
+.panel[data-active="true"] .stat-row .stat,
+.panel[data-active="true"] .bento .stat {
+  animation: tile-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: calc(260ms + var(--i, 0) * 50ms);
+}
+
+/* ── MDS Pro: overview / live demo ────────────────────────────────────── */
+
+.view-switch {
+  align-self: center;
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg-card);
+}
+.view-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+.view-btn svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.view-btn:hover { color: var(--text); }
+.view-btn[aria-selected="true"] { color: var(--bg); background: var(--accent); }
+.head-link-icon { padding: 5px 7px; }
+
+/* The overview keeps the panel's own rhythm. `gap: inherit` rather than a
+   number, so the short-viewport pass that tightens the panel tightens this
+   too without a second rule to keep in step. */
+.view[data-view="about"] { display: grid; gap: inherit; grid-auto-rows: min-content; }
+
+/* The demo fills whatever height the panel has, and the panel stops scrolling
+   while it does - a scrollbar around a scrollable app is two scrollbars. */
+.panel[data-view="demo"] { grid-template-rows: auto minmax(0, 1fr); overflow: hidden; }
+.view[data-view="demo"] { min-height: 0; }
+.demo-frame { display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 8px; height: 100%; }
+.demo-frame iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+}
+.demo-caption { margin: 0; font-size: 11.5px; color: var(--text-dim); }
+
+/* ── the operator half ──────────────────────────────────────────────────
+
+   Hidden by default and revealed by a flag the SERVER set, not by a class the
+   page was always able to remove. There is nothing underneath to reveal: the
+   figures these blocks hold never arrive for a reader who is not the owner, so
+   removing the rule in devtools shows empty scaffolding and its captions.
+
+   Written as :not() rather than as display:none plus an override, because each
+   of these elements has a different display - grid, flex, block - and the
+   override would have to know which. */
+.panel:not([data-op="true"]) [data-operator] { display: none; }
+
+/* ── the panel that scrolls ─────────────────────────────────────────────
+
+   Every other panel fits the fold, so a reader who has learned that rule
+   needs a signal that this one does not - otherwise the bottom edge reads as
+   the end of the content. A fade at the live edge carries it.
+   Pinned to the panel rather than the content so it does not travel up as the
+   reader scrolls - and off once they reach the end, which the script flags. */
+.panel[data-scrolls="true"]::after {
+  content: '';
+  position: sticky;
+  bottom: -28px;
+  display: block;
+  height: 40px;
+  margin: -40px -32px -28px;
+  background: linear-gradient(to top, var(--bg), transparent);
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.panel[data-scrolls="true"][data-at-end="true"]::after { opacity: 0; }
+
+.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+/* Short viewports.
+
+   The one promise this page makes is that a panel does not scroll, and it was
+   broken on the most ordinary screen there is: a 1366x768 laptop leaves about
+   650px of viewport once Chrome has taken its chrome, and WordWarz needed 723.
+   The panel scrolled, which on a recording is the moment the viewer loses the
+   thread - the exact failure the layout exists to prevent.
+
+   So the padding, the gaps and the type step down together rather than any one
+   of them carrying it: taking it all out of a single measure would have been
+   visible as a squashed row, and spread across all three it reads as the same
+   page at a slightly tighter setting. Measured, it buys 85px - WordWarz 723 to
+   638, MDS Pro 685 to 600 - which fits that laptop with about ten to spare.
+
+   Those two figures are with the operator tile present, which is the case that
+   matters: it is a fifth metric, it only exists once unlocked, and unlocking is
+   the thing done immediately before recording. Measuring the public page would
+   have declared this fixed and left it broken for the only reader who sees it.
+
+   Keyed on height alone. A wide-but-short window is exactly the projector case,
+   and pairing this with a width would miss it. */
+@media (max-height: 780px) {
+  .head { padding: 10px 20px; }
+  .panel { padding: 18px 24px; gap: 14px; }
+  .panel-title { font-size: 30px; }
+  .panel-sub { font-size: 15px; }
+  .metric { padding: 10px 13px; }
+  .metric-value { font-size: 23px; }
+  .metric-label { margin-top: 4px; }
+  .card { padding: 14px 16px; }
+  .cols { gap: 14px; }
+  .dsec { padding: 12px 14px; }
+  .dsec-head { margin-bottom: 9px; }
+  .stat { padding: 8px 10px; }
+  .stat-value { font-size: 18px; }
+  .chart svg { height: 74px; }
+  .hist-col { height: 84px; }
+  .seg { height: 13px; margin-bottom: 9px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot[data-state="up"]::after { animation: none; }
+  /* The final state, not a faster animation: tiles arrive where they end, and
+     hub.js writes figures and bars at their values without counting. */
+  * { transition: none !important; animation: none !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <header class="head">
+    <div class="brand">kimlj<em>.dev</em> / live</div>
+    <div class="strip" id="strip" aria-label="Service status"></div>
+    <div class="stamp" id="stamp">checking…</div>
+  </header>
+
+  <nav class="rail" role="tablist" aria-label="Projects">
+    <div class="rail-label">Projects</div>
+
+    <button class="tab" role="tab" id="tab-mdspro" aria-controls="panel-mdspro" aria-selected="true" data-target="mdspro" data-group="MDS Pro">
+      <span class="key">1</span><span class="tab-name">MDS Pro</span><span class="tab-dot" data-group-dot="MDS Pro"></span>
+    </button>
+    <button class="tab" role="tab" id="tab-wordwarz" aria-controls="panel-wordwarz" aria-selected="false" data-target="wordwarz" data-group="WordWarz">
+      <span class="key">2</span><span class="tab-name">WordWarz</span><span class="tab-dot" data-group-dot="WordWarz"></span>
+    </button>
+    <button class="tab" role="tab" id="tab-jobsift" aria-controls="panel-jobsift" aria-selected="false" data-target="jobsift">
+      <span class="key">3</span><span class="tab-name">jobsift</span>
+    </button>
+    <button class="tab" role="tab" id="tab-portfolio" aria-controls="panel-portfolio" aria-selected="false" data-target="portfolio">
+      <span class="key">4</span><span class="tab-name">kimlj.dev</span>
+    </button>
+    <button class="tab" role="tab" id="tab-shiftops" aria-controls="panel-shiftops" aria-selected="false" data-target="shiftops">
+      <span class="key">5</span><span class="tab-name">Shift Ops</span>
+    </button>
+
+    <div class="rail-foot">
+      <kbd>1</kbd>–<kbd>5</kbd> jump · <kbd>←</kbd><kbd>→</kbd> cycle
+    </div>
+  </nav>
+
+  <div class="panel-wrap">
+
+    <!-- ── MDS Pro ──────────────────────────────────────────────────────
+         Everything here is a fact about the system, not about anybody it
+         holds records for. No nurse, facility or client name appears on this
+         page, and none should be added: it is a screen recording waiting to
+         happen, and the contract is live.
+    -->
+    <section class="panel" id="panel-mdspro" role="tabpanel" aria-labelledby="tab-mdspro" data-active="true">
+      <div class="panel-head">
+        <h1 class="panel-title">MDS Pro</h1>
+        <span class="badge" data-tone="prod">In production</span>
+        <!-- Overview or the product itself. "Live demo" puts the real MDS Pro
+             dashboard in this panel, in demo mode: ?demo=1 answers every read
+             from invented fixtures and never signs in, so it holds no token and
+             shows no client data. It is the same app, not a copy of it.
+
+             The dashboard sends no framing headers at all, so embedding needed
+             nothing changed on the client's system - which also means any site
+             can frame its login page today. That is a gap on the dashboard, not
+             something this page relies on. -->
+        <div class="view-switch" role="tablist" aria-label="MDS Pro view">
+          <button class="view-btn" type="button" role="tab" aria-selected="true" data-view="about">Overview</button>
+          <button class="view-btn" type="button" role="tab" aria-selected="false" data-view="demo"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg><span>Live demo</span></button>
+        </div>
+      <div class="view" data-view="about">
+        <a class="head-link head-link-icon" href="https://dashboard.mdsprosolutions.com/?demo=1" target="_blank" rel="noopener" title="Open the demo in its own tab" aria-label="Open the demo in its own tab"><svg class="arr" viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
+      </div>
+      <p class="panel-sub">Timekeeping, payroll and billing for a US nurse staffing company. Fifteen people open it every working day, and it is the system their pay runs through.</p>
+
+      <div class="metrics">
+        <div class="metric" data-series="1">
+          <span class="metric-value">15</span>
+          <span class="metric-label">Daily users</span>
+          <span class="metric-note">the whole office, every working day</span>
+        </div>
+        <div class="metric" data-series="3">
+          <span class="metric-value">407</span>
+          <span class="metric-label">Commits</span>
+          <span class="metric-note">Jun 2026 to 13 Sep 2026</span>
+        </div>
+        <div class="metric" data-series="4">
+          <span class="metric-value">44</span>
+          <span class="metric-label">Migrations</span>
+          <span class="metric-note">schema changed under live payroll</span>
+        </div>
+        <div class="metric" data-series="2">
+          <span class="metric-value">35</span>
+          <span class="metric-label">RLS policies</span>
+          <span class="metric-note">row-level, enforced in Postgres</span>
+        </div>
+      </div>
+
+      <div class="cols">
+        <div class="card">
+          <h3>What is actually hard about it</h3>
+          <p><strong>Payroll cannot be eventually consistent.</strong> A timekeeping bug is not a wrong pixel, it is somebody underpaid, so corrections are a reviewed workflow with an audit trail rather than an edit.</p>
+          <p><strong>The roster syncs in real time.</strong> No "apply changes" button, because a button nobody presses is a roster that is quietly wrong.</p>
+          <p><strong>The Ask AI agent is read-only by construction.</strong> It answers from SQL and Sheets and holds no write tool at all, so the worst case of talking it past its instructions is a wrong sentence, not a changed record.</p>
+        </div>
+        <div class="card">
+          <h3>Services</h3>
+          <div class="svc-list" data-group-services="MDS Pro"></div>
+          <div class="links">
+            <a href="https://mdsprosolutions.com" target="_blank" rel="noopener">mdsprosolutions.com</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Stack</h3>
+        <div class="chips">
+          <span class="chip">TypeScript</span><span class="chip">Fastify</span><span class="chip">Supabase / Postgres</span>
+          <span class="chip">Row-level security</span><span class="chip">Chrome MV3</span><span class="chip">ExcelJS</span>
+          <span class="chip">Apps Script</span><span class="chip">Anthropic SDK</span><span class="chip">DigitalOcean + Caddy</span>
+          <span class="chip">Vercel</span>
+        </div>
+      </div>
+      </div>
+
+      <div class="view" data-view="demo" hidden>
+        <div class="demo-frame">
+          <!-- src is set on first open, not at load: the hub should not reach
+               the client's site on every view, only when asked to show it.
+
+               Sandboxed without allow-top-navigation or allow-forms, so the
+               framed page cannot navigate the hub or post anything.
+               allow-same-origin is required, not decorative: app.js reads
+               localStorage at load, and an opaque sandbox origin makes that
+               throw, which kills the script before demo mode can start. -->
+          <iframe title="MDS Pro dashboard, demo mode"
+                  data-src="https://dashboard.mdsprosolutions.com/?demo=1"
+                  sandbox="allow-scripts allow-same-origin allow-popups"
+                  referrerpolicy="no-referrer"></iframe>
+          <p class="demo-caption">The real MDS Pro dashboard in demo mode: invented nurses, hours and pay. It never signs in and sends no requests to the client's data.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── WordWarz ─────────────────────────────────────────────────────
+         The one panel that scrolls, and the only one allowed to.
+
+         Every other panel fits the fold because a scroll on a recording is
+         where the viewer loses the thread. This one carries the whole
+         dashboard, which cannot fit and should not be cut down to fit: the
+         figures ARE the walkthrough here, and the argument for the project is
+         that there are this many of them and they all have a denominator. So
+         the rule it breaks is the rule, stated on the panel itself rather than
+         left for the reader to discover with a wheel.
+
+         The lifetime player count and the daily figure are one claim and are
+         rendered as adjacent tiles on purpose. A lifetime total on its own
+         invites the reader to hear it as current, which is the misleading
+         version of a true number - so these two do not get separated, and a
+         layout change that drops one must drop both.
+
+         WHAT IS IN THE MARKUP AND WHAT IS NOT. Every heading and every caveat
+         below is written out here, and only values are filled in by hub.js.
+         With the script gone this panel is still the full list of what the
+         game measures and every warning about how to read it - it just has no
+         numbers. The caveats are the part that must never depend on a fetch:
+         "inflated, kept for continuity" has to be on screen whenever 1,601 is.
+
+         The operator-only sections are scaffolding here and data nowhere. The
+         server decides what it sends; these blocks stay empty and hidden for a
+         reader who is not the owner, and there is nothing in them to reveal by
+         unhiding - which is the opposite arrangement from writing the figures
+         into the markup and covering them with a class.
+    -->
+    <section class="panel" id="panel-wordwarz" role="tabpanel" aria-labelledby="tab-wordwarz" data-scrolls="true">
+      <div class="panel-head">
+        <h1 class="panel-title">WordWarz.io</h1>
+        <span class="badge" data-tone="live">Live on iOS</span>
+        <a class="head-link" href="https://wordwarz.io" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><span>wordwarz.io</span><svg class="arr" viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
+        <a class="head-link" href="https://dashboard.wordwarz.io" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg><span>dashboard</span><svg class="arr" viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
+      </div>
+      <p class="panel-sub">Real-time multiplayer word battle. Up to eleven people in a room, five ELO tiers, an entropy-driven bot that fills a lobby rather than leaving someone waiting.</p>
+
+      <div class="metrics">
+        <div class="metric" data-series="1">
+          <span class="tile-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8"/><path d="M18 14.2c2.1.6 3.5 2.8 3.5 5.8"/></svg></span>
+          <span class="metric-value" data-live="wordwarz.playersLifetime" data-pending="true">—</span>
+          <span class="metric-label">Players, lifetime</span>
+          <span class="metric-note">real accounts, bots excluded</span>
+        </div>
+        <div class="metric" data-series="3">
+          <span class="tile-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></span>
+          <span class="metric-value" data-live="wordwarz.playersToday" data-pending="true">—</span>
+          <span class="metric-label">Active today</span>
+          <span class="metric-note">devices seen in the last 24 hours</span>
+        </div>
+        <div class="metric" data-series="4">
+          <span class="tile-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2" y="8" width="6" height="8" rx="1"/><rect x="9" y="8" width="6" height="8" rx="1"/><rect x="16" y="8" width="6" height="8" rx="1"/></svg></span>
+          <span class="metric-value" data-live="wordwarz.games" data-pending="true">—</span>
+          <span class="metric-label">Games played</span>
+          <span class="metric-note">counted, not sampled</span>
+        </div>
+        <div class="metric" data-series="1">
+          <span class="tile-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M17 2l3 3-3 3"/><path d="M4 11V9a4 4 0 0 1 4-4h12"/><path d="M7 22l-3-3 3-3"/><path d="M20 13v2a4 4 0 0 1-4 4H4"/></svg></span>
+          <span class="metric-value" data-live="wordwarz.rounds" data-pending="true">—</span>
+          <span class="metric-label">Rounds</span>
+          <span class="metric-note">a game is several rounds</span>
+        </div>
+        <div class="metric" data-series="2">
+          <span class="tile-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5"/><path d="M2 12h6.5M15.5 12H22"/></svg></span>
+          <span class="metric-value">1,334</span>
+          <span class="metric-label">Commits</span>
+          <span class="metric-note">Dec 2025 to 13 Sep 2026</span>
+        </div>
+      </div>
+
+      <!-- Live and audience, as one bento.
+
+           Online now is the large tile because it is the page's heartbeat: the
+           one figure true for a single second at a time, and the first thing
+           asked on a walkthrough. The caveats both old sections carried are
+           kept in the one caption - "a device is one install" has to be on
+           screen whenever a device count is. -->
+      <div class="dsec">
+        <div class="dsec-head">
+          <h3>Right now</h3>
+          <span class="dot" data-group-dot="WordWarz" aria-hidden="true"></span>
+          <span class="dsec-note">live figures polled every 30s · a device is one install of one browser profile</span>
+        </div>
+        <div class="bento">
+          <div class="stat" data-span="hero" data-series="2">
+            <span class="tile-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 15.5a5 5 0 0 0 0-7M5.6 5.6a9 9 0 0 0 0 12.8M18.4 18.4a9 9 0 0 0 0-12.8"/></svg></span>
+            <span class="stat-value" data-live="wordwarz.live.online" data-pending="true">—</span>
+            <span class="stat-label">Online now</span>
+            <span class="stat-note"><span data-live="wordwarz.live.inRoom" data-pending="true">—</span> in a room · <span data-live="wordwarz.live.browsing" data-pending="true">—</span> browsing</span>
+          </div>
+          <div class="stat" data-span="wide" data-series="1">
+            <span class="tile-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></span>
+            <span class="stat-value" data-live="wordwarz.peak24h.peak" data-pending="true">—</span>
+            <span class="stat-label">Peak concurrent (24h)</span>
+            <span class="stat-note" data-hub="peak24h-at">—</span>
+          </div>
+          <div class="stat" data-span="wide" data-series="2">
+            <span class="tile-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></span>
+            <span class="stat-value" data-live="wordwarz.playersReturning" data-pending="true">—</span>
+            <span class="stat-label">Returning devices</span>
+            <span class="stat-note">came back on a later day than they arrived</span>
+          </div>
+          <div class="stat" data-series="3">
+            <span class="tile-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 2v6M15 2v6"/><path d="M6 8h12v3a6 6 0 0 1-12 0z"/><path d="M12 17v5"/></svg></span>
+            <span class="stat-value" data-live="wordwarz.live.connected" data-pending="true">—</span>
+            <span class="stat-label">Sockets connected</span>
+            <span class="stat-note">a socket is a tab, not a person</span>
+          </div>
+          <div class="stat" data-series="4">
+            <span class="tile-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5"/><path d="M9 2h6"/></svg></span>
+            <span class="stat-value" data-live="wordwarz.live.matchesInProgress" data-pending="true">—</span>
+            <span class="stat-label">Matches in progress</span>
+            <span class="stat-note">mid-round, including the gaps between rounds</span>
+          </div>
+          <div class="stat" data-series="4">
+            <span class="tile-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg></span>
+            <span class="stat-value" data-live="wordwarz.playersWeek" data-pending="true">—</span>
+            <span class="stat-label">Active this week</span>
+            <span class="stat-note">seen in 7d</span>
+          </div>
+          <div class="stat" data-series="1">
+            <span class="tile-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18M7 14h4M13 17h4"/></svg></span>
+            <span class="stat-value" data-live="wordwarz.playersMonth" data-pending="true">—</span>
+            <span class="stat-label">Active this month</span>
+            <span class="stat-note">seen in 30d</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dsec">
+        <div class="dsec-head">
+          <h3>New vs returning players — per day</h3>
+          <span class="dsec-note">last 30 days</span>
+        </div>
+        <div class="chart" data-hub="chart-daily"></div>
+        <p class="dsec-foot">Counts devices that reached a game, not devices that opened the app. Guests playing solo or in practice are under-counted, since rounds without an account are not recorded per player — multiplayer is well covered.</p>
+      </div>
+
+      <div class="dsec">
+        <div class="dsec-head">
+          <h3>Games per day</h3>
+          <span class="dsec-note">last 30 days, from the games table — not sampled</span>
+        </div>
+        <div class="chart" data-hub="chart-games"></div>
+      </div>
+
+      <div class="cols cols-3">
+        <div class="dsec">
+          <div class="dsec-head">
+            <h3>Games by mode</h3>
+            <span class="dsec-note">share of all games</span>
+          </div>
+          <div class="segments" data-hub="seg-modes"></div>
+        </div>
+        <div class="dsec">
+          <div class="dsec-head">
+            <h3>Ranked ELO</h3>
+            <span class="dsec-note">classic — rated accounts</span>
+          </div>
+          <div class="histogram" data-hub="hist-elo"></div>
+          <p class="dsec-foot" data-hub="elo-unrated">—</p>
+        </div>
+        <div class="dsec">
+          <div class="dsec-head">
+            <h3>Platform</h3>
+            <span class="dsec-note">devices, and the share still active in 30d</span>
+          </div>
+          <div class="shares" data-hub="share-platform"></div>
+        </div>
+      </div>
+
+      <div class="cols cols-3" data-operator="true">
+        <div class="dsec">
+          <div class="dsec-head">
+            <h3>Lobby sizes</h3>
+            <span class="dsec-note">games by number of players, bots included</span>
+          </div>
+          <div class="chart" data-hub="area-lobby"></div>
+        </div>
+        <div class="dsec">
+          <div class="dsec-head">
+            <h3>Guesses to solve</h3>
+            <span class="dsec-note"><span data-live="wordwarz.unsolved" data-pending="true">—</span> unsolved</span>
+          </div>
+          <div class="bars" data-hub="bars-guesses"></div>
+        </div>
+        <div class="dsec">
+          <div class="dsec-head">
+            <h3>Average solve time</h3>
+            <span class="dsec-note">seconds by mode — the axis does not start at zero</span>
+          </div>
+          <div class="dots" data-hub="dots-solvetime"></div>
+        </div>
+      </div>
+
+      <div class="cols" data-operator="true">
+        <div class="dsec">
+          <div class="dsec-head">
+            <h3>Most used openers</h3>
+            <span class="dsec-note">mirror matches excluded — everyone opens on the same forced word there</span>
+          </div>
+          <div class="bars" data-hub="bars-openers"></div>
+        </div>
+        <div class="dsec">
+          <div class="dsec-head">
+            <h3>Busiest days</h3>
+            <span class="dsec-note">all time</span>
+          </div>
+          <div class="bars" data-hub="bars-busiest"></div>
+        </div>
+      </div>
+
+      <div class="dsec">
+        <div class="dsec-head">
+          <h3>Recent games</h3>
+          <span class="dsec-note">the last fifteen</span>
+        </div>
+        <div class="tbl-wrap">
+          <table class="tbl" data-hub="tbl-recent">
+            <thead>
+              <tr><th>#</th><th>Mode</th><th>Code</th><th>Players</th><th>Winner</th><th>When</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Stack</h3>
+        <div class="chips">
+          <span class="chip">React</span><span class="chip">Capacitor</span><span class="chip">Node</span>
+          <span class="chip">Socket.IO</span><span class="chip">Supabase</span><span class="chip">SQLite</span>
+          <span class="chip">Docker / Nginx</span><span class="chip">Codemagic</span><span class="chip">Playwright</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── jobsift ──────────────────────────────────────────────────── -->
+    <section class="panel" id="panel-jobsift" role="tabpanel" aria-labelledby="tab-jobsift">
+      <div class="panel-head">
+        <h1 class="panel-title">jobsift</h1>
+        <span class="badge" data-tone="prod">Running daily</span>
+      </div>
+      <p class="panel-sub">A self-hosted job pipeline: sources in, filters and an LLM scoring pass in the middle, a spreadsheet and a Telegram message out. It is how I find the postings I actually apply to.</p>
+
+      <div class="metrics">
+        <div class="metric" data-series="1">
+          <span class="metric-value">132</span>
+          <span class="metric-label">Commits</span>
+          <span class="metric-note">Aug 2026 to 13 Sep 2026</span>
+        </div>
+        <div class="metric" data-series="3">
+          <span class="metric-value">2</span>
+          <span class="metric-label">Deployment halves</span>
+          <span class="metric-note">droplet core, worker at home</span>
+        </div>
+        <div class="metric" data-series="4">
+          <span class="metric-value">1</span>
+          <span class="metric-label">SSH command</span>
+          <span class="metric-note">the worker's whole surface, pinned</span>
+        </div>
+        <div class="metric" data-series="2">
+          <span class="metric-value">robots.txt</span>
+          <span class="metric-label">Source rule</span>
+          <span class="metric-note">permission decides, not method</span>
+        </div>
+      </div>
+
+      <div class="cols">
+        <div class="card">
+          <h3>What is actually hard about it</h3>
+          <p><strong>Which sources are allowed is a decision, not a capability.</strong> Sources are chosen by what each site's <code>robots.txt</code> permits. Jobstreet disallows the endpoints that would be easiest to read, so that one arrives by email instead. Reachable is not the same as allowed.</p>
+          <p><strong>It is split across two machines for one reason.</strong> One board answers a datacenter IP with a 403, so that reader runs on the laptop at home and hands batches to the droplet over a single pinned SSH command. Renting residential proxies would have solved it by impersonating somebody's home connection, which is not a trade I wanted.</p>
+          <p><strong>Only one copy of the database is real.</strong> The core owns it; the worker keeps an integrity-checked daily copy and never writes.</p>
+        </div>
+        <div class="card">
+          <h3>Shape</h3>
+          <div class="chips">
+            <span class="chip">Python</span><span class="chip">Anthropic SDK</span><span class="chip">OpenAI</span>
+            <span class="chip">SQLite</span><span class="chip">gspread</span><span class="chip">httpx</span>
+            <span class="chip">GitHub Actions</span><span class="chip">Telegram</span>
+          </div>
+          <p style="margin-top:12px">Private repository. Walkable on a screen share.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── kimlj.dev ────────────────────────────────────────────────── -->
+    <section class="panel" id="panel-portfolio" role="tabpanel" aria-labelledby="tab-portfolio">
+      <div class="panel-head">
+        <h1 class="panel-title">kimlj.dev</h1>
+        <span class="badge" data-tone="live">You are on it</span>
+      </div>
+      <p class="panel-sub">The portfolio, its site assistant, and this page. One hand-written HTML file for the site itself, with the assistant answering only from approved text.</p>
+
+      <div class="metrics">
+        <div class="metric" data-series="1">
+          <span class="metric-value">229</span>
+          <span class="metric-label">Commits</span>
+          <span class="metric-note">Feb 2026 to 13 Sep 2026</span>
+        </div>
+        <div class="metric" data-series="3">
+          <span class="metric-value">0</span>
+          <span class="metric-label">Tools on the assistant</span>
+          <span class="metric-note">and it must never be given one</span>
+        </div>
+        <div class="metric" data-series="4">
+          <span class="metric-value">31</span>
+          <span class="metric-label">Skills listed</span>
+          <span class="metric-note">each against work that shows it</span>
+        </div>
+        <div class="metric" data-series="2">
+          <span class="metric-value">$1.00</span>
+          <span class="metric-label">Hourly spend cap</span>
+          <span class="metric-note">rolling, enforced server-side</span>
+        </div>
+      </div>
+
+      <div class="cols">
+        <div class="card">
+          <h3>What is actually hard about it</h3>
+          <p><strong>The assistant reaches nothing.</strong> No database, no filesystem, no network beyond the one call to the model. The worst case of a visitor talking it past every rule in its prompt is a wrong sentence on a portfolio. Give it a tool and the worst case becomes a reached system.</p>
+          <p><strong>The deploy names what is public.</strong> Vercel served the repository root once, which meant it served the repository - the knowledge corpus, the system prompt and the guard thresholds were all downloadable. The build now copies an allowlist into <code>dist</code>, so a new file is public because somebody added it to that list.</p>
+          <p><strong>A skill without provenance does not go on the list.</strong> The marquee it replaced claimed four technologies that no repository could show.</p>
+        </div>
+        <div class="card">
+          <h3>Services</h3>
+          <div class="svc-list">
+            <div class="svc-row">
+              <span class="dot" data-state="up"></span>
+              <span><span class="svc-name">This page</span><br><span class="svc-note">rendering, so the function answered</span></span>
+            </div>
+          </div>
+          <div class="links">
+            <a href="/" target="_blank" rel="noopener">kimlj.dev</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Shift Ops ────────────────────────────────────────────────────
+         Labelled "simulated" here and everywhere else. The pipeline is real
+         and runs; the hundred people in it are not, and a reader who hears
+         "100-person compliance pipeline" without that word has been misled
+         by omission. The badge is not decoration.
+    -->
+    <section class="panel" id="panel-shiftops" role="tabpanel" aria-labelledby="tab-shiftops">
+      <div class="panel-head">
+        <h1 class="panel-title">Shift Ops Console</h1>
+        <span class="badge" data-tone="simulated">Simulated data</span>
+      </div>
+      <p class="panel-sub">A compliance pipeline for a simulated hundred-person workforce, built across five automation platforms in a day, because the job postings kept asking for all five by name.</p>
+
+      <div class="metrics">
+        <div class="metric" data-series="1">
+          <span class="metric-value">5</span>
+          <span class="metric-label">Platforms</span>
+          <span class="metric-note">n8n, Make, Zapier, Power Automate, Apps Script</span>
+        </div>
+        <div class="metric" data-series="3">
+          <span class="metric-value">100</span>
+          <span class="metric-label">Simulated staff</span>
+          <span class="metric-note">generated, not real people</span>
+        </div>
+        <div class="metric" data-series="4">
+          <span class="metric-value">1 day</span>
+          <span class="metric-label">Build time</span>
+          <span class="metric-note">scope was exposure, not product</span>
+        </div>
+        <div class="metric" data-series="2">
+          <span class="metric-value">Looker</span>
+          <span class="metric-label">Reporting end</span>
+          <span class="metric-note">the pipeline terminates in a dashboard</span>
+        </div>
+      </div>
+
+      <div class="cols">
+        <div class="card">
+          <h3>Why it exists, honestly</h3>
+          <p>It was built for platform exposure. Postings ask for Make, Zapier and Power Automate by name, and I had done the same class of work in n8n and in Python but not in those tools. So the same pipeline was built five ways in a day.</p>
+          <p><strong>What it demonstrates is the tools, not the scale.</strong> Nobody's shift was ever run through it. Calling a simulation production experience is the kind of claim that survives a resume and dies in an interview.</p>
+        </div>
+        <div class="card">
+          <h3>Shape</h3>
+          <div class="chips">
+            <span class="chip">n8n</span><span class="chip">Make</span><span class="chip">Zapier</span>
+            <span class="chip">Power Automate</span><span class="chip">Apps Script</span><span class="chip">Looker Studio</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<script src="/assets/js/hub.js"></script>
+</body>
+</html>
