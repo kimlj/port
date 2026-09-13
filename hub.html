@@ -927,6 +927,11 @@ body {
    too without a second rule to keep in step. */
 .view[data-view="about"] { display: grid; gap: inherit; grid-auto-rows: min-content; }
 
+/* ...but a `display` on a class beats the UA sheet's `[hidden] { display: none }`,
+   so the hidden overview kept painting under the demo. The reset has to come
+   after the rule it is undoing, and be at least as specific. */
+.view[hidden] { display: none; }
+
 /* The demo fills whatever height the panel has, and the panel stops scrolling
    while it does - a scrollbar around a scrollable app is two scrollbars. */
 .panel[data-view="demo"] { grid-template-rows: auto minmax(0, 1fr); overflow: hidden; }
@@ -1083,9 +1088,14 @@ body {
           <button class="view-btn" type="button" role="tab" aria-selected="true" data-view="about">Overview</button>
           <button class="view-btn" type="button" role="tab" aria-selected="false" data-view="demo"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg><span>Live demo</span></button>
         </div>
-      <div class="view" data-view="about">
         <a class="head-link head-link-icon" href="https://dashboard.mdsprosolutions.com/?demo=1" target="_blank" rel="noopener" title="Open the demo in its own tab" aria-label="Open the demo in its own tab"><svg class="arr" viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
       </div>
+
+      <!-- The overview is a view like the demo is, so the switch hides one and
+           shows the other. Everything below the head belongs INSIDE it: left in
+           the head, it stayed on screen under the demo and pushed the frame's
+           1fr row to nothing, which is a blank panel rather than a visible bug. -->
+      <div class="view" data-view="about">
       <p class="panel-sub">Timekeeping, payroll and billing for a US nurse staffing company. Fifteen people open it every working day, and it is the system their pay runs through.</p>
 
       <div class="metrics">
