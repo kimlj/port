@@ -123,6 +123,275 @@
     return value.toLocaleString('en-US');
   }
 
+  // ── motion ────────────────────────────────────────────────────────────
+  //
+  // The same vocabulary as assets/js/activity-motion.js on the portfolio, on
+  // purpose: a figure counts up out of its own rendered format, a bar grows
+  // from the value its builder wrote, and both run once, when the reader
+  // actually reaches them. Two sites by one person should not move two ways.
+  //
+  // Two rules carried over from that file because each cost a debugging
+  // session there:
+  //
+  //   ARM ON CREATE, RELEASE ON VIEW. A value is zeroed the moment it is
+  //   written and let go when it scrolls into view. Zeroing at release paints
+  //   the real figure first and then resets it, and every number arrives twice.
+  //
+  //   PARSE THE FIGURE BACK OUT OF ITS TEXT. "39.2%", "1,334" and "8" keep
+  //   the shape num() gave them; only the number inside moves.
+  //
+  // One rule this file needs and that one does not: hub.js REBUILDS every chart
+  // on every 30-second poll. So a block is animated once per page life, and a
+  // rebuild after that renders the final state directly - otherwise every chart
+  // on the panel would replay twice a minute, which on a recording reads as the
+  // page glitching.
+
+  var MOTION = !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var COUNT_MS = 1000;
+  var EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
+
+  // A little way into the viewport rather than the instant an edge crosses it,
+  // so a slow scroll arrives to watch a block fill rather than to find it done.
+  // An element in a hidden panel reports not-intersecting until its tab is
+  // chosen, which is what makes pressing 2 count the WordWarz figures up.
+  //
+  // AND IT FIRES AT ONCE WHEN THE DOCUMENT IS HIDDEN. An IntersectionObserver
+  // delivers nothing to a hidden document - no rendering steps run, so it never
+  // computes an intersection - and every figure armed at zero stays at zero for
+  // as long as the page is not in front. On Windows Chrome counts a window
+  // covered by another window as hidden, which is precisely a hub sitting
+  // behind the app recording it: first version, every tile read 0 until
+  // someone clicked the window. Nobody is watching a hidden page animate, so it
+  // gets its final state instead - the count's timer backstop lands the figure,
+  // bars take their widths, rings their values.
+  var waitingForView = [];
+
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) return;
+    var waiting = waitingForView;
+    waitingForView = [];
+    for (var i = 0; i < waiting.length; i++) waiting[i]();
+  });
+
+  function onceInView(el, fn) {
+    var fired = false;
+    var obs = null;
+    function run() {
+      if (fired) return;
+      fired = true;
+      if (obs) obs.disconnect();
+      fn();
+    }
+    if (!window.IntersectionObserver || document.hidden) { run(); return; }
+    waitingForView.push(run);
+    obs = new IntersectionObserver(function (entries) {
+      for (var i = 0; i < entries.length; i++) {
+        if (entries[i].isIntersecting) { run(); return; }
+      }
+    }, { rootMargin: '0px 0px -12% 0px' });
+    obs.observe(el);
+  }
+
+  function parseFigure(text) {
+    var m = /-?[\d,]*\.?\d+/.exec(String(text));
+    if (!m) return null;
+    var n = parseFloat(m[0].replace(/,/g, ''));
+    if (!isFinite(n)) return null;
+    return {
+      n: n,
+      before: text.slice(0, m.index),
+      after: text.slice(m.index + m[0].length),
+      decimals: (m[0].split('.')[1] || '').length,
+      grouped: m[0].indexOf(',') !== -1
+    };
+  }
+
+  function writeFigure(el, f, v) {
+    var body = f.decimals ? v.toFixed(f.decimals)
+      : f.grouped ? Math.round(v).toLocaleString('en-US')
+      : String(Math.round(v));
+    el.textContent = f.before + body + f.after;
+  }
+
+  // Tiles in a row arrive left to right rather than all at once.
+  function staggerOf(el) {
+    var tile = el.closest('.metric, .stat');
+    if (!tile || !tile.parentElement) return 0;
+    return Array.prototype.indexOf.call(tile.parentElement.children, tile) * 70;
+  }
+
+  // Reads st.target on every frame rather than capturing it, so a poll that
+  // lands mid-count steers the running tween to the new figure instead of
+  // letting it finish on a stale one and jump.
+  function tween(el, st, from, ms, delay) {
+    var token = {};
+    st.token = token;
+
+    // Backstop. requestAnimationFrame does not run at all in a hidden tab, and
+    // this page is routinely a background tab beside the one being recorded -
+    // so without this a count armed at zero stays at zero, and the tab's
+    // thumbnail, or a window brought forward mid-sentence, shows "0 players".
+    // Timers still fire in the background (throttled to about a second), so
+    // this lands the real figure shortly after the animation would have ended
+    // whether or not a single frame was ever drawn.
+    setTimeout(function () {
+      if (st.token !== token || st.shown === st.target.n) return;
+      st.token = null;
+      st.shown = st.target.n;
+      el.textContent = st.target.text;
+    }, delay + ms + 250);
+
+    setTimeout(function () {
+      if (st.token !== token) return;
+      var start = 0;
+      requestAnimationFrame(function step(now) {
+        if (st.token !== token) return;
+        if (!start) start = now;
+        var t = Math.min(1, (now - start) / ms);
+        var f = st.target;
+        st.shown = from + (f.n - from) * (1 - Math.pow(1 - t, 3));
+        if (t < 1) {
+          writeFigure(el, f, st.shown);
+          requestAnimationFrame(step);
+        } else {
+          st.shown = f.n;
+          el.textContent = f.text;
+        }
+      });
+    }, delay);
+  }
+
+  // The one way a figure reaches the page. First value: zeroed and held until
+  // seen, then counted up. Later values: a short tween from whatever is on
+  // screen, so a live figure changing mid-walkthrough visibly moves rather than
+  // silently swapping digits.
+  function setFigure(el, text) {
+    var f = MOTION ? parseFigure(text) : null;
+    var st = el.__fig;
+    if (!f) {
+      if (st) st.token = null;
+      el.textContent = text;
+      return;
+    }
+    f.text = text;
+
+    if (!st) {
+      st = el.__fig = { target: f, shown: 0, released: false, token: null };
+      // Nothing to count up from zero to zero.
+      if (f.n === 0) {
+        st.released = true;
+        el.textContent = text;
+        return;
+      }
+      writeFigure(el, f, 0);
+      onceInView(el, function () {
+        st.released = true;
+        tween(el, st, 0, COUNT_MS, staggerOf(el));
+      });
+      return;
+    }
+
+    st.target = f;
+    if (!st.released) {
+      writeFigure(el, f, 0);
+      return;
+    }
+    if (st.shown === f.n) {
+      el.textContent = text;
+      return;
+    }
+    tween(el, st, st.shown, 600, 0);
+  }
+
+  // A chart block: arm(host) zeroes whatever the builder just made and returns
+  // the function that lets it go. Re-armed on every rebuild until the block has
+  // been seen, so the release always animates the current nodes and never a
+  // set a poll has since thrown away; a no-op for good once it has run.
+  function revealOnce(host, arm) {
+    if (!MOTION || !host || host.__revealed) return;
+    host.__release = arm(host);
+    if (host.__watching) return;
+    host.__watching = true;
+    onceInView(host, function () {
+      host.__revealed = true;
+      var release = host.__release;
+      host.__release = null;
+      if (release) {
+        // One reflow, so the zeroed state is a computed style the transition
+        // can start from - a panel that was display:none a frame ago has none.
+        void host.offsetWidth;
+        release();
+      }
+    });
+  }
+
+  // Width, height or left, read off the inline style the builder wrote.
+  function growProp(selector, prop, stepMs) {
+    return function (host) {
+      var nodes = host.querySelectorAll(selector);
+      var vals = [];
+      for (var i = 0; i < nodes.length; i++) {
+        vals.push(nodes[i].style[prop]);
+        nodes[i].style.transition = 'none';
+        nodes[i].style[prop] = '0';
+      }
+      return function () {
+        for (var j = 0; j < nodes.length; j++) {
+          nodes[j].style.transition = prop + ' 0.7s ' + EASE + ' ' + (j * stepMs) + 'ms';
+          nodes[j].style[prop] = vals[j];
+        }
+      };
+    };
+  }
+
+  // SVG columns rise from their feet, swept left to right by their x - which
+  // is a percentage of the width, so the sweep takes the same time however
+  // many days are in the window.
+  function growRects(host) {
+    var rects = host.querySelectorAll('rect');
+    for (var i = 0; i < rects.length; i++) {
+      rects[i].style.transition = 'none';
+      rects[i].style.transform = 'scaleY(0)';
+    }
+    return function () {
+      for (var j = 0; j < rects.length; j++) {
+        var x = parseFloat(rects[j].getAttribute('x')) || 0;
+        rects[j].style.transition = 'transform 0.65s ' + EASE + ' ' + Math.round(x * 8) + 'ms';
+        rects[j].style.transform = '';
+      }
+    };
+  }
+
+  // A curve is uncovered from the left rather than grown, because scaling a
+  // filled polygon from its base changes its shape on the way up.
+  function wipeIn(host) {
+    var svg = host.querySelector('svg');
+    if (!svg) return null;
+    svg.style.transition = 'none';
+    svg.style.clipPath = 'inset(0 100% 0 0)';
+    return function () {
+      svg.style.transition = 'clip-path 1s ' + EASE;
+      svg.style.clipPath = 'inset(0 0 0 0)';
+    };
+  }
+
+  function riseRows(host) {
+    var rows = host.querySelectorAll('tbody tr');
+    for (var i = 0; i < rows.length; i++) {
+      rows[i].style.transition = 'none';
+      rows[i].style.opacity = '0';
+      rows[i].style.transform = 'translateY(4px)';
+    }
+    return function () {
+      for (var j = 0; j < rows.length; j++) {
+        rows[j].style.transition = 'opacity 0.4s ease ' + (j * 35) + 'ms, transform 0.4s ' + EASE + ' ' + (j * 35) + 'ms';
+        rows[j].style.opacity = '';
+        rows[j].style.transform = '';
+      }
+    };
+  }
+
+
   function get(obj, path) {
     return path.split('.').reduce(function (acc, key) {
       return acc === null || acc === undefined ? undefined : acc[key];
@@ -183,12 +452,6 @@
   function renderGroupServices(services) {
     document.querySelectorAll('[data-group-services]').forEach(function (host) {
       var group = host.getAttribute('data-group-services');
-      // Compact rows put the name and its note on one line. Used where the
-      // block sits beside the lede rather than under it, and the note is kept
-      // rather than dropped - it is the sentence somebody says out loud about
-      // that service, which is most of why the block is on a walkthrough
-      // screen at all.
-      var compact = host.hasAttribute('data-compact');
       host.textContent = '';
       services.filter(function (s) { return s.group === group; }).forEach(function (svc) {
         var row = document.createElement('div');
@@ -204,11 +467,7 @@
         name.className = 'svc-name';
         name.textContent = svc.name;
         text.appendChild(name);
-        if (compact) {
-          text.appendChild(document.createTextNode(' '));
-        } else {
-          text.appendChild(document.createElement('br'));
-        }
+        text.appendChild(document.createElement('br'));
         var note = document.createElement('span');
         note.className = 'svc-note';
         note.textContent = svc.note || '';
@@ -244,7 +503,7 @@
         el.setAttribute('data-pending', 'true');
         return;
       }
-      el.textContent = value;
+      setFigure(el, value);
       el.removeAttribute('data-pending');
     });
     return wentStale;
@@ -266,22 +525,19 @@
     return document.querySelector('[data-hub="' + name + '"]');
   }
 
-  function pct(value, digits) {
-    if (typeof value !== 'number' || !isFinite(value)) return null;
-    return (value * 100).toFixed(digits === undefined ? 1 : digits) + '%';
-  }
 
   // Sets a value that is not a plain count - a rate, a date, a composed
   // string - keeping the same pending contract the numbers use: null leaves
   // what is there and dims it rather than writing something false over it.
-  function setText(name, text) {
+  function setText(name, text, figure) {
     var el = target(name);
     if (!el) return;
     if (text === null || text === undefined) {
       el.setAttribute('data-pending', 'true');
       return;
     }
-    el.textContent = text;
+    if (figure) setFigure(el, text);
+    else el.textContent = text;
     el.removeAttribute('data-pending');
   }
 
@@ -803,16 +1059,6 @@
       return;
     }
 
-    setText('playRate', pct(w.playRate));
-    setText('signInRate', pct(w.signInRate));
-    setText('solveRate', pct(w.solveRate));
-
-    setText('largestLobby', w.largestLobby ? num(w.largestLobby.size) : null);
-    setText('largestLobby-note', w.largestLobby
-      ? w.largestLobby.mode + ' · ' + (shortDate(w.largestLobby.at) || 'unknown date') +
-        ' — a floor: bots excluded, and a player with no account yet is not counted'
-      : null);
-
     setText('peak24h-at', w.peak24h ? (clockTime(w.peak24h.at) || '') : null);
 
     // Part-to-whole: one bar, four slices of a single total.
@@ -944,6 +1190,18 @@
     });
 
     renderRecentGames(w.recentGames);
+
+    revealOnce(target('chart-daily'), growRects);
+    revealOnce(target('chart-games'), growRects);
+    revealOnce(target('seg-modes'), growProp('.seg-part', 'width', 110));
+    revealOnce(target('hist-elo'), growProp('.hist-bar', 'height', 70));
+    revealOnce(target('share-platform'), growProp('.share-fill', 'width', 90));
+    revealOnce(target('area-lobby'), wipeIn);
+    revealOnce(target('bars-guesses'), growProp('.bar-fill', 'width', 45));
+    revealOnce(target('dots-solvetime'), growProp('.dot-mark', 'left', 80));
+    revealOnce(target('bars-openers'), growProp('.bar-fill', 'width', 35));
+    revealOnce(target('bars-busiest'), growProp('.bar-fill', 'width', 35));
+    revealOnce(target('tbl-recent'), riseRows);
   }
 
   function renderRecentGames(rows) {
@@ -1045,6 +1303,20 @@
         setStamp('status unavailable');
       });
   }
+
+  // Each tile's place in its row, for the CSS entrance stagger.
+  document.querySelectorAll('.metrics, .stat-row, .bento').forEach(function (row) {
+    Array.prototype.forEach.call(row.children, function (tile, i) {
+      tile.style.setProperty('--i', i);
+    });
+  });
+
+  // Figures written straight into the markup - commit counts, MDS Pro's
+  // fifteen users - count up on first sight like the fetched ones. Anything
+  // that is not a number ("robots.txt", "Looker") is left exactly as written.
+  document.querySelectorAll('.metric-value:not([data-live])').forEach(function (el) {
+    setFigure(el, el.textContent);
+  });
 
   refresh();
   setInterval(function () {

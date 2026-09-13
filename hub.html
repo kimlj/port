@@ -393,33 +393,6 @@ body {
 .svc-row .svc-note { color: var(--text-dim); font-size: 11.5px; }
 .svc-row .lat { margin-left: auto; }
 
-/* Lede on the left, service status on the right, one row.
-
-   The status belongs beside the sentence that introduces the project rather
-   than in a card of its own further down: it is the first thing anybody asks
-   on a walkthrough ("is it up right now?"), and on a panel this long a card
-   answering it near the bottom is a card nobody reaches. Putting it here also
-   buys back the vertical space a full-width card was spending on two rows.
-
-   auto rather than a fraction, so the column is exactly as wide as the longest
-   service line and the lede takes everything else - a fixed fraction would
-   either crop "game server, Socket.IO + SQLite" or leave a gap beside it. */
-.lede-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 16px 28px;
-  align-items: start;
-}
-.svc-compact { min-width: 0; }
-.svc-compact .svc-list { gap: 6px; }
-.svc-compact .svc-row { font-size: 12px; gap: 8px; }
-.svc-compact .svc-note { margin-left: 2px; }
-/* The latency column would otherwise sit hard against the note, since there is
-   no longer a second line pushing it away. */
-.svc-compact .lat { padding-left: 14px; }
-.svc-compact .links { margin-top: 8px; }
-.svc-compact .links a { font-size: 12px; }
-
 .links { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 12px; }
 .links a { color: var(--accent); font-size: 13px; text-decoration: none; border-bottom: 1px solid transparent; }
 .links a:hover { border-bottom-color: var(--accent); }
@@ -437,8 +410,9 @@ body {
   .panel[data-active="true"] { display: grid; }
   .cols { grid-template-columns: 1fr; }
   .cols-3 { grid-template-columns: 1fr; }
-  .lede-row { grid-template-columns: 1fr; }
-  .svc-compact { order: -1; }
+  .bento { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .bento .stat[data-span="hero"] { grid-row: span 1; }
+  .bento .stat[data-span="hero"] .stat-value { font-size: 40px; }
   .bar-row { grid-template-columns: minmax(0, 9em) 1fr auto; }
   .hist-label { font-size: 8px; }
   .panel-title { font-size: 28px; }
@@ -650,6 +624,34 @@ body {
 .tbl .t-winner { color: var(--text); }
 .tbl .t-none { color: var(--text-dim); }
 
+/* ── bento ─────────────────────────────────────────────────────────────
+
+   Six columns, two rows, twelve cells: the hero takes four, the two wide
+   tiles two each, four singles one each. Explicit spans rather than
+   grid-auto-flow: dense, because dense packing reorders tiles to fill holes -
+   and the order here is the reading order, live figures first. */
+.bento {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-auto-rows: minmax(92px, auto);
+  gap: 10px;
+}
+.bento .stat { display: flex; flex-direction: column; }
+.bento .stat-note { margin-top: auto; padding-top: 6px; }
+.bento .stat[data-span="wide"] { grid-column: span 2; }
+.bento .stat[data-span="hero"] {
+  grid-column: span 2;
+  grid-row: span 2;
+  padding: 16px 18px;
+  background: color-mix(in srgb, var(--tone, var(--accent)) 7%, var(--bg-card));
+  border-color: color-mix(in srgb, var(--tone, var(--accent)) 30%, var(--border));
+}
+.bento .stat[data-span="hero"] .stat-value { font-size: 52px; line-height: 1; letter-spacing: -0.03em; }
+.bento .stat[data-span="hero"] .stat-label { font-size: 14px; margin-top: 8px; }
+.bento .stat[data-span="hero"] .stat-note { font-size: 12px; }
+.bento .stat[data-span="hero"] .tile-ico { width: 34px; height: 34px; top: 14px; right: 14px; }
+.bento .stat[data-span="hero"] .tile-ico svg { width: 18px; height: 18px; }
+
 /* ── the other mark types ──────────────────────────────────────────────
 
    A bar list answers "which is biggest". These answer the other questions the
@@ -790,9 +792,104 @@ body {
 .share-fill { display: block; height: 100%; border-radius: 4px; background: var(--series-3); }
 .share-pct { color: var(--text-dim); text-align: right; font-variant-numeric: tabular-nums; }
 
-/* Services lost the prose card beside it, so it lays its two rows out side by
-   side rather than stacking them down a full-width card. */
-.card-wide .svc-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
+
+/* ── tile dressing ─────────────────────────────────────────────────────
+
+   Every piece here is absolutely positioned or a pseudo-element, so none of
+   it adds a pixel of height. That matters beyond tidiness: four of the five
+   panels are held under the fold of a 1366x768 laptop, and a decoration that
+   grew a tile would quietly break that for a panel nobody edited. */
+
+.metric[data-series="1"], .stat[data-series="1"] { --tone: var(--series-1); }
+.metric[data-series="2"], .stat[data-series="2"] { --tone: var(--series-2); }
+.metric[data-series="3"], .stat[data-series="3"] { --tone: var(--series-3); }
+.metric[data-series="4"], .stat[data-series="4"] { --tone: var(--series-4); }
+
+.metric, .stat {
+  position: relative;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.25s ease;
+}
+.metric:hover, .stat:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--tone, var(--accent)) 45%, var(--border));
+}
+
+.tile-ico {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 30px;
+  height: 30px;
+}
+.tile-ico {
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  color: var(--tone, var(--accent));
+  background: color-mix(in srgb, var(--tone, var(--accent)) 13%, transparent);
+}
+.tile-ico svg, .head-link svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.tile-ico svg { width: 16px; height: 16px; }
+.stat .tile-ico { top: 9px; right: 9px; width: 26px; height: 26px; }
+.stat .tile-ico svg { width: 14px; height: 14px; }
+
+
+/* The two outbound links, in the title row. They used to sit under a services
+   list that repeated the status strip in the header word for word. */
+/* Baseline-aligned like the badge beside it. Centering these in a row that
+   aligns on the text baseline lifted them a few pixels above "Live on iOS".
+   Inside the pill only the label takes part in baseline alignment - an svg has
+   no baseline, and as the first item it would make the pill's bottom edge the
+   baseline instead. */
+.head-link {
+  align-self: baseline;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 3px 10px 3px 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-muted);
+  font-size: 12px;
+  text-decoration: none;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.head-link svg { width: 13px; height: 13px; align-self: center; }
+.head-link .arr { width: 10px; height: 10px; opacity: 0.55; }
+.head-link:hover { color: var(--accent); border-color: rgba(200, 255, 0, 0.35); background: var(--accent-dim); }
+.dsec-head .dot { align-self: center; }
+
+/* Bars grow from their own foot. fill-box, because an SVG rect's default
+   transform origin is the viewport's corner and every bar would swing in from
+   the top-left. */
+.chart rect { transform-box: fill-box; transform-origin: 50% 100%; }
+
+/* Arriving on a panel. `backwards`, not `both`: a finished animation left
+   holding transform:none would out-rank the hover lift above for the life of
+   the page, and the tiles would stop responding to the pointer. */
+@keyframes tile-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+.panel[data-active="true"] .panel-head,
+.panel[data-active="true"] .panel-sub {
+  animation: tile-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+.panel[data-active="true"] .metric {
+  animation: tile-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: calc(80ms + var(--i, 0) * 60ms);
+}
+.panel[data-active="true"] .stat-row .stat,
+.panel[data-active="true"] .bento .stat {
+  animation: tile-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: calc(260ms + var(--i, 0) * 50ms);
+}
 
 /* ── the operator half ──────────────────────────────────────────────────
 
@@ -808,17 +905,9 @@ body {
 
 /* ── the panel that scrolls ─────────────────────────────────────────────
 
-   Stated rather than discovered. Every other panel fits the fold, so a reader
-   who has learned that rule needs telling that this one does not - otherwise
-   the bottom edge reads as the end of the content. */
-.scroll-note {
-  font-family: var(--mono);
-  font-size: 10.5px;
-  color: var(--text-dim);
-  letter-spacing: 0.04em;
-}
-
-/* And a fade at the live edge, so there is a second signal that is not words.
+   Every other panel fits the fold, so a reader who has learned that rule
+   needs a signal that this one does not - otherwise the bottom edge reads as
+   the end of the content. A fade at the live edge carries it.
    Pinned to the panel rather than the content so it does not travel up as the
    reader scrolls - and off once they reach the end, which the script flags. */
 .panel[data-scrolls="true"]::after {
@@ -878,7 +967,9 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .dot[data-state="up"]::after { animation: none; }
-  * { transition: none !important; }
+  /* The final state, not a faster animation: tiles arrive where they end, and
+     hub.js writes figures and bars at their values without counting. */
+  * { transition: none !important; animation: none !important; }
 }
 </style>
 </head>
@@ -1015,136 +1106,99 @@ body {
       <div class="panel-head">
         <h1 class="panel-title">WordWarz.io</h1>
         <span class="badge" data-tone="live">Live on iOS</span>
-        <span class="scroll-note">the one panel that scrolls</span>
+        <a class="head-link" href="https://wordwarz.io" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><span>wordwarz.io</span><svg class="arr" viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
+        <a class="head-link" href="https://dashboard.wordwarz.io" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg><span>dashboard</span><svg class="arr" viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
       </div>
-      <div class="lede-row">
-        <p class="panel-sub">Real-time multiplayer word battle. Up to eleven people in a room, five ELO tiers, an entropy-driven bot that fills a lobby rather than leaving someone waiting.</p>
-        <div class="svc-compact">
-          <div class="svc-list" data-group-services="WordWarz" data-compact="true"></div>
-          <div class="links">
-            <a href="https://wordwarz.io" target="_blank" rel="noopener">wordwarz.io</a>
-            <a href="https://dashboard.wordwarz.io" target="_blank" rel="noopener">dashboard</a>
-          </div>
-        </div>
-      </div>
+      <p class="panel-sub">Real-time multiplayer word battle. Up to eleven people in a room, five ELO tiers, an entropy-driven bot that fills a lobby rather than leaving someone waiting.</p>
 
       <div class="metrics">
         <div class="metric" data-series="1">
+          <span class="tile-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8"/><path d="M18 14.2c2.1.6 3.5 2.8 3.5 5.8"/></svg></span>
           <span class="metric-value" data-live="wordwarz.playersLifetime" data-pending="true">—</span>
           <span class="metric-label">Players, lifetime</span>
-          <span class="metric-note">real accounts, bots and the simulated roster excluded</span>
+          <span class="metric-note">real accounts, bots excluded</span>
         </div>
         <div class="metric" data-series="3">
+          <span class="tile-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></span>
           <span class="metric-value" data-live="wordwarz.playersToday" data-pending="true">—</span>
           <span class="metric-label">Active today</span>
           <span class="metric-note">devices seen in the last 24 hours</span>
         </div>
         <div class="metric" data-series="4">
+          <span class="tile-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2" y="8" width="6" height="8" rx="1"/><rect x="9" y="8" width="6" height="8" rx="1"/><rect x="16" y="8" width="6" height="8" rx="1"/></svg></span>
           <span class="metric-value" data-live="wordwarz.games" data-pending="true">—</span>
           <span class="metric-label">Games played</span>
           <span class="metric-note">counted, not sampled</span>
         </div>
         <div class="metric" data-series="1">
+          <span class="tile-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M17 2l3 3-3 3"/><path d="M4 11V9a4 4 0 0 1 4-4h12"/><path d="M7 22l-3-3 3-3"/><path d="M20 13v2a4 4 0 0 1-4 4H4"/></svg></span>
           <span class="metric-value" data-live="wordwarz.rounds" data-pending="true">—</span>
           <span class="metric-label">Rounds</span>
           <span class="metric-note">a game is several rounds</span>
         </div>
         <div class="metric" data-series="2">
+          <span class="tile-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.5"/><path d="M2 12h6.5M15.5 12H22"/></svg></span>
           <span class="metric-value">1,334</span>
           <span class="metric-label">Commits</span>
           <span class="metric-note">Dec 2025 to 13 Sep 2026</span>
         </div>
       </div>
 
-      <!-- Live. The only figures on this page that are true for one second at
-           a time, which is why they say how often they are taken. -->
+      <!-- Live and audience, as one bento.
+
+           Online now is the large tile because it is the page's heartbeat: the
+           one figure true for a single second at a time, and the first thing
+           asked on a walkthrough. The caveats both old sections carried are
+           kept in the one caption - "a device is one install" has to be on
+           screen whenever a device count is. -->
       <div class="dsec">
         <div class="dsec-head">
-          <h3>Live</h3>
-          <span class="dsec-note">polled every 30s</span>
+          <h3>Right now</h3>
+          <span class="dot" data-group-dot="WordWarz" aria-hidden="true"></span>
+          <span class="dsec-note">live figures polled every 30s · a device is one install of one browser profile</span>
         </div>
-        <div class="stat-row">
-          <div class="stat" data-series="2">
+        <div class="bento">
+          <div class="stat" data-span="hero" data-series="2">
+            <span class="tile-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 15.5a5 5 0 0 0 0-7M5.6 5.6a9 9 0 0 0 0 12.8M18.4 18.4a9 9 0 0 0 0-12.8"/></svg></span>
             <span class="stat-value" data-live="wordwarz.live.online" data-pending="true">—</span>
             <span class="stat-label">Online now</span>
             <span class="stat-note"><span data-live="wordwarz.live.inRoom" data-pending="true">—</span> in a room · <span data-live="wordwarz.live.browsing" data-pending="true">—</span> browsing</span>
           </div>
-          <div class="stat" data-series="1">
+          <div class="stat" data-span="wide" data-series="1">
+            <span class="tile-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></span>
             <span class="stat-value" data-live="wordwarz.peak24h.peak" data-pending="true">—</span>
             <span class="stat-label">Peak concurrent (24h)</span>
             <span class="stat-note" data-hub="peak24h-at">—</span>
           </div>
+          <div class="stat" data-span="wide" data-series="2">
+            <span class="tile-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></span>
+            <span class="stat-value" data-live="wordwarz.playersReturning" data-pending="true">—</span>
+            <span class="stat-label">Returning devices</span>
+            <span class="stat-note">came back on a later day than they arrived</span>
+          </div>
           <div class="stat" data-series="3">
+            <span class="tile-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 2v6M15 2v6"/><path d="M6 8h12v3a6 6 0 0 1-12 0z"/><path d="M12 17v5"/></svg></span>
             <span class="stat-value" data-live="wordwarz.live.connected" data-pending="true">—</span>
             <span class="stat-label">Sockets connected</span>
             <span class="stat-note">a socket is a tab, not a person</span>
           </div>
           <div class="stat" data-series="4">
+            <span class="tile-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5"/><path d="M9 2h6"/></svg></span>
             <span class="stat-value" data-live="wordwarz.live.matchesInProgress" data-pending="true">—</span>
             <span class="stat-label">Matches in progress</span>
             <span class="stat-note">mid-round, including the gaps between rounds</span>
           </div>
-        </div>
-      </div>
-
-      <!-- Audience. Devices, not people - said here once so the six figures
-           below do not each have to repeat it. -->
-      <div class="dsec">
-        <div class="dsec-head">
-          <h3>Audience</h3>
-          <span class="dsec-note">who is actually here — a device is one install of one browser profile</span>
-        </div>
-        <div class="stat-row">
-          <div class="stat" data-series="2">
-            <span class="stat-value" data-live="wordwarz.playersReturning" data-pending="true">—</span>
-            <span class="stat-label">Returning devices</span>
-            <span class="stat-note">came back on a later day than they arrived</span>
-          </div>
           <div class="stat" data-series="4">
+            <span class="tile-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg></span>
             <span class="stat-value" data-live="wordwarz.playersWeek" data-pending="true">—</span>
             <span class="stat-label">Active this week</span>
             <span class="stat-note">seen in 7d</span>
           </div>
           <div class="stat" data-series="1">
+            <span class="tile-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18M7 14h4M13 17h4"/></svg></span>
             <span class="stat-value" data-live="wordwarz.playersMonth" data-pending="true">—</span>
             <span class="stat-label">Active this month</span>
             <span class="stat-note">seen in 30d</span>
-          </div>
-          <div class="stat" data-series="3">
-            <span class="stat-value" data-live="wordwarz.playersSignedIn" data-pending="true">—</span>
-            <span class="stat-label">Signed in</span>
-            <span class="stat-note">Apple, Google or Discord — the rest lose stats on reinstall</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Conversion. Both rates carry their own numerator and denominator,
-           because a percentage on its own hides which of the two moved. -->
-      <div class="dsec">
-        <div class="dsec-head">
-          <h3>Conversion</h3>
-          <span class="dsec-note">how far people get</span>
-        </div>
-        <div class="stat-row">
-          <div class="stat" data-series="2">
-            <span class="stat-value" data-hub="playRate">—</span>
-            <span class="stat-label">Play rate</span>
-            <span class="stat-note"><span data-live="wordwarz.playersLifetime" data-pending="true">—</span> of <span data-live="wordwarz.devicesTotal" data-pending="true">—</span> devices — a device is one install, so the denominator is an upper bound</span>
-          </div>
-          <div class="stat" data-series="4">
-            <span class="stat-value" data-hub="signInRate">—</span>
-            <span class="stat-label">Sign-in rate</span>
-            <span class="stat-note"><span data-live="wordwarz.playersSignedIn" data-pending="true">—</span> of <span data-live="wordwarz.playersLifetime" data-pending="true">—</span> — the rest lose stats on reinstall</span>
-          </div>
-          <div class="stat" data-series="3" data-operator="true">
-            <span class="stat-value" data-hub="solveRate">—</span>
-            <span class="stat-label">Solve rate</span>
-            <span class="stat-note"><span data-live="wordwarz.solves" data-pending="true">—</span> of <span data-live="wordwarz.attempts" data-pending="true">—</span> attempts — player-rounds, not rounds</span>
-          </div>
-          <div class="stat" data-series="1" data-operator="true">
-            <span class="stat-value" data-hub="largestLobby">—</span>
-            <span class="stat-label">Largest lobby (humans)</span>
-            <span class="stat-note" data-hub="largestLobby-note">a floor, not an exact count — see the note</span>
           </div>
         </div>
       </div>
@@ -1177,7 +1231,7 @@ body {
         <div class="dsec">
           <div class="dsec-head">
             <h3>Ranked ELO</h3>
-            <span class="dsec-note">classic — rated accounts, simulated excluded</span>
+            <span class="dsec-note">classic — rated accounts</span>
           </div>
           <div class="histogram" data-hub="hist-elo"></div>
           <p class="dsec-foot" data-hub="elo-unrated">—</p>
@@ -1317,7 +1371,7 @@ body {
 
       <div class="metrics">
         <div class="metric" data-series="1">
-          <span class="metric-value">228</span>
+          <span class="metric-value">229</span>
           <span class="metric-label">Commits</span>
           <span class="metric-note">Feb 2026 to 13 Sep 2026</span>
         </div>
