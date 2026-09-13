@@ -949,6 +949,31 @@ body {
   transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
 .panel[data-view="demo"] .panel-toggle { display: inline-flex; }
+
+/* What the stage is, said once, in the title line. It used to be a pill inside
+   the dashboard frame, which put the claim on top of the product being shown
+   and at a different size from everything around it. The framed dashboard now
+   hides its own copy when it is told it is embedded here (`embed=hub` on its
+   src), and opened on its own it still shows one - a recording of the bare
+   dashboard carries the claim without this page around it.
+
+   Its own dot class, not `.dot`: that one is the status dot, with a state
+   animation keyed on data-state, and a shared class name is a trap this repo
+   has already sprung once. */
+.demo-pill {
+  align-self: baseline;
+  display: none;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-muted);
+  font-size: 11.5px;
+}
+.panel[data-view="demo"] .demo-pill { display: inline-flex; }
+.demo-pill-dot { flex: 0 0 auto; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+.demo-pill strong { color: var(--accent); font-weight: 600; font-size: 10.5px; letter-spacing: 0.07em; text-transform: uppercase; }
 .panel-toggle svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .panel-toggle:hover { color: var(--text); border-color: rgba(200, 255, 0, 0.35); }
 .panel-toggle[aria-pressed="true"] { color: var(--accent); border-color: rgba(200, 255, 0, 0.35); background: var(--accent-dim); }
@@ -1186,6 +1211,7 @@ body {
              Pressed = the panel is showing, so the button reads as a thing
              that is currently on rather than as an action. -->
         <button class="panel-toggle" type="button" data-panel-toggle aria-pressed="true" title="Minimise the nurse side panel"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M15 4v16"/></svg><span>Side panel</span></button>
+        <span class="demo-pill"><span class="demo-pill-dot"></span><strong>Demo data</strong>invented nurses, hours and pay</span>
         <a class="head-link head-link-icon" href="https://dashboard.mdsprosolutions.com/?demo=1" target="_blank" rel="noopener" title="Open the demo in its own tab" aria-label="Open the demo in its own tab"><svg class="arr" viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
       </div>
 
@@ -1258,7 +1284,7 @@ body {
                throw, which kills the script before demo mode can start. -->
           <div class="demo-stage">
             <iframe title="MDS Pro dashboard, demo mode"
-                    data-src="https://dashboard.mdsprosolutions.com/?demo=1"
+                    data-src="https://dashboard.mdsprosolutions.com/?demo=1&amp;embed=hub"
                     sandbox="allow-scripts allow-same-origin allow-popups"
                     referrerpolicy="no-referrer"></iframe>
             <!-- The nurse's side panel, the same popup.html the extension ships,
