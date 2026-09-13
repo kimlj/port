@@ -393,6 +393,33 @@ body {
 .svc-row .svc-note { color: var(--text-dim); font-size: 11.5px; }
 .svc-row .lat { margin-left: auto; }
 
+/* Lede on the left, service status on the right, one row.
+
+   The status belongs beside the sentence that introduces the project rather
+   than in a card of its own further down: it is the first thing anybody asks
+   on a walkthrough ("is it up right now?"), and on a panel this long a card
+   answering it near the bottom is a card nobody reaches. Putting it here also
+   buys back the vertical space a full-width card was spending on two rows.
+
+   auto rather than a fraction, so the column is exactly as wide as the longest
+   service line and the lede takes everything else - a fixed fraction would
+   either crop "game server, Socket.IO + SQLite" or leave a gap beside it. */
+.lede-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px 28px;
+  align-items: start;
+}
+.svc-compact { min-width: 0; }
+.svc-compact .svc-list { gap: 6px; }
+.svc-compact .svc-row { font-size: 12px; gap: 8px; }
+.svc-compact .svc-note { margin-left: 2px; }
+/* The latency column would otherwise sit hard against the note, since there is
+   no longer a second line pushing it away. */
+.svc-compact .lat { padding-left: 14px; }
+.svc-compact .links { margin-top: 8px; }
+.svc-compact .links a { font-size: 12px; }
+
 .links { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 12px; }
 .links a { color: var(--accent); font-size: 13px; text-decoration: none; border-bottom: 1px solid transparent; }
 .links a:hover { border-bottom-color: var(--accent); }
@@ -410,6 +437,8 @@ body {
   .panel[data-active="true"] { display: grid; }
   .cols { grid-template-columns: 1fr; }
   .cols-3 { grid-template-columns: 1fr; }
+  .lede-row { grid-template-columns: 1fr; }
+  .svc-compact { order: -1; }
   .bar-row { grid-template-columns: minmax(0, 9em) 1fr auto; }
   .hist-label { font-size: 8px; }
   .panel-title { font-size: 28px; }
@@ -988,7 +1017,16 @@ body {
         <span class="badge" data-tone="live">Live on iOS</span>
         <span class="scroll-note">the one panel that scrolls</span>
       </div>
-      <p class="panel-sub">Real-time multiplayer word battle. Up to eleven people in a room, five ELO tiers, an entropy-driven bot that fills a lobby rather than leaving someone waiting.</p>
+      <div class="lede-row">
+        <p class="panel-sub">Real-time multiplayer word battle. Up to eleven people in a room, five ELO tiers, an entropy-driven bot that fills a lobby rather than leaving someone waiting.</p>
+        <div class="svc-compact">
+          <div class="svc-list" data-group-services="WordWarz" data-compact="true"></div>
+          <div class="links">
+            <a href="https://wordwarz.io" target="_blank" rel="noopener">wordwarz.io</a>
+            <a href="https://dashboard.wordwarz.io" target="_blank" rel="noopener">dashboard</a>
+          </div>
+        </div>
+      </div>
 
       <div class="metrics">
         <div class="metric" data-series="1">
@@ -1006,19 +1044,15 @@ body {
           <span class="metric-label">Games played</span>
           <span class="metric-note">counted, not sampled</span>
         </div>
+        <div class="metric" data-series="1">
+          <span class="metric-value" data-live="wordwarz.rounds" data-pending="true">—</span>
+          <span class="metric-label">Rounds</span>
+          <span class="metric-note">a game is several rounds</span>
+        </div>
         <div class="metric" data-series="2">
           <span class="metric-value">1,334</span>
           <span class="metric-label">Commits</span>
           <span class="metric-note">Dec 2025 to 13 Sep 2026</span>
-        </div>
-      </div>
-
-      <div class="card card-wide">
-        <h3>Services</h3>
-        <div class="svc-list" data-group-services="WordWarz"></div>
-        <div class="links">
-          <a href="https://wordwarz.io" target="_blank" rel="noopener">wordwarz.io</a>
-          <a href="https://dashboard.wordwarz.io" target="_blank" rel="noopener">dashboard</a>
         </div>
       </div>
 
@@ -1061,20 +1095,10 @@ body {
           <span class="dsec-note">who is actually here — a device is one install of one browser profile</span>
         </div>
         <div class="stat-row">
-          <div class="stat" data-series="1">
-            <span class="stat-value" data-live="wordwarz.playersLifetime" data-pending="true">—</span>
-            <span class="stat-label">Players who played</span>
-            <span class="stat-note"><span data-live="wordwarz.playersSignedIn" data-pending="true">—</span> signed in with Apple, Google or Discord</span>
-          </div>
           <div class="stat" data-series="2">
             <span class="stat-value" data-live="wordwarz.playersReturning" data-pending="true">—</span>
             <span class="stat-label">Returning devices</span>
             <span class="stat-note">came back on a later day than they arrived</span>
-          </div>
-          <div class="stat" data-series="3">
-            <span class="stat-value" data-live="wordwarz.playersToday" data-pending="true">—</span>
-            <span class="stat-label">Active today</span>
-            <span class="stat-note">seen in 24h</span>
           </div>
           <div class="stat" data-series="4">
             <span class="stat-value" data-live="wordwarz.playersWeek" data-pending="true">—</span>
@@ -1085,6 +1109,11 @@ body {
             <span class="stat-value" data-live="wordwarz.playersMonth" data-pending="true">—</span>
             <span class="stat-label">Active this month</span>
             <span class="stat-note">seen in 30d</span>
+          </div>
+          <div class="stat" data-series="3">
+            <span class="stat-value" data-live="wordwarz.playersSignedIn" data-pending="true">—</span>
+            <span class="stat-label">Signed in</span>
+            <span class="stat-note">Apple, Google or Discord — the rest lose stats on reinstall</span>
           </div>
         </div>
       </div>
@@ -1100,7 +1129,7 @@ body {
           <div class="stat" data-series="2">
             <span class="stat-value" data-hub="playRate">—</span>
             <span class="stat-label">Play rate</span>
-            <span class="stat-note"><span data-live="wordwarz.playersLifetime" data-pending="true">—</span> of <span data-live="wordwarz.devicesTotal" data-pending="true">—</span> devices reached a game</span>
+            <span class="stat-note"><span data-live="wordwarz.playersLifetime" data-pending="true">—</span> of <span data-live="wordwarz.devicesTotal" data-pending="true">—</span> devices — a device is one install, so the denominator is an upper bound</span>
           </div>
           <div class="stat" data-series="4">
             <span class="stat-value" data-hub="signInRate">—</span>
@@ -1120,41 +1149,6 @@ body {
         </div>
       </div>
 
-      <!-- The two inflated counts, kept because they are the denominators
-           above rather than because they flatter anything. -->
-      <div class="dsec">
-        <div class="dsec-head">
-          <h3>Raw counts</h3>
-          <span class="dsec-note">upper bounds — kept for continuity, not for decisions</span>
-        </div>
-        <div class="stat-row">
-          <div class="stat" data-series="1">
-            <span class="stat-value" data-live="wordwarz.devicesTotal" data-pending="true">—</span>
-            <span class="stat-label">Devices</span>
-            <span class="stat-note">browser storage, not people — one person clearing a cache is two</span>
-          </div>
-          <div class="stat" data-series="2">
-            <span class="stat-value" data-live="wordwarz.displayNames" data-pending="true">—</span>
-            <span class="stat-label">Display names</span>
-            <span class="stat-note">names that were used, not people who used them</span>
-          </div>
-          <div class="stat" data-series="4">
-            <span class="stat-value" data-live="wordwarz.rounds" data-pending="true">—</span>
-            <span class="stat-label">Rounds</span>
-            <span class="stat-note">a game is several rounds</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="dsec">
-        <div class="dsec-head">
-          <h3>Concurrent players — peak per hour</h3>
-          <span class="dsec-note">last 24 hours</span>
-        </div>
-        <div class="chart" data-hub="chart-ccu"></div>
-        <p class="dsec-foot">Gaps are missing samples, which almost always means the server was down. They are not drawn as zero, because zero would say it was up and empty. Coverage is a weak uptime proxy at best: a server that is down cannot record its own downtime.</p>
-      </div>
-
       <div class="dsec">
         <div class="dsec-head">
           <h3>New vs returning players — per day</h3>
@@ -1169,7 +1163,7 @@ body {
           <h3>Games per day</h3>
           <span class="dsec-note">last 30 days, from the games table — not sampled</span>
         </div>
-        <div class="chart" data-hub="area-games"></div>
+        <div class="chart" data-hub="chart-games"></div>
       </div>
 
       <div class="cols cols-3">
@@ -1323,7 +1317,7 @@ body {
 
       <div class="metrics">
         <div class="metric" data-series="1">
-          <span class="metric-value">227</span>
+          <span class="metric-value">228</span>
           <span class="metric-label">Commits</span>
           <span class="metric-note">Feb 2026 to 13 Sep 2026</span>
         </div>

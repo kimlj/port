@@ -183,6 +183,12 @@
   function renderGroupServices(services) {
     document.querySelectorAll('[data-group-services]').forEach(function (host) {
       var group = host.getAttribute('data-group-services');
+      // Compact rows put the name and its note on one line. Used where the
+      // block sits beside the lede rather than under it, and the note is kept
+      // rather than dropped - it is the sentence somebody says out loud about
+      // that service, which is most of why the block is on a walkthrough
+      // screen at all.
+      var compact = host.hasAttribute('data-compact');
       host.textContent = '';
       services.filter(function (s) { return s.group === group; }).forEach(function (svc) {
         var row = document.createElement('div');
@@ -198,7 +204,11 @@
         name.className = 'svc-name';
         name.textContent = svc.name;
         text.appendChild(name);
-        text.appendChild(document.createElement('br'));
+        if (compact) {
+          text.appendChild(document.createTextNode(' '));
+        } else {
+          text.appendChild(document.createElement('br'));
+        }
         var note = document.createElement('span');
         note.className = 'svc-note';
         note.textContent = svc.note || '';
@@ -889,18 +899,7 @@
       return { label: shortDate(d.day) || d.day, value: d.games, display: num(d.games) };
     }), { series: 2 });
 
-    var HOUR = 3600000;
     var DAY = 86400000;
-
-    renderChart('chart-ccu', w.ccu, [{ key: 'peak', color: 'var(--series-2)' }], {
-      label: 'Peak concurrent players per hour over the last 24 hours',
-      stepMs: HOUR,
-      timeOf: function (p) { return p.at; },
-      labelAt: function (p) { return clockTime(p.at) || ''; },
-      // The distinction the footnote under this chart is about. No samples at
-      // all is the sampler not having run, which is not a fact about players.
-      emptyText: 'no samples — the sampler records room state from memory and cannot backfill'
-    });
 
     renderChart('chart-daily', w.dailyPlayers, [
       { key: 'newPlayers', color: 'var(--series-1)' },
@@ -915,14 +914,15 @@
       labelAt: function (p) { return shortDate(p.day) || ''; }
     });
 
-    // An area rather than columns: this is a continuous volume over contiguous
-    // days and the shape is what is being read, which also keeps it from being
-    // a third bar chart in a row.
+    // Columns, not a curve. Thirty discrete daily counts are thirty things that
+    // either happened or did not, and an area drawn through them implies a
+    // continuous quantity that was sampled - which invites reading a value off
+    // the slope between two days, where there is nothing to read.
     //
-    // The window is filled in, so a day with no games draws as zero. Safe here
-    // and NOT safe on the concurrency chart above: the games table always
-    // exists, so a missing day really did have no games, whereas a missing
-    // concurrency sample means nobody was measuring.
+    // The window is filled in, so a day with no games draws as a measured zero
+    // rather than as a gap. That is true HERE and would not be on a sampled
+    // series: the games table always exists, so a day with no row really did
+    // have no games.
     var byDay = {};
     (w.gamesPerDay || []).forEach(function (d) { byDay[d.day] = d.games; });
     var days = Object.keys(byDay).sort();
@@ -932,13 +932,15 @@
       var end = Date.parse(days[days.length - 1] + 'T00:00:00Z');
       while (cursor <= end) {
         var key = new Date(cursor).toISOString().slice(0, 10);
-        gamePoints.push({ label: shortDate(key) || key, value: byDay[key] || 0 });
+        gamePoints.push({ day: key, games: byDay[key] || 0 });
         cursor += DAY;
       }
     }
-    renderArea('area-games', gamePoints, {
+    renderChart('chart-games', gamePoints, [{ key: 'games', color: 'var(--series-4)' }], {
       label: 'Games per day over the last 30 days',
-      color: 'var(--series-4)', fill: 'var(--series-4)'
+      stepMs: DAY,
+      timeOf: function (p) { return p.day; },
+      labelAt: function (p) { return shortDate(p.day) || ''; }
     });
 
     renderRecentGames(w.recentGames);
