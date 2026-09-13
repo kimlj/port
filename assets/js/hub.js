@@ -127,8 +127,10 @@
     if (!panel) return;
     var buttons = panel.querySelectorAll('.view-btn');
     var views = panel.querySelectorAll('.view');
-    var frame = panel.querySelector('.demo-frame iframe');
-    if (!buttons.length || !frame) return;
+    // Every frame in the demo, not one: the stage carries the dashboard and the
+    // nurse side panel side by side.
+    var frames = panel.querySelectorAll('.demo-frame iframe');
+    if (!buttons.length || !frames.length) return;
 
     function show(view) {
       Array.prototype.forEach.call(buttons, function (b) {
@@ -138,8 +140,10 @@
         v.hidden = v.getAttribute('data-view') !== view;
       });
       panel.setAttribute('data-view', view);
-      if (view === 'demo' && !frame.getAttribute('src')) {
-        frame.setAttribute('src', frame.getAttribute('data-src'));
+      if (view === 'demo') {
+        Array.prototype.forEach.call(frames, function (f) {
+          if (!f.getAttribute('src')) f.setAttribute('src', f.getAttribute('data-src'));
+        });
       }
     }
 
