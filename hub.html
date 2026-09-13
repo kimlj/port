@@ -896,7 +896,10 @@ body {
 /* ── MDS Pro: overview / live demo ────────────────────────────────────── */
 
 .view-switch {
-  align-self: center;
+  /* Baseline, not centre: the switch reads as a third item on the title line
+     beside the badge, and centring it against a 38px serif line box floated it
+     off that line. Same `align-self` the head link already takes. */
+  align-self: baseline;
   display: inline-flex;
   padding: 3px;
   border: 1px solid var(--border);
@@ -927,11 +930,32 @@ body {
    too without a second rule to keep in step. */
 .view[data-view="about"] { display: grid; gap: inherit; grid-auto-rows: min-content; }
 
+/* ...but a `display` on a class beats the UA sheet's `[hidden] { display: none }`,
+   so the hidden overview kept painting under the demo. The reset has to come
+   after the rule it is undoing, and be at least as specific. */
+.view[hidden] { display: none; }
+
 /* The demo fills whatever height the panel has, and the panel stops scrolling
    while it does - a scrollbar around a scrollable app is two scrollbars. */
 .panel[data-view="demo"] { grid-template-rows: auto minmax(0, 1fr); overflow: hidden; }
 .view[data-view="demo"] { min-height: 0; }
 .demo-frame { display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 8px; height: 100%; }
+
+/* Both halves of the system at once: the admin's dashboard and the nurse's
+   side panel, which is the point of showing the panel at all. The panel column
+   is fixed because it is a side panel - it has one width in Chrome and looks
+   wrong at any other - and the dashboard takes what is left. */
+.demo-stage { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 8px; min-height: 0; }
+
+/* Immediately after the rule it overrides, NOT up in the narrow block with the
+   rest of the breakpoint. That block is ~500 lines earlier in this file, so at
+   equal specificity the unqualified rule above still won inside it, and the
+   dashboard column resolved to 375 - 400 - 8, i.e. nothing: a 2px sliver
+   beside a full-width panel. A media query does not outrank source order. */
+@media (max-width: 860px) {
+  .demo-stage { grid-template-columns: minmax(0, 1fr); }
+  .demo-stage iframe:last-child { max-width: 400px; justify-self: center; }
+}
 .demo-frame iframe {
   display: block;
   width: 100%;
@@ -1083,9 +1107,14 @@ body {
           <button class="view-btn" type="button" role="tab" aria-selected="true" data-view="about">Overview</button>
           <button class="view-btn" type="button" role="tab" aria-selected="false" data-view="demo"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg><span>Live demo</span></button>
         </div>
-      <div class="view" data-view="about">
         <a class="head-link head-link-icon" href="https://dashboard.mdsprosolutions.com/?demo=1" target="_blank" rel="noopener" title="Open the demo in its own tab" aria-label="Open the demo in its own tab"><svg class="arr" viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
       </div>
+
+      <!-- The overview is a view like the demo is, so the switch hides one and
+           shows the other. Everything below the head belongs INSIDE it: left in
+           the head, it stayed on screen under the demo and pushed the frame's
+           1fr row to nothing, which is a blank panel rather than a visible bug. -->
+      <div class="view" data-view="about">
       <p class="panel-sub">Timekeeping, payroll and billing for a US nurse staffing company. Fifteen people open it every working day, and it is the system their pay runs through.</p>
 
       <div class="metrics">
@@ -1148,11 +1177,21 @@ body {
                allow-same-origin is required, not decorative: app.js reads
                localStorage at load, and an opaque sandbox origin makes that
                throw, which kills the script before demo mode can start. -->
-          <iframe title="MDS Pro dashboard, demo mode"
-                  data-src="https://dashboard.mdsprosolutions.com/?demo=1"
-                  sandbox="allow-scripts allow-same-origin allow-popups"
-                  referrerpolicy="no-referrer"></iframe>
-          <p class="demo-caption">The real MDS Pro dashboard in demo mode: invented nurses, hours and pay. It never signs in and sends no requests to the client's data.</p>
+          <div class="demo-stage">
+            <iframe title="MDS Pro dashboard, demo mode"
+                    data-src="https://dashboard.mdsprosolutions.com/?demo=1"
+                    sandbox="allow-scripts allow-same-origin allow-popups"
+                    referrerpolicy="no-referrer"></iframe>
+            <!-- The nurse's side panel, the same popup.html the extension ships,
+                 run as a page by a shim in the dashboard repo. Not a mock and not
+                 a screenshot: the buttons work, against an in-memory sandbox that
+                 extension already had for its admin preview. -->
+            <iframe title="MDS Pro nurse side panel, demo mode"
+                    data-src="https://dashboard.mdsprosolutions.com/panel/"
+                    sandbox="allow-scripts allow-same-origin allow-popups"
+                    referrerpolicy="no-referrer"></iframe>
+          </div>
+          <p class="demo-caption">Both halves of the system, live: the admin's dashboard and the nurse's Chrome side panel. Invented nurses, hours and pay — neither signs in, and neither sends a request to the client's data.</p>
         </div>
       </div>
     </section>
