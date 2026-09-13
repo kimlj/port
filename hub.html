@@ -896,7 +896,10 @@ body {
 /* ── MDS Pro: overview / live demo ────────────────────────────────────── */
 
 .view-switch {
-  align-self: center;
+  /* Baseline, not centre: the switch reads as a third item on the title line
+     beside the badge, and centring it against a 38px serif line box floated it
+     off that line. Same `align-self` the head link already takes. */
+  align-self: baseline;
   display: inline-flex;
   padding: 3px;
   border: 1px solid var(--border);
