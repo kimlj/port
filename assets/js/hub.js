@@ -1300,15 +1300,15 @@
   // and a scroll handler that blocks the scroll it is watching is the one way
   // to make a long panel feel broken.
   (function watchScrollEnd() {
-    var panel = document.querySelector('.panel[data-scrolls="true"]');
-    if (!panel) return;
-    function check() {
-      var atEnd = panel.scrollTop + panel.clientHeight >= panel.scrollHeight - 4;
-      panel.setAttribute('data-at-end', atEnd ? 'true' : 'false');
-    }
-    panel.addEventListener('scroll', check, { passive: true });
-    window.addEventListener('resize', check);
-    check();
+    document.querySelectorAll('.panel[data-scrolls="true"]').forEach(function (panel) {
+      function check() {
+        var atEnd = panel.scrollTop + panel.clientHeight >= panel.scrollHeight - 4;
+        panel.setAttribute('data-at-end', atEnd ? 'true' : 'false');
+      }
+      panel.addEventListener('scroll', check, { passive: true });
+      window.addEventListener('resize', check);
+      check();
+    });
   })();
 
   function refresh() {
