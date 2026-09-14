@@ -1,0 +1,69 @@
+{
+  "generatedAt": "2026-09-14T08:24:10.832168+00:00",
+  "latestJobAt": "2026-09-14T02:13:01+00:00",
+  "kind": "snapshot",
+  "counts": {
+    "jobs": 579,
+    "companies": 232,
+    "sources": 8,
+    "applied": 24,
+    "ignored": 16,
+    "emails": 552
+  },
+  "sources": [
+    {
+      "name": "onlinejobs_ph",
+      "count": 255
+    },
+    {
+      "name": "indeed",
+      "count": 202
+    },
+    {
+      "name": "jobstreet",
+      "count": 50
+    },
+    {
+      "name": "jobstreet_api",
+      "count": 48
+    },
+    {
+      "name": "linkedin",
+      "count": 10
+    },
+    {
+      "name": "himalayas",
+      "count": 8
+    },
+    {
+      "name": "workingnomads",
+      "count": 3
+    },
+    {
+      "name": "jobicy",
+      "count": 3
+    }
+  ],
+  "stages": [
+    {
+      "name": "Applied",
+      "count": 24
+    },
+    {
+      "name": "Closed",
+      "count": 7
+    },
+    {
+      "name": "Ignore",
+      "count": 16
+    },
+    {
+      "name": "New",
+      "count": 387
+    },
+    {
+      "name": "To apply",
+      "count": 3
+    }
+  ]
+}

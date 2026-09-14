@@ -172,7 +172,7 @@ nothing on the site links to it.
 
 That purpose decides the layout. **Every panel fits the viewport with no
 scroll**, because a scroll on a screen recording is where the viewer loses the
-thread; switching is `1`–`5` or the arrow keys, because reaching for the mouse
+thread; switching is `1`–`6` or the arrow keys, because reaching for the mouse
 mid-sentence reads as fumbling. If a panel grows past the fold, cut something
 rather than letting it scroll — the constraint is the feature. It is committed
 to dark for the same reason the WordWarz dashboard is: one look tuned properly
@@ -470,3 +470,11 @@ walkthrough.
 - Content is the owner's professional history. **Do not invent figures, dates or
   claims.** Where placeholder copy exists it is marked as such — the two AI
   transcripts in `ai-ledger.js` are illustrative and say so.
+
+### Hub pipeline consoles (14 Sep 2026)
+
+Panels 3–6 use `assets/hub-pipelines.css` and `assets/js/hub-pipelines.js`. Animated paths are explicitly illustrative and pause for hidden panels/documents; reduced motion starts paused. JobSift aggregates are exported read-only by `scripts/export-jobsift-hub.py` from a fresh SQLite core backup into JSON and static HTML together. Applied counts union receipt URLs with Applied/Interviewing/Rejected stage URLs; ignored counts use the Ignore stage. Sources count adapters, companies normalize case and whitespace. The VPS panel subscribes to the existing `hub:status` event; it does not make a duplicate poll. CPU, memory, deployment state and logs still require the collector described in TODO. The hub remains dark only.
+
+### Detailed hub replays
+
+JobSift and Shift Ops now use `assets/hub-workflows.css` and `assets/js/hub-workflows.js`. Five static HTML scenes per project carry one fictional record through the workflow, with timed status messages and staged reveals. The scenes are not live API calls. JobSift follows PY-042 from email to Telegram; Shift Ops follows DEMO-042 and carries the interactive Approve/Reject choice into the report. Overview & evidence switches back to the project narrative and actual JobSift snapshot evidence. The player freezes when its panel, overview, or document is hidden, supports pause/replay/direct step navigation, and starts fully revealed and paused with reduced motion. Source reference: local recodeai `StatusFeed.tsx`; no React dependency added here. Keep all ten scenes within the desktop fold and do not mix sample metrics with real aggregate counts.

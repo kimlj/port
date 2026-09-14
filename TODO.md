@@ -170,8 +170,7 @@ that ends at "and it is deployed" has nothing to point at.
 - **It fits the fold.** Services, deploy state and schedules on one screen;
   logs as a short tail rather than a scroller.
 
-Not started. Needs: the status endpoint on the droplet (and where its token
-lives), the panel's markup, and `api/hub-status.js` growing a fifth probe.
+Panel 6 now exists with the deployment map, animated request walkthrough and live MDS Pro / WordWarz API reachability from the existing status poll. Host metrics are explicitly unavailable. Remaining: the token-gated collector on the droplet, host resources, deploy revisions, schedules, TLS expiry and operator-only redacted logs.
 
 ## Smaller, unscheduled
 
@@ -201,3 +200,9 @@ lives), the panel's markup, and `api/hub-status.js` growing a fifth probe.
   naming a number it cannot see and defer to the page instead, which is the same
   rule the rest of this file already follows: one copy, or it disagrees with
   itself eventually.
+
+## JobSift hub evidence
+
+Panels 3 and 5 include illustrative pipeline replays with pause/step controls. JobSift reads aggregate evidence from `assets/jobsift-stats.json`; these are dated snapshots, not live database queries. Refresh both JSON and the no-JavaScript markup with `python scripts/export-jobsift-hub.py PATH_TO_FRESH_CORE_BACKUP`. The browser checks that file every 30 seconds; updates still require a new export and deployment. A continuous core-to-hub feed is not connected. No job titles, URLs, email content or application evidence are exported.
+
+JobSift and Shift Ops now have five detailed sample scenes each, inspired by recodeai’s status feed: input UI, visible processing, stored output and notification/review UI. The replay data is fictional and the aggregate counters remain separate. No additional live integration is implied.

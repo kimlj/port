@@ -1147,6 +1147,8 @@ body {
   * { transition: none !important; animation: none !important; }
 }
 </style>
+<link rel="stylesheet" href="/assets/hub-pipelines.css">
+<link rel="stylesheet" href="/assets/hub-workflows.css">
 </head>
 <body>
 
@@ -1177,8 +1179,8 @@ body {
       <span class="key">5</span><span class="tab-name">Shift Ops</span>
     </button>
 
-    <div class="rail-foot">
-      <kbd>1</kbd>–<kbd>5</kbd> jump · <kbd>←</kbd><kbd>→</kbd> cycle
+    <button class="tab" role="tab" id="tab-infrastructure" aria-controls="panel-infrastructure" aria-selected="false" data-target="infrastructure"><span class="key">6</span><span class="tab-name">Backend / VPS</span></button><div class="rail-foot">
+      <kbd>1</kbd>–<kbd>6</kbd> jump · <kbd>←</kbd><kbd>→</kbd> cycle
     </div>
   </nav>
 
@@ -1551,107 +1553,680 @@ body {
     </section>
 
     <!-- ── jobsift ──────────────────────────────────────────────────── -->
-    <section class="panel" id="panel-jobsift" role="tabpanel" aria-labelledby="tab-jobsift">
-      <div class="panel-head">
-        <h1 class="panel-title">jobsift</h1>
-        <span class="badge" data-tone="prod">Running daily</span>
-      </div>
-      <p class="panel-sub">A self-hosted job pipeline: sources in, filters and an LLM scoring pass in the middle, a spreadsheet and a Telegram message out. It is how I find the postings I actually apply to.</p>
-
-      <div class="metrics">
-        <div class="metric" data-series="1">
-          <span class="metric-value">132</span>
-          <span class="metric-label">Commits</span>
-          <span class="metric-note">Aug 2026 to 13 Sep 2026</span>
-        </div>
-        <div class="metric" data-series="3">
-          <span class="metric-value">2</span>
-          <span class="metric-label">Deployment halves</span>
-          <span class="metric-note">droplet core, worker at home</span>
-        </div>
-        <div class="metric" data-series="4">
-          <span class="metric-value">1</span>
-          <span class="metric-label">SSH command</span>
-          <span class="metric-note">the worker's whole surface, pinned</span>
-        </div>
-        <div class="metric" data-series="2">
-          <span class="metric-value">robots.txt</span>
-          <span class="metric-label">Source rule</span>
-          <span class="metric-note">permission decides, not method</span>
-        </div>
-      </div>
-
-      <div class="cols">
-        <div class="card">
-          <h3>What is actually hard about it</h3>
-          <p><strong>Which sources are allowed is a decision, not a capability.</strong> Sources are chosen by what each site's <code>robots.txt</code> permits. Jobstreet disallows the endpoints that would be easiest to read, so that one arrives by email instead. Reachable is not the same as allowed.</p>
-          <p><strong>It is split across two machines for one reason.</strong> One board answers a datacenter IP with a 403, so that reader runs on the laptop at home and hands batches to the droplet over a single pinned SSH command. Renting residential proxies would have solved it by impersonating somebody's home connection, which is not a trade I wanted.</p>
-          <p><strong>Only one copy of the database is real.</strong> The core owns it; the worker keeps an integrity-checked daily copy and never writes.</p>
-        </div>
-        <div class="card">
-          <h3>Shape</h3>
-          <div class="chips">
-            <span class="chip">Python</span><span class="chip">Anthropic SDK</span><span class="chip">OpenAI</span>
-            <span class="chip">SQLite</span><span class="chip">gspread</span><span class="chip">httpx</span>
-            <span class="chip">GitHub Actions</span><span class="chip">Telegram</span>
-          </div>
-          <p style="margin-top:12px">Private repository. Walkable on a screen share.</p>
-        </div>
-      </div>
-    </section>
+    <section class="panel console workflow-console" data-console-mode="workflow" id="panel-jobsift" role="tabpanel" aria-labelledby="tab-jobsift">
+<div class="panel-head">
+<h1 class="panel-title">jobsift</h1>
+<span class="badge" data-tone="prod">Personal workflow</span>
+<div class="console-mode" aria-label="Project view">
+<button type="button" data-console-mode="workflow" aria-pressed="true">Workflow demo</button>
+<button type="button" data-console-mode="overview" aria-pressed="false">Overview &amp; evidence</button>
+</div>
+</div>
+<p class="panel-sub">Job-alert emails become a ranked shortlist. AI extracts and scores the roles; I decide which ones deserve an application.</p>
+<div class="metrics">
+<div class="metric" data-series="1">
+<span class="metric-value" data-job-count="jobs">579</span>
+<span class="metric-label">Jobs stored</span>
+<span class="metric-note">scored posting records</span>
+</div>
+<div class="metric" data-series="2">
+<span class="metric-value" data-job-count="companies">232</span>
+<span class="metric-label">Companies</span>
+<span class="metric-note">normalized company names</span>
+</div>
+<div class="metric" data-series="3">
+<span class="metric-value" data-job-count="sources">8</span>
+<span class="metric-label">Sources</span>
+<span class="metric-note">with stored postings</span>
+</div>
+<div class="metric" data-series="4">
+<span class="metric-value" data-job-count="applied">24</span>
+<span class="metric-label">Applied</span>
+<span class="metric-note">receipts + sent stages, deduped</span>
+</div>
+<div class="metric" data-series="1">
+<span class="metric-value" data-job-count="ignored">16</span>
+<span class="metric-label">Ignored</span>
+<span class="metric-note">marked Ignore in Sheets</span>
+</div>
+<div class="metric" data-series="2">
+<span class="metric-value" data-job-count="emails">552</span>
+<span class="metric-label">Emails processed</span>
+<span class="metric-note">deduplicated inbox messages</span>
+</div>
+</div>
+<p class="console-caption" data-job-stamp>Database snapshot · exported 2026-09-14 08:24 UTC · latest stored job 2026-09-14 02:13 UTC</p>
+<div class="workflow-player" data-workflow="jobsift" data-beat="3" data-paused="true">
+<div class="workflow-toolbar">
+<div>
+<span class="demo-label">SAMPLE REPLAY</span>
+<span class="workflow-run">JOB / PY-042</span>
+</div>
+<div class="workflow-controls">
+<button type="button" data-restart aria-label="Restart sample replay">↺ Replay</button>
+<button type="button" data-play aria-pressed="false">Play</button>
+<button type="button" data-advance>Next →</button>
+</div>
+</div>
+<div class="workflow-nav" aria-label="Workflow steps">
+<button type="button" data-goto="0" aria-pressed="true">
+<span>01</span>Inbox<i>
+</i>
+</button>
+<button type="button" data-goto="1" aria-pressed="false">
+<span>02</span>Extract<i>
+</i>
+</button>
+<button type="button" data-goto="2" aria-pressed="false">
+<span>03</span>Score<i>
+</i>
+</button>
+<button type="button" data-goto="3" aria-pressed="false">
+<span>04</span>Store<i>
+</i>
+</button>
+<button type="button" data-goto="4" aria-pressed="false">
+<span>05</span>Notify<i>
+</i>
+</button>
+</div>
+<div class="workflow-stage">
+<section class="workflow-scene" data-scene="0" aria-label="Reading job-alert emails">
+<div class="demo-app">
+<div class="demo-app-bar">
+<span class="window-dots">● ● ●</span>
+<b>Gmail / inbox</b>
+<span>DEMO</span>
+</div>
+<div class="demo-app-body">
+<div class="mail-layout">
+<aside class="mail-folders">
+<b class="gmail-brand">M <span>Gmail</span>
+</b>
+<span class="folder-active">Inbox <b>3</b>
+</span>
+<span>Starred</span>
+<span>Job alerts</span>
+<span>Sent</span>
+</aside>
+<div class="mail-content">
+<div class="mail-subject">A new role matches your alert <span>Inbox</span>
+</div>
+<div class="mail-sender reveal" data-reveal="1">
+<i>N</i>
+<div>
+<b>Northstar Talent Alerts</b>
+<small>alerts@northstar.example · 09:02</small>
+</div>
+</div>
+<div class="mail-letter reveal" data-reveal="2">
+<small>YOUR DAILY JOB MATCH</small>
+<h4>Python Automation Developer</h4>
+<p>
+<strong>Northstar Studio</strong> · Remote, Philippines</p>
+<p>₱80,000–₱100,000 / month · Full-time</p>
+<p>Build Python automations, integrate REST APIs and maintain SQL reporting pipelines. Looking for 2+ years of hands-on experience.</p>
+<span class="mail-cta">View job details ↗</span>
+</div>
+</div>
+</div>
+<div class="reveal scene-result" data-reveal="3">
+<span class="result-check">✓</span> Recognized alert · read without changing inbox status</div>
+</div>
+</div>
+<aside class="run-feed">
+<small>STEP 01 / 05</small>
+<h3>Reading job-alert emails</h3>
+<ol>
+<li data-log="0">
+<span class="run-log-dot">
+</span>
+<span>Connecting to Gmail over IMAP…</span>
+<b>00s</b>
+</li>
+<li data-log="1">
+<span class="run-log-dot">
+</span>
+<span>Fetching unread job-alert messages…</span>
+<b>02s</b>
+</li>
+<li data-log="2">
+<span class="run-log-dot">
+</span>
+<span>Recognized sender · 1 sample posting found</span>
+<b>04s</b>
+</li>
+<li data-log="3">
+<span class="run-log-dot">
+</span>
+<span>Email captured · original inbox left unchanged</span>
+<b>06s</b>
+</li>
+</ol>
+<div class="run-summary">A realistic sample alert enters the pipeline. No private email is displayed.</div>
+</aside>
+</section>
+<section class="workflow-scene" data-scene="1" hidden aria-label="Extracting the useful fields">
+<div class="demo-app">
+<div class="demo-app-bar">
+<span class="window-dots">● ● ●</span>
+<b>Extraction / structured record</b>
+<span>DEMO</span>
+</div>
+<div class="demo-app-body">
+<div class="extract-layout">
+<div class="source-fragment">
+<small>ALERT CONTENT</small>
+<p>A new role matches your alert</p>
+<h4>
+<mark>Python Automation Developer</mark>
+</h4>
+<p>
+<mark>Northstar Studio</mark> · Remote, Philippines</p>
+<p>
+<mark>₱80,000–₱100,000 / month</mark>
+</p>
+<p>Build <mark>Python</mark> automations, integrate <mark>REST APIs</mark> and maintain <mark>SQL</mark> reporting pipelines.</p>
+<div class="discarded">Email footer · tracking parameters · unsubscribe</div>
+</div>
+<div class="extracted-fields">
+<small>KEEP / NORMALIZE</small>
+<div class="reveal " data-reveal="1">
+<label>job_title</label>
+<b>Python Automation Developer</b>
+<label>company</label>
+<b>Northstar Studio</b>
+</div>
+<div class="reveal " data-reveal="2">
+<label>location / salary</label>
+<b>PH · Remote / PHP 80k–100k</b>
+<label>explicit_skills</label>
+<b>Python · REST APIs · SQL</b>
+</div>
+<div class="reveal " data-reveal="3">
+<label>url / evidence</label>
+<b>northstar.example/jobs/py-042</b>
+<b>Alert snippet · verify full posting</b>
+</div>
+</div>
+</div>
+</div>
+</div>
+<aside class="run-feed">
+<small>STEP 02 / 05</small>
+<h3>Extracting the useful fields</h3>
+<ol>
+<li data-log="0">
+<span class="run-log-dot">
+</span>
+<span>Parsing the alert body…</span>
+<b>00s</b>
+</li>
+<li data-log="1">
+<span class="run-log-dot">
+</span>
+<span>Extracting role, employer and salary…</span>
+<b>02s</b>
+</li>
+<li data-log="2">
+<span class="run-log-dot">
+</span>
+<span>Normalizing location and removing tracking…</span>
+<b>04s</b>
+</li>
+<li data-log="3">
+<span class="run-log-dot">
+</span>
+<span>Structured record ready · snippet evidence retained</span>
+<b>06s</b>
+</li>
+</ol>
+<div class="run-summary">Only stated fields are retained. A snippet is flagged as incomplete evidence.</div>
+</aside>
+</section>
+<section class="workflow-scene" data-scene="2" hidden aria-label="Checking fit and scoring">
+<div class="demo-app">
+<div class="demo-app-bar">
+<span class="window-dots">● ● ●</span>
+<b>Filters + scoring / sample result</b>
+<span>DEMO</span>
+</div>
+<div class="demo-app-body">
+<div class="score-layout">
+<div class="score-checks">
+<small>DETERMINISTIC FILTERS</small>
+<div class="reveal " data-reveal="1">
+<p>
+<span class="result-check">✓</span> Remote / Philippines eligible</p>
+<p>
+<span class="result-check">✓</span> Salary range supplied</p>
+<p>
+<span class="result-check">✓</span> New posting · no duplicate key</p>
+</div>
+<small>MODEL EVIDENCE</small>
+<div class="reveal " data-reveal="2">
+<p>“Python automations”, “REST APIs”, “SQL”</p>
+<p class="demo-muted">Skills and experience judged against the profile. No stack inferred from missing text.</p>
+</div>
+</div>
+<div class="score-card">
+<small>SAMPLE MATCH SCORE</small>
+<div class="score-total">
+<span data-count-to="82" data-count-beat="3">82</span>
+<i>/100</i>
+</div>
+<div class="score-bar" data-reveal="2">
+<span style="--score:82%">
+</span>
+</div>
+<p>Skills <b>24 / 30</b> <em>LLM</em>
+</p>
+<p>Experience <b>22 / 30</b> <em>LLM</em>
+</p>
+<p>Salary <b>36 / 40</b> <em>Code</em>
+</p>
+<div class="reveal " data-reveal="3">
+<span class="warning-chip">Snippet only · open the full job first</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<aside class="run-feed">
+<small>STEP 03 / 05</small>
+<h3>Checking fit and scoring</h3>
+<ol>
+<li data-log="0">
+<span class="run-log-dot">
+</span>
+<span>Running location and duplicate checks…</span>
+<b>00s</b>
+</li>
+<li data-log="1">
+<span class="run-log-dot">
+</span>
+<span>Analyzing explicitly stated skills…</span>
+<b>02s</b>
+</li>
+<li data-log="2">
+<span class="run-log-dot">
+</span>
+<span>Combining model fit with code-calculated salary score…</span>
+<b>04s</b>
+</li>
+<li data-log="3">
+<span class="run-log-dot">
+</span>
+<span>82 / 100 · illustrative score, not an actual model run</span>
+<b>06s</b>
+</li>
+</ol>
+<div class="run-summary">Scoring follows the real 30 + 30 + 40 split. These example component values are illustrative.</div>
+</aside>
+</section>
+<section class="workflow-scene" data-scene="3" hidden aria-label="Saving the shortlist">
+<div class="demo-app">
+<div class="demo-app-bar">
+<span class="window-dots">● ● ●</span>
+<b>SQLite → Google Sheets</b>
+<span>DEMO</span>
+</div>
+<div class="demo-app-body">
+<div class="sheet-toolbar">
+<span class="sheet-icon">▦</span> JobSift / shortlist<span class="sheet-saved">Sample workbook</span>
+</div>
+<div class="sheet-formula">
+<b>fx</b> Sample row · score and stage persist together</div>
+<div class="sheet-scroll">
+<table class="demo-sheet">
+<thead>
+<tr>
+<th>
+</th>
+<th>Role</th>
+<th>Company</th>
+<th>Score</th>
+<th>Stage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>1</th>
+<td>Integration Engineer</td>
+<td>Harbor Labs</td>
+<td>76</td>
+<td>To apply</td>
+</tr>
+<tr>
+<th>2</th>
+<td>Operations Analyst</td>
+<td>Cedar Works</td>
+<td>68</td>
+<td>New</td>
+</tr>
+<tr class="sheet-new" data-reveal="2">
+<th>3</th>
+<td>Python Automation Developer</td>
+<td>Northstar Studio</td>
+<td>82</td>
+<td>New</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sheet-tabs">
+<b>Shortlist</b>
+<span>Applied</span>
+<span>Ignore</span>
+<span>+</span>
+</div>
+<div class="reveal scene-result" data-reveal="3">
+<span class="result-check">✓</span> SQLite record stored → shortlist row added · stage: New</div>
+</div>
+</div>
+<aside class="run-feed">
+<small>STEP 04 / 05</small>
+<h3>Saving the shortlist</h3>
+<ol>
+<li data-log="0">
+<span class="run-log-dot">
+</span>
+<span>Preparing the scored record…</span>
+<b>00s</b>
+</li>
+<li data-log="1">
+<span class="run-log-dot">
+</span>
+<span>Writing job, source and evidence to SQLite…</span>
+<b>02s</b>
+</li>
+<li data-log="2">
+<span class="run-log-dot">
+</span>
+<span>Appending the shortlist row to Google Sheets…</span>
+<b>04s</b>
+</li>
+<li data-log="3">
+<span class="run-log-dot">
+</span>
+<span>Row saved · ready for a human decision</span>
+<b>06s</b>
+</li>
+</ol>
+<div class="run-summary">The same sample job becomes a spreadsheet row. No application is sent automatically.</div>
+</aside>
+</section>
+<section class="workflow-scene" data-scene="4" hidden aria-label="Delivering a useful notification">
+<div class="demo-app">
+<div class="demo-app-bar">
+<span class="window-dots">● ● ●</span>
+<b>Telegram / JobSift bot</b>
+<span>DEMO</span>
+</div>
+<div class="demo-app-body">
+<div class="telegram">
+<div class="telegram-head">
+<i>➤</i>
+<div>
+<b>JobSift</b>
+<small>bot · sample conversation</small>
+</div>
+<span>⋮</span>
+</div>
+<div class="telegram-chat">
+<span class="chat-date">Today · demo</span>
+<div class="chat-previous">Your shortlist is ready. New matches appear here.</div>
+<div class="reveal chat-arrival" data-reveal="2">
+<div class="telegram-message">
+<b>82/100 · Python Automation Developer</b>
+<p>🏢 Northstar Studio<br>💰 ₱80,000–₱100,000 / month</p>
+<small>Skills 24 · Exp 22 · Pay 36</small>
+<p>✓ Python · REST APIs · SQL</p>
+<p>Build automation and reporting workflows.<br>
+<em>Scored on an alert snippet — open the full posting before trusting the match.</em>
+</p>
+<span class="demo-url">northstar.example/jobs/py-042</span>
+<span class="chat-time">09:03 ✓✓</span>
+</div>
+</div>
+<div class="chat-typing" data-until="2">
+<i>
+</i>
+<i>
+</i>
+<i>
+</i> preparing job alert</div>
+</div>
+<div class="chat-composer">Message <span>⌁ &nbsp; ➤</span>
+</div>
+</div>
+</div>
+</div>
+<aside class="run-feed">
+<small>STEP 05 / 05</small>
+<h3>Delivering a useful notification</h3>
+<ol>
+<li data-log="0">
+<span class="run-log-dot">
+</span>
+<span>Formatting score, salary and matching skills…</span>
+<b>00s</b>
+</li>
+<li data-log="1">
+<span class="run-log-dot">
+</span>
+<span>Preparing Telegram notification…</span>
+<b>02s</b>
+</li>
+<li data-log="2">
+<span class="run-log-dot">
+</span>
+<span>Sample alert delivered to the conversation</span>
+<b>04s</b>
+</li>
+<li data-log="3">
+<span class="run-log-dot">
+</span>
+<span>Human next step: inspect the role, then decide</span>
+<b>06s</b>
+</li>
+</ol>
+<div class="run-summary">A glanceable notification preserves the evidence warning and points back to the role.</div>
+</aside>
+</section>
+</div>
+<div class="workflow-footer">
+<span class="running-dot">
+</span>
+<span data-run-status>Sample data · ready to replay</span>
+<span class="workflow-disclaimer">Fictional records · real workflow structure</span>
+</div>
+</div>
+<div class="console-bottom">
+<div class="card">
+<h3>From problem to output</h3>
+<dl class="story">
+<dt>Problem</dt>
+<dd>Relevant roles are buried in repeated alerts across job boards.</dd>
+<dt>I built</dt>
+<dd>An email-first Python pipeline with extraction, deduplication, filters and an LLM scoring pass. A home worker feeds the droplet core.</dd>
+<dt>Output</dt>
+<dd>A ranked sheet, Telegram alerts, and an application history backed by SQLite.</dd>
+</dl>
+<div class="chips">
+<span class="chip">Python</span>
+<span class="chip">LLM APIs</span>
+<span class="chip">SQLite</span>
+<span class="chip">Gmail / IMAP</span>
+<span class="chip">gspread</span>
+<span class="chip">httpx</span>
+<span class="chip">Telegram</span>
+</div>
+</div>
+<div class="card">
+<div class="evidence-tabs" aria-label="JobSift evidence">
+<button type="button" data-evidence-view="sources" aria-pressed="true">Sources</button>
+<button type="button" data-evidence-view="stages" aria-pressed="false">Decisions</button>
+<button type="button" data-evidence-view="database" aria-pressed="false">Database</button>
+</div>
+<div data-job-evidence>
+<div class="evidence-grid">
+<div class="evidence-row">
+<span>onlinejobs_ph</span>
+<b>255</b>
+<i>
+<em style="--bar:100.0%">
+</em>
+</i>
+</div>
+<div class="evidence-row">
+<span>indeed</span>
+<b>202</b>
+<i>
+<em style="--bar:79.22%">
+</em>
+</i>
+</div>
+<div class="evidence-row">
+<span>jobstreet</span>
+<b>50</b>
+<i>
+<em style="--bar:19.61%">
+</em>
+</i>
+</div>
+<div class="evidence-row">
+<span>jobstreet_api</span>
+<b>48</b>
+<i>
+<em style="--bar:18.82%">
+</em>
+</i>
+</div>
+<div class="evidence-row">
+<span>linkedin</span>
+<b>10</b>
+<i>
+<em style="--bar:3.92%">
+</em>
+</i>
+</div>
+<div class="evidence-row">
+<span>himalayas</span>
+<b>8</b>
+<i>
+<em style="--bar:3.14%">
+</em>
+</i>
+</div>
+<div class="evidence-row">
+<span>workingnomads</span>
+<b>3</b>
+<i>
+<em style="--bar:1.18%">
+</em>
+</i>
+</div>
+<div class="evidence-row">
+<span>jobicy</span>
+<b>3</b>
+<i>
+<em style="--bar:1.18%">
+</em>
+</i>
+</div>
+</div>
+</div>
+<p class="console-footnote">Counts are real snapshot evidence. Replay is illustrative. Sheet stages cover a subset of stored jobs; source adapters are counted separately.</p>
+</div>
+</div>
+</section>
 
     <!-- ── kimlj.dev ────────────────────────────────────────────────── -->
-    <section class="panel" id="panel-portfolio" role="tabpanel" aria-labelledby="tab-portfolio">
-      <div class="panel-head">
-        <h1 class="panel-title">kimlj.dev</h1>
-        <span class="badge" data-tone="live">You are on it</span>
-      </div>
-      <p class="panel-sub">The portfolio, its site assistant, and this page. One hand-written HTML file for the site itself, with the assistant answering only from approved text.</p>
-
-      <div class="metrics">
-        <div class="metric" data-series="1">
-          <span class="metric-value">229</span>
-          <span class="metric-label">Commits</span>
-          <span class="metric-note">Feb 2026 to 13 Sep 2026</span>
-        </div>
-        <div class="metric" data-series="3">
-          <span class="metric-value">0</span>
-          <span class="metric-label">Tools on the assistant</span>
-          <span class="metric-note">and it must never be given one</span>
-        </div>
-        <div class="metric" data-series="4">
-          <span class="metric-value">31</span>
-          <span class="metric-label">Skills listed</span>
-          <span class="metric-note">each against work that shows it</span>
-        </div>
-        <div class="metric" data-series="2">
-          <span class="metric-value">$1.00</span>
-          <span class="metric-label">Hourly spend cap</span>
-          <span class="metric-note">rolling, enforced server-side</span>
-        </div>
-      </div>
-
-      <div class="cols">
-        <div class="card">
-          <h3>What is actually hard about it</h3>
-          <p><strong>The assistant reaches nothing.</strong> No database, no filesystem, no network beyond the one call to the model. The worst case of a visitor talking it past every rule in its prompt is a wrong sentence on a portfolio. Give it a tool and the worst case becomes a reached system.</p>
-          <p><strong>The deploy names what is public.</strong> Vercel served the repository root once, which meant it served the repository - the knowledge corpus, the system prompt and the guard thresholds were all downloadable. The build now copies an allowlist into <code>dist</code>, so a new file is public because somebody added it to that list.</p>
-          <p><strong>A skill without provenance does not go on the list.</strong> The marquee it replaced claimed four technologies that no repository could show.</p>
-        </div>
-        <div class="card">
-          <h3>Services</h3>
-          <div class="svc-list">
-            <div class="svc-row">
-              <span class="dot" data-state="up"></span>
-              <span><span class="svc-name">This page</span><br><span class="svc-note">rendering, so the function answered</span></span>
-            </div>
-          </div>
-          <div class="links">
-            <a href="/" target="_blank" rel="noopener">kimlj.dev</a>
-          </div>
-        </div>
-      </div>
-    </section>
+    <section class="panel console" id="panel-portfolio" role="tabpanel" aria-labelledby="tab-portfolio">
+<div class="panel-head">
+<h1 class="panel-title">kimlj.dev</h1>
+<span class="badge" data-tone="prod">Under the hood</span>
+</div>
+<p class="panel-sub">The engineering behind the page you are viewing: a lightweight frontend, a bounded AI assistant, and an explicit deployment boundary.</p>
+<div class="pipeline">
+<div class="console-topline">
+<h3 class="console-caption">Request paths / architecture</h3>
+<a href="/" class="console-caption" target="_blank" rel="noopener">Open portfolio ↗</a>
+</div>
+<div class="architecture">
+<span>Browser</span>
+<b>→</b>
+<span>Vercel / static assets</span>
+<b>+</b>
+<span>Serverless API</span>
+<b>→</b>
+<span>Approved context → model</span>
+</div>
+<p class="console-footnote">Hub status requests use a separate server-side probe. Provider credentials stay on the server.</p>
+</div>
+<div class="underhood">
+<div class="card">
+<h3>01 / Interface</h3>
+<p>
+<strong>Hand-written HTML, CSS and JavaScript.</strong> Project stories render before network requests. Small scripts add motion, navigation and data views.</p>
+<div class="chips">
+<span class="chip">HTML</span>
+<span class="chip">CSS</span>
+<span class="chip">JavaScript</span>
+<span class="chip">SVG</span>
+<span class="chip">Responsive UI</span>
+</div>
+</div>
+<div class="card">
+<h3>02 / Assistant</h3>
+<p>
+<strong>Answers from approved portfolio material.</strong> A server-side model call, a rolling hourly spend cap, and no tools that can reach the filesystem or database.</p>
+<div class="chips">
+<span class="chip">Node.js</span>
+<span class="chip">Serverless</span>
+<span class="chip">LLM API</span>
+<span class="chip">Approved corpus</span>
+</div>
+</div>
+<div class="card">
+<h3>03 / Delivery</h3>
+<p>
+<strong>An allowlist defines the public output.</strong> The build copies public files into dist; the assistant’s private material is maintained separately.</p>
+<div class="chips">
+<span class="chip">GitHub</span>
+<span class="chip">Vercel</span>
+<span class="chip">Build allowlist</span>
+<span class="chip">CSP</span>
+</div>
+</div>
+</div>
+<div class="console-bottom">
+<div class="card">
+<h3>From problem to output</h3>
+<dl class="story">
+<dt>Problem</dt>
+<dd>Employers need evidence behind the projects and skills on a resume.</dd>
+<dt>I built</dt>
+<dd>A portfolio, a constrained site assistant, and this hub to walk through systems and their outputs.</dd>
+<dt>Output</dt>
+<dd>Project evidence in one place, with source timestamps and explicit boundaries between live status and snapshots.</dd>
+</dl>
+<div class="chips">
+<span class="chip">Vanilla frontend</span>
+<span class="chip">GitHub Actions</span>
+<span class="chip">Aggregate snapshots</span>
+</div>
+</div>
+<div class="card">
+<h3>Infrastructure / panel 6</h3>
+<p>
+<strong>The VPS behind the products.</strong> Service reachability and a deployment map now have a dedicated sixth hub panel.</p>
+<p>Public health and versions; restricted operational details. A read-only status endpoint is still to be built.</p>
+<p class="console-footnote">Open Backend / VPS with key 6. Host telemetry remains planned.</p>
+</div>
+</div>
+</section>
 
     <!-- ── Shift Ops ────────────────────────────────────────────────────
          Labelled "simulated" here and everywhere else. The pipeline is real
@@ -1659,55 +2234,627 @@ body {
          "100-person compliance pipeline" without that word has been misled
          by omission. The badge is not decoration.
     -->
-    <section class="panel" id="panel-shiftops" role="tabpanel" aria-labelledby="tab-shiftops">
-      <div class="panel-head">
-        <h1 class="panel-title">Shift Ops Console</h1>
-        <span class="badge" data-tone="simulated">Simulated data</span>
-      </div>
-      <p class="panel-sub">A compliance pipeline for a simulated hundred-person workforce, built across five automation platforms in a day, because the job postings kept asking for all five by name.</p>
+    <section class="panel console workflow-console" data-console-mode="workflow" id="panel-shiftops" role="tabpanel" aria-labelledby="tab-shiftops">
+<div class="panel-head">
+<h1 class="panel-title">Shift Ops Console</h1>
+<span class="badge" data-tone="simulated">Simulated workforce</span>
+<div class="console-mode" aria-label="Project view">
+<button type="button" data-console-mode="workflow" aria-pressed="true">Workflow demo</button>
+<button type="button" data-console-mode="overview" aria-pressed="false">Overview &amp; evidence</button>
+</div>
+</div>
+<p class="panel-sub">From scattered punches to a reviewable exception queue. A working automation system for a synthetic workforce across eight countries.</p>
+<div class="metrics platform-metrics">
+<div class="metric" data-series="1">
+<span class="metric-value">100</span>
+<span class="metric-label">Simulated staff</span>
+<span class="metric-note">synthetic roster</span>
+</div>
+<div class="metric" data-series="3">
+<span class="metric-value">9</span>
+<span class="metric-label">Timezones</span>
+<span class="metric-note">eight countries</span>
+</div>
+<div class="metric" data-series="4">
+<span class="metric-value">5</span>
+<span class="metric-label">Automation platforms</span>
+<span class="metric-note">each owns a specific job</span>
+</div>
+<div class="metric" data-series="2">
+<span class="metric-value">97.0%</span>
+<span class="metric-label">Detection recall · 7 Sep 2026</span>
+<span class="metric-note">359 / 370 planted · 7 Sep 2026</span>
+</div>
+</div>
+<div class="workflow-player" data-workflow="shiftops" data-beat="3" data-paused="true">
+<div class="workflow-toolbar">
+<div>
+<span class="demo-label">SAMPLE REPLAY</span>
+<span class="workflow-run">SHIFT / DEMO-042</span>
+</div>
+<div class="workflow-controls">
+<button type="button" data-restart aria-label="Restart sample replay">↺ Replay</button>
+<button type="button" data-play aria-pressed="false">Play</button>
+<button type="button" data-advance>Next →</button>
+</div>
+</div>
+<div class="workflow-nav" aria-label="Workflow steps">
+<button type="button" data-goto="0" aria-pressed="true">
+<span>01</span>Collect<i>
+</i>
+</button>
+<button type="button" data-goto="1" aria-pressed="false">
+<span>02</span>Detect<i>
+</i>
+</button>
+<button type="button" data-goto="2" aria-pressed="false">
+<span>03</span>Route<i>
+</i>
+</button>
+<button type="button" data-goto="3" aria-pressed="false">
+<span>04</span>Review<i>
+</i>
+</button>
+<button type="button" data-goto="4" aria-pressed="false">
+<span>05</span>Report<i>
+</i>
+</button>
+</div>
+<div class="workflow-stage">
+<section class="workflow-scene" data-scene="0" aria-label="Collecting the shift record">
+<div class="demo-app">
+<div class="demo-app-bar">
+<span class="window-dots">● ● ●</span>
+<b>Google Sheets / generated punches</b>
+<span>DEMO</span>
+</div>
+<div class="demo-app-body">
+<div class="sheet-toolbar">
+<span class="sheet-icon">▦</span> Shift Ops / operations<span class="sheet-saved">Sample workbook</span>
+</div>
+<div class="sheet-formula">
+<b>fx</b> Synthetic data · same shift across the workflow</div>
+<div class="sheet-scroll">
+<table class="demo-sheet">
+<thead>
+<tr>
+<th>
+</th>
+<th>Staff</th>
+<th>Date / zone</th>
+<th>Scheduled</th>
+<th>Clock-in</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>1</th>
+<td>S-041 · Alex R.</td>
+<td>14 Sep · Manila</td>
+<td>09:00–17:00</td>
+<td>09:04</td>
+</tr>
+<tr class="sheet-new" data-reveal="2">
+<th>2</th>
+<td>S-042 · Jamie D.</td>
+<td>14 Sep · Manila</td>
+<td>09:00–17:00</td>
+<td>09:24</td>
+</tr>
+<tr>
+<th>3</th>
+<td>S-043 · Morgan L.</td>
+<td>14 Sep · London</td>
+<td>09:00–17:00</td>
+<td>09:02</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sheet-tabs">
+<b>time_entries</b>
+<span>exceptions</span>
+<span>decisions</span>
+<span>+</span>
+</div>
+<div class="reveal scene-result" data-reveal="3">
+<span class="result-check">✓</span> S-042 · shift DEMO-042 · punch joined to its schedule</div>
+</div>
+</div>
+<aside class="run-feed">
+<small>STEP 01 / 05</small>
+<h3>Collecting the shift record</h3>
+<ol>
+<li data-log="0">
+<span class="run-log-dot">
+</span>
+<span>Reading the synthetic roster…</span>
+<b>00s</b>
+</li>
+<li data-log="1">
+<span class="run-log-dot">
+</span>
+<span>Fetching generated clock-in entries…</span>
+<b>02s</b>
+</li>
+<li data-log="2">
+<span class="run-log-dot">
+</span>
+<span>Joining shift DEMO-042 by schedule ID…</span>
+<b>04s</b>
+</li>
+<li data-log="3">
+<span class="run-log-dot">
+</span>
+<span>09:24 clock-in matched to the 09:00 shift</span>
+<b>06s</b>
+</li>
+</ol>
+<div class="run-summary">A synthetic shift arrives with its scheduled time, actual punch and local timezone.</div>
+</aside>
+</section>
+<section class="workflow-scene" data-scene="1" hidden aria-label="Detecting a schedule exception">
+<div class="demo-app">
+<div class="demo-app-bar">
+<span class="window-dots">● ● ●</span>
+<b>n8n / rules engine</b>
+<span>DEMO</span>
+</div>
+<div class="demo-app-body">
+<div class="rule-layout">
+<div class="shift-ticket">
+<small>SHIFT DEMO-042</small>
+<h4>Jamie D. <span>S-042</span>
+</h4>
+<p>Asia / Manila · 14 Sep 2026</p>
+<div class="clock-comparison">
+<div>
+<small>SCHEDULED</small>
+<b>09:00</b>
+</div>
+<span>→</span>
+<div>
+<small>ACTUAL</small>
+<b>09:24</b>
+</div>
+</div>
+<div class="lateness-track">
+<i>
+</i>
+<span>Grace: 15 min</span>
+<b>+24 min</b>
+</div>
+</div>
+<div class="rule-result">
+<small>CONFIGURED RULE / DEMO</small>
+<div class="reveal " data-reveal="1">
+<code>late_minutes = 24</code>
+<code>grace_minutes = 15</code>
+</div>
+<div class="reveal " data-reveal="2">
+<code>24 &gt; 15 → true</code>
+<span class="exception-badge">late_arrival</span>
+</div>
+<div class="reveal " data-reveal="3">
+<p>Exception raised with schedule ID and punch evidence.</p>
+<small>Schedule policy example, not a legal ruling.</small>
+</div>
+</div>
+</div>
+</div>
+</div>
+<aside class="run-feed">
+<small>STEP 02 / 05</small>
+<h3>Detecting a schedule exception</h3>
+<ol>
+<li data-log="0">
+<span class="run-log-dot">
+</span>
+<span>Loading schedule and jurisdiction settings…</span>
+<b>00s</b>
+</li>
+<li data-log="1">
+<span class="run-log-dot">
+</span>
+<span>Calculating local clock-in variance…</span>
+<b>02s</b>
+</li>
+<li data-log="2">
+<span class="run-log-dot">
+</span>
+<span>24 minutes late exceeds the 15-minute grace…</span>
+<b>04s</b>
+</li>
+<li data-log="3">
+<span class="run-log-dot">
+</span>
+<span>Exception emitted · late_arrival · DEMO-042</span>
+<b>06s</b>
+</li>
+</ol>
+<div class="run-summary">The detector uses explicit rules, not an LLM verdict. The sample traces one late arrival.</div>
+</aside>
+</section>
+<section class="workflow-scene" data-scene="2" hidden aria-label="Routing the exception">
+<div class="demo-app">
+<div class="demo-app-bar">
+<span class="window-dots">● ● ●</span>
+<b>Make / digest → Zapier / urgent Slack</b>
+<span>DEMO</span>
+</div>
+<div class="demo-app-body">
+<div class="route-layout">
+<div class="route-card">
+<small>MAKE / SEVERITY ROUTER</small>
+<h4>Exception ready</h4>
+<p>
+<b>DEMO-042</b> · late_arrival</p>
+<div class="reveal " data-reveal="1">
+<div class="route-branch selected">→ Ops digest <b>Selected</b>
+</div>
+<div class="route-branch">→ Finance digest</div>
+<div class="route-branch">→ Urgent / Zapier → Slack</div>
+</div>
+<p class="demo-muted">This sample is routine. The urgent branch remains idle.</p>
+</div>
+<div class="digest-card">
+<small>OPS / DAILY DIGEST</small>
+<div class="reveal " data-reveal="2">
+<h4>1 exception needs review</h4>
+<div class="digest-item">
+<b>Jamie D. · S-042</b>
+<p>Late arrival · +24 minutes<br>Scheduled 09:00 · clocked in 09:24</p>
+<span class="warning-chip">Awaiting manager</span>
+</div>
+</div>
+<div class="reveal " data-reveal="3">
+<p class="demo-muted">Evidence attached · DEMO-042</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<aside class="run-feed">
+<small>STEP 03 / 05</small>
+<h3>Routing the exception</h3>
+<ol>
+<li data-log="0">
+<span class="run-log-dot">
+</span>
+<span>Grouping exceptions for the operations audience…</span>
+<b>00s</b>
+</li>
+<li data-log="1">
+<span class="run-log-dot">
+</span>
+<span>Evaluating severity routing…</span>
+<b>02s</b>
+</li>
+<li data-log="2">
+<span class="run-log-dot">
+</span>
+<span>Adding the routine exception to the ops digest…</span>
+<b>04s</b>
+</li>
+<li data-log="3">
+<span class="run-log-dot">
+</span>
+<span>Digest prepared · urgent Slack branch not triggered</span>
+<b>06s</b>
+</li>
+</ol>
+<div class="run-summary">Show the branch actually taken: this routine late arrival goes to the digest, not an urgent alert.</div>
+</aside>
+</section>
+<section class="workflow-scene" data-scene="3" hidden aria-label="Recording the manager decision">
+<div class="demo-app">
+<div class="demo-app-bar">
+<span class="window-dots">● ● ●</span>
+<b>Power Automate Desktop / review</b>
+<span>DEMO</span>
+</div>
+<div class="demo-app-body">
+<div class="approval-window">
+<div class="approval-title">▣ Manager review <span>Sample interaction</span>
+</div>
+<div class="approval-body">
+<small>EXCEPTION DEMO-042 / LATE ARRIVAL</small>
+<h4>Review Jamie D.’s shift</h4>
+<p>Scheduled: <b>09:00</b> &nbsp; Clock-in: <b>09:24</b> &nbsp; Variance: <b>+24 min</b>
+</p>
+<div class="reveal " data-reveal="1">
+<div class="review-note">Evidence: clock-in linked to shift DEMO-042. Choose a decision to record this sample review.</div>
+</div>
+<div class="review-actions">
+<button type="button" data-review="Approved">Approve</button>
+<button type="button" data-review="Rejected">Reject</button>
+</div>
+<div class="reveal " data-reveal="3">
+<div class="review-receipt">
+<span class="result-check">✓</span> <b data-review-value>Approved</b> · decision appended to the sample ledger</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<aside class="run-feed">
+<small>STEP 04 / 05</small>
+<h3>Recording the manager decision</h3>
+<ol>
+<li data-log="0">
+<span class="run-log-dot">
+</span>
+<span>Opening the manager review dialog…</span>
+<b>00s</b>
+</li>
+<li data-log="1">
+<span class="run-log-dot">
+</span>
+<span>Displaying schedule and punch evidence…</span>
+<b>02s</b>
+</li>
+<li data-log="2">
+<span class="run-log-dot">
+</span>
+<span>Waiting for a decision · demo will choose Approve</span>
+<b>04s</b>
+</li>
+<li data-log="3">
+<span class="run-log-dot">
+</span>
+<span>Decision appended · original exception retained</span>
+<b>06s</b>
+</li>
+</ol>
+<div class="run-summary">Try Approve or Reject. It only changes this sample replay; no operational system is called.</div>
+</aside>
+</section>
+<section class="workflow-scene" data-scene="4" hidden aria-label="Reporting the outcome">
+<div class="demo-app">
+<div class="demo-app-bar">
+<span class="window-dots">● ● ●</span>
+<b>Looker Studio / sample report</b>
+<span>DEMO</span>
+</div>
+<div class="demo-app-body">
+<div class="report-head">
+<b>Shift Ops / exception review</b>
+<span>Demo run · 1 shift</span>
+</div>
+<div class="report-kpis">
+<div>
+<small>EXCEPTIONS</small>
+<b>1</b>
+</div>
+<div>
+<small>REVIEWED</small>
+<b data-count-to="1" data-count-beat="2">1</b>
+</div>
+<div>
+<small>PENDING</small>
+<b data-pending-count>0</b>
+</div>
+</div>
+<div class="report-layout">
+<div>
+<small>REVIEW COMPLETION</small>
+<div class="report-bar">
+<span data-reveal="2">
+</span>
+</div>
+<div class="reveal " data-reveal="2">
+<p>1 / 1 exception reviewed</p>
+</div>
+<p class="demo-muted">This replay is one record.<br>Historical detector evaluation is separate.</p>
+</div>
+<div class="report-ledger">
+<small>DECISION LEDGER</small>
+<div class="reveal " data-reveal="1">
+<p>
+<b>DEMO-042</b> · Jamie D.</p>
+<p>late_arrival → <b data-review-value>Approved</b>
+</p>
+<p>Original punch: 09:24<br>Schedule: 09:00 · Asia/Manila</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<aside class="run-feed">
+<small>STEP 05 / 05</small>
+<h3>Reporting the outcome</h3>
+<ol>
+<li data-log="0">
+<span class="run-log-dot">
+</span>
+<span>Reading exceptions and decision records…</span>
+<b>00s</b>
+</li>
+<li data-log="1">
+<span class="run-log-dot">
+</span>
+<span>Joining DEMO-042 to its manager decision…</span>
+<b>02s</b>
+</li>
+<li data-log="2">
+<span class="run-log-dot">
+</span>
+<span>Refreshing the sample review-completion tile…</span>
+<b>04s</b>
+</li>
+<li data-log="3">
+<span class="run-log-dot">
+</span>
+<span>Trace complete · source punch to reported outcome</span>
+<b>06s</b>
+</li>
+</ol>
+<div class="run-summary">The dashboard closes the loop without erasing the original exception or inventing a production KPI.</div>
+</aside>
+</section>
+</div>
+<div class="workflow-footer">
+<span class="running-dot">
+</span>
+<span data-run-status>Sample data · ready to replay</span>
+<span class="workflow-disclaimer">Fictional records · real workflow structure</span>
+</div>
+</div>
+<div class="console-bottom">
+<div class="card">
+<h3>From problem to output</h3>
+<dl class="story">
+<dt>Problem</dt>
+<dd>Distributed shifts make missed breaks, no-shows and schedule mismatches difficult to review consistently.</dd>
+<dt>I built</dt>
+<dd>A rules-table-driven detector, severity routing and a manager review workflow, with planted anomalies to test detection.</dd>
+<dt>Output</dt>
+<dd>An exception queue, audience-specific digests, recorded decisions and KPI dashboards.</dd>
+</dl>
+<div class="chips">
+<span class="chip">Apps Script</span>
+<span class="chip">Google Sheets</span>
+<span class="chip">n8n</span>
+<span class="chip">Make</span>
+<span class="chip">Zapier</span>
+<span class="chip">Power Automate</span>
+<span class="chip">Looker Studio</span>
+</div>
+</div>
+<div class="card">
+<h3>Evidence, including the limits</h3>
+<dl class="story">
+<dt>Caught</dt>
+<dd>
+<strong>359 of 370</strong> planted anomalies in the 45-day window, measured 7 Sep 2026. Eleven were missed.</dd>
+<dt>Debugged</dt>
+<dd>An open punch created unbounded duplicate overlaps. Diagnosis separated real detector errors from unlabelled valid exceptions.</dd>
+<dt>Scope</dt>
+<dd>Rules-based automation; no model decides compliance. Synthetic people and shifts, with an illustrative replay above.</dd>
+</dl>
+<p class="console-footnote">Historical benchmark, not a live KPI. A sliding window changes the result; the dated measurement keeps its denominator.</p>
+</div>
+</div>
+</section>
 
-      <div class="metrics">
-        <div class="metric" data-series="1">
-          <span class="metric-value">5</span>
-          <span class="metric-label">Platforms</span>
-          <span class="metric-note">n8n, Make, Zapier, Power Automate, Apps Script</span>
-        </div>
-        <div class="metric" data-series="3">
-          <span class="metric-value">100</span>
-          <span class="metric-label">Simulated staff</span>
-          <span class="metric-note">generated, not real people</span>
-        </div>
-        <div class="metric" data-series="4">
-          <span class="metric-value">1 day</span>
-          <span class="metric-label">Build time</span>
-          <span class="metric-note">scope was exposure, not product</span>
-        </div>
-        <div class="metric" data-series="2">
-          <span class="metric-value">Looker</span>
-          <span class="metric-label">Reporting end</span>
-          <span class="metric-note">the pipeline terminates in a dashboard</span>
-        </div>
-      </div>
-
-      <div class="cols">
-        <div class="card">
-          <h3>Why it exists, honestly</h3>
-          <p>It was built for platform exposure. Postings ask for Make, Zapier and Power Automate by name, and I had done the same class of work in n8n and in Python but not in those tools. So the same pipeline was built five ways in a day.</p>
-          <p><strong>What it demonstrates is the tools, not the scale.</strong> Nobody's shift was ever run through it. Calling a simulation production experience is the kind of claim that survives a resume and dies in an interview.</p>
-        </div>
-        <div class="card">
-          <h3>Shape</h3>
-          <div class="chips">
-            <span class="chip">n8n</span><span class="chip">Make</span><span class="chip">Zapier</span>
-            <span class="chip">Power Automate</span><span class="chip">Apps Script</span><span class="chip">Looker Studio</span>
-          </div>
-        </div>
-      </div>
-    </section>
+<section class="panel console" id="panel-infrastructure" role="tabpanel" aria-labelledby="tab-infrastructure">
+<div class="panel-head">
+<h1 class="panel-title">Backend / VPS</h1>
+<span class="badge" data-tone="prod">DigitalOcean · service probes</span>
+</div>
+<p class="panel-sub">The infrastructure behind the products. Caddy fronts the droplet services; the portfolio and its serverless endpoints deploy separately on Vercel.</p>
+<div class="metrics platform-metrics">
+<div class="metric" data-series="1">
+<span class="metric-value" data-infra="healthy">—</span>
+<span class="metric-label">APIs responding</span>
+<span class="metric-note">MDS Pro + WordWarz · / 2</span>
+</div>
+<div class="metric" data-series="3">
+<span class="metric-value" data-infra="latency">—</span>
+<span class="metric-label">Mean probe latency</span>
+<span class="metric-note">responding APIs only · ms</span>
+</div>
+<div class="metric" data-series="4">
+<span class="metric-value">—</span>
+<span class="metric-label">CPU / RAM / disk</span>
+<span class="metric-note">host collector not connected</span>
+</div>
+<div class="metric" data-series="2">
+<span class="metric-value">Read-only</span>
+<span class="metric-label">Status boundary</span>
+<span class="metric-note">server-side probes · no controls</span>
+</div>
+</div>
+<p class="console-caption" data-infra-stamp>Waiting for probes · API availability does not establish host health</p>
+<div class="pipeline" data-pipeline>
+<div class="console-topline">
+<h3 class="console-caption">Request → service → storage · illustrative replay</h3>
+<div class="pipeline-controls">
+<button type="button" data-pause aria-pressed="false">Pause</button>
+<button type="button" data-next>Next step →</button>
+</div>
+</div>
+<div class="pipeline-track">
+<div class="pipeline-node" data-current="true" data-detail="A browser reaches the product’s HTTPS endpoint.">
+<small>01 / Request</small>
+<strong>Product client</strong>
+<span>Web · extension · game</span>
+</div>
+<div class="pipeline-node" data-detail="Caddy terminates TLS and routes requests to the appropriate droplet service.">
+<small>02 / Edge</small>
+<strong>Caddy / TLS</strong>
+<span>Reverse proxy</span>
+</div>
+<div class="pipeline-node" data-detail="MDS Pro’s Fastify API and WordWarz’s Socket.IO server handle their own product requests.">
+<small>03 / Compute</small>
+<strong>App services</strong>
+<span>Fastify · Socket.IO</span>
+</div>
+<div class="pipeline-node" data-detail="MDS Pro uses Supabase; WordWarz uses SQLite. JobSift’s core owns its separate SQLite database.">
+<small>04 / Persist</small>
+<strong>Product data</strong>
+<span>Supabase · SQLite</span>
+</div>
+<div class="pipeline-node" data-detail="The hub’s Vercel function probes health endpoints every 30 seconds. Host metrics need a separate collector.">
+<small>05 / Observe</small>
+<strong>Hub status</strong>
+<span>Server-side probes</span>
+</div>
+</div>
+<div class="pipeline-output">
+<b data-step>01 / 05</b>
+<span data-output>A browser reaches the product’s HTTPS endpoint.</span>
+</div>
+</div>
+<div class="console-bottom">
+<div class="card">
+<h3>Service map / live reachability</h3>
+<div class="svc-list" data-infra-services>
+<div class="svc-row">
+<span class="dot" data-state="unknown">
+</span>
+<span>MDS Pro API · awaiting probe</span>
+</div>
+<div class="svc-row">
+<span class="dot" data-state="unknown">
+</span>
+<span>WordWarz API · awaiting probe</span>
+</div>
+</div>
+<div class="schema-line">JobSift core · scheduled pipeline · not probed</div>
+<div class="schema-line">Casinore API · on droplet · not probed</div>
+<div class="schema-line">Caddy · reverse proxy · no direct health probe</div>
+<div class="chips">
+<span class="chip">DigitalOcean</span>
+<span class="chip">Linux</span>
+<span class="chip">Caddy</span>
+<span class="chip">PM2 / MDS Pro</span>
+<span class="chip">GitHub Actions</span>
+</div>
+</div>
+<div class="card">
+<h3>Deployment &amp; operations</h3>
+<dl class="story">
+<dt>Deploy</dt>
+<dd>MDS Pro: GitHub Actions reaches the droplet. Portfolio: an allowlisted static build deploys to Vercel.</dd>
+<dt>Jobs</dt>
+<dd>JobSift runs on a schedule, with a home worker feeding the core. Run times and exit status are not connected here yet.</dd>
+<dt>Next</dt>
+<dd>A token-gated collector for uptime, resources, versions and schedules. Redacted logs and repository state require operator access.</dd>
+</dl>
+<p class="console-footnote">Host telemetry, deploy revision, restart counts and TLS expiry are not currently returned by the status API.</p>
+</div>
+</div>
+</section>
 
   </div>
 </div>
 
-<script src="/assets/js/hub.js"></script>
+<script src="/assets/js/hub.js">
+</script>
+<script src="/assets/js/hub-pipelines.js">
+</script>
+<script src="/assets/js/hub-workflows.js">
+</script>
 </body>
 </html>
