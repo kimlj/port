@@ -1,4 +1,4 @@
-/* Compact presentation consoles for panels 3–5. */
+/* Compact presentation consoles for panels 3–6. */
 .panel.console { gap: 16px; }
 .console .panel-sub { max-width: 95ch; font-size: 14px; }
 .console-topline { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
@@ -8,20 +8,8 @@
 .console .metric-value { font-size: 25px; }
 .console .metric-note { font-size: 10px; }
 .pipeline { padding: 16px; border: 1px solid var(--border); border-radius: var(--radius); background: linear-gradient(120deg, rgba(57,135,229,.06), transparent 70%), var(--bg-card); }
-.pipeline-controls { display: flex; gap: 6px; }
-.pipeline button, .evidence-tabs button { font: 11px var(--mono); color: var(--text-muted); border: 1px solid var(--border); border-radius: 5px; background: transparent; padding: 5px 9px; cursor: pointer; }
-.pipeline button:hover, .pipeline button:focus-visible, .evidence-tabs button[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
-.pipeline-track { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 20px; margin-top: 16px; }
-.pipeline-node { position: relative; padding: 12px; border: 1px solid var(--border); border-radius: 7px; min-width: 0; transition: border-color .35s, background .35s; }
-.pipeline-node:not(:last-child)::after { content: ''; position: absolute; width: 20px; height: 1px; background: var(--border); top: 50%; left: 100%; }
-.pipeline-node[data-current="true"] { border-color: var(--accent); background: var(--accent-dim); }
-.pipeline-node[data-current="true"]:not(:last-child)::after { background: var(--accent); animation: pipe-signal 1.2s ease-in-out infinite; }
-.pipeline-node small { display: block; font: 9px var(--mono); text-transform: uppercase; letter-spacing: .09em; color: var(--text-dim); }
-.pipeline-node strong { display: block; margin: 6px 0; font-size: 13px; font-weight: 500; }
-.pipeline-node span { display: block; color: var(--text-muted); font-size: 11px; }
-.pipeline-output { display: flex; gap: 12px; align-items: baseline; border-top: 1px solid var(--border); margin-top: 14px; padding-top: 12px; font: 11px var(--mono); min-height: 30px; }
-.pipeline-output b { color: var(--accent); white-space: nowrap; font-weight: 400; }
-.pipeline-output span { color: var(--text-muted); }
+.evidence-tabs button { font: 11px var(--mono); color: var(--text-muted); border: 1px solid var(--border); border-radius: 5px; background: transparent; padding: 5px 9px; cursor: pointer; }
+.evidence-tabs button:hover, .evidence-tabs button:focus-visible, .evidence-tabs button[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
 .console-bottom { display: grid; grid-template-columns: 1.1fr 1fr; gap: 14px; }
 .console .card { padding: 14px 16px; min-width: 0; }
 .story { display: grid; grid-template-columns: 64px 1fr; gap: 8px 12px; font-size: 12px; }
@@ -45,27 +33,17 @@
 .architecture { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; font: 12px var(--mono); padding: 20px 0 8px; }
 .architecture span { border: 1px solid var(--border); padding: 12px; border-radius: 6px; }
 .architecture b { color: var(--accent); font-weight: 400; }
-@keyframes pipe-signal { 0%,100% { opacity: .2; } 50% { opacity: 1; } }
 @media (max-height: 800px) and (min-width: 901px) {
   .panel.console { gap: 12px; }
   .console .metric { padding: 9px 12px; }
   .pipeline { padding: 12px; }
-  .pipeline-track { margin-top: 12px; }
-  .pipeline-node { padding: 9px; }
   .console .card { padding: 12px; }
 }
-@media (max-width: 1100px) { .pipeline-track { gap: 12px; } .pipeline-node:not(:last-child)::after { width: 12px; } }
 @media (max-width: 900px) {
   .console-bottom, .underhood { grid-template-columns: 1fr; }
   .console .metrics { grid-template-columns: repeat(3, minmax(0,1fr)); }
-  .pipeline-track { grid-template-columns: 1fr; gap: 8px; }
-  .pipeline-node:not(:last-child)::after { width: 1px; height: 8px; left: 24px; top: 100%; }
-  .pipeline-node { display: grid; grid-template-columns: 90px 1fr; align-items: center; gap: 0 8px; }
-  .pipeline-node span { grid-column: 2; }
-  .pipeline-output { min-height: 55px; }
   .console-topline { flex-wrap: wrap; }
   .console .platform-metrics { grid-template-columns: repeat(2, minmax(0,1fr)); }
 }
-@media (prefers-reduced-motion: reduce) { .pipeline-node, .pipeline-node::after { animation: none !important; transition: none; } }
 
 .console .card .console-footnote { font-size: 10px; color: var(--text-dim); margin: 10px 0 0; }

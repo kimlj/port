@@ -1,31 +1,5 @@
 (function () {
   'use strict';
-  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-  document.querySelectorAll('[data-pipeline]').forEach(function (host) {
-    var nodes = Array.from(host.querySelectorAll('.pipeline-node'));
-    var output = host.querySelector('[data-output]');
-    var counter = host.querySelector('[data-step]');
-    var pause = host.querySelector('[data-pause]');
-    var index = 0;
-    var paused = reduced.matches;
-    function paint() {
-      nodes.forEach(function (node, i) { node.dataset.current = String(i === index); });
-      output.textContent = nodes[index].dataset.detail;
-      counter.textContent = String(index + 1).padStart(2, '0') + ' / ' + String(nodes.length).padStart(2, '0');
-      pause.textContent = paused ? 'Play' : 'Pause';
-      pause.setAttribute('aria-pressed', String(paused));
-    }
-    pause.addEventListener('click', function () { paused = !paused; paint(); });
-    host.querySelector('[data-next]').addEventListener('click', function () { paused = true; index = (index + 1) % nodes.length; paint(); });
-    reduced.addEventListener('change', function () { paused = reduced.matches; paint(); });
-    setInterval(function () {
-      if (paused || document.hidden || host.closest('.panel').dataset.active !== 'true') return;
-      index = (index + 1) % nodes.length;
-      paint();
-    }, 2800);
-    paint();
-  });
-
   document.addEventListener('hub:status', function (event) {
     var data = event.detail;
     var host = document.querySelector('[data-infra-services]');
