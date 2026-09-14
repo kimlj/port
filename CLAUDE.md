@@ -170,11 +170,15 @@ it is the screen a walkthrough is given from, so that the walkthrough is not
 eight browser tabs. `X-Robots-Tag: noindex` on both `/hub` and `/hub.html`, and
 nothing on the site links to it.
 
-That purpose decides the layout. **Every panel fits the viewport with no
-scroll**, because a scroll on a screen recording is where the viewer loses the
-thread; switching is `1`–`6` or the arrow keys, because reaching for the mouse
-mid-sentence reads as fumbling. If a panel grows past the fold, cut something
-rather than letting it scroll — the constraint is the feature. It is committed
+That purpose decides the layout. **A panel fits the viewport with no scroll
+unless it has a stated reason not to**, because a scroll on a screen recording
+is where the viewer loses the thread; switching is `1`–`6` or the arrow keys,
+because reaching for the mouse mid-sentence reads as fumbling. If a panel grows
+past the fold, cut something rather than letting it scroll — the constraint is
+the feature, and two panels have argued their way out of it (WordWarz and
+Backend / VPS, each for its own reason, below). Both carry `data-scrolls="true"`,
+which is what draws the fade at the live edge and what `watchScrollEnd` walks to
+switch that fade off at the bottom. It is committed
 to dark for the same reason the WordWarz dashboard is: one look tuned properly
 beats two tuned halfway, and this one is shown on a projector.
 
@@ -216,7 +220,7 @@ kept painting in full blue beside a timestamp from that second.
 
 ### The WordWarz panel
 
-**The one panel that scrolls, and the only one allowed to.** It carries the
+**The first panel to earn a scroll.** It carries the
 whole game dashboard — seventeen sections — and that cannot fit the fold and
 should not be cut down to fit: the figures *are* the walkthrough there, and the
 argument for the project is that there are that many of them and each has a
@@ -473,10 +477,12 @@ walkthrough.
 
 ### Hub pipeline consoles (14 Sep 2026)
 
-Panels 3, 4 and 6 take their console shell — the metric row, the cards and the story block — from `assets/hub-pipelines.css`; `assets/js/hub-pipelines.js` is now only the live wiring, the `hub:status` subscriber behind panel 6's figures and the JobSift snapshot poll. The five-node stepper it used to animate is gone: panel 6 was its only caller, so its markup, its CSS and its loop went with it rather than being left as a second, weaker way of drawing the same thing. JobSift aggregates are exported read-only by `scripts/export-jobsift-hub.py` from a fresh SQLite core backup into JSON and static HTML together. Applied counts union receipt URLs with Applied/Interviewing/Rejected stage URLs; ignored counts use the Ignore stage. Sources count adapters, companies normalize case and whitespace. The VPS panel subscribes to the existing `hub:status` event; it does not make a duplicate poll. CPU, memory, deployment state and logs still require the collector described in TODO. The hub remains dark only.
+Panels 3, 4 and 6 take their console shell — the metric row, the cards and the story block — from `assets/hub-pipelines.css`, which also holds panel 6's `.stack-map`; `assets/js/hub-pipelines.js` is only the live wiring, the `hub:status` subscriber behind panel 6's figures and the JobSift snapshot poll. Panel 6 had a five-node stepper and then a five-scene replay before it; both are gone, and nothing on the panel advances now. JobSift aggregates are exported read-only by `scripts/export-jobsift-hub.py` from a fresh SQLite core backup into JSON and static HTML together. Applied counts union receipt URLs with Applied/Interviewing/Rejected stage URLs; ignored counts use the Ignore stage. Sources count adapters, companies normalize case and whitespace. The VPS panel subscribes to the existing `hub:status` event; it does not make a duplicate poll. CPU, memory, deployment state and logs still require the collector described in TODO. The hub remains dark only.
 
 ### Detailed hub replays
 
-JobSift, Shift Ops and Backend / VPS use `assets/hub-workflows.css` and `assets/js/hub-workflows.js`. Five static HTML scenes per panel carry one fictional record through the work, with timed status messages and staged reveals. The scenes are not live API calls. JobSift follows PY-042 from email to Telegram; Shift Ops follows DEMO-042 and carries the interactive Approve/Reject choice into the report; Backend / VPS follows REQ-042 from a client connection through Caddy, the service, its store and the hub's own probe.
+JobSift and Shift Ops use `assets/hub-workflows.css` and `assets/js/hub-workflows.js`. Five static HTML scenes per panel carry one fictional record through the work, with timed status messages and staged reveals. The scenes are not live API calls. JobSift follows PY-042 from email to Telegram; Shift Ops follows DEMO-042 and carries the interactive Approve/Reject choice into the report.
 
-**Panel 6's last scene is the one that is not a replay, and it says so on screen.** Steps 01–04 are drawn: sample timings, a sample process table, a sample statement, each labelled where it sits rather than only in the footer, because the panel's whole argument is that API reachability is not host health. Step 05 is the probe that actually fills the live figures above the player every 30 seconds, so the replay ends by pointing at the real thing on the same screen. Any figure added to steps 01–04 needs the same label beside it; the footer disclaimer alone is not enough for a number. Overview & evidence switches back to the project narrative and actual JobSift snapshot evidence. The player freezes when its panel, overview, or document is hidden, supports pause/replay/direct step navigation, and starts fully revealed and paused with reduced motion. Source reference: local recodeai `StatusFeed.tsx`; no React dependency added here. Keep all fifteen scenes within the desktop fold and do not mix sample metrics with real aggregate counts.
+**Backend / VPS was given the same replay and then had it taken away again, which is worth not re-doing.** A replay suits a pipeline, where the reader's question is *what happens next*. Panel 6 answers *what is on the box*, and every step of a stepper is four fifths of that answer withheld — so it is a `.stack-map` now: five layers, all of them on screen, each with its own technologies beside the paragraph that explains it, and the panel scrolls rather than paginating itself. The replay's real cost was the figures it needed to look like a replay — sample timings, an invented process table — each of which then had to carry a label saying it was invented. The stack needs none, so **panel 6 now states only measured figures and named gaps**; the *Not measured here* card is that list, and anything added to this panel belongs in one column or the other.
+
+Overview & evidence switches back to the project narrative and actual JobSift snapshot evidence. The player freezes when its panel, overview, or document is hidden, supports pause/replay/direct step navigation, and starts fully revealed and paused with reduced motion. Source reference: local recodeai `StatusFeed.tsx`; no React dependency added here. Keep all ten scenes within the desktop fold and do not mix sample metrics with real aggregate counts.

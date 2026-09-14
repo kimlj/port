@@ -170,7 +170,7 @@ that ends at "and it is deployed" has nothing to point at.
 - **It fits the fold.** Services, deploy state and schedules on one screen;
   logs as a short tail rather than a scroller.
 
-Panel 6 now exists with the deployment map, live MDS Pro / WordWarz API reachability from the existing status poll, and a five-scene request replay in the same player JobSift and Shift Ops use — client, Caddy, service, store, probe. Host metrics are explicitly unavailable. Remaining: the token-gated collector on the droplet, host resources, deploy revisions, schedules, TLS expiry and operator-only redacted logs.
+Panel 6 now exists as a single stack shown all at once — client, Caddy, the four services, the stores and this page’s own probe, each with its technologies — plus live MDS Pro / WordWarz API reachability from the existing status poll, the service map, the deployment notes and an explicit list of what is not measured. It is the second panel allowed to scroll. Host metrics are explicitly unavailable. Remaining: the token-gated collector on the droplet, host resources, deploy revisions, schedules, TLS expiry and operator-only redacted logs.
 
 ## Smaller, unscheduled
 
@@ -205,4 +205,4 @@ Panel 6 now exists with the deployment map, live MDS Pro / WordWarz API reachabi
 
 Panels 3 and 5 include illustrative pipeline replays with pause/step controls. JobSift reads aggregate evidence from `assets/jobsift-stats.json`; these are dated snapshots, not live database queries. Refresh both JSON and the no-JavaScript markup with `python scripts/export-jobsift-hub.py PATH_TO_FRESH_CORE_BACKUP`. The browser checks that file every 30 seconds; updates still require a new export and deployment. A continuous core-to-hub feed is not connected. No job titles, URLs, email content or application evidence are exported.
 
-JobSift, Shift Ops and Backend / VPS now have five detailed sample scenes each, inspired by recodeai’s status feed: input UI, visible processing, stored output and notification/review UI. Panel 6’s fifth scene is the live status probe rather than a sample, and the scene says so. The replay data is fictional and the aggregate counters remain separate. No additional live integration is implied.
+JobSift and Shift Ops have five detailed sample scenes each, inspired by recodeai’s status feed: input UI, visible processing, stored output and notification/review UI. Panel 6 briefly had a sixth set and does not any more — it shows its whole stack at once instead, and carries no sample figures at all. The replay data is fictional and the aggregate counters remain separate. No additional live integration is implied.
