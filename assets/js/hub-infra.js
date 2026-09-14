@@ -20,6 +20,13 @@
   var panel = document.getElementById('panel-infrastructure');
   if (!panel) return;
 
+  // hub.js's vocabulary, not a second copy of it: count up from zero, arm on
+  // create, release on view, once per page life. setFigure handles the 30s
+  // repaints itself - a value that has already been seen tweens to the new one
+  // rather than restarting from zero twice a minute.
+  var M = window.hubMotion || {};
+  function reveal(host, arm) { if (M.revealOnce && host) M.revealOnce(host, arm); }
+
   var note = panel.querySelector('[data-vps-stamp]');
   var noteBase = note ? note.textContent : '';
 
@@ -31,7 +38,9 @@
     if (value === undefined) return;
     panel.querySelectorAll('[data-vps="' + path + '"]').forEach(function (el) {
       var missing = value === null || value === '';
-      el.textContent = missing ? '—' : value;
+      if (missing) el.textContent = '—';
+      else if (M.figure) M.figure(el, String(value));
+      else el.textContent = value;
       if (missing) el.setAttribute('data-vps-missing', 'true');
       else el.removeAttribute('data-vps-missing');
     });
@@ -44,7 +53,16 @@
     if (!bar) return;
     var ok = isFinite(used) && isFinite(total) && total > 0;
     var p = ok ? Math.round((used / total) * 100) : 0;
-    bar.querySelector('em').style.setProperty('--pct', p + '%');
+    var fill = bar.querySelector('em');
+    fill.style.setProperty('--pct', p + '%');
+    // The bar's width is var(--pct); arming it means pinning 0 and releasing
+    // means handing it back, so the target stays in one place.
+    reveal(bar, function (host) {
+      var em = host.querySelector('em');
+      em.style.transition = 'none';
+      em.style.width = '0px';
+      return function () { em.style.transition = 'width .8s cubic-bezier(.22,.61,.36,1)'; em.style.width = ''; };
+    });
     var label = bar.querySelector('b');
     label.textContent = ok ? p + '%' : '—';
     if (ok) label.removeAttribute('data-vps-missing');
@@ -87,13 +105,24 @@
       box.setAttribute('data-state', state);
       host.appendChild(box);
     });
+    reveal(host, function (h) {
+      var boxes = h.children;
+      for (var i = 0; i < boxes.length; i++) { boxes[i].style.transition = 'none'; boxes[i].style.transform = 'scaleY(0)'; }
+      return function () {
+        for (var j = 0; j < boxes.length; j++) {
+          boxes[j].style.transition = 'transform .45s cubic-bezier(.22,.61,.36,1) ' + (j * 14) + 'ms';
+          boxes[j].style.transform = '';
+        }
+      };
+    });
     var scale = panel.querySelectorAll('.uptime-scale span');
     if (scale.length === 2) { scale[0].textContent = strip.firstDay; scale[1].textContent = strip.lastDay; }
     var landed = strip.days.filter(function (x) { return x === 'up'; }).length;
     var scheduled = strip.days.filter(function (x) { return x !== 'unknown'; }).length;
     var total = panel.querySelector('.uptime-total');
     if (total && scheduled) {
-      total.querySelector('b').textContent = landed + ' / ' + scheduled + ' nights';
+      if (M.figure) M.figure(total.querySelector('b'), landed + ' / ' + scheduled + ' nights');
+      else total.querySelector('b').textContent = landed + ' / ' + scheduled + ' nights';
       total.querySelector('span').textContent = ((landed / scheduled) * 100).toFixed(1) + '% landed';
     }
     var sets = panel.querySelector('.strip-sets');

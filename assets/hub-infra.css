@@ -12,9 +12,12 @@
    rest of the page uses it for: the one live path, the sparkline, active
    state, and the figure the panel is proudest of. */
 
-.panel.infra { gap: 12px; }
-.infra-grid { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 12px; align-items: start; }
-.infra-main, .infra-rail { display: grid; gap: 12px; min-width: 0; align-content: start; }
+.panel.infra { gap: 10px; }
+.infra-grid { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 12px; align-items: stretch; }
+.infra-main { display: grid; gap: 10px; min-width: 0; align-content: start; }
+.infra-rail { display: grid; gap: 10px; min-width: 0; align-content: stretch; }
+.infra-rail .card { display: flex; flex-direction: column; }
+.infra-rail .rail-rows { align-content: start; }
 .infra .card { padding: 12px 16px; min-width: 0; }
 .card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
 .card-head h3 { margin: 0; font-family: var(--serif); font-size: 17px; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--text); }
@@ -41,7 +44,7 @@
 .stat-sub { margin: 6px 0 0; font: 10px var(--mono); color: var(--text-dim); }
 .meter { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
 .meter i { flex: 1; height: 8px; border-radius: 4px; background: #1b1b1f; overflow: hidden; }
-.meter em { display: block; height: 100%; width: var(--pct, 0%); border-radius: 4px; background: var(--accent); }
+.meter em { display: block; height: 100%; width: var(--pct, 0%); border-radius: 4px; background: var(--accent); will-change: width; }
 .meter[data-tone="warn"] em { background: var(--degraded); }
 .meter b { font: 11px var(--mono); font-weight: 400; color: var(--text-muted); }
 
@@ -72,7 +75,10 @@
 .proxy-node::before { content: ''; position: absolute; right: 100%; width: 30px; top: 50%; height: 1px; background: var(--border); }
 .proxy-node::after { content: ''; position: absolute; right: 100%; top: 50%; margin-top: -4px; border: 4px solid transparent; border-left-color: var(--border); }
 .proxy-node[data-flow="true"] { border-color: var(--border-hover); }
-.proxy-node[data-flow="true"]::before { background: var(--accent); }
+.proxy-node[data-flow="true"]::before { background: linear-gradient(90deg, var(--accent) 0 35%, #eaffa0 50%, var(--accent) 65% 100%); background-size: 240% 100%; animation: wire-flow 2.6s linear infinite; }
+.proxy-trunk::after { content: ''; position: absolute; left: -0.5px; width: 2px; top: var(--flow-a, 0%); height: calc(var(--flow-b, 0%) - var(--flow-a, 0%)); background: linear-gradient(to top, transparent 0 18%, var(--accent) 45%, transparent 82% 100%); background-size: 100% 220%; animation: wire-rise 2.6s linear infinite; opacity: .85; }
+@keyframes wire-flow { to { background-position: -240% 0; } }
+@keyframes wire-rise { from { background-position: 0 120%; } to { background-position: 0 -120%; } }
 .proxy-node[data-flow="true"]::after { border-left-color: var(--accent); }
 .proxy-node.is-plain::before, .proxy-node.is-plain::after { display: none; }
 
@@ -108,7 +114,7 @@
 .strip-sets { margin-left: 0; flex-basis: 100%; white-space: normal; line-height: 1.45; }
 .uptime-strip { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 18px; }
 .uptime-days { display: flex; gap: 6px; }
-.uptime-days i { flex: 1; min-width: 0; height: 14px; border-radius: 3px; background: var(--up); }
+.uptime-days i { flex: 1; min-width: 0; height: 14px; border-radius: 3px; background: var(--up); transform-origin: bottom; }
 .uptime-days i[data-state="degraded"] { background: var(--degraded); }
 .uptime-days i[data-state="down"] { background: var(--down); }
 .uptime-days i[data-state="unknown"] { background: var(--border); }
@@ -186,4 +192,10 @@
   .proxy-node span:last-child { margin-left: 0; text-align: left; }
   .uptime-strip { grid-template-columns: 1fr; gap: 14px; }
   .uptime-total { text-align: left; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .proxy-node[data-flow="true"]::before { background: var(--accent); animation: none; }
+  .proxy-trunk::after { animation: none; opacity: .6; }
+  .infra * { transition: none !important; }
 }
