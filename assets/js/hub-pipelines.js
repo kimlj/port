@@ -1,36 +1,5 @@
 (function () {
   'use strict';
-  document.addEventListener('hub:status', function (event) {
-    var data = event.detail;
-    var host = document.querySelector('[data-infra-services]');
-    var stamp = document.querySelector('[data-infra-stamp]');
-    var healthy = document.querySelector('[data-infra="healthy"]');
-    var latency = document.querySelector('[data-infra="latency"]');
-    if (!host) return;
-    if (!data) {
-      healthy.textContent = latency.textContent = '—';
-      host.querySelectorAll('.dot').forEach(function (dot) { dot.dataset.state = 'unknown'; });
-      host.querySelectorAll('.lat').forEach(function (label) { label.textContent = 'unknown'; });
-      stamp.textContent = 'Service probes unavailable · host telemetry not connected';
-      return;
-    }
-    var services = (data.services || []).filter(function (s) { return s.id === 'mdspro-api' || s.id === 'wordwarz-api'; });
-    var up = services.filter(function (s) { return s.state === 'up' || s.state === 'degraded'; });
-    healthy.textContent = services.length === 2 ? String(up.length) : '—';
-    latency.textContent = up.length ? String(Math.round(up.reduce(function (sum, s) { return sum + s.latencyMs; }, 0) / up.length)) : '—';
-    host.textContent = '';
-    ['mdspro-api', 'wordwarz-api'].forEach(function (id) {
-      var service = services.find(function (s) { return s.id === id; });
-      var row = document.createElement('div'); row.className = 'svc-row';
-      var dot = document.createElement('span'); dot.className = 'dot'; dot.dataset.state = service ? service.state : 'unknown';
-      var label = document.createElement('span'); label.textContent = id === 'mdspro-api' ? 'MDS Pro API' : 'WordWarz API';
-      var status = document.createElement('span'); status.className = 'lat'; status.textContent = service ? service.state + (service.state !== 'down' ? ' \u00b7 ' + service.latencyMs + 'ms' : '') : 'unknown';
-      row.append(dot, label, status); host.appendChild(row);
-    });
-    var checked = new Date(data.generatedAt);
-    stamp.textContent = 'Service probes · ' + (isNaN(checked.getTime()) ? 'time unavailable' : checked.toLocaleTimeString()) + ' · refreshed every 30s · host telemetry not connected';
-  });
-
   var evidence = document.querySelector('[data-job-evidence]');
   var view = 'sources';
   var data = null;

@@ -170,7 +170,7 @@ that ends at "and it is deployed" has nothing to point at.
 - **It fits the fold.** Services, deploy state and schedules on one screen;
   logs as a short tail rather than a scroller.
 
-Panel 6 now exists as a single stack shown all at once — client, Caddy, the four services, the stores and this page’s own probe, each with its technologies — plus live MDS Pro / WordWarz API reachability from the existing status poll, the service map, the deployment notes and an explicit list of what is not measured. It is the second panel allowed to scroll. Host metrics are explicitly unavailable. Remaining: the token-gated collector on the droplet, host resources, deploy revisions, schedules, TLS expiry and operator-only redacted logs.
+Panel 6 is an operations dashboard: host card, Caddy topology, and a schedule / security / services rail, rendered from `assets/vps-snapshot.json` by `scripts/fetch-vps-snapshot.mjs`. Every figure is a dated read-only SSH collection or an em dash. Remaining, and it is the last piece: install `scripts/droplet/hub-agent.sh` on the droplet with its timer, add the token-gated Caddy route, set `HUB_VPS_URL` and `HUB_VPS_TOKEN` in Vercel — then the host figures come from the existing 30s poll instead of a snapshot, and the uptime strip starts accumulating a per-day series it does not have yet.
 
 ## Smaller, unscheduled
 

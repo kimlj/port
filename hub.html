@@ -1149,6 +1149,7 @@ body {
 </style>
 <link rel="stylesheet" href="/assets/hub-pipelines.css">
 <link rel="stylesheet" href="/assets/hub-workflows.css">
+<link rel="stylesheet" href="/assets/hub-infra.css">
 </head>
 <body>
 
@@ -2737,156 +2738,121 @@ body {
 </div>
 </section>
 
-<section class="panel console" data-scrolls="true" id="panel-infrastructure" role="tabpanel" aria-labelledby="tab-infrastructure">
+<section class="panel infra" data-scrolls="true" id="panel-infrastructure" role="tabpanel" aria-labelledby="tab-infrastructure">
 <div class="panel-head">
 <h1 class="panel-title">Backend / VPS</h1>
 <span class="badge" data-tone="prod">DigitalOcean · service probes</span>
 </div>
-<p class="panel-sub">The infrastructure behind the products. Caddy fronts the droplet services; the portfolio and its serverless endpoints deploy separately on Vercel.</p>
-<div class="metrics platform-metrics">
-<div class="metric" data-series="1">
-<span class="metric-value" data-infra="healthy">—</span>
-<span class="metric-label">APIs responding</span>
-<span class="metric-note">MDS Pro + WordWarz · / 2</span>
+<p class="panel-sub">One Ubuntu droplet behind Caddy, running the APIs for four products. Everything this page does is a read.</p>
+<!-- vps:start -->
+<div class="infra-grid">
+<div class="infra-main">
+
+<div class="card host-card">
+<div class="host-head">
+<span class="host-badge"><svg viewBox="0 0 24 24"><path d="M3 5h18v5H3zM3 14h18v5H3z"/><circle cx="7" cy="7.5" r=".6"/><circle cx="7" cy="16.5" r=".6"/></svg></span>
+<div class="host-id">
+<h2><span data-vps="host.name">casinore-backend</span></h2>
+<p><span data-vps="host.ip">DigitalOcean droplet</span> <span>&#183;</span> <span data-vps="host.region">1 vCPU · 961 MB · 24 GB</span></p>
 </div>
-<div class="metric" data-series="3">
-<span class="metric-value" data-infra="latency">—</span>
-<span class="metric-label">Mean probe latency</span>
-<span class="metric-note">responding APIs only · ms</span>
-</div>
-<div class="metric" data-series="4">
-<span class="metric-value">—</span>
-<span class="metric-label">CPU / RAM / disk</span>
-<span class="metric-note">host collector not connected</span>
-</div>
-<div class="metric" data-series="2">
-<span class="metric-value">Read-only</span>
-<span class="metric-label">Status boundary</span>
-<span class="metric-note">server-side probes · no controls</span>
+<div class="host-chips">
+<span class="mono-chip"><span data-vps="host.os">Ubuntu 24.04.3 LTS</span></span>
+<span class="mono-chip"><span data-vps="host.virt">KVM</span></span>
+<span class="mono-chip">uptime <b><span data-vps="host.uptimeDays">289 days</span></b></span>
 </div>
 </div>
-<p class="console-caption" data-infra-stamp>Waiting for probes · API availability does not establish host health</p>
-<div class="stack-map">
-<div class="stack-layer">
-<div class="stack-label">
-<small>01 / Client</small>
-<strong>The product</strong>
-<div class="chips">
-<span class="chip">HTTPS</span>
-<span class="chip">WebSocket</span>
-<span class="chip">Chrome extension</span>
+<div class="host-stats">
+<div class="stat">
+<div class="stat-head"><span class="card-ico"><svg viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="1.5"/><path d="M10 3v4M14 3v4M10 17v4M14 17v4M3 10h4M3 14h4M17 10h4M17 14h4"/></svg></span><span>CPU</span></div>
+<p class="stat-value"><span data-vps="host.cpu.vcpu">1 vCPU</span></p>
+<p class="stat-sub"><span data-vps="host.cpu.model">DO-Regular</span></p>
+</div>
+<div class="stat">
+<div class="stat-head"><span class="card-ico"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 11v2M11 11v2M15 11v2"/></svg></span><span>RAM</span></div>
+<p class="stat-value"><span data-vps="host.ram">747 / 961 MB</span></p>
+<div class="meter" data-tone="warn"><i><em style="--pct:78%"></em></i><b>78%</b></div>
+</div>
+<div class="stat">
+<div class="stat-head"><span class="card-ico"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 8h8M8 12h8"/><circle cx="12" cy="16.5" r="1"/></svg></span><span>DISK</span></div>
+<p class="stat-value"><span data-vps="host.disk">15 / 24 GB</span></p>
+<div class="meter"><i><em style="--pct:63%"></em></i><b>63%</b></div>
 </div>
 </div>
-<div class="stack-detail">
-<p>A game client, the MDS Pro dashboard or the browser extension opens a connection to its own host name — <code>api.wordwarz.io</code>, <code>dashboard.mdsprosolutions.com</code>. Every product on the droplet is reached the same way, and none of them knows it has neighbours.</p>
 </div>
-</div>
-<div class="stack-layer">
-<div class="stack-label">
-<small>02 / Edge</small>
+
+<div class="card proxy-card">
+<div class="card-head"><span class="card-ico"><svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="2.4"/><circle cx="18" cy="6.5" r="2.4"/><circle cx="18" cy="17.5" r="2.4"/><path d="M8.2 10.9l7.6-3.3M8.2 13.1l7.6 3.3"/></svg></span><h3>Reverse proxy &amp; services</h3><span class="card-note">Caddy terminates TLS and routes to the services on loopback.</span></div>
+<div class="proxy-grid">
+<div class="proxy-source">
+<span class="proxy-lock"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
 <strong>Caddy</strong>
-<div class="chips">
-<span class="chip">Caddy</span>
-<span class="chip">TLS</span>
-<span class="chip">Reverse proxy</span>
-<span class="chip">Automatic certificates</span>
+<span class="mono">:80 / :443</span>
+<small>TLS &#183; HTTP/3<br>Reverse proxy</small>
+</div>
+<div class="proxy-wires"><i class="proxy-trunk" style="--trunk-top:12.50%;--flow-a:0.00%;--flow-b:50.00%"></i></div>
+<div class="proxy-targets">
+<div class="proxy-node" data-flow="true"><span class="state-dot" data-state="up"></span><b>api.casinore.io</b><span>Docker · :3001</span></div>
+<div class="proxy-node"><span class="state-dot" data-state="up"></span><b>api.wordwarz.io</b><span>Docker · :3002</span></div>
+<div class="proxy-node"><span class="state-dot" data-state="up"></span><b>wordle.casinore.io</b><span>Docker · :3002</span></div>
+<div class="proxy-node"><span class="state-dot" data-state="up"></span><b>mdspro.kimlj.dev</b><span>node · :8787</span></div>
 </div>
 </div>
-<div class="stack-detail">
-<p>
-<strong>One certificate per host, renewed without anyone logging in.</strong> Caddy matches on host name and forwards to that service alone; the services themselves listen on the loopback interface, so the edge is the only open door on the machine. A new product costs a host name rather than a firewall change.</p>
-</div>
-</div>
-<div class="stack-layer">
-<div class="stack-label">
-<small>03 / Compute</small>
-<strong>Four services, one box</strong>
-<div class="chips">
-<span class="chip">Linux</span>
-<span class="chip">PM2</span>
-<span class="chip">Node.js</span>
-<span class="chip">Fastify</span>
-<span class="chip">Socket.IO</span>
-<span class="chip">Python</span>
-</div>
-</div>
-<div class="stack-detail">
-<p>
-<strong>Separate processes, separate stores, separate host names.</strong> MDS Pro&#8217;s Fastify API and WordWarz&#8217;s Socket.IO server each answer for themselves; JobSift&#8217;s core runs on a schedule with a worker at home feeding it; Casinore&#8217;s API sits alongside them. They share the machine and nothing else, which is the point — a crash takes one product down, not the box.</p>
-</div>
-</div>
-<div class="stack-layer">
-<div class="stack-label">
-<small>04 / Data</small>
-<strong>One store each</strong>
-<div class="chips">
-<span class="chip">SQLite</span>
-<span class="chip">Supabase</span>
-<span class="chip">Read-only exports</span>
-</div>
-</div>
-<div class="stack-detail">
-<p>WordWarz keeps SQLite on the droplet, MDS Pro uses Supabase off it, and JobSift&#8217;s core owns its own SQLite. <strong>No service reads another&#8217;s store</strong>, so there is no shared database to widen later. What leaves any of them is decided by an allowlist somebody had to add a column to — which is why the panel three tabs left shows counts and no postings.</p>
-</div>
-</div>
-<div class="stack-layer">
-<div class="stack-label">
-<small>05 / Observe</small>
-<strong>This page</strong>
-<div class="chips">
-<span class="chip">Vercel function</span>
-<span class="chip">Server-side probes</span>
-<span class="chip">Every 30s</span>
-</div>
-</div>
-<div class="stack-detail">
-<p>
-<strong>The browser never talks to the droplet.</strong> It asks this site&#8217;s own function, which probes each service&#8217;s health endpoint, keeps only the public fields and returns state and latency — no controls of any kind. That is what fills the four figures at the top of this panel, and the timestamp beside them is the last time it answered.</p>
+<div class="proxy-split"><span>Standalone services</span><i></i></div>
+<div class="proxy-grid">
+<div></div>
+<div></div>
+<div class="proxy-targets">
+<div class="proxy-node is-plain"><span class="state-dot" data-state="up"></span><b>sendit.service</b><span>uvicorn</span></div>
+<div class="proxy-node is-plain"><span class="state-dot" data-state="up"></span><b>jobsift.service</b><span>python worker → Telegram</span></div>
 </div>
 </div>
 </div>
-<div class="infra-cards">
+
+</div>
+<aside class="infra-rail">
+
 <div class="card">
-<h3>Service map / live reachability</h3>
-<div class="svc-list" data-infra-services>
-<div class="svc-row">
-<span class="dot" data-state="unknown">
-</span>
-<span>MDS Pro API · awaiting probe</span>
-</div>
-<div class="svc-row">
-<span class="dot" data-state="unknown">
-</span>
-<span>WordWarz API · awaiting probe</span>
+<div class="card-head"><span class="card-ico"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></span><h3>Scheduled</h3><span class="card-note">4 jobs</span></div>
+<div class="rail-rows">
+<div class="rail-row"><span>03:00</span><span>backup · multiwordle</span><span class="tick">&#10003;</span></div>
+<div class="rail-row"><span>03:15</span><span>backup · mdspro</span><span class="tick">&#10003;</span></div>
+<div class="rail-row"><span>03:45</span><span>offsite · mdspro</span><span class="tick">&#10003;</span></div>
+<div class="rail-row"><span>Mon 10:00</span><span>sheet-sync</span><span class="tick">&#10003;</span></div>
 </div>
 </div>
-<div class="schema-line">JobSift core · scheduled pipeline · not probed</div>
-<div class="schema-line">Casinore API · on droplet · not probed</div>
-<div class="schema-line">Caddy · reverse proxy · no direct health probe</div>
-<p class="console-footnote">Two services answer a health endpoint. The other three are on the machine and are not probed, so this map says where they run, not that they are running.</p>
-</div>
+
 <div class="card">
-<h3>Deployment &amp; operations</h3>
-<dl class="story">
-<dt>Deploy</dt>
-<dd>MDS Pro: GitHub Actions reaches the droplet. Portfolio: an allowlisted static build deploys to Vercel on a push to main.</dd>
-<dt>Jobs</dt>
-<dd>JobSift runs on a schedule, with a home worker feeding the core. Its run times and exit status are not connected here.</dd>
-<dt>Access</dt>
-<dd>Everything this page does is a read. There is no control on it, and the status function has no way to reach a shell.</dd>
-</dl>
+<div class="card-head"><span class="card-ico"><svg viewBox="0 0 24 24"><path d="M12 3l7.5 3v6c0 4.4-3.1 7.9-7.5 9-4.4-1.1-7.5-4.6-7.5-9V6z"/></svg></span><h3>Security</h3></div>
+<div class="rail-check"><span class="tick">&#10003;</span>fail2ban active</div>
+<div class="rail-check"><span class="tick">&#10003;</span>key-only SSH</div>
+<p class="rail-figure"><span data-vps="security.blocked">116</span> failed auth attempts</p>
+<p class="infra-note">10 addresses banned by fail2ban since it started</p>
+<p class="infra-note">No daily series recorded &#183; the collector keeps one once it runs.</p>
 </div>
+
 <div class="card">
-<h3>Not measured here</h3>
-<p>The figures this panel does not show, it does not have. Nothing below is estimated and nothing is drawn from a sample:</p>
-<div class="schema-line">CPU, memory and disk on the host</div>
-<div class="schema-line">Deploy revision and restart counts</div>
-<div class="schema-line">Certificate expiry per host</div>
-<div class="schema-line">Job run times and exit status</div>
-<div class="schema-line">Logs, redacted or otherwise</div>
-<p class="console-footnote">A token-gated read-only collector on the droplet would answer all of them. Until it exists this panel names the gap instead of filling it, because a plausible number here would be indistinguishable from a measured one.</p>
+<div class="card-head"><span class="card-ico"><svg viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg></span><h3>Services</h3><span class="card-note">7 services</span></div>
+<div class="rail-rows">
+<div class="rail-row"><span>caddy.service</span><span>:80/:443</span><span class="rail-state" data-state="running"><i class="state-dot" data-state="up"></i>running</span></div>
+<div class="rail-row"><span>api.casinore.io</span><span>:3001</span><span class="rail-state" data-state="degraded"><i class="state-dot" data-state="degraded"></i>degraded</span></div>
+<div class="rail-row"><span>api.wordwarz.io</span><span>:3002</span><span class="rail-state" data-state="running"><i class="state-dot" data-state="up"></i>running</span></div>
+<div class="rail-row"><span>wordle.casinore.io</span><span>:3002</span><span class="rail-state" data-state="running"><i class="state-dot" data-state="up"></i>running</span></div>
+<div class="rail-row"><span>mdspro.kimlj.dev</span><span>:8787</span><span class="rail-state" data-state="running"><i class="state-dot" data-state="up"></i>running</span></div>
+<div class="rail-row"><span>sendit.service</span><span>-</span><span class="rail-state" data-state="running"><i class="state-dot" data-state="up"></i>running</span></div>
+<div class="rail-row"><span>jobsift.service</span><span>-</span><span class="rail-state" data-state="running"><i class="state-dot" data-state="up"></i>running</span></div>
 </div>
 </div>
+
+</aside>
+</div>
+
+<div class="card uptime-strip is-empty">
+<div class="card-head" style="margin:0"><span class="card-ico"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><h3>Uptime</h3></div>
+<p class="infra-note">No daily history is recorded yet. The host has been up 289 days without a reboot, which is not the same claim &#183; a per-day series needs the collector to have been running for those days.</p>
+</div>
+
+<p class="infra-note">Snapshot taken 2026-09-14 13:13 UTC. Host figures, the schedule and the uptime series are a dated reading, not a live feed &#183; the four figures in the header strip are the live probe.</p>
+<!-- vps:end -->
 </section>
 
   </div>
@@ -2897,6 +2863,8 @@ body {
 <script src="/assets/js/hub-pipelines.js">
 </script>
 <script src="/assets/js/hub-workflows.js">
+</script>
+<script src="/assets/js/hub-infra.js">
 </script>
 </body>
 </html>

@@ -1,0 +1,143 @@
+/* Panel 6 - the droplet, drawn as an operations dashboard.
+
+   Every colour here is a token. The hub's palette already IS this design
+   system (#0a0a0b / #111113 / #222225 / #c8ff00, Instrument Serif + DM Sans +
+   JetBrains Mono), so nothing needed a literal.
+
+   One deliberate departure from the mock it was drawn from: status dots and
+   the uptime squares take --up and --degraded, not the lime accent. A status
+   dot is a judgement and the hub already makes that judgement in green - four
+   of them sit in the header strip directly above this panel, and lime ones
+   below them would read as two systems on one screen. Lime stays what the
+   rest of the page uses it for: the one live path, the sparkline, active
+   state, and the figure the panel is proudest of. */
+
+.panel.infra { gap: 16px; }
+.infra-grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16px; align-items: start; }
+.infra-main, .infra-rail { display: grid; gap: 16px; min-width: 0; }
+.infra .card { padding: 18px 20px; min-width: 0; }
+.card-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.card-head h3 { margin: 0; font-family: var(--serif); font-size: 19px; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--text); }
+.card-ico { width: 26px; height: 26px; display: grid; place-items: center; color: var(--text-muted); flex: none; }
+.card-ico svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; }
+.card-note { margin-left: auto; font-size: 11px; color: var(--text-dim); text-align: right; }
+
+/* ── the host ───────────────────────────────────────────────────────── */
+.host-head { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.host-badge { width: 46px; height: 46px; flex: none; display: grid; place-items: center; border: 1px solid var(--border); border-radius: 10px; color: var(--text-muted); }
+.host-badge svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.5; }
+.host-id h2 { margin: 0; font-size: 22px; font-weight: 500; letter-spacing: -0.01em; }
+.host-id p { margin: 5px 0 0; font: 11px var(--mono); color: var(--text-muted); }
+.host-id p span { color: var(--text-dim); }
+.host-chips { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.mono-chip { font: 11px var(--mono); color: var(--text-muted); border: 1px solid var(--border); border-radius: 9px; padding: 9px 12px; white-space: nowrap; }
+.mono-chip b { font-weight: 400; color: var(--accent); }
+.host-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
+.stat { border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; min-width: 0; }
+.stat-head { display: flex; align-items: center; gap: 11px; }
+.stat-head span { font: 10px var(--mono); letter-spacing: .12em; color: var(--text-muted); }
+.stat-value { margin: 10px 0 0; font: 22px var(--mono); color: var(--text); }
+.stat-value i { font-style: normal; color: var(--text-dim); }
+.stat-sub { margin: 6px 0 0; font: 10px var(--mono); color: var(--text-dim); }
+.meter { display: flex; align-items: center; gap: 11px; margin-top: 11px; }
+.meter i { flex: 1; height: 8px; border-radius: 4px; background: #1b1b1f; overflow: hidden; }
+.meter em { display: block; height: 100%; width: var(--pct, 0%); border-radius: 4px; background: var(--accent); }
+.meter[data-tone="warn"] em { background: var(--degraded); }
+.meter b { font: 11px var(--mono); font-weight: 400; color: var(--text-muted); }
+
+/* ── the topology ───────────────────────────────────────────────────────
+   Connectors are CSS, not SVG. The column they live in is a fixed 60px, so
+   a 1px rule stays 1px at every viewport - an SVG stretched to fill would
+   have to scale non-uniformly, which thickens one axis and not the other. */
+.proxy-grid { display: grid; grid-template-columns: 220px 60px minmax(0, 1fr); align-items: center; }
+.proxy-source { border: 1px solid var(--border); border-radius: 10px; padding: 18px; background: var(--bg-card-hover); }
+.proxy-lock { width: 40px; height: 40px; display: grid; place-items: center; border: 1px solid var(--border); border-radius: 9px; color: var(--accent); background: var(--accent-dim); }
+.proxy-lock svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; }
+.proxy-source strong { display: block; margin: 14px 0 4px; font-family: var(--serif); font-size: 24px; font-weight: 400; }
+.proxy-source .mono { display: block; font: 15px var(--mono); color: var(--text-muted); }
+.proxy-source small { display: block; margin-top: 14px; font: 10px/1.6 var(--mono); color: var(--text-dim); }
+
+.proxy-wires { position: relative; align-self: stretch; }
+/* Caddy's own lead-in, meeting the trunk at its midpoint. */
+.proxy-wires::before { content: ''; position: absolute; left: 0; right: 50%; top: 50%; height: 1px; background: var(--border); }
+/* The trunk runs first node centre to last node centre, so 0% and 100% of it
+   are those centres - which is what lets the live segment be a plain gradient
+   stop rather than anything measured. */
+.proxy-trunk { position: absolute; left: 50%; top: var(--trunk-top, 12.5%); bottom: var(--trunk-top, 12.5%); width: 1px; background: linear-gradient(to bottom, var(--border) 0 var(--flow-a, 0%), var(--accent) var(--flow-a, 0%) var(--flow-b, 0%), var(--border) var(--flow-b, 0%) 100%); }
+
+.proxy-targets { display: grid; gap: 12px; min-width: 0; }
+.proxy-node { position: relative; display: flex; align-items: center; gap: 12px; padding: 14px 16px; border: 1px solid var(--border); border-radius: 9px; background: var(--bg-card-hover); min-width: 0; }
+.proxy-node b { font: 13px var(--mono); font-weight: 400; color: var(--text); overflow-wrap: anywhere; }
+.proxy-node span:last-child { margin-left: auto; font: 11px var(--mono); color: var(--text-muted); text-align: right; white-space: nowrap; }
+.proxy-node::before { content: ''; position: absolute; right: 100%; width: 30px; top: 50%; height: 1px; background: var(--border); }
+.proxy-node::after { content: ''; position: absolute; right: 100%; top: 50%; margin-top: -4px; border: 4px solid transparent; border-left-color: var(--border); }
+.proxy-node[data-flow="true"] { border-color: var(--border-hover); }
+.proxy-node[data-flow="true"]::before { background: var(--accent); }
+.proxy-node[data-flow="true"]::after { border-left-color: var(--accent); }
+.proxy-node.is-plain::before, .proxy-node.is-plain::after { display: none; }
+
+.proxy-split { display: grid; grid-template-columns: 220px minmax(0, 1fr); align-items: center; gap: 60px; margin: 22px 0 18px; }
+.proxy-split span { font: 11px var(--mono); color: var(--text-dim); }
+.proxy-split i { height: 1px; background: repeating-linear-gradient(to right, var(--border) 0 4px, transparent 4px 9px); }
+
+/* ── the rail ───────────────────────────────────────────────────────── */
+.rail-rows { display: grid; }
+.rail-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 9px 0; border-bottom: 1px solid var(--border); font: 12px var(--mono); color: var(--text); }
+.rail-row:last-child { border-bottom: 0; }
+.rail-row > span:first-child { color: var(--text-muted); }
+.rail-row .tick { color: var(--accent); font-size: 13px; }
+.rail-state { display: flex; align-items: center; gap: 7px; font: 11px var(--mono); color: var(--text-muted); }
+.rail-state[data-state="degraded"] { color: var(--degraded); }
+.rail-check { display: flex; align-items: center; gap: 11px; padding: 7px 0; font: 12px var(--mono); color: var(--text); }
+.rail-check .tick { color: var(--accent); }
+.rail-figure { margin: 16px 0 0; padding-top: 15px; border-top: 1px solid var(--border); font: 13px var(--mono); color: var(--text); }
+.spark { display: flex; align-items: flex-end; gap: 5px; height: 38px; margin-top: 12px; }
+.spark i { flex: 1; min-width: 0; background: var(--accent); border-radius: 2px; height: var(--h, 10%); }
+.spark-foot { display: flex; justify-content: flex-end; margin-top: 7px; font: 10px var(--mono); color: var(--text-dim); }
+
+.state-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--unknown); flex: none; display: block; }
+.state-dot[data-state="up"] { background: var(--up); }
+.state-dot[data-state="degraded"] { background: var(--degraded); }
+.state-dot[data-state="down"] { background: var(--down); }
+.rail-row .state-dot { width: 7px; height: 7px; }
+.uptime-strip.is-empty { grid-template-columns: auto minmax(0, 1fr); gap: 16px; }
+
+/* ── the strip ──────────────────────────────────────────────────────── */
+.uptime-strip { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 24px; }
+.uptime-days { display: flex; gap: 6px; }
+.uptime-days i { flex: 1; min-width: 0; height: 17px; border-radius: 4px; background: var(--up); }
+.uptime-days i[data-state="degraded"] { background: var(--degraded); }
+.uptime-days i[data-state="down"] { background: var(--down); }
+.uptime-days i[data-state="unknown"] { background: var(--border); }
+.uptime-scale { display: flex; justify-content: space-between; margin-top: 9px; font: 10px var(--mono); color: var(--text-dim); }
+.uptime-total { text-align: right; }
+.uptime-total b { display: block; font: 22px var(--mono); font-weight: 400; color: var(--text); }
+.uptime-total span { font: 11px var(--mono); color: var(--text-muted); }
+
+/* Nothing on this panel is estimated. A figure the snapshot does not carry
+   renders as an em dash and says why, rather than holding a plausible number
+   that would be indistinguishable from a measured one. */
+.infra [data-vps-missing="true"] { color: var(--text-dim); }
+.infra-note { margin: 0; font: 10px var(--mono); color: var(--text-dim); }
+
+@media (max-width: 1250px) {
+  .infra-grid { grid-template-columns: 1fr; }
+  .infra-rail { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 1100px) {
+  .proxy-grid { grid-template-columns: 180px 40px minmax(0, 1fr); }
+  .proxy-node::before { width: 20px; }
+  .proxy-split { grid-template-columns: 180px minmax(0, 1fr); gap: 40px; }
+  .host-chips { margin-left: 0; width: 100%; }
+}
+@media (max-width: 900px) {
+  .infra-rail { grid-template-columns: 1fr; }
+  .host-stats { grid-template-columns: 1fr; }
+  .proxy-grid, .proxy-split { grid-template-columns: 1fr; gap: 12px; }
+  .proxy-wires { display: none; }
+  .proxy-node::before, .proxy-node::after { display: none; }
+  .proxy-node { flex-wrap: wrap; gap: 6px 12px; }
+  .proxy-node span:last-child { margin-left: 0; text-align: left; }
+  .uptime-strip { grid-template-columns: 1fr; gap: 14px; }
+  .uptime-total { text-align: left; }
+}

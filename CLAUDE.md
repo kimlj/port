@@ -483,6 +483,30 @@ Panels 3, 4 and 6 take their console shell — the metric row, the cards and the
 
 JobSift and Shift Ops use `assets/hub-workflows.css` and `assets/js/hub-workflows.js`. Five static HTML scenes per panel carry one fictional record through the work, with timed status messages and staged reveals. The scenes are not live API calls. JobSift follows PY-042 from email to Telegram; Shift Ops follows DEMO-042 and carries the interactive Approve/Reject choice into the report.
 
-**Backend / VPS was given the same replay and then had it taken away again, which is worth not re-doing.** A replay suits a pipeline, where the reader's question is *what happens next*. Panel 6 answers *what is on the box*, and every step of a stepper is four fifths of that answer withheld — so it is a `.stack-map` now: five layers, all of them on screen, each with its own technologies beside the paragraph that explains it, and the panel scrolls rather than paginating itself. The replay's real cost was the figures it needed to look like a replay — sample timings, an invented process table — each of which then had to carry a label saying it was invented. The stack needs none, so **panel 6 now states only measured figures and named gaps**; the *Not measured here* card is that list, and anything added to this panel belongs in one column or the other.
+**Backend / VPS is not one of these and was twice mistaken for one.** It had the
+five-node stepper, then the five-scene replay, and both were the wrong shape: a
+replay suits a pipeline, where the reader's question is *what happens next*, and
+panel 6 answers *what is on the box*. It is an operations dashboard now — host
+card, a Caddy topology, a schedule/security/services rail and an uptime strip —
+and it is the second panel allowed to scroll.
+
+**Its figures are real or absent, never plausible.** `assets/vps-snapshot.json`
+is a dated read-only SSH collection rendered into the markup by
+`scripts/fetch-vps-snapshot.mjs`, which writes the JSON and the markup in one
+pass so the panel is complete with the script blocked. A field the collection
+did not return renders as an em dash carrying `data-vps-missing` — never 0 and
+never a guess. The design mock this was built from carried an invented IP and an
+invented "152,626 auth attempts blocked"; the real figure is two orders of
+magnitude smaller, and that is the figure on the page.
+
+**The live path is a token-gated document, not SSH from the function.**
+`scripts/droplet/hub-agent.sh` runs read-only on the droplet and writes one JSON
+file; Caddy serves it behind an `X-Hub-Token` matcher with a 404 fall-through;
+`fetchVpsStats` in `api/hub-status.js` fetches it server-side and allowlists the
+fields. It fails closed — with `HUB_VPS_URL` or `HUB_VPS_TOKEN` unset the key is
+absent from the payload and the panel keeps its dated snapshot. **A Vercel
+function holding a key that opens a root shell on a production box is a
+different thing from one holding a token that fetches a document**, and the hub's
+stated property is that it reports and never acts.
 
 Overview & evidence switches back to the project narrative and actual JobSift snapshot evidence. The player freezes when its panel, overview, or document is hidden, supports pause/replay/direct step navigation, and starts fully revealed and paused with reduced motion. Source reference: local recodeai `StatusFeed.tsx`; no React dependency added here. Keep all ten scenes within the desktop fold and do not mix sample metrics with real aggregate counts.

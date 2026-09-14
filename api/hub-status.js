@@ -126,6 +126,51 @@ async function fetchWordWarzStats() {
   }
 }
 
+// The droplet's own reading of itself.
+//
+// NOT SSH from here. A Vercel function holding a key that opens a root shell on
+// a production box is a far larger thing than one holding a token that fetches
+// a JSON document, and the difference shows up the day the env var leaks: one
+// is a stranger reading numbers, the other is a stranger on the machine. The
+// agent on the droplet runs read-only commands and serves the result; this
+// fetches it. The hub stays a thing that reports and never acts, which is the
+// property the whole panel is arguing for.
+//
+// Fails closed. With neither variable set the panel keeps its dated snapshot
+// and says so, which is the honest state and not an error.
+async function fetchVpsStats() {
+  const url = process.env.HUB_VPS_URL;
+  const token = process.env.HUB_VPS_TOKEN;
+  if (!url || !token) return null;
+  try {
+    const res = await withTimeout(url, { headers: { 'X-Hub-Token': token } });
+    if (!res.ok) return null;
+    const body = await res.json();
+    // An allowlist, for the reason the game's one is: the agent's payload is
+    // the thing most likely to grow, and a denylist would publish whatever was
+    // added to it next. No paths, no addresses, no process lists, no log lines.
+    const host = body.host || {};
+    return {
+      generatedAt: typeof body.generatedAt === 'string' ? body.generatedAt : new Date().toISOString(),
+      host: {
+        name: host.name,
+        os: host.os,
+        virt: host.virt,
+        uptimeDays: host.uptimeDays,
+        cpu: host.cpu ? { vcpu: host.cpu.vcpu, model: host.cpu.model } : undefined,
+        ram: host.ram ? { usedMb: host.ram.usedMb, totalMb: host.ram.totalMb } : undefined,
+        disk: host.disk ? { usedGb: host.disk.usedGb, totalGb: host.disk.totalGb } : undefined
+      },
+      security: body.security ? { fail2ban: body.security.fail2ban, sshKeyOnly: body.security.sshKeyOnly, blocked: body.security.blocked, banned: body.security.banned } : undefined,
+      services: Array.isArray(body.services)
+        ? body.services.slice(0, 20).map((s) => ({ name: s.name, port: s.port, state: s.state }))
+        : undefined
+    };
+  } catch (err) {
+    return null;
+  }
+}
+
 // What a stranger may read.
 //
 // An ALLOWLIST, like the query upstream and for the same reason: the game
@@ -237,9 +282,10 @@ module.exports = async (req, res) => {
 
   // All probes at once. Four sequential 4s timeouts is a 16 second page load on
   // the day everything is down, which is the day it most needs to render.
-  const [services, stats] = await Promise.all([
+  const [services, stats, vps] = await Promise.all([
     Promise.all(SERVICES.map(probe)),
-    fetchWordWarzStats()
+    fetchWordWarzStats(),
+    fetchVpsStats()
   ]);
 
   const body = {
@@ -248,7 +294,11 @@ module.exports = async (req, res) => {
     services,
     wordwarz: operator
       ? (stats.error ? { error: stats.error } : stats)
-      : publicProjection(stats)
+      : publicProjection(stats),
+    // Absent rather than null when the agent is not configured or did not
+    // answer, so the panel falls back to its dated snapshot instead of
+    // painting a live-looking row of em dashes.
+    ...(vps ? { vps } : {})
   };
 
   cache = { at: now, key: cacheKey, body };
