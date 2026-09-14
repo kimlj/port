@@ -95,9 +95,17 @@ function render(d) {
   const flowB = Math.max(flowAt, 50).toFixed(2) + "%";
   const trunkTop = proxy.length ? (50 / proxy.length).toFixed(2) + "%" : "12.5%";
 
-  const up = (d.uptime && d.uptime.days) || [];
+  // The strip is the nightly backups, not host uptime. A box that has not
+  // rebooted in 289 days has no daily shape to draw, and the host card already
+  // states the 289 - a thirty-square strip of the same fact would be a chart of
+  // one number. The backups genuinely have a per-day answer: the artifact for
+  // that night is on disk or it is not.
+  const strip = (d.backups && d.backups.strip) || null;
+  const up = (strip && strip.days) || [];
   const healthy = up.filter((s) => s === "up").length;
-  const uptimePct = up.length ? ((healthy / up.length) * 100).toFixed(1) : null;
+  const scheduled = up.filter((s) => s !== "unknown").length;
+  const uptimePct = scheduled ? ((healthy / scheduled) * 100).toFixed(1) : null;
+  const sets = (d.backups && d.backups.sets) || [];
   const sec = d.security || {};
   const spark = (sec.blockedDays || []);
   const sparkMax = Math.max(1, ...spark);
@@ -108,21 +116,21 @@ function render(d) {
 
   const uptimeCard = up.length
     ? `<div class="card uptime-strip">
-<div class="card-head" style="margin:0">${icon("chart", "card-ico")}<h3>Uptime <span class="card-note" style="margin:0">(${up.length} days)</span></h3></div>
+<div class="card-head" style="margin:0">${icon("chart", "card-ico")}<h3>Nightly backups</h3><span class="card-note strip-sets">${sets.map((x) => esc(x.name) + " " + x.hit + "/" + x.scheduled).join(" &#183; ")}</span></div>
 <div>
 <div class="uptime-days">
 ${up.map((s) => `<i data-state="${esc(s)}"></i>`).join("")}
 </div>
-<div class="uptime-scale"><span>${esc((d.uptime && d.uptime.firstDay) || "")}</span><span>${esc((d.uptime && d.uptime.lastDay) || "")}</span></div>
+<div class="uptime-scale"><span>${esc(strip.firstDay)}</span><span>${esc(strip.lastDay)}</span></div>
 </div>
 <div class="uptime-total">
-<b>${healthy} / ${up.length} days</b>
-<span>${uptimePct === null ? "&#8212;" : uptimePct + "% uptime"}</span>
+<b>${healthy} / ${scheduled} nights</b>
+<span>${uptimePct === null ? "&#8212;" : uptimePct + "% landed"}</span>
 </div>
 </div>`
     : `<div class="card uptime-strip is-empty">
-<div class="card-head" style="margin:0">${icon("chart", "card-ico")}<h3>Uptime</h3></div>
-<p class="infra-note">No daily history is recorded yet. The host has been up ${Number.isFinite(h.uptimeDays) ? h.uptimeDays + " days" : "&#8212;"} without a reboot, which is not the same claim &#183; a per-day series needs the collector to have been running for those days.</p>
+<div class="card-head" style="margin:0">${icon("chart", "card-ico")}<h3>Nightly backups</h3></div>
+<p class="infra-note">No dated backup artifacts found, so there is no per-night series to draw.</p>
 </div>`;
 
   return `${START}
@@ -185,6 +193,8 @@ ${(d.standalone || []).map((p) => `<div class="proxy-node is-plain"><span class=
 </div>
 </div>
 
+${uptimeCard}
+
 </div>
 <aside class="infra-rail">
 
@@ -199,10 +209,9 @@ ${(d.cron || []).map((c) => `<div class="rail-row"><span>${esc(c.when)}</span><s
 <div class="card-head">${icon("shield", "card-ico")}<h3>Security</h3></div>
 ${sec.fail2ban === null || sec.fail2ban === undefined ? "" : `<div class="rail-check"><span class="tick">${sec.fail2ban ? "&#10003;" : "&#183;"}</span>fail2ban ${sec.fail2ban ? "active" : "not running"}</div>
 `}${sec.sshKeyOnly === null || sec.sshKeyOnly === undefined ? "" : `<div class="rail-check"><span class="tick">${sec.sshKeyOnly ? "&#10003;" : "&#183;"}</span>${sec.sshKeyOnly ? "key-only SSH" : "password SSH enabled"}</div>
-`}<p class="rail-figure">${field("security.blocked", num(sec.blocked))} failed auth attempts</p>
-<p class="infra-note">${Number.isFinite(sec.banned) ? num(sec.banned) + " addresses banned by fail2ban since it started" : "fail2ban counters unavailable"}</p>
+`}<p class="rail-figure">${field("security.blocked", num(sec.blocked))} failed auth attempts<em>${Number.isFinite(sec.banned) ? num(sec.banned) + " addresses banned" : "ban count unavailable"}</em></p>
 ${spark.length ? `<div class="spark">${spark.map((v) => `<i style="--h:${Math.max(8, Math.round((v / sparkMax) * 100))}%"></i>`).join("")}</div>
-<div class="spark-foot">${spark.length} days</div>` : `<p class="infra-note">No daily series recorded &#183; the collector keeps one once it runs.</p>`}
+<div class="spark-foot">${spark.length} days</div>` : ""}
 </div>
 
 <div class="card">
@@ -215,9 +224,7 @@ ${(d.services || []).map((s) => `<div class="rail-row"><span>${esc(s.name)}</spa
 </aside>
 </div>
 
-${uptimeCard}
-
-<p class="infra-note" data-vps-stamp>Snapshot taken ${stamp}. Host figures, the schedule and the uptime series are a dated reading, not a live feed &#183; the four figures in the header strip are the live probe.${d.verified === false ? " <b>Unverified seed.</b>" : ""}</p>
+<p class="infra-note" data-vps-stamp>Snapshot taken ${stamp}. Host figures, the service states and the nightly-backup series are a dated reading, not a live feed &#183; the four figures in the header strip are the live probe.${d.verified === false ? " <b>Unverified seed.</b>" : ""}</p>
 ${END}`;
 }
 

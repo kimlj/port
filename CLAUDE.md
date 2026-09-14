@@ -487,8 +487,22 @@ JobSift and Shift Ops use `assets/hub-workflows.css` and `assets/js/hub-workflow
 five-node stepper, then the five-scene replay, and both were the wrong shape: a
 replay suits a pipeline, where the reader's question is *what happens next*, and
 panel 6 answers *what is on the box*. It is an operations dashboard now — host
-card, a Caddy topology, a schedule/security/services rail and an uptime strip —
-and it is the second panel allowed to scroll.
+card, a Caddy topology, a schedule/security/services rail and a nightly-backup
+strip — and it fits the fold like every panel but WordWarz. It briefly did not,
+and the CSS carries three height branches (`max-height: 860px`, `820px`, and a
+`1251–1400px` width branch) to keep it fitting: the rail keeps its width while
+the main column loses it, so the proxy rows are the first thing to wrap and the
+panel grows by a line per node.
+
+**The strip is the nightly backups, not host uptime, and that was the only
+honest option.** A box that has not rebooted in 289 days has no per-day shape to
+draw, and the host card already states the 289 — thirty squares of the same fact
+is a chart of one number. The backups do have a per-day answer, already on disk
+and going back further than the window: the dated artifact for that night exists
+or it does not. `hub-agent.sh` reads it from the filenames rather than from a
+log, because a log line says the script reached its last echo and a file says it
+produced something. A set that started mid-window reports its own start rather
+than counting the nights before it as failures.
 
 **Its figures are real or absent, never plausible.** `assets/vps-snapshot.json`
 is a dated read-only SSH collection rendered into the markup by

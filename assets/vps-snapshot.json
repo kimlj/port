@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-14T13:13:31Z",
+  "generatedAt": "2026-09-14T14:03:07Z",
   "source": "hub-agent on the droplet, read server-side",
   "verified": true,
   "host": {
@@ -14,7 +14,7 @@
       "model": "DO-Regular"
     },
     "ram": {
-      "usedMb": 747,
+      "usedMb": 720,
       "totalMb": 961
     },
     "disk": {
@@ -75,8 +75,8 @@
   "security": {
     "fail2ban": true,
     "sshKeyOnly": true,
-    "blocked": 116,
-    "banned": 10,
+    "blocked": 162,
+    "banned": 15,
     "blockedDays": []
   },
   "services": [
@@ -116,9 +116,63 @@
       "state": "running"
     }
   ],
-  "uptime": {
-    "firstDay": null,
-    "lastDay": null,
-    "days": []
+  "backups": {
+    "sets": [
+      {
+        "name": "billing-sheet",
+        "firstDay": "2026-08-18",
+        "hit": 28,
+        "scheduled": 28
+      },
+      {
+        "name": "mdspromonitor",
+        "firstDay": "2026-08-09",
+        "hit": 30,
+        "scheduled": 30
+      },
+      {
+        "name": "multiwordle",
+        "firstDay": "2026-09-07",
+        "hit": 8,
+        "scheduled": 8
+      }
+    ],
+    "strip": {
+      "name": "mdspromonitor",
+      "firstDay": "2026-08-16",
+      "lastDay": "2026-09-14",
+      "days": [
+        "up",
+        "up",
+        "up",
+        "up",
+        "up",
+        "up",
+        "up",
+        "up",
+        "up",
+        "up",
+        "up",
+        "up",
+        "up",
+        "up",
+        "up",
+        "up",
+        "up",
+        "up",
+        "up",
+        "up",
+        "up",
+        "up",
+        "up",
+        "up",
+        "up",
+        "up",
+        "up",
+        "up",
+        "up",
+        "up"
+      ]
+    }
   }
 }
