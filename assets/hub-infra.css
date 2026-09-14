@@ -75,10 +75,28 @@
 .proxy-node::before { content: ''; position: absolute; right: 100%; width: 30px; top: 50%; height: 1px; background: var(--border); }
 .proxy-node::after { content: ''; position: absolute; right: 100%; top: 50%; margin-top: -4px; border: 4px solid transparent; border-left-color: var(--border); }
 .proxy-node[data-flow="true"] { border-color: var(--border-hover); }
-.proxy-node[data-flow="true"]::before { background: linear-gradient(90deg, var(--accent) 0 35%, #eaffa0 50%, var(--accent) 65% 100%); background-size: 240% 100%; animation: wire-flow 2.6s linear infinite; }
-.proxy-trunk::after { content: ''; position: absolute; left: -0.5px; width: 2px; top: var(--flow-a, 0%); height: calc(var(--flow-b, 0%) - var(--flow-a, 0%)); background: linear-gradient(to top, transparent 0 18%, var(--accent) 45%, transparent 82% 100%); background-size: 100% 220%; animation: wire-rise 2.6s linear infinite; opacity: .85; }
-@keyframes wire-flow { to { background-position: -240% 0; } }
-@keyframes wire-rise { from { background-position: 0 120%; } to { background-position: 0 -120%; } }
+.proxy-node[data-flow="true"]::before {
+  background-image: linear-gradient(90deg, transparent, #f4ffbe, transparent), linear-gradient(var(--accent), var(--accent));
+  background-repeat: no-repeat, no-repeat;
+  background-size: 70% 100%, 100% 100%;
+  background-position: -80% 0, 0 0;
+  animation: wire-sweep 2.8s linear infinite 1.45s;
+}
+.proxy-trunk::after {
+  content: '';
+  position: absolute;
+  left: -0.5px;
+  width: 2px;
+  top: var(--flow-a, 0%);
+  height: calc(var(--flow-b, 0%) - var(--flow-a, 0%));
+  background-image: linear-gradient(to top, transparent, #f4ffbe, transparent), linear-gradient(var(--accent), var(--accent));
+  background-repeat: no-repeat, no-repeat;
+  background-size: 100% 55%, 100% 100%;
+  background-position: 0 180%, 0 0;
+  animation: trunk-sweep 2.8s linear infinite;
+}
+@keyframes wire-sweep { to { background-position: 180% 0, 0 0; } }
+@keyframes trunk-sweep { to { background-position: 0 -80%, 0 0; } }
 .proxy-node[data-flow="true"]::after { border-left-color: var(--accent); }
 .proxy-node.is-plain::before, .proxy-node.is-plain::after { display: none; }
 
@@ -93,6 +111,17 @@
 .rail-row > span:first-child { color: var(--text-muted); }
 .rail-row .tick { color: var(--accent); font-size: 13px; }
 .rail-state { display: flex; align-items: center; gap: 7px; font: 11px var(--mono); color: var(--text-muted); }
+.rail-state .state-dot { position: relative; }
+.rail-state .state-dot[data-state="up"]::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid var(--up);
+  opacity: 0;
+  animation: ping 2.6s ease-out infinite;
+  animation-delay: var(--breathe, 0s);
+}
 .rail-state[data-state="degraded"] { color: var(--degraded); }
 .rail-check { display: flex; align-items: center; gap: 10px; padding: 4px 0; font: 12px var(--mono); color: var(--text); }
 .rail-check .tick { color: var(--accent); }
@@ -118,7 +147,7 @@
 .uptime-days i[data-state="degraded"] { background: var(--degraded); }
 .uptime-days i[data-state="down"] { background: var(--down); }
 .uptime-days i[data-state="unknown"] { background: var(--border); }
-.uptime-scale { display: flex; justify-content: space-between; gap: 12px; white-space: nowrap; margin-top: 7px; font: 10px var(--mono); color: var(--text-dim); }
+.uptime-scale { display: flex; justify-content: space-between; gap: 12px; white-space: nowrap; margin-top: 6px; font: 10px var(--mono); color: var(--text-dim); }
 .uptime-total { text-align: right; }
 .uptime-total b { display: block; font: 19px var(--mono); font-weight: 400; color: var(--text); }
 .uptime-total span { font: 11px var(--mono); color: var(--text-muted); }
@@ -195,7 +224,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .proxy-node[data-flow="true"]::before { background: var(--accent); animation: none; }
-  .proxy-trunk::after { animation: none; opacity: .6; }
+  .proxy-node[data-flow="true"]::before { background: var(--accent); background-image: none; animation: none; }
+  .proxy-trunk::after { animation: none; background-image: linear-gradient(var(--accent), var(--accent)); }
+  .rail-state .state-dot[data-state="up"]::after { animation: none; }
   .infra * { transition: none !important; }
 }
