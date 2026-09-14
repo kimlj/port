@@ -357,6 +357,11 @@
     tween(el, st, st.shown, 600, 0);
   }
 
+  // Panel 6 is built by hub-infra.js and wants exactly this vocabulary: count up
+  // from zero, arm on create, release on view, once per page life. A second
+  // implementation would drift from this one, and both are on the same screen.
+  window.hubMotion = { motion: MOTION, figure: setFigure, revealOnce: null, growProp: null };
+
   // A chart block: arm(host) zeroes whatever the builder just made and returns
   // the function that lets it go. Re-armed on every rebuild until the block has
   // been seen, so the release always animates the current nodes and never a
@@ -379,6 +384,8 @@
     });
   }
 
+  window.hubMotion.revealOnce = revealOnce;
+
   // Width, height or left, read off the inline style the builder wrote.
   function growProp(selector, prop, stepMs) {
     return function (host) {
@@ -397,6 +404,10 @@
       };
     };
   }
+
+  window.hubMotion.growProp = growProp;
+
+
 
   // SVG columns rise from their feet, swept left to right by their x - which
   // is a percentage of the width, so the sweep takes the same time however
