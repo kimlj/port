@@ -1,26 +1,26 @@
 {
-  "generatedAt": "2026-09-14T14:17:16Z",
+  "generatedAt": "2026-09-14T16:12:31Z",
   "source": "hub-agent on the droplet, read server-side",
   "verified": true,
   "host": {
     "name": "kimlj-backend",
-    "ip": "DigitalOcean droplet",
-    "region": "1 vCPU · 961 MB · 24 GB",
     "os": "Ubuntu 24.04.3 LTS",
     "virt": "KVM",
-    "uptimeDays": 289,
+    "uptimeDays": 0,
     "cpu": {
       "vcpu": 1,
       "model": "DO-Regular"
     },
     "ram": {
-      "usedMb": 731,
-      "totalMb": 961
+      "usedMb": 839,
+      "totalMb": 1967
     },
     "disk": {
-      "usedGb": 15,
+      "usedGb": 10,
       "totalGb": 24
-    }
+    },
+    "ip": "DigitalOcean droplet",
+    "region": "1 vCPU · 1967 MB · 24 GB"
   },
   "proxy": [
     {
@@ -75,8 +75,8 @@
   "security": {
     "fail2ban": true,
     "sshKeyOnly": true,
-    "blocked": 175,
-    "banned": 16,
+    "blocked": 2,
+    "banned": 1,
     "blockedDays": []
   },
   "services": [
