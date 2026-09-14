@@ -1330,6 +1330,7 @@
         renderStrip(services);
         renderRailDots(services);
         renderGroupServices(services);
+        document.dispatchEvent(new CustomEvent("hub:status", { detail: data }));
         var stale = renderLiveValues(data);
         if (stale) staleSince = new Date();
         else if (!(data.wordwarz && data.wordwarz.error)) staleSince = null;
@@ -1355,6 +1356,7 @@
           dot.removeAttribute('data-state');
         });
         setStamp('status unavailable');
+        document.dispatchEvent(new CustomEvent('hub:status', { detail: null }));
       });
   }
 
@@ -1368,7 +1370,7 @@
   // Figures written straight into the markup - commit counts, MDS Pro's
   // fifteen users - count up on first sight like the fetched ones. Anything
   // that is not a number ("robots.txt", "Looker") is left exactly as written.
-  document.querySelectorAll('.metric-value:not([data-live])').forEach(function (el) {
+  document.querySelectorAll('.metric-value:not([data-live]):not([data-job-count]):not([data-infra])').forEach(function (el) {
     setFigure(el, el.textContent);
   });
 
