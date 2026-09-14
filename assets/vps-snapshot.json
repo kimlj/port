@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-09-14T13:05:00Z",
-  "source": "read-only SSH collection from vps-main",
+  "generatedAt": "2026-09-14T13:13:31Z",
+  "source": "hub-agent on the droplet, read server-side",
   "verified": true,
   "host": {
     "name": "casinore-backend",
@@ -9,40 +9,112 @@
     "os": "Ubuntu 24.04.3 LTS",
     "virt": "KVM",
     "uptimeDays": 289,
-    "cpu": { "vcpu": 1, "model": "DO-Regular @ 2.0GHz" },
-    "ram": { "usedMb": 761, "totalMb": 961 },
-    "disk": { "usedGb": 15, "totalGb": 24 }
+    "cpu": {
+      "vcpu": 1,
+      "model": "DO-Regular"
+    },
+    "ram": {
+      "usedMb": 747,
+      "totalMb": 961
+    },
+    "disk": {
+      "usedGb": 15,
+      "totalGb": 24
+    }
   },
   "proxy": [
-    { "host": "api.casinore.io", "backing": "Docker · :3001", "flow": true },
-    { "host": "api.wordwarz.io", "backing": "Docker · :3002", "flow": false },
-    { "host": "wordle.casinore.io", "backing": "Docker · :3002", "flow": false },
-    { "host": "mdspro.kimlj.dev", "backing": "node · :8787", "flow": false }
+    {
+      "host": "api.casinore.io",
+      "backing": "Docker · :3001",
+      "flow": true
+    },
+    {
+      "host": "api.wordwarz.io",
+      "backing": "Docker · :3002",
+      "flow": false
+    },
+    {
+      "host": "wordle.casinore.io",
+      "backing": "Docker · :3002",
+      "flow": false
+    },
+    {
+      "host": "mdspro.kimlj.dev",
+      "backing": "node · :8787",
+      "flow": false
+    }
   ],
   "standalone": [
-    { "host": "sendit.service", "backing": "uvicorn" },
-    { "host": "jobsift.service", "backing": "python worker → Telegram" }
+    {
+      "host": "sendit.service",
+      "backing": "uvicorn"
+    },
+    {
+      "host": "jobsift.service",
+      "backing": "python worker → Telegram"
+    }
   ],
   "cron": [
-    { "when": "03:00", "what": "backup · multiwordle" },
-    { "when": "03:15", "what": "backup · mdspro" },
-    { "when": "03:45", "what": "offsite · mdspro" },
-    { "when": "Mon 10:00", "what": "sheet-sync" }
+    {
+      "when": "03:00",
+      "what": "backup · multiwordle"
+    },
+    {
+      "when": "03:15",
+      "what": "backup · mdspro"
+    },
+    {
+      "when": "03:45",
+      "what": "offsite · mdspro"
+    },
+    {
+      "when": "Mon 10:00",
+      "what": "sheet-sync"
+    }
   ],
   "security": {
     "fail2ban": true,
-    "sshKeyOnly": null,
-    "blocked": 114,
+    "sshKeyOnly": true,
+    "blocked": 116,
     "banned": 10,
     "blockedDays": []
   },
   "services": [
-    { "name": "caddy.service", "port": ":80/:443", "state": "running" },
-    { "name": "api.casinore.io", "port": ":3001", "state": "degraded" },
-    { "name": "api.wordwarz.io", "port": ":3002", "state": "running" },
-    { "name": "mdspro.kimlj.dev", "port": ":8787", "state": "running" },
-    { "name": "sendit.service", "port": "-", "state": "running" },
-    { "name": "jobsift.service", "port": "-", "state": "running" }
+    {
+      "name": "caddy.service",
+      "port": ":80/:443",
+      "state": "running"
+    },
+    {
+      "name": "api.casinore.io",
+      "port": ":3001",
+      "state": "degraded"
+    },
+    {
+      "name": "api.wordwarz.io",
+      "port": ":3002",
+      "state": "running"
+    },
+    {
+      "name": "wordle.casinore.io",
+      "port": ":3002",
+      "state": "running"
+    },
+    {
+      "name": "mdspro.kimlj.dev",
+      "port": ":8787",
+      "state": "running"
+    },
+    {
+      "name": "sendit.service",
+      "port": "-",
+      "state": "running"
+    },
+    {
+      "name": "jobsift.service",
+      "port": "-",
+      "state": "running"
+    }
   ],
   "uptime": {
     "firstDay": null,

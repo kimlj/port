@@ -112,11 +112,17 @@ SERVICES=""
 add_service() { # name, port, systemd-unit-or-docker-name, kind
   local state
   if [ "$4" = "docker" ]; then
-    case "$(try docker inspect -f '{{.State.Health.Status}}{{.State.Status}}' "$3")" in
-      healthyrunning|running) state=running ;;
-      unhealthy*) state=degraded ;;
+    case "$(try docker inspect -f '{{.State.Status}}|{{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}}' "$3")" in
+      running\|none|running\|healthy) state=running ;;
+      running\|starting) state=degraded ;;
+      running\|unhealthy) state=degraded ;;
       *) state=down ;;
     esac
+  elif [ "$4" = "port" ]; then
+    # Not everything on this box is a unit. The :8787 service is a bare node
+    # process, and something listening on its port is the only claim available
+    # without guessing at a PID.
+    if [ -n "$(try ss -lntH "sport = :$3")" ]; then state=running; else state=down; fi
   else
     case "$(systemctl is-active "$3" 2>/dev/null || true)" in
       active) state=running ;;
@@ -131,7 +137,8 @@ add_service() { # name, port, systemd-unit-or-docker-name, kind
 add_service "caddy.service"     ":80/:443" caddy.service       systemd
 add_service "api.casinore.io"   ":3001"    ore-backend         docker
 add_service "api.wordwarz.io"   ":3002"    server-multiwordle-1 docker
-add_service "mdspro.kimlj.dev"  ":8787"    mdspro.service      systemd
+add_service "wordle.casinore.io" ":3002"   server-multiwordle-1 docker
+add_service "mdspro.kimlj.dev"  ":8787"    8787                port
 add_service "sendit.service"    "-"        sendit.service      systemd
 add_service "jobsift.service"   "-"        jobsift.service     systemd
 
