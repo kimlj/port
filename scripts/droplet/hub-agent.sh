@@ -142,6 +142,58 @@ add_service "mdspro.kimlj.dev"  ":8787"    8787                port
 add_service "sendit.service"    "-"        sendit.service      systemd
 add_service "jobsift.service"   "-"        jobsift.service     systemd
 
+# A real per-day series, and the only one this box already holds. The host has
+# not rebooted in 289 days, so "uptime" has no daily shape to draw; the nightly
+# backups do - one dated artifact per night, and either it is there or the job
+# did not run. Read from the filenames rather than from a log, because a log
+# line says the script reached its last echo and a file says it produced
+# something. A set that started mid-window reports its own start rather than
+# counting the nights before it as failures.
+BACKUPS_JSON=$(python3 - <<'PY'
+import os, re, json, datetime
+ROOT = "/root/backups"
+WINDOW = 30
+today = datetime.date.today()
+window = [(today - datetime.timedelta(days=i)) for i in range(WINDOW - 1, -1, -1)]
+sets = []
+for name in sorted(os.listdir(ROOT)) if os.path.isdir(ROOT) else []:
+    path = os.path.join(ROOT, name)
+    if not os.path.isdir(path):
+        continue
+    days = set()
+    for f in os.listdir(path):
+        m = re.search(r"\d{4}-\d{2}-\d{2}", f)
+        if m:
+            days.add(m.group(0))
+    if not days:
+        continue
+    first = min(days)
+    hit = sum(1 for d in window if d.isoformat() in days)
+    scheduled = sum(1 for d in window if d.isoformat() >= first)
+    sets.append({"name": name, "firstDay": first, "hit": hit, "scheduled": scheduled})
+# The strip draws the set with the longest unbroken coverage of the window; a
+# set that only started last week would draw three weeks of grey and read as
+# three weeks of failure.
+best = max(sets, key=lambda s: (s["scheduled"], s["hit"]), default=None)
+out = {"sets": sets}
+if best:
+    path = os.path.join(ROOT, best["name"])
+    days = set()
+    for f in os.listdir(path):
+        m = re.search(r"\d{4}-\d{2}-\d{2}", f)
+        if m:
+            days.add(m.group(0))
+    out["strip"] = {
+        "name": best["name"],
+        "firstDay": window[0].isoformat(),
+        "lastDay": window[-1].isoformat(),
+        "days": [("up" if d.isoformat() in days else "down" if d.isoformat() >= best["firstDay"] else "unknown") for d in window],
+    }
+print(json.dumps(out))
+PY
+)
+[ -n "$BACKUPS_JSON" ] || BACKUPS_JSON='{"sets":[]}'
+
 cat >"$TMP" <<JSON
 {
   "generatedAt": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
@@ -160,7 +212,8 @@ cat >"$TMP" <<JSON
     "blocked": $(jnum "$F2B_FAILED"),
     "banned": $(jnum "$F2B_BANNED")
   },
-  "services": [$SERVICES]
+  "services": [$SERVICES],
+  "backups": $BACKUPS_JSON
 }
 JSON
 

@@ -164,6 +164,24 @@ async function fetchVpsStats() {
       security: body.security ? { fail2ban: body.security.fail2ban, sshKeyOnly: body.security.sshKeyOnly, blocked: body.security.blocked, banned: body.security.banned } : undefined,
       services: Array.isArray(body.services)
         ? body.services.slice(0, 20).map((s) => ({ name: s.name, port: s.port, state: s.state }))
+        : undefined,
+      // Names of backup sets and whether each night landed. No paths, no file
+      // names, no sizes - a backup's size over time is a shape of the data
+      // inside it, and that data is a client's.
+      backups: body.backups
+        ? {
+            sets: Array.isArray(body.backups.sets)
+              ? body.backups.sets.slice(0, 10).map((x) => ({ name: x.name, firstDay: x.firstDay, hit: x.hit, scheduled: x.scheduled }))
+              : undefined,
+            strip: body.backups.strip
+              ? {
+                  name: body.backups.strip.name,
+                  firstDay: body.backups.strip.firstDay,
+                  lastDay: body.backups.strip.lastDay,
+                  days: Array.isArray(body.backups.strip.days) ? body.backups.strip.days.slice(0, 60) : []
+                }
+              : undefined
+          }
         : undefined
     };
   } catch (err) {

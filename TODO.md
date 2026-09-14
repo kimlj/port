@@ -170,7 +170,7 @@ that ends at "and it is deployed" has nothing to point at.
 - **It fits the fold.** Services, deploy state and schedules on one screen;
   logs as a short tail rather than a scroller.
 
-Panel 6 is an operations dashboard: host card, Caddy topology, and a schedule / security / services rail, rendered from `assets/vps-snapshot.json` by `scripts/fetch-vps-snapshot.mjs`. Every figure is a dated read-only SSH collection or an em dash. Remaining, and it is the last piece: install `scripts/droplet/hub-agent.sh` on the droplet with its timer, add the token-gated Caddy route, set `HUB_VPS_URL` and `HUB_VPS_TOKEN` in Vercel — then the host figures come from the existing 30s poll instead of a snapshot, and the uptime strip starts accumulating a per-day series it does not have yet.
+Panel 6 is an operations dashboard reading the droplet live: `scripts/droplet/hub-agent.sh` runs read-only under a 60s timer, Caddy serves its JSON behind an `X-Hub-Token` matcher with a 404 fall-through, and `fetchVpsStats` in `api/hub-status.js` fetches it server-side on the existing poll. Every figure is a real reading or an em dash, and it fits the fold at 1280x800 and up. The 30-night backup strip comes from the dated artifacts in `/root/backups`. Remaining: the sparkline has no daily auth series (fail2ban keeps a running total, not a per-day one), and nothing tracks per-day *service* uptime — the agent would have to accumulate that itself.
 
 ## Smaller, unscheduled
 

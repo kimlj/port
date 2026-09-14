@@ -12,34 +12,34 @@
    rest of the page uses it for: the one live path, the sparkline, active
    state, and the figure the panel is proudest of. */
 
-.panel.infra { gap: 16px; }
-.infra-grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 16px; align-items: start; }
-.infra-main, .infra-rail { display: grid; gap: 16px; min-width: 0; }
-.infra .card { padding: 18px 20px; min-width: 0; }
-.card-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-.card-head h3 { margin: 0; font-family: var(--serif); font-size: 19px; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--text); }
+.panel.infra { gap: 12px; }
+.infra-grid { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 12px; align-items: start; }
+.infra-main, .infra-rail { display: grid; gap: 12px; min-width: 0; align-content: start; }
+.infra .card { padding: 12px 16px; min-width: 0; }
+.card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.card-head h3 { margin: 0; font-family: var(--serif); font-size: 17px; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--text); }
 .card-ico { width: 26px; height: 26px; display: grid; place-items: center; color: var(--text-muted); flex: none; }
 .card-ico svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; }
 .card-note { margin-left: auto; font-size: 11px; color: var(--text-dim); text-align: right; }
 
 /* ── the host ───────────────────────────────────────────────────────── */
 .host-head { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-.host-badge { width: 46px; height: 46px; flex: none; display: grid; place-items: center; border: 1px solid var(--border); border-radius: 10px; color: var(--text-muted); }
-.host-badge svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.5; }
-.host-id h2 { margin: 0; font-size: 22px; font-weight: 500; letter-spacing: -0.01em; }
+.host-badge { width: 38px; height: 38px; flex: none; display: grid; place-items: center; border: 1px solid var(--border); border-radius: 10px; color: var(--text-muted); }
+.host-badge svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; }
+.host-id h2 { margin: 0; font-size: 19px; font-weight: 500; letter-spacing: -0.01em; }
 .host-id p { margin: 5px 0 0; font: 11px var(--mono); color: var(--text-muted); }
 .host-id p span { color: var(--text-dim); }
 .host-chips { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
-.mono-chip { font: 11px var(--mono); color: var(--text-muted); border: 1px solid var(--border); border-radius: 9px; padding: 9px 12px; white-space: nowrap; }
+.mono-chip { font: 11px var(--mono); color: var(--text-muted); border: 1px solid var(--border); border-radius: 8px; padding: 7px 11px; white-space: nowrap; }
 .mono-chip b { font-weight: 400; color: var(--accent); }
-.host-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
-.stat { border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; min-width: 0; }
+.host-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+.stat { border: 1px solid var(--border); border-radius: 9px; padding: 10px 13px; min-width: 0; }
 .stat-head { display: flex; align-items: center; gap: 11px; }
 .stat-head span { font: 10px var(--mono); letter-spacing: .12em; color: var(--text-muted); }
-.stat-value { margin: 10px 0 0; font: 22px var(--mono); color: var(--text); }
+.stat-value { margin: 7px 0 0; font: 19px var(--mono); color: var(--text); }
 .stat-value i { font-style: normal; color: var(--text-dim); }
 .stat-sub { margin: 6px 0 0; font: 10px var(--mono); color: var(--text-dim); }
-.meter { display: flex; align-items: center; gap: 11px; margin-top: 11px; }
+.meter { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
 .meter i { flex: 1; height: 8px; border-radius: 4px; background: #1b1b1f; overflow: hidden; }
 .meter em { display: block; height: 100%; width: var(--pct, 0%); border-radius: 4px; background: var(--accent); }
 .meter[data-tone="warn"] em { background: var(--degraded); }
@@ -50,12 +50,12 @@
    a 1px rule stays 1px at every viewport - an SVG stretched to fill would
    have to scale non-uniformly, which thickens one axis and not the other. */
 .proxy-grid { display: grid; grid-template-columns: 220px 60px minmax(0, 1fr); align-items: center; }
-.proxy-source { border: 1px solid var(--border); border-radius: 10px; padding: 18px; background: var(--bg-card-hover); }
+.proxy-source { border: 1px solid var(--border); border-radius: 10px; padding: 14px; background: var(--bg-card-hover); }
 .proxy-lock { width: 40px; height: 40px; display: grid; place-items: center; border: 1px solid var(--border); border-radius: 9px; color: var(--accent); background: var(--accent-dim); }
 .proxy-lock svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; }
-.proxy-source strong { display: block; margin: 14px 0 4px; font-family: var(--serif); font-size: 24px; font-weight: 400; }
-.proxy-source .mono { display: block; font: 15px var(--mono); color: var(--text-muted); }
-.proxy-source small { display: block; margin-top: 14px; font: 10px/1.6 var(--mono); color: var(--text-dim); }
+.proxy-source strong { display: block; margin: 10px 0 3px; font-family: var(--serif); font-size: 21px; font-weight: 400; }
+.proxy-source .mono { display: block; font: 13px var(--mono); color: var(--text-muted); }
+.proxy-source small { display: block; margin-top: 10px; font: 10px/1.6 var(--mono); color: var(--text-dim); }
 
 .proxy-wires { position: relative; align-self: stretch; }
 /* Caddy's own lead-in, meeting the trunk at its midpoint. */
@@ -65,8 +65,8 @@
    stop rather than anything measured. */
 .proxy-trunk { position: absolute; left: 50%; top: var(--trunk-top, 12.5%); bottom: var(--trunk-top, 12.5%); width: 1px; background: linear-gradient(to bottom, var(--border) 0 var(--flow-a, 0%), var(--accent) var(--flow-a, 0%) var(--flow-b, 0%), var(--border) var(--flow-b, 0%) 100%); }
 
-.proxy-targets { display: grid; gap: 12px; min-width: 0; }
-.proxy-node { position: relative; display: flex; align-items: center; gap: 12px; padding: 14px 16px; border: 1px solid var(--border); border-radius: 9px; background: var(--bg-card-hover); min-width: 0; }
+.proxy-targets { display: grid; gap: 7px; min-width: 0; }
+.proxy-node { position: relative; display: flex; align-items: center; gap: 12px; padding: 9px 14px; border: 1px solid var(--border); border-radius: 9px; background: var(--bg-card-hover); min-width: 0; }
 .proxy-node b { font: 13px var(--mono); font-weight: 400; color: var(--text); overflow-wrap: anywhere; }
 .proxy-node span:last-child { margin-left: auto; font: 11px var(--mono); color: var(--text-muted); text-align: right; white-space: nowrap; }
 .proxy-node::before { content: ''; position: absolute; right: 100%; width: 30px; top: 50%; height: 1px; background: var(--border); }
@@ -76,21 +76,22 @@
 .proxy-node[data-flow="true"]::after { border-left-color: var(--accent); }
 .proxy-node.is-plain::before, .proxy-node.is-plain::after { display: none; }
 
-.proxy-split { display: grid; grid-template-columns: 220px minmax(0, 1fr); align-items: center; gap: 60px; margin: 22px 0 18px; }
+.proxy-split { display: grid; grid-template-columns: 220px minmax(0, 1fr); align-items: center; gap: 60px; margin: 13px 0 11px; }
 .proxy-split span { font: 11px var(--mono); color: var(--text-dim); }
 .proxy-split i { height: 1px; background: repeating-linear-gradient(to right, var(--border) 0 4px, transparent 4px 9px); }
 
 /* ── the rail ───────────────────────────────────────────────────────── */
 .rail-rows { display: grid; }
-.rail-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 9px 0; border-bottom: 1px solid var(--border); font: 12px var(--mono); color: var(--text); }
+.rail-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 5px 0; border-bottom: 1px solid var(--border); font: 12px var(--mono); color: var(--text); }
 .rail-row:last-child { border-bottom: 0; }
 .rail-row > span:first-child { color: var(--text-muted); }
 .rail-row .tick { color: var(--accent); font-size: 13px; }
 .rail-state { display: flex; align-items: center; gap: 7px; font: 11px var(--mono); color: var(--text-muted); }
 .rail-state[data-state="degraded"] { color: var(--degraded); }
-.rail-check { display: flex; align-items: center; gap: 11px; padding: 7px 0; font: 12px var(--mono); color: var(--text); }
+.rail-check { display: flex; align-items: center; gap: 10px; padding: 4px 0; font: 12px var(--mono); color: var(--text); }
 .rail-check .tick { color: var(--accent); }
-.rail-figure { margin: 16px 0 0; padding-top: 15px; border-top: 1px solid var(--border); font: 13px var(--mono); color: var(--text); }
+.rail-figure { margin: 10px 0 0; padding-top: 9px; border-top: 1px solid var(--border); font: 13px var(--mono); color: var(--text); }
+.rail-figure em { display: block; margin-top: 3px; font: 10px var(--mono); font-style: normal; color: var(--text-dim); }
 .spark { display: flex; align-items: flex-end; gap: 5px; height: 38px; margin-top: 12px; }
 .spark i { flex: 1; min-width: 0; background: var(--accent); border-radius: 2px; height: var(--h, 10%); }
 .spark-foot { display: flex; justify-content: flex-end; margin-top: 7px; font: 10px var(--mono); color: var(--text-dim); }
@@ -103,15 +104,17 @@
 .uptime-strip.is-empty { grid-template-columns: auto minmax(0, 1fr); gap: 16px; }
 
 /* ── the strip ──────────────────────────────────────────────────────── */
-.uptime-strip { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 24px; }
+.uptime-strip .card-head { flex-wrap: wrap; max-width: 215px; row-gap: 2px; }
+.strip-sets { margin-left: 0; flex-basis: 100%; white-space: normal; line-height: 1.45; }
+.uptime-strip { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 18px; }
 .uptime-days { display: flex; gap: 6px; }
-.uptime-days i { flex: 1; min-width: 0; height: 17px; border-radius: 4px; background: var(--up); }
+.uptime-days i { flex: 1; min-width: 0; height: 14px; border-radius: 3px; background: var(--up); }
 .uptime-days i[data-state="degraded"] { background: var(--degraded); }
 .uptime-days i[data-state="down"] { background: var(--down); }
 .uptime-days i[data-state="unknown"] { background: var(--border); }
-.uptime-scale { display: flex; justify-content: space-between; margin-top: 9px; font: 10px var(--mono); color: var(--text-dim); }
+.uptime-scale { display: flex; justify-content: space-between; gap: 12px; white-space: nowrap; margin-top: 7px; font: 10px var(--mono); color: var(--text-dim); }
 .uptime-total { text-align: right; }
-.uptime-total b { display: block; font: 22px var(--mono); font-weight: 400; color: var(--text); }
+.uptime-total b { display: block; font: 19px var(--mono); font-weight: 400; color: var(--text); }
 .uptime-total span { font: 11px var(--mono); color: var(--text-muted); }
 
 /* Nothing on this panel is estimated. A figure the snapshot does not carry
@@ -120,6 +123,49 @@
 .infra [data-vps-missing="true"] { color: var(--text-dim); }
 .infra-note { margin: 0; font: 10px var(--mono); color: var(--text-dim); }
 
+@media (max-height: 860px) and (min-width: 901px) {
+  .panel.infra { gap: 10px; }
+  .infra .card { padding: 11px 14px; }
+  .card-head { margin-bottom: 8px; }
+  .host-stats { margin-top: 10px; gap: 8px; }
+  .stat { padding: 8px 11px; }
+  .stat-value { margin: 5px 0 0; font-size: 17px; }
+  .meter { margin-top: 6px; }
+  .proxy-node { padding: 7px 12px; }
+  .proxy-targets { gap: 6px; }
+  .proxy-split { margin: 10px 0 9px; }
+  .proxy-source { padding: 12px; }
+  .rail-row { padding: 4px 0; }
+  .rail-check { padding: 3px 0; }
+  .uptime-days i { height: 12px; }
+}
+@media (max-height: 820px) and (min-width: 901px) {
+  .infra .panel-sub { display: none; }
+  .proxy-source small { display: none; }
+  .stat-sub { display: none; }
+}
+@media (max-width: 1400px) and (min-width: 1251px) {
+  .proxy-grid { grid-template-columns: 180px 46px minmax(0, 1fr); }
+  .proxy-split { grid-template-columns: 180px minmax(0, 1fr); gap: 46px; }
+  .proxy-node::before { width: 23px; }
+  .proxy-node b { font-size: 12px; }
+  .proxy-node span:last-child { font-size: 10px; }
+  .infra-grid { grid-template-columns: minmax(0, 1fr) 290px; }
+  /* The chips wrapping to a second line is what makes the host card grow here,
+     and the card is the tallest thing in the column. */
+  .mono-chip { font-size: 10px; padding: 6px 9px; }
+  .host-head { gap: 12px; }
+  .host-badge { width: 34px; height: 34px; }
+  .host-id h2 { font-size: 17px; }
+  .uptime-days i { height: 11px; }
+  .uptime-scale { margin-top: 5px; }
+  .uptime-total b { font-size: 17px; }
+  .card-head { margin-bottom: 7px; }
+  .stat { padding: 8px 10px; }
+  .infra .card { padding: 10px 14px; }
+  .uptime-strip .card-head { max-width: 150px; }
+  .strip-sets { display: none; }
+}
 @media (max-width: 1250px) {
   .infra-grid { grid-template-columns: 1fr; }
   .infra-rail { grid-template-columns: repeat(3, minmax(0, 1fr)); }

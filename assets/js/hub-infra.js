@@ -74,9 +74,38 @@
     }
   }
 
+  // The strip changes once a night, but it is drawn from the same payload as
+  // everything else and would otherwise be the one block still showing what the
+  // generator wrote at build time.
+  function paintBackups(b) {
+    var strip = b && b.strip;
+    var host = panel.querySelector('.uptime-days');
+    if (!strip || !host || !Array.isArray(strip.days) || !strip.days.length) return;
+    host.textContent = '';
+    strip.days.forEach(function (state) {
+      var box = document.createElement('i');
+      box.setAttribute('data-state', state);
+      host.appendChild(box);
+    });
+    var scale = panel.querySelectorAll('.uptime-scale span');
+    if (scale.length === 2) { scale[0].textContent = strip.firstDay; scale[1].textContent = strip.lastDay; }
+    var landed = strip.days.filter(function (x) { return x === 'up'; }).length;
+    var scheduled = strip.days.filter(function (x) { return x !== 'unknown'; }).length;
+    var total = panel.querySelector('.uptime-total');
+    if (total && scheduled) {
+      total.querySelector('b').textContent = landed + ' / ' + scheduled + ' nights';
+      total.querySelector('span').textContent = ((landed / scheduled) * 100).toFixed(1) + '% landed';
+    }
+    var sets = panel.querySelector('.strip-sets');
+    if (sets && Array.isArray(b.sets) && b.sets.length) {
+      sets.textContent = b.sets.map(function (x) { return x.name + ' ' + x.hit + '/' + x.scheduled; }).join(' · ');
+    }
+  }
+
   function paint(d, live) {
     if (!d) return;
     paintHost(d.host);
+    if (d.backups) paintBackups(d.backups);
     if (d.security) set('security.blocked', isFinite(d.security.blocked) ? d.security.blocked.toLocaleString('en-US') : null);
     if (note) {
       var when = isFinite(Date.parse(d.generatedAt)) ? new Date(d.generatedAt) : null;
