@@ -217,7 +217,7 @@ ${(d.services || []).map((s) => `<div class="rail-row"><span>${esc(s.name)}</spa
 
 ${uptimeCard}
 
-<p class="infra-note">Snapshot taken ${stamp}. Host figures, the schedule and the uptime series are a dated reading, not a live feed &#183; the four figures in the header strip are the live probe.${d.verified === false ? " <b>Unverified seed.</b>" : ""}</p>
+<p class="infra-note" data-vps-stamp>Snapshot taken ${stamp}. Host figures, the schedule and the uptime series are a dated reading, not a live feed &#183; the four figures in the header strip are the live probe.${d.verified === false ? " <b>Unverified seed.</b>" : ""}</p>
 ${END}`;
 }
 

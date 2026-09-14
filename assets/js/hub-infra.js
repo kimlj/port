@@ -20,12 +20,17 @@
   var panel = document.getElementById('panel-infrastructure');
   if (!panel) return;
 
-  var note = panel.querySelector('.infra-note');
+  var note = panel.querySelector('[data-vps-stamp]');
   var noteBase = note ? note.textContent : '';
 
+  // undefined means this source does not carry the field; null means it carries
+  // it and has no value. Only the second is an em dash - the first has to leave
+  // whatever the snapshot wrote, or the live payload blanks the fields it was
+  // never allowlisted to send.
   function set(path, value) {
+    if (value === undefined) return;
     panel.querySelectorAll('[data-vps="' + path + '"]').forEach(function (el) {
-      var missing = value === null || value === undefined || value === '';
+      var missing = value === null || value === '';
       el.textContent = missing ? '—' : value;
       if (missing) el.setAttribute('data-vps-missing', 'true');
       else el.removeAttribute('data-vps-missing');
@@ -54,9 +59,9 @@
     set('host.region', h.region);
     set('host.os', h.os);
     set('host.virt', h.virt);
-    set('host.uptimeDays', isFinite(h.uptimeDays) ? h.uptimeDays + ' days' : null);
+    set('host.uptimeDays', h.uptimeDays === undefined ? undefined : isFinite(h.uptimeDays) ? h.uptimeDays + ' days' : null);
     if (h.cpu) {
-      set('host.cpu.vcpu', isFinite(h.cpu.vcpu) ? h.cpu.vcpu + ' vCPU' : null);
+      set('host.cpu.vcpu', h.cpu.vcpu === undefined ? undefined : isFinite(h.cpu.vcpu) ? h.cpu.vcpu + ' vCPU' : null);
       set('host.cpu.model', h.cpu.model);
     }
     if (h.ram) {
