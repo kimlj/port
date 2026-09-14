@@ -217,7 +217,7 @@ ${spark.length ? `<div class="spark">${spark.map((v) => `<i style="--h:${Math.ma
 <div class="card">
 <div class="card-head">${icon("box", "card-ico")}<h3>Services</h3><span class="card-note">${(d.services || []).length} services</span></div>
 <div class="rail-rows">
-${(d.services || []).map((s) => `<div class="rail-row"><span>${esc(s.name)}</span><span>${esc(s.port)}</span><span class="rail-state" data-state="${esc(s.state)}"><i class="state-dot" data-state="${s.state === "running" ? "up" : s.state === "degraded" ? "degraded" : "down"}"></i>${esc(s.state)}</span></div>`).join("\n")}
+${(d.services || []).map((s, i) => `<div class="rail-row"><span>${esc(s.name)}</span><span>${esc(s.port)}</span><span class="rail-state" data-state="${esc(s.state)}" style="--breathe:${(i * 0.32).toFixed(2)}s"><i class="state-dot" data-state="${s.state === "running" ? "up" : s.state === "degraded" ? "degraded" : "down"}"></i>${esc(s.state)}</span></div>`).join("\n")}
 </div>
 </div>
 

@@ -61,7 +61,7 @@
       var em = host.querySelector('em');
       em.style.transition = 'none';
       em.style.width = '0px';
-      return function () { em.style.transition = 'width .8s cubic-bezier(.22,.61,.36,1)'; em.style.width = ''; };
+      return function () { em.style.transition = 'width 1.7s cubic-bezier(.22,.61,.36,1)'; em.style.width = ''; };
     });
     var label = bar.querySelector('b');
     label.textContent = ok ? p + '%' : '—';
@@ -110,7 +110,7 @@
       for (var i = 0; i < boxes.length; i++) { boxes[i].style.transition = 'none'; boxes[i].style.transform = 'scaleY(0)'; }
       return function () {
         for (var j = 0; j < boxes.length; j++) {
-          boxes[j].style.transition = 'transform .45s cubic-bezier(.22,.61,.36,1) ' + (j * 14) + 'ms';
+          boxes[j].style.transition = 'transform .8s cubic-bezier(.22,.61,.36,1) ' + (j * 30) + 'ms';
           boxes[j].style.transform = '';
         }
       };
