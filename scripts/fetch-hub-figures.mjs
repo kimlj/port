@@ -4,7 +4,7 @@
  *
  *     node scripts/fetch-hub-figures.mjs [--check]
  *
- * Four panels each carry a Commits tile. They were hand-typed and correct on
+ * MDS Pro and WordWarz carry Commits tiles. JobSift now uses database aggregates; the portfolio panel explains its architecture. They were hand-typed and correct on
  * the day they were typed, and three of the four had drifted within a week -
  * MDS Pro by fourteen, the portfolio by six. That is the ordinary fate of a
  * number nobody recounts, and it matters more here than on most pages: the hub
@@ -43,9 +43,7 @@ const HUB = join(ROOT, "hub.html");
 // count available, and it is the same count.
 const PANELS = [
   { id: "mdspro", repo: "mdspromonitor", name: "MDS Pro" },
-  { id: "wordwarz", repo: "Multiwordle", name: "WordWarz" },
-  { id: "jobsift", repo: "jobsift", name: "jobsift" },
-  { id: "portfolio", repo: ROOT, name: "kimlj.dev" }
+  { id: "wordwarz", repo: "Multiwordle", name: "WordWarz" }
 ];
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
