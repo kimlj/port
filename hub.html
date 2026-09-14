@@ -2737,10 +2737,14 @@ body {
 </div>
 </section>
 
-<section class="panel console" id="panel-infrastructure" role="tabpanel" aria-labelledby="tab-infrastructure">
+<section class="panel console workflow-console" data-console-mode="workflow" id="panel-infrastructure" role="tabpanel" aria-labelledby="tab-infrastructure">
 <div class="panel-head">
 <h1 class="panel-title">Backend / VPS</h1>
 <span class="badge" data-tone="prod">DigitalOcean · service probes</span>
+<div class="console-mode" aria-label="Project view">
+<button type="button" data-console-mode="workflow" aria-pressed="true">Workflow demo</button>
+<button type="button" data-console-mode="overview" aria-pressed="false">Overview &amp; evidence</button>
+</div>
 </div>
 <p class="panel-sub">The infrastructure behind the products. Caddy fronts the droplet services; the portfolio and its serverless endpoints deploy separately on Vercel.</p>
 <div class="metrics platform-metrics">
@@ -2766,44 +2770,421 @@ body {
 </div>
 </div>
 <p class="console-caption" data-infra-stamp>Waiting for probes · API availability does not establish host health</p>
-<div class="pipeline" data-pipeline>
-<div class="console-topline">
-<h3 class="console-caption">Request → service → storage · illustrative replay</h3>
-<div class="pipeline-controls">
-<button type="button" data-pause aria-pressed="false">Pause</button>
-<button type="button" data-next>Next step →</button>
+<div class="workflow-player" data-workflow="infrastructure" data-beat="3" data-paused="true">
+<div class="workflow-toolbar">
+<div>
+<span class="demo-label">SAMPLE REPLAY</span>
+<span class="workflow-run">REQUEST / REQ-042</span>
+</div>
+<div class="workflow-controls">
+<button type="button" data-restart aria-label="Restart sample replay">↺ Replay</button>
+<button type="button" data-play aria-pressed="false">Play</button>
+<button type="button" data-advance>Next →</button>
 </div>
 </div>
-<div class="pipeline-track">
-<div class="pipeline-node" data-current="true" data-detail="A browser reaches the product’s HTTPS endpoint.">
-<small>01 / Request</small>
-<strong>Product client</strong>
-<span>Web · extension · game</span>
+<div class="workflow-nav" aria-label="Request path steps">
+<button type="button" data-goto="0" aria-pressed="true">
+<span>01</span>Request<i>
+</i>
+</button>
+<button type="button" data-goto="1" aria-pressed="false">
+<span>02</span>Edge<i>
+</i>
+</button>
+<button type="button" data-goto="2" aria-pressed="false">
+<span>03</span>Compute<i>
+</i>
+</button>
+<button type="button" data-goto="3" aria-pressed="false">
+<span>04</span>Persist<i>
+</i>
+</button>
+<button type="button" data-goto="4" aria-pressed="false">
+<span>05</span>Observe<i>
+</i>
+</button>
 </div>
-<div class="pipeline-node" data-detail="Caddy terminates TLS and routes requests to the appropriate droplet service.">
-<small>02 / Edge</small>
-<strong>Caddy / TLS</strong>
-<span>Reverse proxy</span>
+<div class="workflow-stage">
+<section class="workflow-scene" data-scene="0" aria-label="A client request reaches the droplet">
+<div class="demo-app">
+<div class="demo-app-bar">
+<span class="window-dots">● ● ●</span>
+<b>Product client / network</b>
+<span>DEMO</span>
 </div>
-<div class="pipeline-node" data-detail="MDS Pro’s Fastify API and WordWarz’s Socket.IO server handle their own product requests.">
-<small>03 / Compute</small>
-<strong>App services</strong>
-<span>Fastify · Socket.IO</span>
+<div class="demo-app-body">
+<div class="net-layout">
+<div class="net-url">
+<b>GET</b>
+<span>https://api.wordwarz.io/health</span>
 </div>
-<div class="pipeline-node" data-detail="MDS Pro uses Supabase; WordWarz uses SQLite. JobSift’s core owns its separate SQLite database.">
-<small>04 / Persist</small>
-<strong>Product data</strong>
-<span>Supabase · SQLite</span>
+<p class="demo-muted">A game client, the MDS Pro dashboard or the browser extension opens a connection. Every product on the droplet is reached the same way.</p>
+<div class="net-timings">
+<div class="reveal" data-reveal="1">
+<span>DNS</span>
+<i>
+<em style="--seg:14%"></em>
+</i>
+<b>11 ms</b>
 </div>
-<div class="pipeline-node" data-detail="The hub’s Vercel function probes health endpoints every 30 seconds. Host metrics need a separate collector.">
-<small>05 / Observe</small>
-<strong>Hub status</strong>
-<span>Server-side probes</span>
+<div class="reveal" data-reveal="1">
+<span>TLS</span>
+<i>
+<em style="--seg:46%"></em>
+</i>
+<b>38 ms</b>
+</div>
+<div class="reveal" data-reveal="2">
+<span>Server</span>
+<i>
+<em style="--seg:78%"></em>
+</i>
+<b>64 ms</b>
+</div>
+<div class="reveal" data-reveal="3">
+<span>Transfer</span>
+<i>
+<em style="--seg:9%"></em>
+</i>
+<b>7 ms</b>
 </div>
 </div>
-<div class="pipeline-output">
-<b data-step>01 / 05</b>
-<span data-output>A browser reaches the product’s HTTPS endpoint.</span>
+</div>
+<div class="reveal scene-result" data-reveal="3">
+<span class="result-check">✓</span> 200 OK · sample timings, not a measurement</div>
+</div>
+</div>
+<aside class="run-feed">
+<small>STEP 01 / 05</small>
+<h3>A client opens the connection</h3>
+<ol>
+<li data-log="0">
+<span class="run-log-dot">
+</span>
+<span>Resolving the product hostname…</span>
+<b>00s</b>
+</li>
+<li data-log="1">
+<span class="run-log-dot">
+</span>
+<span>TLS handshake with the droplet…</span>
+<b>02s</b>
+</li>
+<li data-log="2">
+<span class="run-log-dot">
+</span>
+<span>Request sent · waiting on the service</span>
+<b>04s</b>
+</li>
+<li data-log="3">
+<span class="run-log-dot">
+</span>
+<span>Response received · connection reused</span>
+<b>06s</b>
+</li>
+</ol>
+<div class="run-summary">The host names are the real ones. The timings belong to this sample request, not to the live probes above.</div>
+</aside>
+</section>
+<section class="workflow-scene" data-scene="1" hidden aria-label="Caddy terminates TLS and routes the request">
+<div class="demo-app">
+<div class="demo-app-bar">
+<span class="window-dots">● ● ●</span>
+<b>Caddy / reverse proxy</b>
+<span>DEMO</span>
+</div>
+<div class="demo-app-body">
+<div class="edge-layout">
+<div class="caddy-file">
+<small>SITE BLOCKS</small>
+<div class="route-branch" data-edge="0">api.wordwarz.io<b>reverse_proxy</b>
+</div>
+<div class="route-branch" data-edge="1">dashboard.mdsprosolutions.com<b>reverse_proxy</b>
+</div>
+<div class="route-branch" data-edge="2">the droplet&#8217;s other hosts<b>reverse_proxy</b>
+</div>
+<p class="demo-muted">The host names are the real ones. Upstream addresses and ports are not shown.</p>
+</div>
+<div class="edge-note">
+<small>WHAT THE EDGE DOES</small>
+<p class="reveal" data-reveal="1">
+<strong>Terminates TLS.</strong> One certificate per host, issued and renewed without anyone logging in.</p>
+<p class="reveal" data-reveal="2">
+<strong>Matches on host name.</strong> A request never reaches a service that was not asked for.</p>
+<p class="reveal" data-reveal="3">
+<strong>Is the only open door.</strong> The services listen on the loopback interface; nothing else is published.</p>
+</div>
+</div>
+<div class="reveal scene-result" data-reveal="3">
+<span class="result-check">✓</span> Matched on host name · forwarded to that service alone</div>
+</div>
+</div>
+<aside class="run-feed">
+<small>STEP 02 / 05</small>
+<h3>The edge decides where it goes</h3>
+<ol>
+<li data-log="0">
+<span class="run-log-dot">
+</span>
+<span>Connection accepted on the HTTPS port…</span>
+<b>00s</b>
+</li>
+<li data-log="1">
+<span class="run-log-dot">
+</span>
+<span>Certificate presented for the requested host</span>
+<b>02s</b>
+</li>
+<li data-log="2">
+<span class="run-log-dot">
+</span>
+<span>Site block matched on host name</span>
+<b>04s</b>
+</li>
+<li data-log="3">
+<span class="run-log-dot">
+</span>
+<span>Proxied to that service on loopback</span>
+<b>06s</b>
+</li>
+</ol>
+<div class="run-summary">Caddy is the reason a new product costs a host name rather than a firewall change.</div>
+</aside>
+</section>
+<section class="workflow-scene" data-scene="2" hidden aria-label="The application service handles the request">
+<div class="demo-app">
+<div class="demo-app-bar">
+<span class="window-dots">● ● ●</span>
+<b>Droplet / process list</b>
+<span>DEMO</span>
+</div>
+<div class="demo-app-body">
+<div class="proc-wrap">
+<table class="proc-table">
+<thead>
+<tr>
+<th>Service</th>
+<th>State</th>
+<th>Restarts</th>
+<th>Uptime</th>
+</tr>
+</thead>
+<tbody>
+<tr class="proc-live">
+<td>wordwarz-api <em>Socket.IO</em>
+</td>
+<td>online</td>
+<td>0</td>
+<td>12d</td>
+</tr>
+<tr>
+<td>mdspro-api <em>Fastify</em>
+</td>
+<td>online</td>
+<td>0</td>
+<td>12d</td>
+</tr>
+<tr>
+<td>jobsift-core <em>scheduled</em>
+</td>
+<td>idle until next run</td>
+<td>0</td>
+<td>&#8212;</td>
+</tr>
+<tr>
+<td>casinore-api <em>on the droplet</em>
+</td>
+<td>online</td>
+<td>0</td>
+<td>12d</td>
+</tr>
+</tbody>
+</table>
+<p class="warning-chip reveal" data-reveal="2">Every figure in this table is a sample value. Real restarts, uptime and host resources need the collector that is not connected yet.</p>
+</div>
+<div class="reveal scene-result" data-reveal="3">
+<span class="result-check">✓</span> Handled in-process · no shell, no deploy, nothing this page can trigger</div>
+</div>
+</div>
+<aside class="run-feed">
+<small>STEP 03 / 05</small>
+<h3>One service answers for itself</h3>
+<ol>
+<li data-log="0">
+<span class="run-log-dot">
+</span>
+<span>Request arrives at the service…</span>
+<b>00s</b>
+</li>
+<li data-log="1">
+<span class="run-log-dot">
+</span>
+<span>Route matched · handler invoked</span>
+<b>02s</b>
+</li>
+<li data-log="2">
+<span class="run-log-dot">
+</span>
+<span>Each product runs as its own process</span>
+<b>04s</b>
+</li>
+<li data-log="3">
+<span class="run-log-dot">
+</span>
+<span>A crash takes one product down, not the box</span>
+<b>06s</b>
+</li>
+</ol>
+<div class="run-summary">Four products share one machine and nothing else: separate processes, separate stores, separate host names.</div>
+</aside>
+</section>
+<section class="workflow-scene" data-scene="3" hidden aria-label="The service reads and writes its own store">
+<div class="demo-app">
+<div class="demo-app-bar">
+<span class="window-dots">● ● ●</span>
+<b>Data layer / this service only</b>
+<span>DEMO</span>
+</div>
+<div class="demo-app-body">
+<div class="store-layout">
+<div class="store-list">
+<small>WHO OWNS WHAT</small>
+<div class="store-row reveal" data-reveal="1">
+<b>WordWarz</b>
+<span>SQLite on the droplet</span>
+</div>
+<div class="store-row reveal" data-reveal="1">
+<b>MDS Pro</b>
+<span>Supabase, off the droplet</span>
+</div>
+<div class="store-row reveal" data-reveal="2">
+<b>JobSift core</b>
+<span>its own SQLite · read-only exports</span>
+</div>
+<p class="demo-muted">No service reads another&#8217;s store, so there is no shared database to widen.</p>
+</div>
+<div class="store-query">
+<small>SAMPLE STATEMENT</small>
+<code class="reveal" data-reveal="2">SELECT mode, COUNT(*)
+  FROM games
+ WHERE finished_at &gt; ?
+ GROUP BY mode;</code>
+<p class="reveal" data-reveal="3">
+<strong>The statement names its own columns.</strong> The hub&#8217;s stats route is an allowlist for the same reason: what a stranger can read is decided by a list somebody had to add to, never by whatever the table happens to hold.</p>
+</div>
+</div>
+<div class="reveal scene-result" data-reveal="3">
+<span class="result-check">✓</span> Answered from one store · illustrative statement, not a live query</div>
+</div>
+</div>
+<aside class="run-feed">
+<small>STEP 04 / 05</small>
+<h3>It reads only its own data</h3>
+<ol>
+<li data-log="0">
+<span class="run-log-dot">
+</span>
+<span>Opening the service&#8217;s own store…</span>
+<b>00s</b>
+</li>
+<li data-log="1">
+<span class="run-log-dot">
+</span>
+<span>Statement prepared with bound parameters</span>
+<b>02s</b>
+</li>
+<li data-log="2">
+<span class="run-log-dot">
+</span>
+<span>Rows returned to the handler</span>
+<b>04s</b>
+</li>
+<li data-log="3">
+<span class="run-log-dot">
+</span>
+<span>Response written · nothing else was reachable</span>
+<b>06s</b>
+</li>
+</ol>
+<div class="run-summary">The statement is illustrative. The rule it stands for is not: each product owns one store and reads no other.</div>
+</aside>
+</section>
+<section class="workflow-scene" data-scene="4" hidden aria-label="The hub probes the services from the server side">
+<div class="demo-app">
+<div class="demo-app-bar">
+<span class="window-dots">● ● ●</span>
+<b>Hub status / server-side probe</b>
+<span>DEMO</span>
+</div>
+<div class="demo-app-body">
+<div class="probe-layout">
+<div class="probe-list">
+<small>WHAT THE FUNCTION DOES</small>
+<div class="probe-row reveal" data-reveal="1">
+<span>Probes each service&#8217;s health endpoint</span>
+<b>server-side</b>
+</div>
+<div class="probe-row reveal" data-reveal="2">
+<span>Keeps only the public allowlist</span>
+<b>allowlist</b>
+</div>
+<div class="probe-row reveal" data-reveal="3">
+<span>Returns state and latency · no controls</span>
+<b>read-only</b>
+</div>
+</div>
+<div class="probe-payload">
+<small>SHAPE OF THE REPLY</small>
+<code class="reveal" data-reveal="2">{ "services": [
+    { "id": "…", "state": "up",
+      "latencyMs": … } ],
+  "generatedAt": "…" }</code>
+<p class="reveal" data-reveal="3">
+<strong>The browser never talks to the droplet.</strong> It asks this site&#8217;s own function, which is why the page needs no cross-origin permission and holds no token of its own.</p>
+</div>
+</div>
+<div class="reveal scene-result" data-reveal="3">
+<span class="result-check">✓</span> This is the step that is real · the figures above this replay come from it, every 30 seconds</div>
+</div>
+</div>
+<aside class="run-feed">
+<small>STEP 05 / 05</small>
+<h3>The hub watches, and only watches</h3>
+<ol>
+<li data-log="0">
+<span class="run-log-dot">
+</span>
+<span>The page asks its own status function…</span>
+<b>00s</b>
+</li>
+<li data-log="1">
+<span class="run-log-dot">
+</span>
+<span>The function probes the services in turn</span>
+<b>02s</b>
+</li>
+<li data-log="2">
+<span class="run-log-dot">
+</span>
+<span>Public fields only · operator data withheld</span>
+<b>04s</b>
+</li>
+<li data-log="3">
+<span class="run-log-dot">
+</span>
+<span>Figures painted · the replay ends where you are</span>
+<b>06s</b>
+</li>
+</ol>
+<div class="run-summary">Reachability is all this establishes. CPU, memory, deploy revision and logs still need a collector on the box.</div>
+</aside>
+</section>
+</div>
+<div class="workflow-footer">
+<span class="running-dot">
+</span>
+<span data-run-status>Paused · Sample request</span>
+<span class="workflow-disclaimer">Illustrative request · real service topology</span>
 </div>
 </div>
 <div class="console-bottom">

@@ -223,3 +223,68 @@
 @media (prefers-reduced-motion: reduce) { .workflow-player *, .workflow-player *::before, .workflow-player *::after { animation: none !important; transition: none !important; } }
 
 .chat-typing[hidden] { display: none; }
+
+/* Backend / VPS: the same replay shape as JobSift and Shift Ops, following one
+   request instead of one record. Literal colours here for the same reason as
+   the Gmail and Sheets mocks above - these are pictures of other programs, and
+   a terminal that follows the site's accent stops looking like a terminal. */
+.demo-app code { display: block; white-space: pre; overflow-x: auto; font: 10px/1.6 var(--mono); color: #a8c4d8; background: #141a21; border: 1px solid #2c3843; border-radius: 5px; padding: 10px 12px; margin: 10px 0; }
+.demo-app-body > div > small, .demo-app-body small.section-label { display: block; color: #697784; font: 9px var(--mono); letter-spacing: .15em; }
+/* 01 Request: a sample timing breakdown, labelled as one. */
+.net-layout { padding: 18px 16px 4px; min-height: 265px; display: flex; flex-direction: column; }
+.net-url { display: flex; align-items: baseline; gap: 9px; font: 11px var(--mono); overflow-wrap: anywhere; }
+.net-url b { color: #c8ff00; font-weight: 400; font-size: 10px; }
+.net-url span { color: #dce3ec; }
+.net-layout .demo-muted { margin: 9px 0 16px; }
+.net-timings { display: grid; gap: 9px; margin-top: auto; }
+.net-timings > div { display: grid; grid-template-columns: 54px minmax(0, 1fr) 46px; align-items: center; gap: 10px; font: 10px var(--mono); color: #9caaba; }
+.net-timings i { height: 5px; background: #263039; border-radius: 3px; overflow: hidden; }
+.net-timings em { display: block; height: 100%; width: var(--seg); background: #6f9fc4; }
+.net-timings b { text-align: right; font-weight: 400; color: #c3d0dd; }
+/* 02 Edge: the site block that matched lights up when the log says it did. */
+.edge-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; padding: 18px 16px; min-height: 265px; }
+.caddy-file .route-branch { margin: 9px 0; font: 10px var(--mono); overflow-wrap: anywhere; }
+.caddy-file .route-branch b { float: right; margin-left: 8px; color: #7c8b99; }
+.workflow-player[data-beat="2"] [data-edge="0"], .workflow-player[data-beat="3"] [data-edge="0"] { color: #cedea7; border-color: #667c41; background: #303e25; }
+.caddy-file .demo-muted { margin-top: 16px; font-size: 10px; }
+.edge-note { border-left: 1px solid #35434f; padding-left: 18px; }
+.edge-note p { font-size: 11px; margin: 11px 0; }
+/* 03 Compute: one row per product, and a chip saying the figures are invented. */
+.proc-wrap { padding: 16px; }
+.proc-table { width: 100%; border-collapse: collapse; font: 10px var(--mono); }
+.proc-table th { text-align: left; font-weight: 400; color: #8e9cab; background: #222b34; }
+.proc-table th, .proc-table td { border: 1px solid #303b45; padding: 9px 8px; color: #becbd7; }
+.proc-table em { font-style: normal; color: #75828f; margin-left: 5px; }
+.proc-table .proc-live td { background: #24302a; color: #d3eecb; }
+.proc-table .proc-live td:first-child { box-shadow: inset 2px 0 0 #c8ff00; }
+.proc-wrap .warning-chip { margin-top: 14px; line-height: 1.5; }
+/* 04 Persist: who owns what, beside a statement that is explicitly a sample. */
+.store-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; padding: 18px 16px; min-height: 265px; }
+.store-row { display: flex; justify-content: space-between; gap: 10px; padding: 8px 0; border-bottom: 1px solid #2b353f; font-size: 11px; }
+.store-row b { font-weight: 500; color: #dce3ec; }
+.store-row span { color: #93a2b2; font: 10px var(--mono); text-align: right; }
+.store-list .demo-muted { margin-top: 14px; }
+.store-query { border-left: 1px solid #35434f; padding-left: 18px; }
+.store-query p { font-size: 11px; }
+/* 05 Observe: the one step that is not a replay, and says so. */
+.probe-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; padding: 18px 16px; min-height: 265px; }
+.probe-row { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; padding: 9px 0; border-bottom: 1px solid #2b353f; font-size: 11px; color: #c2cedb; }
+.probe-row b { font: 9px var(--mono); font-weight: 400; color: #86a9c0; white-space: nowrap; }
+.probe-payload { border-left: 1px solid #35434f; padding-left: 18px; }
+.probe-payload p { font-size: 11px; }
+@media (max-height: 800px) and (min-width: 901px) {
+ .net-layout, .edge-layout, .store-layout, .probe-layout, .proc-wrap { padding: 12px; }
+ .net-layout, .edge-layout, .store-layout, .probe-layout { min-height: 0; }
+ .net-timings { gap: 7px; }
+ .proc-table th, .proc-table td { padding: 7px 8px; }
+}
+@media (max-width: 900px) {
+ .edge-layout, .store-layout, .probe-layout { grid-template-columns: 1fr; gap: 12px; padding: 12px; min-height: 0; }
+ .edge-note, .store-query, .probe-payload { border-left: 0; padding-left: 0; }
+ .net-layout { padding: 12px; min-height: 0; }
+ .net-timings > div { grid-template-columns: 46px minmax(0, 1fr) 42px; gap: 8px; }
+ .proc-wrap { padding: 10px; overflow-x: auto; }
+ .proc-table { min-width: 360px; }
+ .store-row { flex-direction: column; gap: 2px; }
+ .store-row span { text-align: left; }
+}
