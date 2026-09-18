@@ -38,3 +38,4 @@ letter points at.
 | 2026-09-18 | React Native Developer, Rovexa (onlinejobs) | `/r/rovexa-13dfc195.pdf` | `Kim_Julongbayan_Resume_Rovexa.pdf` |
 | 2026-09-18 | AI Engineer, DDU Media (onlinejobs) | `/r/ddumedia-450557dd.pdf` | `Kim_Julongbayan_Resume_DDUMedia.pdf` |
 | 2026-09-19 | AI Builder / Automation Specialist, HighLevelPros (onlinejobs) | `/r/highlevelpros-5e847e81.pdf` | `Kim_Julongbayan_Resume_HighLevelPros.pdf` |
+| 2026-09-19 | Website Developer, Five Pillars Real Estate Investors (onlinejobs) | `/r/fivepillars-7c2ff018.pdf` | `Kim_Julongbayan_Resume_FivePillars.pdf` |
