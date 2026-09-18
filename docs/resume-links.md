@@ -34,3 +34,4 @@ letter points at.
 | 2026-09-18 | Automation Specialist, Best One Insurance (onlinejobs) | `/r/bestoneinsurance-2ad8d76a.pdf` | `Kim_Julongbayan_Resume_BestOneInsurance.pdf` |
 | 2026-09-18 | AI Automation Developer, Australian online education company (onlinejobs) | `/r/auseduai-ca7f315c.pdf` | `Kim_Julongbayan_Resume_AusEduAI.pdf` |
 | 2026-09-18 | Software Developer, Glitchy (onlinejobs) | `/r/glitchy-c996135c.pdf` | `Kim_Julongbayan_Resume_Glitchy.pdf` |
+| 2026-09-18 | AI Automation Engineer & Full Stack Developer, Medical Centre Network (onlinejobs) | `/r/medcn-67adf044.pdf` | `Kim_Julongbayan_Resume_MEDCN.pdf` |
