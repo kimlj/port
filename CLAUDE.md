@@ -448,7 +448,7 @@ walkthrough.
 
 ## Working here
 
-- **Branch, don't commit to `main`** — `main` is what Vercel deploys.
+- **Commit to `main` directly** — `main` is what Vercel deploys, so pushing it deploys the site.
 - **Verify in a browser when the layout changes** — a new element in the flow, a
   flex or grid direction, a cap, anything a media query or an inherited rule
   might disagree with. Most bugs in this file are visual or layout-order problems
