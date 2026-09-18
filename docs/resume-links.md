@@ -36,3 +36,4 @@ letter points at.
 | 2026-09-18 | Software Developer, Glitchy (onlinejobs) | `/r/glitchy-c996135c.pdf` | `Kim_Julongbayan_Resume_Glitchy.pdf` |
 | 2026-09-18 | AI Automation Engineer & Full Stack Developer, Medical Centre Network (onlinejobs) | `/r/medcn-67adf044.pdf` | `Kim_Julongbayan_Resume_MEDCN.pdf` |
 | 2026-09-18 | React Native Developer, Rovexa (onlinejobs) | `/r/rovexa-13dfc195.pdf` | `Kim_Julongbayan_Resume_Rovexa.pdf` |
+| 2026-09-18 | AI Engineer, DDU Media (onlinejobs) | `/r/ddumedia-450557dd.pdf` | `Kim_Julongbayan_Resume_DDUMedia.pdf` |
