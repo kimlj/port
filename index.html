@@ -619,6 +619,9 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 .project-link { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1.25rem; font-size: 0.85rem; font-weight: 500; color: var(--accent); transition: gap 0.3s; }
 .project-link svg { width: 16px; height: 16px; stroke: var(--accent); fill: none; stroke-width: 2; transition: transform 0.3s; }
 .project-card:hover .project-link svg { transform: translateX(4px); }
+/* A card whose site is down keeps the CTA's place in the layout but not its
+   promise: no arrow and no accent, because both read as "this goes somewhere". */
+.project-link.is-inactive { color: var(--text-dim); font-weight: 400; }
 
 /* -- 05 / Experience --------------------------------------------------------
    Two entries do not need a progress rail, ripple dots and a sidebar; the
@@ -2023,21 +2026,28 @@ footer .footer-accent { color: var(--accent); }
     </div>
     <div class="work-item" data-name="Casinore.io" data-class="Blockchain" data-fig="Web3" data-figlabel="wallet auth">
       <div class="project-stuck">
-        <a href="https://casinore.io" target="_blank" class="project-card reveal spotlight-card">
+        <!-- No href: the site is down for maintenance, and a card that still
+             opened casinore.io would send the reader to a dead page. The badge
+             and the CTA both say so; the CTA keeps its slot so the card does
+             not change height against the others in the stage. -->
+        <div class="project-card reveal spotlight-card">
           <div class="project-info">
             <span class="project-tag">Blockchain &amp; Web3</span>
-            <h3>Casinore.io</h3>
+            <div class="project-head">
+              <h3>Casinore.io</h3>
+              <span class="project-status">Under Maintenance</span>
+            </div>
             <p class="project-origin">A hobby experiment — I wanted to explore Web3 by tinkering with open-source blockchain code and see how far I could push it.</p>
             <p>A decentralized, fully secure blockchain platform built with Privy for seamless wallet authentication. Features trustless architecture, on-chain transactions, and a robust security-first approach to Web3 gaming.</p>
             <p>Full stack across 1,072 commits: a React and Vite front end on Privy wallet auth, the Solana wallet adapter and <span class="hl-inline">@solana/web3.js</span>, over an Express and WebSocket backend that verifies Privy tokens server-side against SQLite. Alongside it a headless TypeScript bot for the same protocol, picking squares by expected value and ROI across four named strategies, stopping after a set loss streak and under configurable risk limits, Dockerised with a restart policy for 24/7 operation on a VPS.</p>
             <div class="project-tech"><span class="hl">Blockchain</span><span class="hl">Privy</span><span class="hl">Solana</span><span>web3.js</span><span>Wallet Adapter</span><span>Web3</span><span>Node.js</span><span>TypeScript</span><span>Docker</span><span>Decentralized</span></div>
-            <div class="project-link">Visit Site <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+            <div class="project-link is-inactive">Under maintenance</div>
           </div>
           <div class="project-visual">
             <div class="project-visual-bg pv-2"></div>
             <img src="assets/casinore-preview.webp" alt="Casinore.io platform screenshot" class="project-visual-img" loading="lazy">
           </div>
-        </a>
+        </div>
       </div>
     </div>
     </div><!-- /.work-stage -->
