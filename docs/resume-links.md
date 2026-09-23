@@ -39,3 +39,4 @@ letter points at.
 | 2026-09-18 | AI Engineer, DDU Media (onlinejobs) | `/r/ddumedia-450557dd.pdf` | `Kim_Julongbayan_Resume_DDUMedia.pdf` |
 | 2026-09-19 | AI Builder / Automation Specialist, HighLevelPros (onlinejobs) | `/r/highlevelpros-5e847e81.pdf` | `Kim_Julongbayan_Resume_HighLevelPros.pdf` |
 | 2026-09-19 | Website Developer, Five Pillars Real Estate Investors (onlinejobs) | `/r/fivepillars-7c2ff018.pdf` | `Kim_Julongbayan_Resume_FivePillars.pdf` |
+| 2026-09-23 | AI Agent Developer, Faccelove (onlinejobs.ph #883) | `/r/faccelove-3bf61633.pdf` | `Kim_Julongbayan_Resume_Faccelove.pdf` |
