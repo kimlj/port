@@ -2,6 +2,11 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "node scripts/build.mjs",
   "outputDirectory": "dist",
+  "functions": {
+    "api/hub-status.js": {
+      "regions": ["sin1"]
+    }
+  },
   "headers": [
     {
       "source": "/assets/(.*).webp",
