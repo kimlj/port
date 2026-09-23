@@ -8,7 +8,9 @@
 // wrong sentence on a portfolio — a copy bug. Give it a tool and the worst case
 // becomes a reached system instead.
 //
-// Required env:  ANTHROPIC_API_KEY
+// Required env:  DEEPSEEK_API_KEY or ANTHROPIC_API_KEY. With the DeepSeek key
+//                set, the call goes to DeepSeek's Anthropic-compatible endpoint;
+//                remove it to fall back to Claude. Nothing else changes.
 // Optional env:  CHAT_TICKET_SECRET   survives an API key rotation
 //                CHAT_HOURLY_USD      rolling spend ceiling, default 1.00
 
@@ -25,11 +27,15 @@ const {
   SPEND_CAP_USD
 } = require('../lib/guards');
 
-const MODEL = 'claude-haiku-4-5';
+const DEEPSEEK = Boolean(process.env.DEEPSEEK_API_KEY);
+const MODEL = DEEPSEEK ? 'deepseek-flash' : 'claude-haiku-4-5';
 const MAX_TOKENS = 400;        // the widget is not a general chat client
 const MAX_QUESTION = 800;      // characters
 const MAX_TURNS = 8;           // last N messages of history the client may send
-const API = 'https://api.anthropic.com/v1/messages';
+const API = DEEPSEEK
+  ? 'https://api.deepseek.com/anthropic/v1/messages'
+  : 'https://api.anthropic.com/v1/messages';
+const API_KEY = DEEPSEEK ? process.env.DEEPSEEK_API_KEY : process.env.ANTHROPIC_API_KEY;
 
 const say = (res, code, error) => res.status(code).json({ error });
 
@@ -70,8 +76,8 @@ module.exports = async (req, res) => {
 
   if (!allowedOrigin(req)) return say(res, 403, 'Not available from here.');
 
-  if (!process.env.ANTHROPIC_API_KEY) {
-    console.error('chat: ANTHROPIC_API_KEY is not set');
+  if (!API_KEY) {
+    console.error('chat: neither DEEPSEEK_API_KEY nor ANTHROPIC_API_KEY is set');
     return say(res, 503, 'The assistant is not configured yet.');
   }
 
@@ -122,12 +128,15 @@ module.exports = async (req, res) => {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'x-api-key': API_KEY,
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
         model: MODEL,
         max_tokens: MAX_TOKENS,
+        // DeepSeek thinks by default, and the thinking is billed against
+        // max_tokens: at 400 it can spend them all and return no text at all.
+        ...(DEEPSEEK && { thinking: { type: 'disabled' } }),
         // The corpus is ~16k tokens and identical on every request, so it is
         // cached. Anything that varies per request must stay after this
         // breakpoint — caching is a prefix match and one changing byte above it
@@ -149,8 +158,8 @@ module.exports = async (req, res) => {
 
     if (!upstream.ok) {
       const detail = await upstream.text();
-      console.error('chat: anthropic responded', upstream.status, detail.slice(0, 500));
-      // Upstream status codes are not forwarded: a 401 from Anthropic means our
+      console.error('chat: model API responded', upstream.status, detail.slice(0, 500));
+      // Upstream status codes are not forwarded: a 401 from the model API means our
       // key is wrong, and the widget reads 401 as "my ticket expired".
       return say(res, 502, 'I could not answer that just now. Try again in a moment.');
     }
