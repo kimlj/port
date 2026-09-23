@@ -41,3 +41,4 @@ letter points at.
 | 2026-09-19 | Website Developer, Five Pillars Real Estate Investors (onlinejobs) | `/r/fivepillars-7c2ff018.pdf` | `Kim_Julongbayan_Resume_FivePillars.pdf` |
 | 2026-09-23 | AI Agent Developer, Faccelove (onlinejobs.ph #883) | `/r/faccelove-3bf61633.pdf` | `Kim_Julongbayan_Resume_Faccelove.pdf` |
 | 2026-09-23 | AI Agent Developer, Faccelove (onlinejobs.ph #883) | `/r/faccelove-4272b1db.pdf` | `Kim_Julongbayan_Resume_Faccelove.pdf` |
+| 2026-09-23 | Technology and Automation Specialist, employer 829602 (onlinejobs.ph #479) | `/r/techautomationspecialist-23ff3d59.pdf` | `Kim_Julongbayan_Resume_TechAutomationSpecialist.pdf` |
