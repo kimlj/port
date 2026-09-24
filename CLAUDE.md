@@ -22,10 +22,10 @@ page renders as unstyled links rather than throwing anything.
 ## The hero film
 
 `hero-film.js` tells a story over the hero, then hands the page to it. It has
-**two cuts**. The 57.6-second one autoplays: hello world → contribution
-calendar → AI → WordWarz → MDS Pro → pipelines → portrait. The 88.8-second
-full cut adds Avatars, RecodeAI, Reach and Open source, and plays from the chip
-under the CTAs or with `?film=full`. Everything is cut to a 100 BPM bar grid (a
+**two cuts**. The 67.2-second one autoplays: hello world → contribution
+calendar → AI → AI orchestration → WordWarz → MDS Pro → pipelines → portrait.
+The 91.2-second full cut adds Avatars, RecodeAI and Open source, and plays from
+the chip under the CTAs or with `?film=full`. Everything is cut to a 100 BPM bar grid (a
 bar is 2.4s). One set of 2,191 particles, one per calendar day 2021–2026,
 reshapes itself through every chapter and ends as a halftone of `profile.webp`
 sitting exactly on the source-code portrait, which is what appears when it
@@ -36,8 +36,8 @@ fades.
   seek, chapter clicks, pause and the audio resync free. Do not add state that
   carries from one frame to the next.
 - **Every scene keeps its own clock.** The first cut's seven scenes keep the
-  absolute times they were written against (`o` in `SC`). The full cut's four
-  count from zero. A cut is a list of scenes, and `applyCut()` lays them end to
+  absolute times they were written against (`o` in `SC`). The four added
+  since (orchestration, avatars, RecodeAI, open source) count from zero. A cut is a list of scenes, and `applyCut()` lays them end to
   end and gives each a shift. Formations, overlays, captions and score events
   all name their scene, so adding or reordering a scene is an edit to `CUTS`
   plus that scene's own parts. Scenes are whole bars, so the beat never slips
@@ -51,11 +51,10 @@ fades.
   - The merged pull requests (`PRS`) come from
     `gh search prs --author kimlj --merged` and are dated on screen, because
     GitHub is out of reach under `connect-src 'self'`.
-  - The Reach chapter's tool names are the real ones in
-    `mdspromonitor/server/src/routes/ask.ts` and `jarvis-router`.
-  - The model roles orbiting the AI chapter's sphere, and the 20+ skills and 5
-    subagents under it, come from the owner's resume (`jobsift/resume.txt`) and
-    `~/.claude/agents`.
+  - The orchestration's roles (ChatGPT plans and designs, Claude Code builds,
+    DeepSeek reviews), and the 20+ skills and 5 subagents under them, come from
+    the owner's resume (`jobsift/resume.txt`) and `~/.claude/agents`. The work
+    shown inside its cards is illustrative.
 
   Re-check the exceptions when the repositories behind them change.
 - **The avatars are one sprite**, `assets/avatar-sprite-60.webp`. It is built by
@@ -75,8 +74,7 @@ fades.
   without a jump.
 - **`heroFilm.renderOffline('full')` renders a cut's score** and reports peak
   and loudness per second. Run it after touching levels. The full cut peaks at
-  0.82 with no clipping. The Reach breakdown dips to about −22 dB against −16
-  around it, on purpose.
+  0.78 and the autoplay cut at 0.81, both with no clipping.
 - **When it plays is decided in `<head>`**, as the `ev-film-boot` class, so the
   hero never flashes before the film covers it. It plays once per visitor per
   fortnight (`localStorage.heroFilmSeen`), never under reduced motion, and

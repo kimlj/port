@@ -26,9 +26,9 @@
  * picture rather than the other way round — audio cannot be nudged without a
  * click, pictures can.
  *
- * TWO CUTS. The 58-second one autoplays, once per visitor per fortnight (the
+ * TWO CUTS. The 67-second one autoplays, once per visitor per fortnight (the
  * head script decides, so the hero never flashes before the film covers it).
- * The 89-second one adds Avatars, RecodeAI, Reach and Open source, and plays
+ * The 91-second one adds Avatars, RecodeAI and Open source, and plays
  * from the chip under the CTAs, or with ?film=full. Reduced motion and
  * returning visitors get the hero as it always was, plus that chip.
  */
@@ -59,22 +59,22 @@
     open: { o: 0, bars: 2, n: 'hello, world' },
     practice: { o: 4.8, bars: 4, n: 'Practice' },
     ai: { o: 14.4, bars: 4, n: 'AI' },
+    orch: { o: 0, bars: 4, n: 'AI orchestration' },
     ww: { o: 24, bars: 4, n: 'WordWarz.io' },
     avatars: { o: 0, bars: 3, n: 'Avatars' },
     mds: { o: 33.6, bars: 4, n: 'MDS Pro' },
     recode: { o: 0, bars: 4, n: 'RecodeAI' },
-    reach: { o: 0, bars: 3, n: 'Reach' },
     pipe: { o: 43.2, bars: 3, n: 'Pipelines' },
     oss: { o: 0, bars: 3, n: 'Open source' },
     kim: { o: 50.4, bars: 3, n: 'Kim' }
   };
   var CUTS = {
-    short: ['open', 'practice', 'ai', 'ww', 'mds', 'pipe', 'kim'],
-    full: ['open', 'practice', 'ai', 'ww', 'avatars', 'mds', 'recode', 'reach', 'pipe', 'oss', 'kim']
+    short: ['open', 'practice', 'ai', 'orch', 'ww', 'mds', 'pipe', 'kim'],
+    full: ['open', 'practice', 'ai', 'orch', 'ww', 'avatars', 'mds', 'recode', 'pipe', 'oss', 'kim']
   };
   function origScene(t) {
     var s = 'open';
-    CUTS.short.forEach(function (id) { if (t >= SC[id].o) s = id; });
+    ['open', 'practice', 'ai', 'ww', 'mds', 'pipe', 'kim'].forEach(function (id) { if (t >= SC[id].o) s = id; });
     return s;
   }
   var cut = 'short', DUR = 0, REVEAL_AT = 0, CHAPTERS = [];
@@ -233,7 +233,7 @@
   /* ----------------------------------------------------------- the layout */
 
   var W = 0, H = 0, dpr = 1, wide = true;
-  var st = {}, cal = {}, board = {}, pr = {}, rc = {}, av = {}, open = { cx: 0, cy: 0 };
+  var st = {}, cal = {}, board = {}, pr = {}, rc = {}, av = {}, oc = {}, open = { cx: 0, cy: 0 };
   var OPEN_TEXT = 'hello, world';
   var fontMono = "'JetBrains Mono', monospace", fontSans = "'DM Sans', sans-serif";
 
@@ -264,6 +264,11 @@
     board.g = board.t * 0.12;
     board.x0 = st.cx - (5 * board.t + 4 * board.g) / 2;
     board.y0 = st.cy - (6 * board.t + 5 * board.g) / 2;
+
+    /* the orchestration's four cards, clockwise from the top left */
+    oc.w = st.w * 0.43; oc.h = Math.min(st.h * 0.37, oc.w * 0.82);
+    oc.gx = st.w * 0.14; oc.gy = Math.min(st.h * 0.12, 48);
+    oc.x0 = st.cx - oc.w - oc.gx / 2; oc.y0 = st.cy - oc.h - oc.gy / 2;
 
     /* RecodeAI's page, raised a little to leave room for what the crawl
        extracts and the deploy line underneath it */
@@ -487,25 +492,30 @@
     o.s = WN.f[i] ? 1.1 : 1.8; o.a = WN.f[i] ? 0.22 : 0.85; o.c = WN.x[i] * 0.9;
   }
 
-  /* Three AI systems by how much they can touch. Tool names are the real
-     ones: Ask AI's two in the MDS Pro codebase, Jarvis's four in the MCP server
-     (jarvis-router), which this machine's Claude Code has connected. */
-  var REACH = [
-    { name: 'site assistant', where: 'kimlj.dev', tools: [], guard: 'no tools, no database · worst case: a wrong sentence', f: 0.06 },
-    { name: 'Ask AI', where: 'MDS Pro', tools: ['run_sql', 'read_sheet'], guard: 'SELECT-only role · 500-row cap · cost logged per question', f: 0.42 },
-    { name: 'Jarvis', where: 'my own MCP server', tools: ['find_photos', 'where_was_i', 'what_did_i_decide', 'who_have_i_named'], guard: 'three self-hosted stores: Immich · Dawarich · basic-memory', f: 0.94 }
+  /* AI orchestration: one brief through four roles. The roles are the owner's
+     own split (resume: ChatGPT for planning and images, Claude Code for code,
+     DeepSeek for audits and reviews); the work inside the cards is illustrative. */
+  var ORCH = [
+    { tool: 'ChatGPT', role: 'plans · orchestrates', on: [0.6, 2.6] },
+    { tool: 'ChatGPT', role: 'image design', on: [2.6, 4.8] },
+    { tool: 'Claude Code', role: 'writes the code', on: [4.8, 6.9] },
+    { tool: 'DeepSeek', role: 'audits · reviews', on: [6.9, 8.7] }
   ];
-  function reachAt(k) { return 0.5 + k * 1.7; }
-  function reachRow(k) {
-    var rowH = st.h / (wide ? 4 : 3), y = wide ? st.y + st.h * (0.22 + 0.28 * k) : st.y + rowH * (k + 0.5);
-    if (wide) return { lx: st.x, ly: y - 16, wy: y + 2, same: false, bx: st.x + st.w * 0.3, by: y - 8, bw: st.w * 0.7, gy: y + 20 };
-    return { lx: st.x, ly: y - rowH * 0.3, wy: y - rowH * 0.3, same: true, bx: st.x, by: y - rowH * 0.02, bw: st.w, gy: y + rowH * 0.24 };
+  /* [start, from, to]: the brief moving round, and one finding sent back */
+  var HANDOFF = [[2.25, 0, 1], [4.4, 1, 2], [6.55, 2, 3], [7.65, 3, 2], [8.05, 2, 3]];
+  function orchCard(k) {
+    return { x: oc.x0 + (k === 1 || k === 2 ? oc.w + oc.gx : 0), y: oc.y0 + (k >= 2 ? oc.h + oc.gy : 0), w: oc.w, h: oc.h };
   }
-  function fReach(i, t, o) {
-    var k = i % 3, R = fr.rows[k], g = ease((t - reachAt(k)) / 0.9);
-    o.x = R.bx + H1[i] * R.bw * REACH[k].f * Math.max(0.03, g);
-    o.y = R.by + (H2[i] - 0.5) * (wide ? 16 : 12) + Math.sin(t * 2 + i) * 1.2;
-    o.s = 1.4 + H3[i]; o.a = g > 0 ? 0.35 + 0.45 * H3[i] : 0.1; o.c = k * 0.42 + H4[i] * 0.1;
+  /* the particles run one loop through the four card centres; the cards are
+     drawn over them, so the loop only shows in the gaps, as the wiring */
+  function fOrch(i, t, o) {
+    var hx = (oc.w + oc.gx) / 2, hy = (oc.h + oc.gy) / 2, cx = st.cx, cy = st.cy;
+    var u = frac(H1[i] + t * 0.07) * 4 * (hx + hy), j = (H2[i] - 0.5) * 6, x, y;
+    if (u < 2 * hx) { x = cx - hx + u; y = cy - hy + j; }
+    else if ((u -= 2 * hx) < 2 * hy) { x = cx + hx + j; y = cy - hy + u; }
+    else if ((u -= 2 * hy) < 2 * hx) { x = cx + hx - u; y = cy + hy + j; }
+    else { u -= 2 * hx; x = cx - hx + j; y = cy + hy - u; }
+    o.x = x; o.y = y; o.s = 1.2 + H3[i] * 0.8; o.a = 0.2 + 0.3 * H3[i]; o.c = H4[i];
   }
 
   /* Merged pull requests, from `gh search prs --author kimlj --merged` on
@@ -535,13 +545,13 @@
     { s: 'open', at: 0, f: fOpen },
     { s: 'open', at: 4.5, f: fCal, dur: 0.9, sw: 0.5, d: function (i) { return 0.25 + (i / N) * 6.6; } },
     { s: 'ai', at: 17.0, f: fSphere, dur: 1.7, sw: 0.9, d: function (i) { return (i / N) * 1.5; } },
+    { s: 'orch', at: 0, f: fOrch, dur: 1.4, sw: 0.7, d: function (i) { return H2[i] * 0.6; } },
     { s: 'ww', at: 24.0, f: fDust, dur: 1.3, sw: 0.4, d: function (i) { return H1[i] * 0.5; } },
     { s: 'ww', at: 28.9, f: fNet, dur: 1.4, sw: 0.6, d: function (i) { return H2[i] * 0.7; } },
     { s: 'avatars', at: 0, f: fDustDim, dur: 1.2, sw: 0.5, d: function (i) { return H1[i] * 0.5; } },
     { s: 'mds', at: 33.6, f: fClusters, dur: 1.5, sw: 0.7, d: function (i) { return H3[i] * 0.8; } },
     { s: 'recode', at: 0, f: fWireOld, dur: 1.3, sw: 0.6, d: function (i) { return H2[i] * 0.5; } },
     { s: 'recode', at: 3.6, f: fWireNew, dur: 1.4, sw: 0.9, d: function (i) { return H3[i] * 0.6; } },
-    { s: 'reach', at: 0, f: fReach, dur: 1.2, sw: 0.5, d: function (i) { return H1[i] * 0.4; } },
     { s: 'pipe', at: 43.2, f: fStream, dur: 1.3, sw: 0.5, d: function (i) { return H4[i] * 0.9; } },
     { s: 'oss', at: 0, f: fLanes, dur: 1.3, sw: 0.6, d: function (i) { return H4[i] * 0.6; } },
     { s: 'kim', at: 50.4, f: fPortrait, dur: 1.9, sw: 1.1, d: function (i) { return TV[i] * 0.6 + H1[i] * 0.5; } }
@@ -583,7 +593,6 @@
 
   function prep(t) {
     fr.calDim = smooth((t - SC.ai.sh - 14.4) / 0.8);
-    if (SC.reach.on) fr.rows = [reachRow(0), reachRow(1), reachRow(2)];
     var ang = t * 0.42, tl = 0.38 + 0.08 * Math.sin(t * 0.5);
     fr.ca = Math.cos(ang); fr.sa = Math.sin(ang); fr.ct = Math.cos(tl); fr.stl = Math.sin(tl);
     fr.R = st.m * 0.4 * (1 + 0.035 * Math.exp(-((t % BEAT) / BEAT) * 6));
@@ -675,8 +684,7 @@
     { s: 'ai', a: 17.6, b: 24.4, f: drawSynapses, top: true },
     { s: 'ai', a: 14.2, b: 17.8, f: drawDecHighlight, top: true },
     { s: 'avatars', a: 0, b: 7.5, f: drawAvatars, top: true },
-    { s: 'reach', a: 0, b: 7.5, f: drawReach, top: true },
-    { s: 'ai', a: 18.8, b: 24.4, f: drawOrbit, top: true }
+    { s: 'orch', a: 0, b: 9.9, f: drawOrch, top: true }
   ];
   function overlays(t, top) {
     for (var k = 0; k < OVERLAYS.length; k++) {
@@ -1070,76 +1078,133 @@
     ctx.globalAlpha = 1;
   }
 
-  function drawReach(tl) {
-    var a = env(tl, 0.1, 7.4, 0.5, 0.5), fs = wide ? 12 : 10, k, c;
-    ctx.textBaseline = 'middle';
-    ctx.globalAlpha = a * 0.8;
-    ctx.font = '400 ' + (fs - 2) + 'px ' + fontMono; ctx.fillStyle = css(col.dim);
-    ctx.fillText('reach →', wide ? st.x + st.w * 0.3 : st.x + st.w - 44, st.y + 4);
-    for (k = 0; k < 3; k++) {
-      var R = fr.rows[k], D = REACH[k], p = smooth((tl - reachAt(k) + 0.3) / 0.4);
-      if (p <= 0) continue;
-      ctx.globalAlpha = a * p;
-      ctx.font = '600 ' + (fs + 2) + 'px ' + fontSans; ctx.fillStyle = css(col.text);
-      ctx.fillText(D.name, R.lx, R.ly);
-      var wx = R.same ? R.lx + ctx.measureText(D.name + '  ').width : R.lx;
-      ctx.font = '400 ' + (fs - 1) + 'px ' + fontMono; ctx.fillStyle = css(col.muted);
-      ctx.fillText(D.where, wx, R.wy);
-      /* the tools, sitting on the reach they give */
-      ctx.font = '500 ' + (fs - 2) + 'px ' + fontMono;
-      var cx = R.bx + 4, chips = D.tools.length ? D.tools : ['no tools'];
-      for (c = 0; c < chips.length; c++) {
-        var cp = smooth((tl - reachAt(k) - 0.55 - c * 0.18) / 0.25);
-        var cw = ctx.measureText(chips[c]).width + 14, chh = fs + 8;
-        if (cp > 0) {
-          ctx.globalAlpha = a * cp;
-          rr(cx, R.by - chh / 2, cw, chh, chh / 2);
-          ctx.fillStyle = css(col.card, 0.95); ctx.fill();
-          ctx.strokeStyle = css(D.tools.length ? col.accent : col.border); ctx.lineWidth = 1; ctx.stroke();
-          ctx.fillStyle = css(D.tools.length ? col.text : col.dim);
-          ctx.fillText(chips[c], cx + 7, R.by + 0.5);
-        }
-        cx += cw + 6;
-      }
-      ctx.globalAlpha = a * smooth((tl - reachAt(k) - 1.0) / 0.4);
-      ctx.font = '400 ' + (fs - 2) + 'px ' + fontMono; ctx.fillStyle = css(col.muted);
-      ctx.fillText(D.guard, R.bx, R.gy);
-    }
-    ctx.globalAlpha = 1;
+  var PLAN = ['brief & scope', 'art direction', 'build tasks', 'review pass'];
+  var PLAN_DONE = [2.4, 4.7, 6.8, 8.5];
+  var CODE = ['export async function match(job) {', '  const fit = await score(job)', '  if (fit < FLOOR) return skip(job)', '  return notify(job, fit)', '}'];
+  var CODE_FIX = '  if (!fit || fit < FLOOR) return skip(job)';
+  var REVIEW = [[7.0, '✓ types', 0], [7.3, '✓ tests', 0], [7.6, '✗ fit can be null · line 3', 1], [8.45, '✓ fixed · approved', 0]];
+  function orchAct(k, tl) {
+    var on = ORCH[k].on, v = smooth((tl - on[0]) / 0.3) * (1 - smooth((tl - on[1]) / 0.3));
+    if (k === 2) v = Math.max(v, smooth((tl - 7.9) / 0.15) * (1 - smooth((tl - 8.3) / 0.2)));
+    return Math.max(v, smooth((tl - 8.75) / 0.4) * 0.8);
   }
-
-  /* the models, by the job each is given (from the owner's resume) */
-  var MODELS = [['Claude Code', 'writes the code'], ['ChatGPT', 'images · orchestration'], ['DeepSeek', 'audits · reviews']];
-  function drawOrbit(tl) {
-    var a = env(tl, 19.0, 24.3, 0.6, 0.5), fs = wide ? 11 : 9, rx = fr.R * 1.3, ry = fr.R * 0.42, k;
-    ctx.globalAlpha = a * 0.5; ctx.strokeStyle = css(col.border); ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.ellipse(st.cx, st.cy, rx, ry, -0.12, 0, 6.2832); ctx.stroke();
-    ctx.textBaseline = 'middle';
-    for (k = 0; k < MODELS.length; k++) {
-      var p = smooth((tl - 19.3 - k * 0.5) / 0.5);
-      if (p <= 0) continue;
-      var ang = tl * 0.3 + k * 2.0944, ca = Math.cos(ang), sa = Math.sin(ang);
-      var x = st.cx + ca * rx * Math.cos(-0.12) - sa * ry * Math.sin(-0.12);
-      var y = st.cy + ca * rx * Math.sin(-0.12) + sa * ry * Math.cos(-0.12);
-      var front = sa > -0.2, al = a * p * (front ? 1 : 0.45);
-      ctx.globalAlpha = al;
-      var hs = 26;
-      ctx.drawImage(sprite, x - hs / 2, y - hs / 2, hs, hs);
-      ctx.fillStyle = css(k ? col.g2 : col.accent);
-      ctx.beginPath(); ctx.arc(x, y, 4, 0, 6.2832); ctx.fill();
-      ctx.font = '600 ' + (fs + 1) + 'px ' + fontSans;
-      var nw = ctx.measureText(MODELS[k][0]).width;
-      ctx.font = '400 ' + fs + 'px ' + fontMono;
-      var rw = ctx.measureText(MODELS[k][1]).width, lw = Math.max(nw, rw);
-      var lx = x + 10 + lw > W - 8 ? x - 10 - lw : x + 10;
-      lx = clamp(lx, 8, W - 8 - lw);
-      ctx.globalAlpha = al * 0.85;
-      rr(lx - 6, y - fs * 1.55, lw + 12, fs * 3.1, 6); ctx.fillStyle = css(col.bg); ctx.fill();
-      ctx.globalAlpha = al;
-      ctx.font = '600 ' + (fs + 1) + 'px ' + fontSans; ctx.fillStyle = css(col.text);
-      ctx.fillText(MODELS[k][0], lx, y - fs * 0.7);
-      ctx.font = '400 ' + fs + 'px ' + fontMono; ctx.fillStyle = css(col.muted);
-      ctx.fillText(MODELS[k][1], lx, y + fs * 0.75);
+  function drawOrch(tl) {
+    var a = env(tl, 0.1, 9.8, 0.5, 0.5), fs = wide ? 11 : 9, k, n;
+    /* the brief on its way round, drawn first so the cards cover its ends */
+    for (k = 0; k < HANDOFF.length; k++) {
+      var H = HANDOFF[k], hp = (tl - H[0]) / 0.45;
+      if (hp <= 0 || hp >= 1) continue;
+      var A0 = orchCard(H[1]), A1 = orchCard(H[2]), e = ease(hp);
+      var x0 = A0.x + A0.w / 2, y0 = A0.y + A0.h / 2, x1 = A1.x + A1.w / 2, y1 = A1.y + A1.h / 2;
+      var px = x0 + (x1 - x0) * e, py = y0 + (y1 - y0) * e, back = H[2] < H[1];
+      ctx.globalAlpha = a;
+      ctx.drawImage(sprite, px - 18, py - 18, 36, 36);
+      ctx.fillStyle = css(back ? col.g2 : col.accent);
+      ctx.beginPath(); ctx.arc(px, py, 4, 0, 6.2832); ctx.fill();
+    }
+    for (k = 0; k < 4; k++) {
+      var C = orchCard(k), R = ORCH[k], act = orchAct(k, tl), pop = smooth((tl - 0.1 - k * 0.12) / 0.4);
+      if (pop <= 0) continue;
+      ctx.globalAlpha = a * pop;
+      if (act > 0.02) { ctx.shadowColor = css(col.accent, 0.45 * act); ctx.shadowBlur = 26 * act; }
+      rr(C.x, C.y, C.w, C.h, 12);
+      ctx.fillStyle = css(col.card, 0.97); ctx.fill();
+      ctx.shadowBlur = 0; ctx.shadowColor = 'transparent';
+      ctx.strokeStyle = css(act > 0.3 ? col.accent : col.border); ctx.lineWidth = act > 0.3 ? 1.5 : 1; ctx.stroke(); ctx.lineWidth = 1;
+      /* header: the tool, its job, and whether it is working or done */
+      var hh = wide ? 42 : 34;
+      ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+      ctx.font = '600 ' + (fs + 2) + 'px ' + fontSans; ctx.fillStyle = css(col.text);
+      ctx.fillText(R.tool, C.x + 12, C.y + hh * 0.36);
+      ctx.font = '400 ' + (fs - 1) + 'px ' + fontMono; ctx.fillStyle = css(col.muted);
+      ctx.fillText(R.role, C.x + 12, C.y + hh * 0.74);
+      var done = tl > R.on[1] && act < 0.5;
+      if (done || act > 0.3) {
+        ctx.fillStyle = css(col.accent);
+        if (done) { ctx.font = '600 ' + (fs + 1) + 'px ' + fontMono; ctx.fillText('✓', C.x + C.w - 20, C.y + hh * 0.4); }
+        else { ctx.beginPath(); ctx.arc(C.x + C.w - 16, C.y + hh * 0.4, 3.5 * (0.7 + 0.3 * Math.sin(tl * 9)), 0, 6.2832); ctx.fill(); }
+      }
+      ctx.fillStyle = css(col.border); ctx.fillRect(C.x + 1, C.y + hh, C.w - 2, 1);
+      var bx = C.x + 12, by = C.y + hh + 8, bw = C.w - 24, bh = C.h - hh - 16, lh = fs + 7;
+      ctx.save();
+      ctx.beginPath(); ctx.rect(bx - 2, by - 2, bw + 4, bh + 4); ctx.clip();
+      ctx.font = '400 ' + (fs - (wide ? 0 : 1)) + 'px ' + fontMono;
+      if (k === 0) {
+        for (n = 0; n < PLAN.length; n++) {
+          var tn = tl - 0.8 - n * 0.3;
+          if (tn <= 0) continue;
+          var y = by + lh * (n + 0.5), ok = tl >= PLAN_DONE[n];
+          ctx.fillStyle = css(ok ? col.accent : col.dim);
+          ctx.fillText(ok ? '✓' : '○', bx, y);
+          ctx.fillStyle = css(ok ? col.muted : col.text);
+          ctx.fillText(PLAN[n].slice(0, Math.floor(tn * 40)), bx + fs * 1.4, y);
+        }
+      } else if (k === 1) {
+        /* an image resolving out of noise, four denoising steps on the beat */
+        var side = Math.min(bw, bh), ix = bx + (bw - side) / 2, iy = by + (bh - side) / 2, G = 12, cs = side / G;
+        var step = clamp(Math.floor((tl - 2.9) / 0.4) + 1, 0, 4);
+        if (tl > 2.7) {
+          for (var gy = 0; gy < G; gy++) for (var gx = 0; gx < G; gx++) {
+            var id = gy * G + gx, dx = (gx + 0.5) / G - 0.5, dy = (gy + 0.5) / G - 0.45, d = Math.sqrt(dx * dx + dy * dy);
+            if (hash(id * 7 + 1) < step / 4) {
+              if (d < 0.3) { ctx.globalAlpha = a * (1 - d * 1.5); ctx.fillStyle = LUT[clamp(Math.round((gy / G) * 15), 0, 15)]; }
+              else { ctx.globalAlpha = a * 0.25; ctx.fillStyle = css(col.border); }
+            } else {
+              ctx.globalAlpha = a * (0.15 + 0.5 * hash(id + step * 131));
+              ctx.fillStyle = LUT[Math.floor(hash(id * 3 + step * 17) * 15)];
+            }
+            ctx.fillRect(ix + gx * cs, iy + gy * cs, cs - 1, cs - 1);
+          }
+          ctx.globalAlpha = a;
+        } else {
+          ctx.strokeStyle = css(col.border); ctx.strokeRect(ix, iy, side, side);
+        }
+      } else if (k === 2) {
+        var typed = Math.max(0, (tl - 5.0) * 55);
+        for (n = 0; n < CODE.length && typed > 0; n++) {
+          var line = n === 2 && tl > 7.95 ? CODE_FIX : CODE[n];
+          if (n === 2 && tl > 7.95) {
+            ctx.fillStyle = css(col.g2, 0.18 * (1 - smooth((tl - 8.6) / 0.6)) + 0.04);
+            ctx.fillRect(bx - 2, by + lh * n, bw + 4, lh);
+          }
+          ctx.fillStyle = css(n === 0 || n === 4 ? col.accent : col.text);
+          ctx.fillText(line.slice(0, Math.floor(typed)), bx, by + lh * (n + 0.5));
+          typed -= CODE[n].length;
+        }
+      } else {
+        for (n = 0; n < REVIEW.length; n++) {
+          var rv = REVIEW[n];
+          if (tl < rv[0]) continue;
+          ctx.globalAlpha = a * smooth((tl - rv[0]) / 0.2);
+          ctx.fillStyle = css(rv[2] ? col.g2 : (n === REVIEW.length - 1 ? col.accent : col.muted));
+          ctx.fillText(rv[1], bx, by + lh * (n + 0.5));
+        }
+        /* the reviewer's scan while it reads */
+        if (tl > 6.9 && tl < 8.5) {
+          var sy2 = by + frac((tl - 6.9) / 0.8) * bh;
+          ctx.globalAlpha = a * 0.22; ctx.fillStyle = css(col.accent); ctx.fillRect(bx - 2, sy2, bw + 4, 1);
+        }
+        ctx.globalAlpha = a;
+      }
+      ctx.restore();
+    }
+    /* the centre: the brief goes in, the work comes out */
+    var ship = smooth((tl - 8.75) / 0.35), brief = env(tl, 0.3, 2.4, 0.3, 0.3);
+    if (brief > 0 || ship > 0) {
+      var lab = ship > 0 ? '✓ shipped' : 'brief', pw2;
+      ctx.globalAlpha = a * Math.max(brief, ship);
+      ctx.font = '600 ' + fs + 'px ' + fontMono; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      pw2 = ctx.measureText(lab).width + 18;
+      rr(st.cx - pw2 / 2, st.cy - 11, pw2, 22, 11);
+      ctx.fillStyle = css(ship > 0 ? col.accent : col.card); ctx.fill();
+      ctx.strokeStyle = css(col.accent); ctx.stroke();
+      ctx.fillStyle = css(ship > 0 ? col.bg : col.text); ctx.fillText(lab, st.cx, st.cy + 0.5);
+      ctx.textAlign = 'left';
+      if (ship > 0 && tl < 9.6) {
+        var q = (tl - 8.75) / 0.85;
+        ctx.globalAlpha = a * (1 - q); ctx.strokeStyle = css(col.accent); ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.arc(st.cx, st.cy, 14 + q * 40, 0, 6.2832); ctx.stroke(); ctx.lineWidth = 1;
+      }
     }
     ctx.globalAlpha = 1;
   }
@@ -1257,8 +1322,13 @@
     { s: 'kick', t0: 14.6, t1: 23.8, kick: 'AI' },
     { s: 'big', t0: 14.8, t1: 18.6, h: 'Eleven days after ChatGPT opened, I was *in it*.' },
     { s: 'big', t0: 18.9, t1: 23.8, h: 'Now AI is how I *build*.' },
-    { s: 'sub', t0: 19.2, t1: 23.8, h: 'Each model gets the job it does best, driven by 20+ skills and 5 subagents I wrote.' },
     { s: 'stat', t0: 19.6, t1: 23.8, f: claudeStat },
+
+    { sc: 'orch', s: 'kick', t0: 0.2, t1: 9.4, kick: 'AI orchestration' },
+    { sc: 'orch', s: 'big', t0: 0.3, t1: 4.7, h: 'Every model gets the job it’s *best at*.' },
+    { sc: 'orch', s: 'sub', t0: 0.8, t1: 4.7, h: 'ChatGPT plans and designs. Claude Code builds. DeepSeek reviews.' },
+    { sc: 'orch', s: 'big', t0: 4.9, t1: 9.4, h: 'Reviewed by a *different model* than the one that wrote it.' },
+    { sc: 'orch', s: 'sub', t0: 5.4, t1: 9.4, h: 'Driven by 20+ Claude Code skills and 5 subagents I wrote.' },
 
     { s: 'kick', t0: 24.2, t1: 33.4, kick: 'WordWarz.io' },
     { s: 'big', t0: 24.4, t1: 28.9, h: 'A real-time multiplayer *word game*.' },
@@ -1284,9 +1354,6 @@
     { sc: 'recode', s: 'big', t0: 5.1, t1: 9.4, h: 'It redesigns it — and *ships it live*.' },
     { sc: 'recode', s: 'sub', t0: 5.7, t1: 9.4, h: 'Streamed step by step over Server-Sent Events.' },
 
-    { sc: 'reach', s: 'kick', t0: 0.2, t1: 7.0, kick: 'Reach' },
-    { sc: 'reach', s: 'big', t0: 0.4, t1: 7.0, h: 'Every AI I ship gets exactly the *reach* its job needs.' },
-    { sc: 'reach', s: 'sub', t0: 1.0, t1: 7.0, h: 'Decide what it can touch before what it can say.' },
 
     { s: 'kick', t0: 43.4, t1: 50.2, kick: 'Pipelines' },
     { s: 'big', t0: 43.6, t1: 47.1, h: 'Software that does the *reading* for me.' },
@@ -1558,17 +1625,19 @@
     ev(7.0, 'bell', [81, 0.06, 2.5], 0, false, 'recode'); ev(7.0, 'bell', [86, 0.045, 2.5], 0, false, 'recode');
     ev(7.0, 'crash', [0.04, 1.6], 0, false, 'recode');
     ev(9.2, 'whoosh', [0.5, 0.05, 1], 0, false, 'recode');
-    /* Reach: the breakdown. The drums drop out, one bell per system as its
-       reach widens, a tick for every tool it is handed */
-    [[46, 53, 57, 62, 65], [48, 53, 57, 60, 64], [48, 55, 60, 62, 67]].forEach(function (chd, k) {
-      ev(k * BAR, 'pad', [chd, 0.95, 800 + k * 150], BAR, true, 'reach');
-      ev(k * BAR, 'sub', [[34, 36, 36][k], 0.06], BAR, true, 'reach');
-    });
-    [74, 77, 81].forEach(function (m, k) { ev(reachAt(k), 'bell', [m, 0.065, 3], 0, false, 'reach'); });
-    REACH.forEach(function (D, k) {
-      for (var c = 0; c < Math.max(1, D.tools.length); c++) ev(reachAt(k) + 0.55 + c * 0.18, 'tick', [0.035], 0, false, 'reach');
-    });
-    ev(6.0, 'whoosh', [1.2, 0.06, 1], 0, false, 'reach');
+    /* orchestration: a bar per role, Dm, Bb, F/C, C between the globe's C
+       and WordWarz's Dm; a bell as each model takes the work */
+    for (b = 0; b < 4; b++) groove('orch', b * BAR, b, { bright: 2000 + b * 250, snare: b >= 2 });
+    ORCH.forEach(function (R, k) { ev(R.on[0], 'bell', [[74, 77, 81, 86][k], 0.06, 2], 0, false, 'orch'); });
+    for (j = 0; j < 4; j++) ev(0.8 + j * 0.3, 'tick', [0.04], 0, false, 'orch');
+    for (j = 0; j < 4; j++) ev(2.9 + j * 0.4, 'pluck', [PENT[(j * 2) % 9] + 24, 0.03, 8000], 0, false, 'orch');
+    for (j = 0; j < 12; j++) ev(5.0 + j * 0.15, 'tick', [0.03], 0, false, 'orch');
+    ev(7.6, 'pluck', [45, 0.08, 500], 0, false, 'orch');
+    ev(7.95, 'bell', [81, 0.05, 1.2], 0, false, 'orch');
+    ev(8.45, 'bell', [86, 0.06, 2], 0, false, 'orch');
+    ev(8.75, 'crash', [0.04, 1.4], 0, false, 'orch');
+    HANDOFF.forEach(function (h) { ev(h[0], 'whoosh', [0.45, 0.035, h[2] > h[1] ? 1 : -1], 0, false, 'orch'); });
+    ev(9.2, 'whoosh', [0.4, 0.05, 1], 0, false, 'orch');
     /* open source: C, Bb, C into the finale's D major; a bell per merge */
     [3, 1, 3].forEach(function (ci, k) { groove('oss', k * BAR, ci, { bright: 2400 + k * 300, snare: k === 2, end: 6.9 }); });
     PRS.forEach(function (P, k) { ev(prAt(k) + 0.6, 'bell', [[81, 84, 86, 88, 91][k], 0.05, 1.8], 0, false, 'oss'); });
@@ -1929,7 +1998,7 @@
     CHAPTERS = list.map(function (sid) { return { t: SC[sid].start, n: SC[sid].n }; });
     FORMS = FORM_DEFS.filter(function (d) { return SC[d.s].on; }).map(function (d) {
       return { t: d.at + SC[d.s].sh, sh: SC[d.s].sh, f: d.f, dur: d.dur, sw: d.sw, d: d.d };
-    });
+    }).sort(function (x, y) { return x.t - y.t; });
     CUES.forEach(function (c) {
       var sc = SC[c.sc];
       if (!sc.on) { c.T0 = c.T1 = -99; return; }
