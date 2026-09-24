@@ -1968,6 +1968,7 @@
   var unlockArmed = false, UNLOCK = ['pointerdown', 'keydown', 'touchend'];
   function unlock() {
     if (!au.c || au.c.state === 'running') { disarm(); return; }
+    if (au.on && playing) mediaSession();
     if (au.on && playing) au.c.resume().then(disarm, function () {});
   }
   function disarm() {
@@ -1979,8 +1980,31 @@
     unlockArmed = true;
     UNLOCK.forEach(function (e) { document.addEventListener(e, unlock, true); });
   }
+  /* iPhone's silent switch mutes Web Audio: an AudioContext counts as app
+     sound, and only media playback ignores the switch. Two ways to become
+     media. iOS 17+ exposes the session type directly. Before that, a looping
+     silent <audio> element started inside the same tap moves the page's whole
+     audio session to playback, which is what sites that do play through the
+     switch are doing. Both only matter on iOS, and the element is only made
+     there. */
+  var IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  var silentEl = null;
+  function mediaSession() {
+    try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) { /* read-only here */ }
+    if (!IOS) return;
+    if (!silentEl) {
+      silentEl = new Audio('assets/silence.wav');
+      silentEl.loop = true;
+      silentEl.setAttribute('playsinline', '');
+    }
+    var r = silentEl.play();
+    if (r && r.catch) r.catch(function () {});
+  }
+  function releaseMedia() { if (silentEl && !silentEl.paused) silentEl.pause(); }
+
   function soundOn() {
     if (!AC) return false;
+    try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) { /* read-only here */ }
     if (!au.c) {
       try { au.c = new AC(); } catch (e) { return false; }
       au.chain = buildChain(au.c);
@@ -2001,6 +2025,7 @@
     if (au.synced) { au.synced = false; perfBase = performance.now() - T * 1000; }
     endSession(au.S); au.S = null;
     disarm();
+    releaseMedia();
     var c = au.c;
     setTimeout(function () { if (!au.on && c.state === 'running') c.suspend(); }, 400);
     soundUI();
@@ -2147,7 +2172,7 @@
     if (au.on) {
       var c = au.c;
       /* the last chord is still ringing: let it, then stop the context */
-      setTimeout(function () { if (state !== 'film' && c.state === 'running') c.suspend(); }, 5000);
+      setTimeout(function () { if (state !== 'film') { releaseMedia(); if (c.state === 'running') c.suspend(); } }, 5000);
     }
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, cv.width, cv.height);
@@ -2170,6 +2195,7 @@
     if (playing) { userPaused = true; pause(); } else { userPaused = false; play(); }
   });
   soundBtn.addEventListener('click', function () {
+    if (!au.on || !au.synced) mediaSession();
     if (!au.on) soundOn();
     else if (!au.synced) { if (playing) au.c.resume().catch(function () {}); }   /* this click is the gesture */
     else soundOff();
@@ -2184,6 +2210,7 @@
     /* the chip plays the full cut "with sound", and its click is the gesture
        that lets the sound start */
     if (isPhone()) enterFs();
+    mediaSession();
     start('full');
     soundOn();
   });
@@ -2238,6 +2265,7 @@
     if (e && e.type === 'keydown' && (e.key === ' ' || e.key === 'Spacebar')) e.preventDefault();
     gateOpenedAt = performance.now();
     /* resumed inside the gesture, which is the whole point of the wait */
+    mediaSession();
     if (au.c && au.c.state !== 'running') au.c.resume().catch(function () {});
     endGate();
   }

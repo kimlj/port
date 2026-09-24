@@ -74,7 +74,12 @@ fades.
   already allows sound, and a background tab does not spend it. After that,
   *Tap for sound* and the first click, tap or key anywhere join the score
   wherever the film has reached. The Space that opens the hold is swallowed,
-  or it would scroll the film out of view and pause it. While the AudioContext
+  or it would scroll the film out of view and pause it.
+  **iPhone's silent switch mutes Web Audio** (it counts as app sound; only
+  media ignores the switch), so every tap that starts the sound also claims a
+  playback session: `navigator.audioSession.type = 'playback'` on iOS 17+, and a
+  looping `assets/silence.wav` element on iOS before it. Both are released when
+  the sound stops. While the AudioContext
   runs, its clock drives the picture (`au.synced`). When it stops, whether from
   our pause or from the browser, the time goes back to the performance clock
   without a jump.
