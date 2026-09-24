@@ -2121,6 +2121,7 @@
   }
   function seek(T) {
     T = clamp(T, 0, DUR - 0.05);
+    if (T > 0.05) dropGate();
     pausedAt = T; filmT = T;
     perfBase = performance.now() - T * 1000;
     if (au.on) {
@@ -2217,7 +2218,7 @@
   });
   fsBtn.addEventListener('click', function () { if (fsActive()) exitFs(); else enterFs(); });
   skipBtn.addEventListener('click', function () {
-    if (waiting) { waiting = false; clearTimeout(gateTimer); hero.classList.remove('ev-film-waiting'); }
+    dropGate();
     if (au.on) { endSession(au.S); au.S = null; }
     finish();
   });
@@ -2284,12 +2285,18 @@
     if (au.c && au.c.state !== 'running') au.c.resume().catch(function () {});
     endGate();
   }
-  function endGate() {
-    if (!waiting) return;
+  /* the hold ends without starting anything: a jump or a skip already says
+     where the film should be */
+  function dropGate() {
+    if (!waiting) return false;
     waiting = false;
     clearTimeout(gateTimer);
     GATE_EVENTS.forEach(function (e) { document.removeEventListener(e, openGate, true); });
     hero.classList.remove('ev-film-waiting');
+    return true;
+  }
+  function endGate() {
+    if (!dropGate()) return;
     userPaused = false;
     play();
   }
