@@ -20,9 +20,10 @@
  * THE SCORE IS SYNTHESISED, not a file: Web Audio oscillators and filtered
  * noise, scheduled on a 100 BPM grid the scenes are cut to (a bar is 2.4s).
  * Sound is on by default, but browsers let no page make a sound before the
- * visitor has done something, so until then the button says "Tap for sound"
- * and the first click, tap or key anywhere joins the score at whatever second
- * the film has reached. While sound runs, the AudioContext's clock drives the
+ * visitor has done something. So the autoplay holds on its first frame for up
+ * to three seconds: a key, click or tap starts it from the first note with the
+ * score, and silence starts it muted. After that, "Tap for sound" and the
+ * first click anywhere join the score at whatever second the film has reached. While sound runs, the AudioContext's clock drives the
  * picture rather than the other way round — audio cannot be nudged without a
  * click, pictures can.
  *
@@ -294,6 +295,7 @@
     var fw = ctx.measureText(OPEN_TEXT).width, pw = ctx.measureText('> ').width;
     open.x0 = W / 2 - (fw + pw) / 2 + pw;
     open.cx = open.x0 + fw + 4 + open.size * 0.3; open.cy = open.y;
+    gate.style.top = Math.round(open.y + open.size * 1.2) + 'px';
 
     var avEl = hero.querySelector('.hero-avatar'), img = avEl && avEl.querySelector('img');
     if (wide && img && getComputedStyle(avEl).display !== 'none') {
@@ -1540,6 +1542,16 @@
   function clockText(x) { x = Math.floor(x); return Math.floor(x / 60) + ':' + String(x % 60).padStart(2, '0'); }
   function cutLength(name) { return CUTS[name].reduce(function (n, id) { return n + SC[id].bars * BAR; }, 0); }
 
+  /* The opening holds on its first frame for up to three seconds: a key, a
+     click or a tap in that time is the gesture a browser demands before any
+     sound, so the film starts from its first note WITH its score. Nothing in
+     three seconds and it starts muted, as it always did. */
+  var gate = document.createElement('div');
+  gate.className = 'ev-film-gate ev-film-layer';
+  gate.setAttribute('aria-hidden', 'true');
+  gate.innerHTML = '<span><b>' + (matchMedia('(hover: none)').matches ? 'tap' : 'press any key or click') +
+    '</b> to start with sound</span><i></i><em>starts muted in 3s</em>';
+
   var chip = document.createElement('button');
   chip.type = 'button';
   chip.className = 'ev-film-replay ev-film-layer';
@@ -2111,10 +2123,12 @@
   hero.appendChild(caps);
   hero.appendChild(ui);
   hero.appendChild(chip);
+  hero.appendChild(gate);
   readTheme();
   applyCut('short');
 
   ppBtn.addEventListener('click', function () {
+    if (performance.now() - gateOpenedAt < 400) return;
     if (playing) { userPaused = true; pause(); } else { userPaused = false; play(); }
   });
   soundBtn.addEventListener('click', function () {
@@ -2123,6 +2137,7 @@
     else soundOff();
   });
   skipBtn.addEventListener('click', function () {
+    if (waiting) { waiting = false; clearTimeout(gateTimer); hero.classList.remove('ev-film-waiting'); }
     if (au.on) { endSession(au.S); au.S = null; }
     finish();
   });
@@ -2143,6 +2158,54 @@
   });
 
   /* off screen or in a background tab, the story waits for its reader */
+  var waiting = false, gateTimer = 0, gateOpenedAt = -1e9, GATE_EVENTS = ['pointerdown', 'keydown', 'touchend'];
+  function holdAtStart(name) {
+    start(name);
+    pause();
+    soundOn();
+    if (au.c && au.c.state === 'running') { play(); return; }
+    waiting = true;
+    GATE_EVENTS.forEach(function (e) { document.addEventListener(e, openGate, true); });
+    armGateTimer();
+    /* A browser that already allows sound here (Chrome, for a site it has seen
+       played) resumes without a gesture, and then there is nothing to wait
+       for. One that does not leaves the promise pending until a gesture, so
+       the gate only shows if the answer has not come within 200ms. */
+    if (au.c) au.c.resume().then(function () { if (waiting && au.c.state === 'running') endGate(); }, function () {});
+    setTimeout(function () { if (waiting) { restartGateBar(); hero.classList.add('ev-film-waiting'); } }, 200);
+  }
+  function armGateTimer() {
+    clearTimeout(gateTimer);
+    gateTimer = setTimeout(function () {
+      /* three seconds nobody saw do not count: a background tab waits */
+      if (document.hidden) document.addEventListener('visibilitychange', function again() {
+        if (document.hidden) return;
+        document.removeEventListener('visibilitychange', again);
+        restartGateBar(); armGateTimer();
+      });
+      else endGate();
+    }, 3000);
+  }
+  function restartGateBar() { var i = gate.querySelector('i'); i.style.animation = 'none'; void i.offsetWidth; i.style.animation = ''; }
+  function openGate(e) {
+    if (!waiting) return;
+    /* the Space that starts the film must not also scroll it out of view */
+    if (e && e.type === 'keydown' && (e.key === ' ' || e.key === 'Spacebar')) e.preventDefault();
+    gateOpenedAt = performance.now();
+    /* resumed inside the gesture, which is the whole point of the wait */
+    if (au.c && au.c.state !== 'running') au.c.resume().catch(function () {});
+    endGate();
+  }
+  function endGate() {
+    if (!waiting) return;
+    waiting = false;
+    clearTimeout(gateTimer);
+    GATE_EVENTS.forEach(function (e) { document.removeEventListener(e, openGate, true); });
+    hero.classList.remove('ev-film-waiting');
+    userPaused = false;
+    play();
+  }
+
   function autoPause(off) {
     if (state !== 'film') return;
     if (off && playing) { autoPaused = true; pause(); }
@@ -2172,7 +2235,7 @@
   if ((boot || forced) && !(reduced && !forced)) {
     /* fonts first — the opening line is typeset on the canvas, and a fallback
        face measured now would put the caret in the wrong place */
-    var go = function () { if (state === 'idle') { start(bootCut); soundOn(); } };
+    var go = function () { if (state === 'idle') holdAtStart(bootCut); };
     if (document.fonts && document.fonts.ready) { document.fonts.ready.then(go); setTimeout(go, 700); }
     else go();
     conceal();

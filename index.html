@@ -291,6 +291,15 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 201; padding: 1.25rem
 .ev-film-replay svg { color: var(--accent); }
 .ev-film-replay em { font-style: normal; color: var(--text-dim); }
 .ev-film-replay:hover { border-color: var(--accent); color: var(--text); }
+/* the opening's three-second hold: a key or tap here starts it with sound */
+.hero.ev-film-waiting .ev-film-gate { display: flex; flex-direction: column; align-items: center; gap: 0.7rem; position: absolute; z-index: 31; left: 0; right: 0; font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.04em; color: var(--text-muted); pointer-events: none; }
+.ev-film-gate span { animation: evGatePulse 1.2s ease-in-out infinite alternate; }
+.ev-film-gate b { font-weight: 500; color: var(--accent); }
+.ev-film-gate i { display: block; position: relative; width: 150px; height: 2px; border-radius: 2px; background: var(--border); overflow: hidden; }
+.ev-film-gate i::after { content: ''; position: absolute; inset: 0; background: var(--accent); transform-origin: left; animation: evGateBar 3s linear forwards; }
+.ev-film-gate em { font-style: normal; font-size: 0.66rem; color: var(--text-dim); }
+@keyframes evGateBar { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+@keyframes evGatePulse { from { opacity: 0.55; } to { opacity: 1; } }
 .ev-film-btn:focus-visible, .ev-film-seg:focus-visible, .ev-film-replay:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 /* 899 and not 768: the script lays the stage out beside the captions from 900px */
 @media (max-width: 899px) {

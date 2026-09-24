@@ -67,9 +67,14 @@ fades.
 - **The score is synthesised** in Web Audio: oscillators and noise on the same
   bar grid as the scenes, each event owned by a scene like everything else.
   Sound is on by default, as far as a browser allows: no page may make a
-  sound before the visitor interacts, so until then the button reads *Tap for
-  sound*, and the first click, tap or key anywhere on the page joins the score
-  wherever the film has reached. While the AudioContext
+  sound before the visitor interacts. So the autoplay **holds on its first
+  frame for up to three seconds** ("press any key or click to start with
+  sound"): a gesture in that window starts the film from the first note with
+  its score, and silence starts it muted. The hold is skipped when the browser
+  already allows sound, and a background tab does not spend it. After that,
+  *Tap for sound* and the first click, tap or key anywhere join the score
+  wherever the film has reached. The Space that opens the hold is swallowed,
+  or it would scroll the film out of view and pause it. While the AudioContext
   runs, its clock drives the picture (`au.synced`). When it stops, whether from
   our pause or from the browser, the time goes back to the performance clock
   without a jump.
