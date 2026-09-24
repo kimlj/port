@@ -673,7 +673,8 @@
     { s: 'ai', a: 17.6, b: 24.4, f: drawSynapses, top: true },
     { s: 'ai', a: 14.2, b: 17.8, f: drawDecHighlight, top: true },
     { s: 'avatars', a: 0, b: 7.5, f: drawAvatars, top: true },
-    { s: 'reach', a: 0, b: 7.5, f: drawReach, top: true }
+    { s: 'reach', a: 0, b: 7.5, f: drawReach, top: true },
+    { s: 'ai', a: 18.8, b: 24.4, f: drawOrbit, top: true }
   ];
   function overlays(t, top) {
     for (var k = 0; k < OVERLAYS.length; k++) {
@@ -1105,6 +1106,42 @@
     ctx.globalAlpha = 1;
   }
 
+  /* the models, by the job each is given (from the owner's resume) */
+  var MODELS = [['Claude Code', 'writes the code'], ['ChatGPT', 'images · orchestration'], ['DeepSeek', 'audits · reviews']];
+  function drawOrbit(tl) {
+    var a = env(tl, 19.0, 24.3, 0.6, 0.5), fs = wide ? 11 : 9, rx = fr.R * 1.3, ry = fr.R * 0.42, k;
+    ctx.globalAlpha = a * 0.5; ctx.strokeStyle = css(col.border); ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.ellipse(st.cx, st.cy, rx, ry, -0.12, 0, 6.2832); ctx.stroke();
+    ctx.textBaseline = 'middle';
+    for (k = 0; k < MODELS.length; k++) {
+      var p = smooth((tl - 19.3 - k * 0.5) / 0.5);
+      if (p <= 0) continue;
+      var ang = tl * 0.3 + k * 2.0944, ca = Math.cos(ang), sa = Math.sin(ang);
+      var x = st.cx + ca * rx * Math.cos(-0.12) - sa * ry * Math.sin(-0.12);
+      var y = st.cy + ca * rx * Math.sin(-0.12) + sa * ry * Math.cos(-0.12);
+      var front = sa > -0.2, al = a * p * (front ? 1 : 0.45);
+      ctx.globalAlpha = al;
+      var hs = 26;
+      ctx.drawImage(sprite, x - hs / 2, y - hs / 2, hs, hs);
+      ctx.fillStyle = css(k ? col.g2 : col.accent);
+      ctx.beginPath(); ctx.arc(x, y, 4, 0, 6.2832); ctx.fill();
+      ctx.font = '600 ' + (fs + 1) + 'px ' + fontSans;
+      var nw = ctx.measureText(MODELS[k][0]).width;
+      ctx.font = '400 ' + fs + 'px ' + fontMono;
+      var rw = ctx.measureText(MODELS[k][1]).width, lw = Math.max(nw, rw);
+      var lx = x + 10 + lw > W - 8 ? x - 10 - lw : x + 10;
+      lx = clamp(lx, 8, W - 8 - lw);
+      ctx.globalAlpha = al * 0.85;
+      rr(lx - 6, y - fs * 1.55, lw + 12, fs * 3.1, 6); ctx.fillStyle = css(col.bg); ctx.fill();
+      ctx.globalAlpha = al;
+      ctx.font = '600 ' + (fs + 1) + 'px ' + fontSans; ctx.fillStyle = css(col.text);
+      ctx.fillText(MODELS[k][0], lx, y - fs * 0.7);
+      ctx.font = '400 ' + fs + 'px ' + fontMono; ctx.fillStyle = css(col.muted);
+      ctx.fillText(MODELS[k][1], lx, y + fs * 0.75);
+    }
+    ctx.globalAlpha = 1;
+  }
+
   function drawOss(tl) {
     var a = env(tl, 0.1, 7.4, 0.5, 0.5), fs = wide ? 11 : 9, k;
     ctx.lineWidth = 1; ctx.textBaseline = 'middle';
@@ -1218,6 +1255,7 @@
     { s: 'kick', t0: 14.6, t1: 23.8, kick: 'AI' },
     { s: 'big', t0: 14.8, t1: 18.6, h: 'Eleven days after ChatGPT opened, I was *in it*.' },
     { s: 'big', t0: 18.9, t1: 23.8, h: 'Now AI is how I *build*.' },
+    { s: 'sub', t0: 19.2, t1: 23.8, h: 'Each model gets the job it does best, driven by 20+ skills and 5 subagents I wrote.' },
     { s: 'stat', t0: 19.6, t1: 23.8, f: claudeStat },
 
     { s: 'kick', t0: 24.2, t1: 33.4, kick: 'WordWarz.io' },

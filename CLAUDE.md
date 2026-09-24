@@ -53,6 +53,9 @@ fades.
     GitHub is out of reach under `connect-src 'self'`.
   - The Reach chapter's tool names are the real ones in
     `mdspromonitor/server/src/routes/ask.ts` and `jarvis-router`.
+  - The model roles orbiting the AI chapter's sphere, and the 20+ skills and 5
+    subagents under it, come from the owner's resume (`jobsift/resume.txt`) and
+    `~/.claude/agents`.
 
   Re-check the exceptions when the repositories behind them change.
 - **The avatars are one sprite**, `assets/avatar-sprite-60.webp`. It is built by
