@@ -18,15 +18,17 @@
  * drops its caption line rather than showing a stale or guessed number.
  *
  * THE SCORE IS SYNTHESISED, not a file: Web Audio oscillators and filtered
- * noise, scheduled on a 100 BPM grid the scenes are cut to (a bar is 2.4s, the
- * film is 24 bars). Browsers refuse audible autoplay, so the film starts silent
- * and the sound button joins the score at whatever second the film has reached.
- * With sound on, the AudioContext's clock drives the picture rather than the
- * other way round — audio cannot be nudged without a click, pictures can.
+ * noise, scheduled on a 100 BPM grid the scenes are cut to (a bar is 2.4s).
+ * Browsers refuse audible autoplay, so the film starts silent and the sound
+ * button joins the score at whatever second the film has reached. While sound
+ * runs, the AudioContext's clock drives the picture rather than the other way
+ * round — audio cannot be nudged without a click, pictures can.
  *
- * It plays once per visitor per fortnight (the head script decides, so the
- * hero never flashes before the film covers it); reduced motion and returning
- * visitors get the hero as it always was, plus a chip to play the story.
+ * TWO CUTS. The 58-second one autoplays, once per visitor per fortnight (the
+ * head script decides, so the hero never flashes before the film covers it).
+ * The 89-second one adds Avatars, RecodeAI, Reach and Open source, and plays
+ * from the chip under the CTAs, or with ?film=full. Reduced motion and
+ * returning visitors get the hero as it always was, plus that chip.
  */
 (function () {
   'use strict';
@@ -41,19 +43,39 @@
   }
 
   var reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var BAR = 2.4, BEAT = 0.6, DUR = 24 * BAR;          /* 57.6s */
-  var REVEAL_AT = 55.3;                                /* hero content starts arriving */
+  var BAR = 2.4, BEAT = 0.6;
   var SEEN_KEY = 'heroFilmSeen';
 
-  var CHAPTERS = [
-    { t: 0, n: 'hello, world' },
-    { t: 2 * BAR, n: 'Practice' },
-    { t: 6 * BAR, n: 'AI' },
-    { t: 10 * BAR, n: 'WordWarz.io' },
-    { t: 14 * BAR, n: 'MDS Pro' },
-    { t: 18 * BAR, n: 'Pipelines' },
-    { t: 21 * BAR, n: 'Kim' }
-  ];
+  /* SCENES AND CUTS. The first cut was written against one absolute clock, and
+     its seven scenes keep that clock as their own: `o` is where each started on
+     it, so every time written inside them still means what it did. The four
+     scenes only the full cut has count from their own zero. A cut is a list of
+     scenes; applyCut() lays them end to end and gives each a shift `sh`, the
+     distance from its own clock to the film's. Scenes are whole bars, so every
+     shift is too, and the beat grid never slips at a join. */
+  var SC = {
+    open: { o: 0, bars: 2, n: 'hello, world' },
+    practice: { o: 4.8, bars: 4, n: 'Practice' },
+    ai: { o: 14.4, bars: 4, n: 'AI' },
+    ww: { o: 24, bars: 4, n: 'WordWarz.io' },
+    avatars: { o: 0, bars: 3, n: 'Avatars' },
+    mds: { o: 33.6, bars: 4, n: 'MDS Pro' },
+    recode: { o: 0, bars: 4, n: 'RecodeAI' },
+    reach: { o: 0, bars: 3, n: 'Reach' },
+    pipe: { o: 43.2, bars: 3, n: 'Pipelines' },
+    oss: { o: 0, bars: 3, n: 'Open source' },
+    kim: { o: 50.4, bars: 3, n: 'Kim' }
+  };
+  var CUTS = {
+    short: ['open', 'practice', 'ai', 'ww', 'mds', 'pipe', 'kim'],
+    full: ['open', 'practice', 'ai', 'ww', 'avatars', 'mds', 'recode', 'reach', 'pipe', 'oss', 'kim']
+  };
+  function origScene(t) {
+    var s = 'open';
+    CUTS.short.forEach(function (id) { if (t >= SC[id].o) s = id; });
+    return s;
+  }
+  var cut = 'short', DUR = 0, REVEAL_AT = 0, CHAPTERS = [];
 
   /* ---------------------------------------------------------------- helpers */
 
@@ -143,6 +165,25 @@
       data.claude = { hours: j.hours.total, prompts: j.prompts.total, projects: j.prompts.projects, asOf: monthOf(j.generatedAt) };
     }
   }).catch(function () {});
+  /* The Avatar pipeline's faces, packed by scripts/build-avatar-sprite.py:
+     the originals are 13 MB, so the chapter reads one 300 KB sheet, fetched
+     only when the full cut is asked for. */
+  var AVATAR_SPRITE = 'assets/avatar-sprite-60.webp', AV_COLS = 11, AV_COUNT = 60, AV_TILE = 112;
+  var avSheet = null;
+  function loadAvatars() {
+    if (avSheet) return;
+    avSheet = new Image();
+    avSheet.decoding = 'async';
+    avSheet.src = AVATAR_SPRITE;
+  }
+  var AV_RANK = [];
+  (function () {
+    var ord = [];
+    for (var j = 0; j < AV_COUNT; j++) ord.push(j);
+    ord.sort(function (a, b) { return hash(a * 3.7 + 11) - hash(b * 3.7 + 11); });
+    ord.forEach(function (j, r) { AV_RANK[j] = r; });
+  })();
+  function avAppear(j) { return 0.35 + AV_RANK[j] * 0.075; }
 
   /* ------------------------------------------------------------ the theme */
 
@@ -190,7 +231,7 @@
   /* ----------------------------------------------------------- the layout */
 
   var W = 0, H = 0, dpr = 1, wide = true;
-  var st = {}, cal = {}, board = {}, pr = {}, open = { cx: 0, cy: 0 };
+  var st = {}, cal = {}, board = {}, pr = {}, rc = {}, av = {}, open = { cx: 0, cy: 0 };
   var OPEN_TEXT = 'hello, world';
   var fontMono = "'JetBrains Mono', monospace", fontSans = "'DM Sans', sans-serif";
 
@@ -222,6 +263,17 @@
     board.x0 = st.cx - (5 * board.t + 4 * board.g) / 2;
     board.y0 = st.cy - (6 * board.t + 5 * board.g) / 2;
 
+    /* RecodeAI's page, raised a little to leave room for what the crawl
+       extracts and the deploy line underneath it */
+    rc.w = Math.min(st.w * 0.82, st.h * 1.2); rc.h = rc.w * 0.6;
+    rc.x = st.cx - rc.w / 2; rc.y = st.cy - rc.h / 2 - st.h * 0.07;
+
+    av.t = Math.min(st.w / 11.9, st.h / 6.9);
+    av.g = av.t * 0.1;
+    av.x0 = st.cx - (AV_COLS * av.t + (AV_COLS - 1) * av.g) / 2;
+    var avRows = Math.ceil(AV_COUNT / AV_COLS);
+    av.y0 = st.cy - (avRows * av.t + (avRows - 1) * av.g) / 2;
+
     open.size = clamp(W * 0.034, 22, 46);
     open.y = (wide ? H / 2 : Math.min(H, vh) * 0.42);
     /* where the caret stops: the burst point, known before the first frame so a
@@ -231,8 +283,8 @@
     open.x0 = W / 2 - (fw + pw) / 2 + pw;
     open.cx = open.x0 + fw + 4 + open.size * 0.3; open.cy = open.y;
 
-    var av = hero.querySelector('.hero-avatar'), img = av && av.querySelector('img');
-    if (wide && img && getComputedStyle(av).display !== 'none') {
+    var avEl = hero.querySelector('.hero-avatar'), img = avEl && avEl.querySelector('img');
+    if (wide && img && getComputedStyle(avEl).display !== 'none') {
       var hr = hero.getBoundingClientRect(), r = img.getBoundingClientRect();
       pr.x = r.left - hr.left; pr.y = r.top - hr.top; pr.w = r.width; pr.h = r.height;
     } else {
@@ -396,25 +448,112 @@
     o.a *= 1 - smooth((t - 55.4) / 1.9);
   }
 
-  var FORMS = [
-    { t: 0, f: fOpen },
-    { t: 4.5, f: fCal, dur: 0.9, sw: 0.5, d: function (i) { return 0.25 + (i / N) * 6.6; } },
-    { t: 17.0, f: fSphere, dur: 1.7, sw: 0.9, d: function (i) { return (i / N) * 1.5; } },
-    { t: 24.0, f: fDust, dur: 1.3, sw: 0.4, d: function (i) { return H1[i] * 0.5; } },
-    { t: 28.9, f: fNet, dur: 1.4, sw: 0.6, d: function (i) { return H2[i] * 0.7; } },
-    { t: 33.6, f: fClusters, dur: 1.5, sw: 0.7, d: function (i) { return H3[i] * 0.8; } },
-    { t: 43.2, f: fStream, dur: 1.3, sw: 0.5, d: function (i) { return H4[i] * 0.9; } },
-    { t: 50.4, f: fPortrait, dur: 1.9, sw: 1.1, d: function (i) { return TV[i] * 0.6 + H1[i] * 0.5; } }
+  function fDustDim(i, t, o) { fDust(i, t, o); o.a *= 0.55; }
+
+  /* the page RecodeAI takes apart, and the one it builds: rects in page units,
+     [x, y, w, h], a zero height being a line of text */
+  var WIRE_OLD = [[0, 0, 1, 1], [0, 0, 1, 0.15], [0, 0.15, 0.2, 0.85], [0.25, 0.2, 0.7, 0.1], [0.25, 0.34, 0.7, 0.1],
+    [0.25, 0.48, 0.7, 0.1], [0.25, 0.63, 0.33, 0.27], [0.62, 0.63, 0.33, 0.27], [0.04, 0.25, 0.12, 0], [0.04, 0.33, 0.12, 0], [0.04, 0.41, 0.12, 0]];
+  var WIRE_NEW = [[0, 0, 1, 1], [0.05, 0.09, 0.9, 0], [0.05, 0.19, 0.5, 0.07], [0.05, 0.28, 0.38, 0.07], [0.05, 0.41, 0.15, 0.06],
+    [0.62, 0.17, 0.33, 0.33], [0.05, 0.6, 0.27, 0.32], [0.365, 0.6, 0.27, 0.32], [0.68, 0.6, 0.27, 0.32]];
+  function wirePoints(R) {
+    var X = new Float32Array(N), Y = new Float32Array(N), F = new Uint8Array(N), per = [], tot = 0, k;
+    for (k = 0; k < R.length; k++) { per.push(2 * (R[k][2] + R[k][3])); tot += per[k]; }
+    for (var i = 0; i < N; i++) {
+      var u = H1[i] * tot;
+      for (k = 0; k < R.length - 1 && u > per[k]; k++) u -= per[k];
+      var r = R[k];
+      if (r[3] > 0 && H3[i] < 0.2) { X[i] = r[0] + H2[i] * r[2]; Y[i] = r[1] + H4[i] * r[3]; F[i] = 1; continue; }
+      var q = H2[i] * per[k];
+      if (q < r[2]) { X[i] = r[0] + q; Y[i] = r[1]; }
+      else if ((q -= r[2]) < r[3]) { X[i] = r[0] + r[2]; Y[i] = r[1] + q; }
+      else if ((q -= r[3]) < r[2]) { X[i] = r[0] + r[2] - q; Y[i] = r[1] + r[3]; }
+      else { X[i] = r[0]; Y[i] = r[1] + r[3] - (q - r[2]); }
+    }
+    return { x: X, y: Y, f: F };
+  }
+  var WO = wirePoints(WIRE_OLD), WN = wirePoints(WIRE_NEW);
+  function fWireOld(i, t, o) {
+    o.x = rc.x + WO.x[i] * rc.w; o.y = rc.y + WO.y[i] * rc.h;
+    o.s = WO.f[i] ? 1.1 : 1.5; o.a = WO.f[i] ? 0.16 : 0.5; o.c = -2;
+    /* the crawler's scan lights what it passes */
+    var d = Math.abs(WO.y[i] - (t - 1.4) / 2.0);
+    if (t > 1.4 && t < 3.5 && d < 0.05) { o.a += (1 - d / 0.05) * 0.6; o.c = 0; }
+  }
+  function fWireNew(i, t, o) {
+    o.x = rc.x + WN.x[i] * rc.w; o.y = rc.y + WN.y[i] * rc.h;
+    o.s = WN.f[i] ? 1.1 : 1.8; o.a = WN.f[i] ? 0.22 : 0.85; o.c = WN.x[i] * 0.9;
+  }
+
+  /* Three AI systems by how much they can touch. Tool names are the real
+     ones: Ask AI's two in the MDS Pro codebase, Jarvis's four in the MCP server
+     (jarvis-router), which this machine's Claude Code has connected. */
+  var REACH = [
+    { name: 'site assistant', where: 'kimlj.dev', tools: [], guard: 'no tools, no database · worst case: a wrong sentence', f: 0.06 },
+    { name: 'Ask AI', where: 'MDS Pro', tools: ['run_sql', 'read_sheet'], guard: 'SELECT-only role · 500-row cap · cost logged per question', f: 0.42 },
+    { name: 'Jarvis', where: 'my own MCP server', tools: ['find_photos', 'where_was_i', 'what_did_i_decide', 'who_have_i_named'], guard: 'three self-hosted stores: Immich · Dawarich · basic-memory', f: 0.94 }
   ];
+  function reachAt(k) { return 0.5 + k * 1.7; }
+  function reachRow(k) {
+    var rowH = st.h / (wide ? 4 : 3), y = wide ? st.y + st.h * (0.22 + 0.28 * k) : st.y + rowH * (k + 0.5);
+    if (wide) return { lx: st.x, ly: y - 16, wy: y + 2, same: false, bx: st.x + st.w * 0.3, by: y - 8, bw: st.w * 0.7, gy: y + 20 };
+    return { lx: st.x, ly: y - rowH * 0.3, wy: y - rowH * 0.3, same: true, bx: st.x, by: y - rowH * 0.02, bw: st.w, gy: y + rowH * 0.24 };
+  }
+  function fReach(i, t, o) {
+    var k = i % 3, R = fr.rows[k], g = ease((t - reachAt(k)) / 0.9);
+    o.x = R.bx + H1[i] * R.bw * REACH[k].f * Math.max(0.03, g);
+    o.y = R.by + (H2[i] - 0.5) * (wide ? 16 : 12) + Math.sin(t * 2 + i) * 1.2;
+    o.s = 1.4 + H3[i]; o.a = g > 0 ? 0.35 + 0.45 * H3[i] : 0.1; o.c = k * 0.42 + H4[i] * 0.1;
+  }
+
+  /* Merged pull requests, from `gh search prs --author kimlj --merged` on
+     24 Sep 2026: the one scene whose figures are written here, because GitHub
+     is not reachable from this page (connect-src 'self'). It says its date. */
+  var PRS = [
+    { repo: 0, day: '2026-07-20', label: 'CartesianAxis: skip a redundant dispatch' },
+    { repo: 0, day: '2026-07-20', label: 'Area: connectNulls across stacked series' },
+    { repo: 0, day: '2026-07-20', label: 'XAxis: height="auto"' },
+    { repo: 1, day: '2026-08-05', label: 'honor Retry-After on model-call retries' },
+    { repo: 0, day: '2026-09-13', label: 'docs: an XAxis height="auto" example' }
+  ];
+  var REPOS = ['recharts', 'mastra'], OSS_ASOF = '24 Sep 2026';
+  var OSS_T0 = Date.UTC(2026, 6, 1), OSS_T1 = Date.UTC(2026, 8, 30);
+  function prX(day) { return st.x + st.w * (0.1 + 0.86 * (Date.parse(day) - OSS_T0) / (OSS_T1 - OSS_T0)); }
+  function laneY(r) { return st.y + st.h * (r ? 0.74 : 0.42); }
+  function prAt(k) { return 0.7 + k * 0.85; }
+  function fLanes(i, t, o) {
+    var r = H4[i] < 0.62 ? 0 : 1, ph = frac(H1[i] + t * 0.05);
+    o.x = st.x + st.w * (0.1 + 0.88 * ph); o.y = laneY(r) + (H2[i] - 0.5) * 7;
+    o.s = 1.3; o.a = 0.32 * smooth(ph / 0.05) * (1 - smooth((ph - 0.93) / 0.07)); o.c = r * 0.8;
+  }
+
+  /* Formations, each on its own scene's clock (see SC): `at` is when it takes
+     over, measured the way the rest of that scene is. */
+  var FORM_DEFS = [
+    { s: 'open', at: 0, f: fOpen },
+    { s: 'open', at: 4.5, f: fCal, dur: 0.9, sw: 0.5, d: function (i) { return 0.25 + (i / N) * 6.6; } },
+    { s: 'ai', at: 17.0, f: fSphere, dur: 1.7, sw: 0.9, d: function (i) { return (i / N) * 1.5; } },
+    { s: 'ww', at: 24.0, f: fDust, dur: 1.3, sw: 0.4, d: function (i) { return H1[i] * 0.5; } },
+    { s: 'ww', at: 28.9, f: fNet, dur: 1.4, sw: 0.6, d: function (i) { return H2[i] * 0.7; } },
+    { s: 'avatars', at: 0, f: fDustDim, dur: 1.2, sw: 0.5, d: function (i) { return H1[i] * 0.5; } },
+    { s: 'mds', at: 33.6, f: fClusters, dur: 1.5, sw: 0.7, d: function (i) { return H3[i] * 0.8; } },
+    { s: 'recode', at: 0, f: fWireOld, dur: 1.3, sw: 0.6, d: function (i) { return H2[i] * 0.5; } },
+    { s: 'recode', at: 3.6, f: fWireNew, dur: 1.4, sw: 0.9, d: function (i) { return H3[i] * 0.6; } },
+    { s: 'reach', at: 0, f: fReach, dur: 1.2, sw: 0.5, d: function (i) { return H1[i] * 0.4; } },
+    { s: 'pipe', at: 43.2, f: fStream, dur: 1.3, sw: 0.5, d: function (i) { return H4[i] * 0.9; } },
+    { s: 'oss', at: 0, f: fLanes, dur: 1.3, sw: 0.6, d: function (i) { return H4[i] * 0.6; } },
+    { s: 'kim', at: 50.4, f: fPortrait, dur: 1.9, sw: 1.1, d: function (i) { return TV[i] * 0.6 + H1[i] * 0.5; } }
+  ];
+  var FORMS = [];
 
   var A = {}, B = {}, P = {};
   function place(i, t, k, o) {
     var F = FORMS[k];
-    if (!k) { F.f(i, t, o); return; }
-    var local = t - F.t - F.d(i);
-    if (local <= 0) { FORMS[k - 1].f(i, t, o); return; }
-    if (local >= F.dur) { F.f(i, t, o); return; }
-    FORMS[k - 1].f(i, t, A); F.f(i, t, B);
+    if (!k) { F.f(i, t - F.sh, o); return; }
+    var Q = FORMS[k - 1], local = t - F.t - F.d(i);
+    if (local <= 0) { Q.f(i, t - Q.sh, o); return; }
+    if (local >= F.dur) { F.f(i, t - F.sh, o); return; }
+    Q.f(i, t - Q.sh, A); F.f(i, t - F.sh, B);
     var e = ease(local / F.dur), dx = B.x - A.x, dy = B.y - A.y;
     var sw = Math.sin(Math.PI * e) * F.sw * (H4[i] - 0.5) * 0.8;
     o.x = A.x + dx * e - dy * sw; o.y = A.y + dy * e + dx * sw;
@@ -441,7 +580,8 @@
   function flipT(r, j) { return ROW_T[r] + 0.6 + j * 0.15; }
 
   function prep(t) {
-    fr.calDim = smooth((t - 14.4) / 0.8);
+    fr.calDim = smooth((t - SC.ai.sh - 14.4) / 0.8);
+    if (SC.reach.on) fr.rows = [reachRow(0), reachRow(1), reachRow(2)];
     var ang = t * 0.42, tl = 0.38 + 0.08 * Math.sin(t * 0.5);
     fr.ca = Math.cos(ang); fr.sa = Math.sin(ang); fr.ct = Math.cos(tl); fr.stl = Math.sin(tl);
     fr.R = st.m * 0.4 * (1 + 0.035 * Math.exp(-((t % BEAT) / BEAT) * 6));
@@ -451,8 +591,9 @@
     fr.K = data.mds && data.mds.users > 1 ? Math.min(data.mds.users, 24) : 15;
     fr.flash = fr.flash || new Float32Array(24);
     for (var k = 0; k < 24; k++) fr.flash[k] = 0;
+    var tm = t - SC.mds.sh;
     for (var e = 0; e < LEDGER.length; e++) {
-      var dt = t - (LEDGER[e].t - 0.45);
+      var dt = tm - (LEDGER[e].t - 0.45);
       if (dt > 0 && dt < 0.5) { var n = LEDGER[e].node % fr.K; fr.flash[n] = Math.max(fr.flash[n], 1 - dt / 0.5); }
     }
   }
@@ -471,7 +612,7 @@
   function render(t) {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, W, H);
-    var bgA = 1 - smooth((t - 55.0) / 1.9);
+    var bgA = 1 - smooth((t - SC.kim.sh - 55.0) / 1.9);
     ctx.globalCompositeOperation = 'source-over';
     ctx.globalAlpha = 1;
     ctx.fillStyle = css(col.bg, bgA);
@@ -490,13 +631,7 @@
       PX[i] = P.x; PY[i] = P.y; PS[i] = P.s; PA[i] = P.a > 1 ? 1 : P.a; PC[i] = P.c;
     }
 
-    if (t < 5.4) drawOpen(t);
-    if (t > 4.6 && t < 17.8) drawCalLabels(t);
-    if (t > 24 && t < 30) drawBoard(t);
-    if (t > 29.2 && t < 34.2) drawNetwork(t);
-    if (t > 33.6 && t < 43.8) drawLedger(t);
-    if (t > 43.2 && t < 50.8) drawPipeline(t);
-    if (t > 50.4) drawFinale(t);
+    overlays(t, false);
 
     /* particles: cores, then halos on the brightest */
     ctx.globalCompositeOperation = dark ? 'lighter' : 'source-over';
@@ -520,8 +655,33 @@
     ctx.globalCompositeOperation = 'source-over';
     ctx.globalAlpha = 1;
 
-    if (t > 17.6 && t < 24.4) drawSynapses(t);
-    if (t > 14.2 && t < 17.8) drawDecHighlight(t);
+    overlays(t, true);
+  }
+
+  /* Each overlay draws on its scene's clock, so the original seven still see
+     the times they were written against wherever the cut has moved them. */
+  var OVERLAYS = [
+    { s: 'open', a: -1, b: 5.4, f: drawOpen },
+    { s: 'practice', a: 4.6, b: 17.8, f: drawCalLabels },
+    { s: 'ww', a: 24, b: 30, f: drawBoard },
+    { s: 'ww', a: 29.2, b: 34.2, f: drawNetwork },
+    { s: 'mds', a: 33.6, b: 43.8, f: drawLedger },
+    { s: 'recode', a: 0, b: 9.8, f: drawRecode },
+    { s: 'pipe', a: 43.2, b: 50.8, f: drawPipeline },
+    { s: 'oss', a: 0, b: 7.5, f: drawOss },
+    { s: 'kim', a: 50.4, b: 99, f: drawFinale },
+    { s: 'ai', a: 17.6, b: 24.4, f: drawSynapses, top: true },
+    { s: 'ai', a: 14.2, b: 17.8, f: drawDecHighlight, top: true },
+    { s: 'avatars', a: 0, b: 7.5, f: drawAvatars, top: true },
+    { s: 'reach', a: 0, b: 7.5, f: drawReach, top: true }
+  ];
+  function overlays(t, top) {
+    for (var k = 0; k < OVERLAYS.length; k++) {
+      var ov = OVERLAYS[k], s = SC[ov.s];
+      if (!s.on || !!ov.top !== top) continue;
+      var tl = t - s.sh;
+      if (tl > ov.a && tl < ov.b) ov.f(tl);
+    }
   }
 
   function drawOpen(t) {
@@ -779,6 +939,229 @@
     ctx.globalAlpha = 1;
   }
 
+  /* ------------------------------------------------- the full cut's four scenes */
+
+  function wrapLines(text, maxW) {
+    var words = text.split(' '), lines = [], line = '';
+    for (var k = 0; k < words.length; k++) {
+      var next = line ? line + ' ' + words[k] : words[k];
+      if (line && ctx.measureText(next).width > maxW) { lines.push(line); line = words[k]; } else line = next;
+    }
+    if (line) lines.push(line);
+    return lines;
+  }
+  function typeLines(lines, n, x, y, lh) {
+    for (var k = 0; k < lines.length && n > 0; k++) {
+      ctx.fillText(lines[k].slice(0, n), x, y + k * lh);
+      n -= lines[k].length + 1;
+    }
+  }
+
+  function avatarsShown(tl) {
+    var n = 0;
+    for (var j = 0; j < AV_COUNT; j++) if (tl >= avAppear(j)) n++;
+    return n;
+  }
+  function drawAvatars(tl) {
+    var a = 1 - smooth((tl - 6.6) / 0.7), T = av.t, g = av.g;
+    var ready = avSheet && avSheet.complete && avSheet.naturalWidth;
+    var rows = Math.ceil(AV_COUNT / AV_COLS), lastN = AV_COUNT - (rows - 1) * AV_COLS, sc = 1 - (1 - a) * 0.12;
+    ctx.lineWidth = 1;
+    for (var j = 0; j < AV_COUNT; j++) {
+      var r = Math.floor(j / AV_COLS), c = j % AV_COLS;
+      var x = av.x0 + c * (T + g) + (r === rows - 1 ? (AV_COLS - lastN) * (T + g) / 2 : 0), y = av.y0 + r * (T + g);
+      var p = (tl - avAppear(j)) / 0.22, cx = x + T / 2, cy = y + T / 2;
+      if (p <= 0) {
+        /* the empty slots arrive first, so the grid is there to be filled */
+        ctx.globalAlpha = a * smooth((tl - j * 0.006) / 0.4) * 0.8;
+        rr(x, y, T, T, T * 0.14); ctx.strokeStyle = css(col.border); ctx.stroke();
+        continue;
+      }
+      var w = T * sc, h = T * sc * ease(Math.min(1, p));
+      ctx.globalAlpha = a;
+      ctx.save();
+      rr(cx - w / 2, cy - h / 2, w, h, Math.min(T * 0.14, h / 2)); ctx.clip();
+      ctx.fillStyle = css(col.card); ctx.fillRect(cx - w / 2, cy - h / 2, w, h);
+      if (ready) {
+        ctx.drawImage(avSheet, (j % AV_COLS) * AV_TILE, Math.floor(j / AV_COLS) * AV_TILE, AV_TILE, AV_TILE, cx - w / 2, cy - h / 2, w, h);
+      } else {
+        ctx.globalAlpha = a * 0.4; ctx.fillStyle = LUT[(hash(j) * 15) | 0]; ctx.fillRect(cx - w / 2, cy - h / 2, w, h);
+      }
+      ctx.restore();
+      var fl = 1 - clamp((tl - avAppear(j)) / 0.6, 0, 1);
+      if (fl > 0) {
+        ctx.globalAlpha = a * fl;
+        rr(cx - w / 2, cy - h / 2, w, h, Math.min(T * 0.14, h / 2));
+        ctx.strokeStyle = css(col.accent); ctx.lineWidth = 2; ctx.stroke(); ctx.lineWidth = 1;
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  var RECODE_STEPS = [[0, 'the site you point it at'], [1.4, 'crawling · reading the brand'], [3.6, 'redesigning with Claude'], [5.8, 'deploying'], [7.0, '✓ live']];
+  function drawRecode(tl) {
+    var a = env(tl, 0.1, 9.7, 0.5, 0.5), fs = wide ? 11 : 9, k;
+    var bh = wide ? 20 : 16, by = rc.y - bh - (wide ? 10 : 8);
+    ctx.globalAlpha = a; ctx.lineWidth = 1;
+    /* the browser the page lives in, whose address bar narrates the run */
+    rr(rc.x, by, rc.w, bh, bh / 2);
+    ctx.fillStyle = css(col.card, 0.9); ctx.fill(); ctx.strokeStyle = css(col.border); ctx.stroke();
+    ctx.fillStyle = css(col.dim);
+    for (k = 0; k < 3; k++) { ctx.beginPath(); ctx.arc(rc.x + 12 + k * 9, by + bh / 2, 2.3, 0, 6.2832); ctx.fill(); }
+    var step = RECODE_STEPS[0][1];
+    for (k = 0; k < RECODE_STEPS.length; k++) if (tl >= RECODE_STEPS[k][0]) step = RECODE_STEPS[k][1];
+    if (tl > 3.6 && tl < 5.8) step += ' ' + new Array(1 + Math.floor((tl - 3.6) / 0.15) % 4).join('·');
+    ctx.font = '400 ' + fs + 'px ' + fontMono; ctx.textBaseline = 'middle';
+    ctx.fillStyle = css(tl >= 7 ? col.accent : col.muted);
+    ctx.fillText(step, rc.x + 46, by + bh / 2);
+    if (tl > 7 && tl < 8.2) {
+      var q = (tl - 7) / 1.2;
+      ctx.globalAlpha = a * (1 - q); ctx.strokeStyle = css(col.accent); ctx.lineWidth = 1.5;
+      rr(rc.x - q * 10, by - q * 10, rc.w + q * 20, bh + q * 20, bh / 2 + q * 10); ctx.stroke(); ctx.lineWidth = 1;
+    }
+    /* the crawl */
+    if (tl > 1.4 && tl < 3.5) {
+      var sy = rc.y + clamp((tl - 1.4) / 2.0, 0, 1) * rc.h;
+      var gr = ctx.createLinearGradient(0, sy - 44, 0, sy);
+      gr.addColorStop(0, css(col.accent, 0)); gr.addColorStop(1, css(col.accent, 0.14));
+      ctx.globalAlpha = a; ctx.fillStyle = gr; ctx.fillRect(rc.x, sy - 44, rc.w, 44);
+      ctx.fillStyle = css(col.accent); ctx.fillRect(rc.x - 6, sy, rc.w + 12, 1.5);
+    }
+    /* what it extracts: the swatches are the page's own tokens, standing for
+       whatever palette the real run would have read */
+    var ss = wide ? 18 : 14, ry = rc.y + rc.h + (wide ? 16 : 12), out = 1 - smooth((tl - 5.5) / 0.4);
+    var sw = [col.accent, col.g2, col.text, col.muted];
+    for (k = 0; k < 4; k++) {
+      var ap = smooth((tl - 2.0 - k * 0.4) / 0.3) * out;
+      if (ap <= 0) continue;
+      ctx.globalAlpha = a * ap;
+      rr(rc.x + k * (ss + 8), ry, ss, ss, 4); ctx.fillStyle = css(sw[k]); ctx.fill(); ctx.strokeStyle = css(col.border); ctx.stroke();
+    }
+    var tp = smooth((tl - 3.3) / 0.3) * out;
+    if (tp > 0) {
+      ctx.globalAlpha = a * tp;
+      ctx.font = 'italic 400 ' + Math.round(ss * 1.3) + "px 'Instrument Serif', serif"; ctx.fillStyle = css(col.text);
+      ctx.fillText('Aa', rc.x + 4 * (ss + 8) + 2, ry + ss / 2);
+      ctx.font = '400 ' + fs + 'px ' + fontMono; ctx.fillStyle = css(col.muted);
+      ctx.fillText('palette · type · tone', rc.x + 4 * (ss + 8) + ss * 1.7 + 8, ry + ss / 2);
+    }
+    /* the new page takes colour once it has a shape */
+    var np = smooth((tl - 5.0) / 0.8);
+    if (np > 0) {
+      ctx.globalAlpha = a * np;
+      var bt = WIRE_NEW[4], im = WIRE_NEW[5];
+      rr(rc.x + bt[0] * rc.w, rc.y + bt[1] * rc.h, bt[2] * rc.w, bt[3] * rc.h, bt[3] * rc.h / 2);
+      ctx.fillStyle = css(col.accent); ctx.fill();
+      ctx.fillStyle = css(col.g2, 0.12); ctx.fillRect(rc.x + im[0] * rc.w, rc.y + im[1] * rc.h, im[2] * rc.w, im[3] * rc.h);
+      ctx.fillStyle = css(col.text, 0.5);
+      [WIRE_NEW[2], WIRE_NEW[3]].forEach(function (h) { ctx.fillRect(rc.x + h[0] * rc.w, rc.y + (h[1] + h[3] * 0.3) * rc.h, h[2] * rc.w, h[3] * rc.h * 0.4); });
+    }
+    var dp = tl - 5.8;
+    if (dp > 0) {
+      ctx.globalAlpha = a * smooth(dp / 0.3);
+      ctx.font = '400 ' + fs + 'px ' + fontMono; ctx.fillStyle = css(col.text);
+      var cmd = '▸ deploy';
+      ctx.fillText(cmd.slice(0, Math.floor(dp / 0.075)), rc.x, ry + ss / 2);
+      if (tl > 7) { ctx.fillStyle = css(col.accent); ctx.fillText('✓ live', rc.x + ctx.measureText(cmd + '   ').width, ry + ss / 2); }
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function drawReach(tl) {
+    var a = env(tl, 0.1, 7.4, 0.5, 0.5), fs = wide ? 12 : 10, k, c;
+    ctx.textBaseline = 'middle';
+    ctx.globalAlpha = a * 0.8;
+    ctx.font = '400 ' + (fs - 2) + 'px ' + fontMono; ctx.fillStyle = css(col.dim);
+    ctx.fillText('reach →', wide ? st.x + st.w * 0.3 : st.x + st.w - 44, st.y + 4);
+    for (k = 0; k < 3; k++) {
+      var R = fr.rows[k], D = REACH[k], p = smooth((tl - reachAt(k) + 0.3) / 0.4);
+      if (p <= 0) continue;
+      ctx.globalAlpha = a * p;
+      ctx.font = '600 ' + (fs + 2) + 'px ' + fontSans; ctx.fillStyle = css(col.text);
+      ctx.fillText(D.name, R.lx, R.ly);
+      var wx = R.same ? R.lx + ctx.measureText(D.name + '  ').width : R.lx;
+      ctx.font = '400 ' + (fs - 1) + 'px ' + fontMono; ctx.fillStyle = css(col.muted);
+      ctx.fillText(D.where, wx, R.wy);
+      /* the tools, sitting on the reach they give */
+      ctx.font = '500 ' + (fs - 2) + 'px ' + fontMono;
+      var cx = R.bx + 4, chips = D.tools.length ? D.tools : ['no tools'];
+      for (c = 0; c < chips.length; c++) {
+        var cp = smooth((tl - reachAt(k) - 0.55 - c * 0.18) / 0.25);
+        var cw = ctx.measureText(chips[c]).width + 14, chh = fs + 8;
+        if (cp > 0) {
+          ctx.globalAlpha = a * cp;
+          rr(cx, R.by - chh / 2, cw, chh, chh / 2);
+          ctx.fillStyle = css(col.card, 0.95); ctx.fill();
+          ctx.strokeStyle = css(D.tools.length ? col.accent : col.border); ctx.lineWidth = 1; ctx.stroke();
+          ctx.fillStyle = css(D.tools.length ? col.text : col.dim);
+          ctx.fillText(chips[c], cx + 7, R.by + 0.5);
+        }
+        cx += cw + 6;
+      }
+      ctx.globalAlpha = a * smooth((tl - reachAt(k) - 1.0) / 0.4);
+      ctx.font = '400 ' + (fs - 2) + 'px ' + fontMono; ctx.fillStyle = css(col.muted);
+      ctx.fillText(D.guard, R.bx, R.gy);
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function drawOss(tl) {
+    var a = env(tl, 0.1, 7.4, 0.5, 0.5), fs = wide ? 11 : 9, k;
+    ctx.lineWidth = 1; ctx.textBaseline = 'middle';
+    for (var r = 0; r < 2; r++) {
+      var y = laneY(r);
+      ctx.globalAlpha = a * 0.7; ctx.strokeStyle = css(col.border);
+      ctx.beginPath(); ctx.moveTo(st.x, y); ctx.lineTo(st.x + st.w, y); ctx.stroke();
+      ctx.globalAlpha = a;
+      ctx.font = '600 ' + (fs + 1) + 'px ' + fontSans; ctx.fillStyle = css(col.text);
+      ctx.fillText(REPOS[r], st.x, y - fs * 1.2);
+    }
+    ctx.font = '400 ' + (fs - 1) + 'px ' + fontMono; ctx.fillStyle = css(col.dim);
+    ['2026-07-01', '2026-08-01', '2026-09-01'].forEach(function (d, m) {
+      var x = prX(d);
+      ctx.globalAlpha = a * 0.8;
+      ctx.fillText(['Jul', 'Aug', 'Sep'][m] + ' 2026', x, st.y + st.h * 0.9);
+      ctx.fillRect(x, st.y + st.h * 0.86, 1, 5);
+    });
+    var stack = {};
+    for (k = 0; k < PRS.length; k++) {
+      var P = PRS[k], mx = prX(P.day), my = laneY(P.repo), key = P.repo;
+      var lvl = stack[key] = (stack[key] || 0) + 1;
+      var p = clamp((tl - prAt(k)) / 0.6, 0, 1);
+      if (p <= 0) continue;
+      var left = mx < st.cx, h = st.h * (0.07 + 0.055 * (lvl - 1));
+      var sx = mx + (left ? 1 : -1) * st.w * 0.07, sy = my - h;
+      /* the branch drawn in, then the merge */
+      ctx.globalAlpha = a; ctx.strokeStyle = css(col.accent); ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(sx, sy);
+      var e = ease(p);
+      for (var q = 1; q <= 16; q++) {
+        var u = e * q / 16, bx = (1 - u) * (1 - u) * sx + 2 * (1 - u) * u * mx + u * u * mx;
+        var by = (1 - u) * (1 - u) * sy + 2 * (1 - u) * u * sy + u * u * my;
+        ctx.lineTo(bx, by);
+      }
+      ctx.stroke(); ctx.lineWidth = 1;
+      ctx.fillStyle = css(col.accent);
+      ctx.beginPath(); ctx.arc(sx, sy, 2.5, 0, 6.2832); ctx.fill();
+      ctx.font = '400 ' + fs + 'px ' + fontMono; ctx.fillStyle = css(col.muted);
+      var lw = ctx.measureText(P.label).width;
+      var lx = left ? sx + 8 : sx - 8 - lw;
+      /* a label that would leave the stage goes on a line above its branch */
+      if (lx + lw > st.x + st.w || lx < st.x) ctx.fillText(P.label, clamp(sx - lw / 2, st.x, st.x + st.w - lw), sy - fs * 1.4);
+      else ctx.fillText(P.label, lx, sy);
+      if (p >= 1) {
+        var m = (tl - prAt(k) - 0.6) / 0.8;
+        ctx.fillStyle = css(col.accent);
+        ctx.beginPath(); ctx.arc(mx, my, 4.5, 0, 6.2832); ctx.fill();
+        if (m < 1) {
+          ctx.globalAlpha = a * (1 - m); ctx.strokeStyle = css(col.accent); ctx.lineWidth = 1.5;
+          ctx.beginPath(); ctx.arc(mx, my, 5 + m * 18, 0, 6.2832); ctx.stroke(); ctx.lineWidth = 1;
+        }
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
   function drawFinale(t) {
     var a = smooth((t - 50.8) / 1.2) * (1 - smooth((t - 55.4) / 1.8));
     if (a <= 0) return;
@@ -815,40 +1198,72 @@
     return '<b>' + m.users + '</b> daily users' + (m.rls ? ' · <b>' + m.rls + '</b> RLS policies · <b>' + m.migrations + '</b> migrations' : '');
   }
 
+  function avStat(p) {
+    return '<b>' + avatarsShown(filmT - SC.avatars.sh) + '</b> of ' + AV_COUNT + ' avatars from the Avatar pipeline';
+  }
+  function ossStat(p) {
+    return '<b>' + Math.round(PRS.length * p) + '</b> pull requests merged in 2026 · as of ' + OSS_ASOF;
+  }
+
+  /* Captions. The first seven scenes' cues carry times on the old absolute
+     clock and find their scene from it; the four new ones name theirs (sc) and
+     count from its zero. Kickers are numbered by position in whichever cut is
+     playing, so the full cut's chapters renumber themselves. */
   var CUES = [
-    { s: 'kick', t0: 5.0, t1: 14.1, h: '01 — Practice' },
+    { s: 'kick', t0: 5.0, t1: 14.1, kick: 'Practice' },
     { s: 'big', t0: 5.3, t1: 9.1, h: 'Five years of *building*.' },
     { s: 'big', t0: 9.3, t1: 14.1, h: 'On and off — then *all at once*.' },
     { s: 'stat', t0: 5.8, t1: 14.1, f: contribStat },
 
-    { s: 'kick', t0: 14.6, t1: 23.8, h: '02 — AI' },
+    { s: 'kick', t0: 14.6, t1: 23.8, kick: 'AI' },
     { s: 'big', t0: 14.8, t1: 18.6, h: 'Eleven days after ChatGPT opened, I was *in it*.' },
     { s: 'big', t0: 18.9, t1: 23.8, h: 'Now AI is how I *build*.' },
-    { s: 'stat', t0: 19.4, t1: 23.8, f: claudeStat },
+    { s: 'stat', t0: 19.6, t1: 23.8, f: claudeStat },
 
-    { s: 'kick', t0: 24.2, t1: 33.4, h: '03 — WordWarz.io' },
+    { s: 'kick', t0: 24.2, t1: 33.4, kick: 'WordWarz.io' },
     { s: 'big', t0: 24.4, t1: 28.9, h: 'A real-time multiplayer *word game*.' },
     { s: 'sub', t0: 25.0, t1: 28.9, h: 'Its bot guesses by Shannon entropy — maximum information per guess.' },
     { s: 'big', t0: 29.2, t1: 33.4, h: 'Grown by *word of mouth*.' },
     { s: 'sub', t0: 29.7, t1: 33.4, h: 'Live on the App Store. No ads, no marketing spend.' },
     { s: 'stat', t0: 30.0, t1: 33.4, f: wwStat },
 
-    { s: 'kick', t0: 33.8, t1: 43.0, h: '04 — MDS Pro Solutions' },
+    { sc: 'avatars', s: 'kick', t0: 0.2, t1: 7.0, kick: 'Avatars' },
+    { sc: 'avatars', s: 'big', t0: 0.4, t1: 7.0, h: AV_COUNT + ' faces, *one pipeline*.' },
+    { sc: 'avatars', s: 'sub', t0: 1.0, t1: 7.0, h: 'WordWarz’s avatars, generated through a custom ComfyUI pipeline.' },
+    { sc: 'avatars', s: 'stat', t0: 1.4, t1: 7.0, f: avStat },
+
+    { s: 'kick', t0: 33.8, t1: 43.0, kick: 'MDS Pro Solutions' },
     { s: 'big', t0: 34.0, t1: 38.5, h: 'A US healthcare company runs its *payroll* on my code.' },
     { s: 'sub', t0: 34.6, t1: 38.5, h: 'Sole developer. In production, used every workday.' },
     { s: 'big', t0: 38.7, t1: 43.0, h: 'The server sets the time. *No row is edited in place.*' },
     { s: 'stat', t0: 39.2, t1: 43.0, f: mdsStat },
 
-    { s: 'kick', t0: 43.4, t1: 50.2, h: '05 — Pipelines' },
+    { sc: 'recode', s: 'kick', t0: 0.2, t1: 9.4, kick: 'RecodeAI' },
+    { sc: 'recode', s: 'big', t0: 0.3, t1: 4.9, h: 'Point it at *any website*.' },
+    { sc: 'recode', s: 'sub', t0: 0.9, t1: 4.9, h: 'RecodeAI crawls it and reads the brand with Claude.' },
+    { sc: 'recode', s: 'big', t0: 5.1, t1: 9.4, h: 'It redesigns it — and *ships it live*.' },
+    { sc: 'recode', s: 'sub', t0: 5.7, t1: 9.4, h: 'Streamed step by step over Server-Sent Events.' },
+
+    { sc: 'reach', s: 'kick', t0: 0.2, t1: 7.0, kick: 'Reach' },
+    { sc: 'reach', s: 'big', t0: 0.4, t1: 7.0, h: 'Every AI I ship gets exactly the *reach* its job needs.' },
+    { sc: 'reach', s: 'sub', t0: 1.0, t1: 7.0, h: 'Decide what it can touch before what it can say.' },
+
+    { s: 'kick', t0: 43.4, t1: 50.2, kick: 'Pipelines' },
     { s: 'big', t0: 43.6, t1: 47.1, h: 'Software that does the *reading* for me.' },
     { s: 'sub', t0: 44.2, t1: 47.1, h: 'Jobsift — hard filters first, an LLM call only where it’s earned.' },
     { s: 'big', t0: 47.3, t1: 50.2, h: 'Database to *deploy*, end to end.' },
     { s: 'stat', t0: 47.7, t1: 50.2, h: 'TypeScript · React · Node · Python · Postgres · Docker · Claude API' },
 
-    { s: 'kick', t0: 51.0, t1: 55.3, h: '06 — Every project, built solo' },
+    { sc: 'oss', s: 'kick', t0: 0.2, t1: 7.0, kick: 'Open source' },
+    { sc: 'oss', s: 'big', t0: 0.4, t1: 7.0, h: 'Merged *upstream*.' },
+    { sc: 'oss', s: 'sub', t0: 1.0, t1: 7.0, h: 'recharts and mastra, 27,000+ stars each. A maintainer reviewed every one.' },
+    { sc: 'oss', s: 'stat', t0: 1.6, t1: 7.0, f: ossStat },
+
+    { s: 'kick', t0: 51.0, t1: 55.3, kick: 'Every project, built solo' },
     { s: 'big', t0: 51.2, t1: 55.3, h: 'Kim *Julongbayan*' },
     { s: 'sub', t0: 52.2, t1: 55.3, h: 'I turn ideas into real products.' }
   ];
+  CUES.forEach(function (c) { if (!c.sc) c.sc = origScene(c.t0); c.T0 = c.T1 = -99; });
 
   var caps = document.createElement('div');
   caps.className = 'ev-film-caps ev-film-layer';
@@ -895,22 +1310,24 @@
     var sh = { kick: 0, big: 0, sub: 0, stat: 0 };
     for (var q = 0; q < CUES.length; q++) {
       var cq = CUES[q];
-      var wq = smooth((t - cq.t0 + 0.1) / 0.5) * (1 - smooth((t - (cq.t1 - 0.2)) / 0.5));
+      var wq = smooth((t - cq.T0 + 0.1) / 0.5) * (1 - smooth((t - (cq.T1 - 0.2)) / 0.5));
       if (wq > 0 && cq.hgt * wq > sh[cq.s]) sh[cq.s] = cq.hgt * wq;
     }
     for (q = 0; q < SLOTS.length; q++) slots[SLOTS[q]].style.height = sh[SLOTS[q]].toFixed(1) + 'px';
     for (var i = 0; i < CUES.length; i++) {
-      var c = CUES[i], live = t > c.t0 - 0.05 && t < c.t1 + 0.05;
+      var c = CUES[i], live = t > c.T0 - 0.05 && t < c.T1 + 0.05;
       if (!live) { if (c.on) { c.el.style.opacity = '0'; c.el.style.visibility = 'hidden'; c.on = false; } continue; }
       if (!c.on) { c.el.style.visibility = 'visible'; c.on = true; }
-      var inn = smooth((t - c.t0) / 0.6), out = smooth((t - (c.t1 - 0.45)) / 0.45);
+      var inn = smooth((t - c.T0) / 0.6), out = smooth((t - (c.T1 - 0.45)) / 0.45);
       if (c.f) {
-        var s = c.f(ease((t - c.t0) / 1.4));
-        if (s !== c.last) { c.el.innerHTML = s; c.last = s; }
+        /* figures arrive by fetch after the slots were measured, so a cue
+           whose text changes is measured again */
+        var s = c.f(ease((t - c.T0) / 1.4));
+        if (s !== c.last) { c.el.innerHTML = s; c.last = s; c.hgt = c.el.offsetHeight; }
       }
       if (c.words) {
         for (var w = 0; w < c.words.length; w++) {
-          var e = ease((t - c.t0 - w * 0.07) / 0.55);
+          var e = ease((t - c.T0 - w * 0.07) / 0.55);
           c.words[w].style.opacity = e.toFixed(3);
           c.words[w].style.transform = 'translateY(' + ((1 - e) * 0.45).toFixed(3) + 'em)';
         }
@@ -947,23 +1364,29 @@
   var nameEl = ui.querySelector('.ev-film-name'), timeEl = ui.querySelector('.ev-film-time');
   var track = ui.querySelector('.ev-film-track'), ppBtn = ui.querySelector('.ev-film-pp');
   var soundBtn = ui.querySelector('.ev-film-sound'), skipBtn = ui.querySelector('.ev-film-skip');
-  var fills = CHAPTERS.map(function (c, k) {
-    var end = k + 1 < CHAPTERS.length ? CHAPTERS[k + 1].t : DUR;
-    var b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'ev-film-seg';
-    b.style.flexGrow = String(end - c.t);
-    b.setAttribute('aria-label', 'Chapter ' + (k + 1) + ': ' + c.n);
-    b.innerHTML = '<span></span>';
-    b.addEventListener('click', function () { seek(c.t + 0.01); if (!playing) play(); });
-    track.appendChild(b);
-    return { el: b.firstChild, t0: c.t, t1: end };
-  });
+  var fills = [];
+  function buildTrack() {
+    track.innerHTML = '';
+    fills = CHAPTERS.map(function (c, k) {
+      var end = k + 1 < CHAPTERS.length ? CHAPTERS[k + 1].t : DUR;
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'ev-film-seg';
+      b.style.flexGrow = String(end - c.t);
+      b.setAttribute('aria-label', 'Chapter ' + k + ': ' + c.n);
+      b.innerHTML = '<span></span>';
+      b.addEventListener('click', function () { seek(c.t + 0.01); if (!playing) play(); });
+      track.appendChild(b);
+      return { el: b.firstChild, t0: c.t, t1: end };
+    });
+  }
+  function clockText(x) { x = Math.floor(x); return Math.floor(x / 60) + ':' + String(x % 60).padStart(2, '0'); }
+  function cutLength(name) { return CUTS[name].reduce(function (n, id) { return n + SC[id].bars * BAR; }, 0); }
 
   var chip = document.createElement('button');
   chip.type = 'button';
   chip.className = 'ev-film-replay ev-film-layer';
-  chip.innerHTML = ICON.play + '<span>Play my story <em>· 58s, with sound</em></span>';
+  chip.innerHTML = ICON.play + '<span>Play the full story <em>· ' + clockText(cutLength('full')) + ', with sound</em></span>';
 
   var lastName = '', lastTime = '';
   function updateUI(t) {
@@ -975,7 +1398,7 @@
     for (k = 0; k < CHAPTERS.length; k++) if (t >= CHAPTERS[k].t) ch = CHAPTERS[k];
     var n = String(CHAPTERS.indexOf(ch)).padStart(2, '0') + ' · ' + ch.n;
     if (n !== lastName) { nameEl.textContent = n; lastName = n; }
-    var s = Math.floor(t), tm = '0:' + String(s).padStart(2, '0') + ' / 0:' + Math.round(DUR);
+    var tm = clockText(t) + ' / ' + clockText(DUR);
     if (tm !== lastTime) { timeEl.textContent = tm; lastTime = tm; }
   }
 
@@ -986,9 +1409,12 @@
 
   function m2f(m) { return 440 * Math.pow(2, (m - 69) / 12); }
 
-  var SCORE = (function () {
+  /* Each event belongs to a scene (o) and is timed on that scene's clock, like
+     everything else; scoreFor() shifts the ones in a cut onto the film's. */
+  var SCORE = [];
+  var SCORE_DEFS = (function () {
     var E = [];
-    function ev(t, k, a, d, hold) { E.push({ t: t, k: k, a: a, d: d || 0, h: !!hold }); }
+    function ev(t, k, a, d, hold, owner) { E.push({ t: t, k: k, a: a, d: d || 0, h: !!hold, o: owner || origScene(t) }); }
     var PROG = [[50, 53, 57, 60, 64], [46, 53, 57, 62, 65], [48, 53, 57, 60, 64], [48, 55, 60, 62, 67]];
     var BASS = [38, 34, 36, 36], PAT = [0, 2, 4, 1, 3, 2, 4, 3], PENT = [62, 65, 67, 69, 72, 74, 77, 79, 81];
     var j, b;
@@ -1041,7 +1467,9 @@
     for (j = 0; j < 27; j++) if (hash(j + 1300) < 0.35) ev(29.4 + j * 0.15, 'pluck', [PENT[Math.floor(hash(j + 1700) * 9)] + 24, 0.02, 7000]);
     LEDGER.forEach(function (L, e) { ev(L.t, 'bell', [[74, 77, 79, 81, 84][e % 5], 0.03, 0.8]); });
     ALERTS.forEach(function (t) { ev(t, 'bell', [86, 0.055, 1.6]); });
-    ev(47.4, 'riser', [3.0]);
+    /* owned by the finale, so it always rises into the impact, whatever
+       scene the cut has put in front of it */
+    ev(47.4, 'riser', [3.0], 0, false, 'kim');
     /* the portrait: impact, a major chord after twenty bars of minor, and the name */
     ev(50.4, 'kick', [0.7]); ev(50.4, 'boom', [0.45]); ev(50.4, 'crash', [0.09, 3.2]);
     ev(50.4, 'pad', [[50, 54, 57, 61, 64, 69], 1.25, 2400, 3.2], 6.2, true);
@@ -1049,8 +1477,75 @@
     [69, 74, 78, 81].forEach(function (m, k) { ev(51.0 + k * 0.3, 'bell', [m, 0.06, 3]); });
     ev(53.1, 'bell', [86, 0.05, 3.5]);
     ev(55.3, 'bell', [90, 0.04, 3.5]); ev(55.2, 'whoosh', [1.2, 0.04, -1]);
-    return E.sort(function (x, y) { return x.t - y.t; });
+
+    /* ---- the full cut's scenes ---- */
+    function groove(own, t0, ci, o) {
+      var chd = PROG[ci], br = o.bright || 2000, x, tt2;
+      ev(t0, 'pad', [chd, 1, br], BAR, true, own);
+      ev(t0, 'sub', [BASS[ci], 0.1], BAR, true, own);
+      for (x = 0; x < 16; x++) {
+        tt2 = t0 + x * 0.15;
+        if (o.end && tt2 >= o.end) break;
+        var nt = chd[PAT[x % 8] % chd.length] + 12;
+        if (o.glitch && hash(t0 * 13 + x) < 0.2) nt += 12;
+        ev(tt2, 'pluck', [nt, 0.045 * (x % 4 === 0 ? 1.3 : 1), br * 2.2], 0, false, own);
+        /* RecodeAI's stutter: a 32nd-note echo here and there */
+        if (o.glitch && hash(t0 * 7 + x) < 0.14) ev(tt2 + 0.075, 'pluck', [nt, 0.027, 6000], 0, false, own);
+      }
+      for (x = 0; x < 4; x++) {
+        tt2 = t0 + x * BEAT;
+        if (o.end && tt2 >= o.end) break;
+        ev(tt2, 'kick', [0.46], 0, false, own);
+        ev(tt2 + 0.3, 'hat', [0.03, 0.05], 0, false, own);
+        if (o.snare && x % 2) ev(tt2, 'snare', [0.06], 0, false, own);
+      }
+    }
+    /* avatars: Dm, Bb, C, out of WordWarz's C and into MDS Pro's Dm; a
+       note for every other face as it lands */
+    groove('avatars', 0, 0, { bright: 2400 });
+    groove('avatars', BAR, 1, { bright: 2600 });
+    groove('avatars', 2 * BAR, 3, { bright: 2800, snare: true });
+    for (j = 0; j < AV_COUNT; j += 2) ev(0.35 + j * 0.075, 'pluck', [PENT[j % 9] + 24, 0.016, 8000], 0, false, 'avatars');
+    ev(4.95, 'bell', [86, 0.05, 2.5], 0, false, 'avatars');
+    ev(6.7, 'whoosh', [0.5, 0.05, 1], 0, false, 'avatars');
+    /* RecodeAI: the progression with a glitching arp; the scan, the four
+       swatches, the deploy keystrokes and the moment it goes live */
+    for (b = 0; b < 4; b++) groove('recode', b * BAR, b, { glitch: true, snare: true, bright: 2200 + b * 200 });
+    ev(1.4, 'whoosh', [2.0, 0.05, 1], 0, false, 'recode');
+    [74, 77, 81, 84].forEach(function (m, k) { ev(2.0 + k * 0.4, 'bell', [m, 0.045, 1.4], 0, false, 'recode'); });
+    ev(3.6, 'whoosh', [0.8, 0.04, -1], 0, false, 'recode');
+    for (j = 0; j < 8; j++) ev(5.8 + j * 0.075, 'tick', [0.035], 0, false, 'recode');
+    ev(7.0, 'bell', [81, 0.06, 2.5], 0, false, 'recode'); ev(7.0, 'bell', [86, 0.045, 2.5], 0, false, 'recode');
+    ev(7.0, 'crash', [0.04, 1.6], 0, false, 'recode');
+    ev(9.2, 'whoosh', [0.5, 0.05, 1], 0, false, 'recode');
+    /* Reach: the breakdown. The drums drop out, one bell per system as its
+       reach widens, a tick for every tool it is handed */
+    [[46, 53, 57, 62, 65], [48, 53, 57, 60, 64], [48, 55, 60, 62, 67]].forEach(function (chd, k) {
+      ev(k * BAR, 'pad', [chd, 0.95, 800 + k * 150], BAR, true, 'reach');
+      ev(k * BAR, 'sub', [[34, 36, 36][k], 0.06], BAR, true, 'reach');
+    });
+    [74, 77, 81].forEach(function (m, k) { ev(reachAt(k), 'bell', [m, 0.065, 3], 0, false, 'reach'); });
+    REACH.forEach(function (D, k) {
+      for (var c = 0; c < Math.max(1, D.tools.length); c++) ev(reachAt(k) + 0.55 + c * 0.18, 'tick', [0.035], 0, false, 'reach');
+    });
+    ev(6.0, 'whoosh', [1.2, 0.06, 1], 0, false, 'reach');
+    /* open source: C, Bb, C into the finale's D major; a bell per merge */
+    [3, 1, 3].forEach(function (ci, k) { groove('oss', k * BAR, ci, { bright: 2400 + k * 300, snare: k === 2, end: 6.9 }); });
+    PRS.forEach(function (P, k) { ev(prAt(k) + 0.6, 'bell', [[81, 84, 86, 88, 91][k], 0.05, 1.8], 0, false, 'oss'); });
+    return E;
   })();
+
+  function shiftsFor(name) {
+    var m = {}, t = 0;
+    CUTS[name].forEach(function (id) { m[id] = t - SC[id].o; t += SC[id].bars * BAR; });
+    return m;
+  }
+  function scoreFor(name) {
+    var m = shiftsFor(name);
+    return SCORE_DEFS.filter(function (e) { return e.o in m; })
+      .map(function (e) { return { t: e.t + m[e.o], k: e.k, a: e.a, d: e.d, h: e.h }; })
+      .sort(function (x, y) { return x.t - y.t; });
+  }
 
   function makeNoise(c) {
     var len = c.sampleRate * 2, buf = c.createBuffer(1, len, c.sampleRate), d = buf.getChannelData(0);
@@ -1217,9 +1712,10 @@
     }
   }
 
-  /* start the score at film time T, clocked from now */
+  /* Start the score at film time T, clocked from now. From here until the
+     context stops running, its clock drives the picture (au.synced). */
   function audioSync(T) {
-    if (!au.on) return;
+    if (!au.on || !au.c || au.c.state !== 'running') { au.synced = false; return; }
     endSession(au.S);
     au.S = newSession(au.c, au.chain);
     au.base = au.c.currentTime + 0.06 - T;
@@ -1228,9 +1724,10 @@
       var ev = SCORE[au.idx++];
       if (ev.h && ev.t + ev.d > T + 0.25) fire(au.S, ev, au.c.currentTime + 0.06, T);
     }
+    au.synced = true;
   }
   function audioPump(T) {
-    if (!au.on || !au.S) return;
+    if (!au.synced || !au.S) return;
     var ahead = T + 0.25;
     while (au.idx < SCORE.length && SCORE[au.idx].t < ahead) {
       var ev = SCORE[au.idx++], when = au.base + ev.t;
@@ -1238,37 +1735,76 @@
       fire(au.S, ev, Math.max(when, au.c.currentTime), ev.t);
     }
   }
+  /* The context's own state picks the clock. Running: join the score where the
+     film already is. Stopped under us (our pause, or the browser's): hand the
+     time back to the performance clock without a jump. */
+  function onAudioState() {
+    if (au.c.state === 'running') {
+      if (au.on && playing && !au.synced) audioSync(clockNow());
+    } else if (au.synced) {
+      var T = playing ? au.c.currentTime - au.base : pausedAt;
+      au.synced = false;
+      perfBase = performance.now() - T * 1000;
+    }
+    soundUI();
+  }
+  /* Sound is on by default, but no browser lets a page make it before the
+     visitor has done something. Until then the button says so, and the first
+     click, tap or key anywhere on the page starts the score where the film is. */
+  var unlockArmed = false, UNLOCK = ['pointerdown', 'keydown', 'touchend'];
+  function unlock() {
+    if (!au.c || au.c.state === 'running') { disarm(); return; }
+    if (au.on && playing) au.c.resume().then(disarm, function () {});
+  }
+  function disarm() {
+    unlockArmed = false;
+    UNLOCK.forEach(function (e) { document.removeEventListener(e, unlock, true); });
+  }
+  function armUnlock() {
+    if (unlockArmed) return;
+    unlockArmed = true;
+    UNLOCK.forEach(function (e) { document.addEventListener(e, unlock, true); });
+  }
   function soundOn() {
     if (!AC) return false;
     if (!au.c) {
       try { au.c = new AC(); } catch (e) { return false; }
       au.chain = buildChain(au.c);
+      au.c.onstatechange = onAudioState;
     }
-    var T = clockNow();
-    if (au.c.state === 'suspended') au.c.resume();
     au.chain.master.gain.cancelScheduledValues(au.c.currentTime);
     au.chain.master.gain.setValueAtTime(0.85, au.c.currentTime);
     au.on = true;
-    audioSync(T);
-    if (!playing) au.c.suspend();
+    if (au.c.state === 'running') { if (playing) audioSync(clockNow()); else au.c.suspend(); }
+    else if (playing) { au.c.resume().catch(function () {}); armUnlock(); }
+    soundUI();
     return true;
   }
   function soundOff() {
     if (!au.on) return;
     var T = clockNow();
     au.on = false;
-    perfBase = performance.now() - T * 1000;
+    if (au.synced) { au.synced = false; perfBase = performance.now() - T * 1000; }
     endSession(au.S); au.S = null;
+    disarm();
     var c = au.c;
     setTimeout(function () { if (!au.on && c.state === 'running') c.suspend(); }, 400);
+    soundUI();
+  }
+  function soundUI() {
+    var live = au.on && au.synced, pending = au.on && !live;
+    soundBtn.classList.toggle('is-hint', !live);
+    soundBtn.setAttribute('aria-pressed', String(au.on));
+    soundBtn.innerHTML = (au.on ? ICON.soundOn : ICON.soundOff) + '<span>' + (live ? 'Mute' : pending ? 'Tap for sound' : 'Sound on') + '</span>';
   }
 
   /* Offline render of the whole score, for checking levels without speakers:
-     heroFilm.renderOffline().then(console.log) → peak and loudness per second. */
-  function renderOffline() {
+     heroFilm.renderOffline('full').then(console.log) → peak and loudness per second. */
+  function renderOffline(name) {
+    name = name || cut;
     var OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
-    var c = new OAC(2, 44100 * Math.ceil(DUR + 4), 44100), chain = buildChain(c), S = newSession(c, chain);
-    SCORE.forEach(function (ev) { fire(S, ev, 0.05 + ev.t, ev.t); });
+    var c = new OAC(2, 44100 * Math.ceil(cutLength(name) + 4), 44100), chain = buildChain(c), S = newSession(c, chain);
+    scoreFor(name).forEach(function (ev) { fire(S, ev, 0.05 + ev.t, ev.t); });
     return c.startRendering().then(function (buf) {
       var L = buf.getChannelData(0), R = buf.getChannelData(1), sr = buf.sampleRate, peak = 0, clipped = 0, perSec = [];
       for (var s = 0; s < Math.floor(L.length / sr); s++) {
@@ -1293,7 +1829,7 @@
 
   function clockNow() {
     if (!playing) return pausedAt;
-    if (au.on) return au.c.currentTime - au.base;
+    if (au.synced) return au.c.currentTime - au.base;
     return (performance.now() - perfBase) / 1000;
   }
 
@@ -1318,7 +1854,7 @@
     if (playing) return;
     playing = true;
     perfBase = performance.now() - pausedAt * 1000;
-    if (au.on && au.c.state === 'suspended') au.c.resume();
+    if (au.on && au.c.state === 'suspended') { au.c.resume().catch(function () {}); armUnlock(); }
     ppBtn.innerHTML = ICON.pause; ppBtn.setAttribute('aria-label', 'Pause');
     if (!raf) raf = requestAnimationFrame(frame);
   }
@@ -1340,13 +1876,40 @@
     if (!playing) { render(T); updateCaps(T); updateUI(T); if (T >= REVEAL_AT) reveal(); else conceal(); }
   }
 
+  function applyCut(name) {
+    cut = name;
+    var m = shiftsFor(name), list = CUTS[name];
+    for (var id in SC) {
+      SC[id].on = id in m;
+      SC[id].sh = SC[id].on ? m[id] : 1e6;
+      SC[id].start = SC[id].o + SC[id].sh;
+    }
+    DUR = cutLength(name);
+    REVEAL_AT = SC.kim.start + 4.9;
+    CHAPTERS = list.map(function (sid) { return { t: SC[sid].start, n: SC[sid].n }; });
+    FORMS = FORM_DEFS.filter(function (d) { return SC[d.s].on; }).map(function (d) {
+      return { t: d.at + SC[d.s].sh, sh: SC[d.s].sh, f: d.f, dur: d.dur, sw: d.sw, d: d.d };
+    });
+    CUES.forEach(function (c) {
+      var sc = SC[c.sc];
+      if (!sc.on) { c.T0 = c.T1 = -99; return; }
+      c.T0 = c.t0 + sc.sh; c.T1 = c.t1 + sc.sh;
+      if (c.kick) c.el.textContent = String(list.indexOf(c.sc)).padStart(2, '0') + ' — ' + c.kick;
+    });
+    SCORE = scoreFor(name);
+    if (name === 'full') loadAvatars();
+    buildTrack();
+    lastName = '';
+  }
+
   function conceal() { revealed = false; hero.classList.add('ev-film-on'); }
   /* removing the class restarts the hero's own entrance animations — the ones
      that were held back under the film — so the page arrives exactly as it
      always has, just later */
   function reveal() { revealed = true; hero.classList.remove('ev-film-on'); }
 
-  function start() {
+  function start(name) {
+    applyCut(name || cut);
     state = 'film';
     hero.classList.add('ev-film-active');
     hero.classList.remove('ev-film-ended');
@@ -1383,28 +1946,25 @@
   hero.appendChild(ui);
   hero.appendChild(chip);
   readTheme();
+  applyCut('short');
 
   ppBtn.addEventListener('click', function () {
     if (playing) { userPaused = true; pause(); } else { userPaused = false; play(); }
   });
   soundBtn.addEventListener('click', function () {
-    soundBtn.classList.remove('is-hint');
-    if (au.on) soundOff(); else if (!soundOn()) return;
-    soundBtn.setAttribute('aria-pressed', String(au.on));
-    soundBtn.innerHTML = (au.on ? ICON.soundOn : ICON.soundOff) + '<span>' + (au.on ? 'Sound off' : 'Sound on') + '</span>';
+    if (!au.on) soundOn();
+    else if (!au.synced) { if (playing) au.c.resume().catch(function () {}); }   /* this click is the gesture */
+    else soundOff();
   });
   skipBtn.addEventListener('click', function () {
     if (au.on) { endSession(au.S); au.S = null; }
     finish();
   });
   chip.addEventListener('click', function () {
-    /* the chip says "with sound", and a click is the gesture that allows it */
-    start();
-    if (!au.on && soundOn()) {
-      soundBtn.classList.remove('is-hint');
-      soundBtn.setAttribute('aria-pressed', 'true');
-      soundBtn.innerHTML = ICON.soundOn + '<span>Sound off</span>';
-    }
+    /* the chip plays the full cut "with sound", and its click is the gesture
+       that lets the sound start */
+    start('full');
+    soundOn();
   });
 
   new MutationObserver(function () { readTheme(); if (!playing && state === 'film') render(filmT); })
@@ -1428,22 +1988,25 @@
   }
 
   window.heroFilm = {
-    play: function () { if (state !== 'film') start(); else play(); },
+    play: function (name) { if (state !== 'film' || (name && name !== cut)) start(name); else play(); },
     pause: pause,
-    seek: function (t) { if (state !== 'film') { start(); pause(); } seek(t); },
+    seek: function (t, name) { if (state !== 'film' || (name && name !== cut)) { start(name); pause(); } seek(t); },
     renderOffline: renderOffline,
     get time() { return clockNow(); },
-    duration: DUR
+    get duration() { return DUR; },
+    get cut() { return cut; },
+    /* for checks: which clock is driving, and where the portrait lands */
+    get debug() { return { audio: au.c ? au.c.state : 'none', synced: !!au.synced, on: au.on, playing: playing, pr: pr, kimSh: SC.kim.sh }; }
   };
 
-  var forced = /[?&]film\b/.test(location.search);
+  var forced = /[?&]film\b/.test(location.search), bootCut = /[?&]film=full\b/.test(location.search) ? 'full' : 'short';
   var boot = root.classList.contains('ev-film-boot');
   root.classList.remove('ev-film-boot');
   hero.classList.add('ev-film-ready');
   if ((boot || forced) && !(reduced && !forced)) {
     /* fonts first — the opening line is typeset on the canvas, and a fallback
        face measured now would put the caret in the wrong place */
-    var go = function () { if (state === 'idle') start(); };
+    var go = function () { if (state === 'idle') start(bootCut); };
     if (document.fonts && document.fonts.ready) { document.fonts.ready.then(go); setTimeout(go, 700); }
     else go();
     conceal();

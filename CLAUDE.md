@@ -21,28 +21,57 @@ page renders as unstyled links rather than throwing anything.
 
 ## The hero film
 
-`hero-film.js` plays a 57.6-second story over the hero, then hands the page to
-it: 24 bars at 100 BPM, seven chapters (hello world → contribution calendar → AI
-→ WordWarz → MDS Pro → pipelines → portrait). One set of 2,191 particles, one per
-calendar day 2021–2026, reshapes itself through every chapter and ends as a
-halftone of `profile.webp` sitting exactly on the source-code portrait, which is
-what appears when it fades.
+`hero-film.js` tells a story over the hero, then hands the page to it. It has
+**two cuts**. The 57.6-second one autoplays: hello world → contribution
+calendar → AI → WordWarz → MDS Pro → pipelines → portrait. The 88.8-second
+full cut adds Avatars, RecodeAI, Reach and Open source, and plays from the chip
+under the CTAs or with `?film=full`. Everything is cut to a 100 BPM bar grid (a
+bar is 2.4s). One set of 2,191 particles, one per calendar day 2021–2026,
+reshapes itself through every chapter and ends as a halftone of `profile.webp`
+sitting exactly on the source-code portrait, which is what appears when it
+fades.
 
 - **Render is a pure function of t.** A particle's position is an eased blend of
   two formations, both functions of time, never a simulation. That is what makes
   seek, chapter clicks, pause and the audio resync free. Do not add state that
   carries from one frame to the next.
-- **It carries no figures of its own.** Contributions and Claude hours come from
-  the same JSON the Activity panel reads, and WordWarz and MDS Pro numbers come
-  from their project cards' `.project-metric-num`. Change a card and the film
-  follows. A figure that does not load drops its caption line; it is never
-  replaced with a guess.
+- **Every scene keeps its own clock.** The first cut's seven scenes keep the
+  absolute times they were written against (`o` in `SC`). The full cut's four
+  count from zero. A cut is a list of scenes, and `applyCut()` lays them end to
+  end and gives each a shift. Formations, overlays, captions and score events
+  all name their scene, so adding or reordering a scene is an edit to `CUTS`
+  plus that scene's own parts. Scenes are whole bars, so the beat never slips
+  at a join.
+- **It carries almost no figures of its own.** Contributions and Claude hours
+  come from the same JSON the Activity panel reads, and WordWarz and MDS Pro
+  numbers come from their project cards' `.project-metric-num`. Change a card
+  and the film follows. A figure that does not load drops its caption line; it
+  is never replaced with a guess. The exceptions are sourced where they are
+  written:
+  - The merged pull requests (`PRS`) come from
+    `gh search prs --author kimlj --merged` and are dated on screen, because
+    GitHub is out of reach under `connect-src 'self'`.
+  - The Reach chapter's tool names are the real ones in
+    `mdspromonitor/server/src/routes/ask.ts` and `jarvis-router`.
+
+  Re-check the exceptions when the repositories behind them change.
+- **The avatars are one sprite**, `assets/avatar-sprite-60.webp`. It is built by
+  `python scripts/build-avatar-sprite.py` from the numbered files in
+  `assets/ai-showcase/`: 13 MB of originals packed into 300 KB, fetched only
+  when the full cut starts. The count is in the filename because `.webp` is
+  served immutable: a new set of faces is a new file, and `AVATAR_SPRITE` and
+  `AV_COUNT` change with it.
 - **The score is synthesised** in Web Audio: oscillators and noise on the same
-  bar grid as the scenes. Browsers block audible autoplay, so the film starts
-  muted and joins the score mid-way when sound is turned on. With sound on, the
-  AudioContext clock drives the picture. `heroFilm.renderOffline()` renders the
-  whole score and reports peak and loudness per second. Run it after touching
-  levels: it currently peaks at 0.76 with no clipping.
+  bar grid as the scenes, each event owned by a scene like everything else.
+  Browsers block audible autoplay, so the film starts muted, and the sound
+  button joins the score wherever the film has reached. While the AudioContext
+  runs, its clock drives the picture (`au.synced`). When it stops, whether from
+  our pause or from the browser, the time goes back to the performance clock
+  without a jump.
+- **`heroFilm.renderOffline('full')` renders a cut's score** and reports peak
+  and loudness per second. Run it after touching levels. The full cut peaks at
+  0.82 with no clipping. The Reach breakdown dips to about −22 dB against −16
+  around it, on purpose.
 - **When it plays is decided in `<head>`**, as the `ev-film-boot` class, so the
   hero never flashes before the film covers it. It plays once per visitor per
   fortnight (`localStorage.heroFilmSeen`), never under reduced motion, and
@@ -164,7 +193,7 @@ feature and nothing else.
 |---|---|
 | `avatar-field.js` | The hero portrait, typeset from this file's own source. The cursor pushes its characters aside and the source shows in the clearing. |
 | `hero-particles.js` | Hero label, headline and lede split into glyphs the cursor pushes. |
-| `hero-film.js` | The 58-second story film that plays over the hero before handing it the page, with a synthesised score. |
+| `hero-film.js` | The story film over the hero, in two cuts (58s autoplay, 89s from the chip), with a synthesised score. |
 | `button-field.js` | Dot fields inside every CTA and the contact buttons. |
 | `section-ornaments.js` | Drift, trace and registration marks, Projects → footer. |
 | `ai-ledger.js` | The AI Showcase rows, transcripts and process logs, plus the Avatar pipeline's stage tabs. Two IIFEs. |
@@ -482,8 +511,8 @@ reference 404s loudly; a year of the wrong picture is silent.
 
 `assets/ai-showcase/` holds the Avatar pipeline walkthrough's images: 60
 numbered avatars, a `comfyui-workflow.webp` screenshot, and the `batch`,
-`fashion`, `ipadapter` and `comparisons` sets. `scripts/build-avatar-sprite.py`
-packs the 60 into `assets/avatar-sprite-60.webp`.
+`fashion`, `ipadapter` and `comparisons` sets. The hero film reads the 60
+through `assets/avatar-sprite-60.webp` (see The hero film).
 
 ## Working here
 
