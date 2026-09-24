@@ -480,8 +480,10 @@ session and each version had to arrive as a new file (`jobwatcher-preview` ->
 `jobsift-preview` -> `jobsift-pipeline`), deleting the one before it. A stale
 reference 404s loudly; a year of the wrong picture is silent.
 
-`assets/ai-showcase/` holds 66 generated avatars used by the Avatar pipeline
-walkthrough.
+`assets/ai-showcase/` holds the Avatar pipeline walkthrough's images: 60
+numbered avatars, a `comfyui-workflow.webp` screenshot, and the `batch`,
+`fashion`, `ipadapter` and `comparisons` sets. `scripts/build-avatar-sprite.py`
+packs the 60 into `assets/avatar-sprite-60.webp`.
 
 ## Working here
 
