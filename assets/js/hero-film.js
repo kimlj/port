@@ -260,10 +260,15 @@
     cal.x0 = st.x + (st.w - cw) / 2 + labelW + cal.p / 2;
     cal.y0 = st.cy - ch / 2 + cal.p / 2;
 
-    board.t = Math.min(st.w / 6.4, st.h / 7.4, 64);
-    board.g = board.t * 0.12;
-    board.x0 = st.cx - (5 * board.t + 4 * board.g) / 2;
-    board.y0 = st.cy - (6 * board.t + 5 * board.g) / 2;
+    /* four WordWarz boards, two by two, each with a name row above it */
+    /* a phone shows four rows, not six: nobody here needs more than three
+       guesses, and the two spare rows cost a third of the tile size */
+    board.rows = wide ? 6 : 4;
+    board.t = Math.min(st.w / 12.2, (st.h - 30) / (2 * board.rows * 1.12 + 2.7), 46);
+    board.g = board.t * 0.12; board.L = board.t * 0.8; board.G = board.t * 1.1;
+    board.bw = 5 * board.t + 4 * board.g; board.bh = board.rows * board.t + (board.rows - 1) * board.g;
+    board.x0 = st.cx - (2 * board.bw + board.G) / 2;
+    board.y0 = st.cy - (2 * (board.bh + board.L) + board.G) / 2 + 12;
 
     /* the orchestration's four cards, clockwise from the top left */
     oc.w = st.w * 0.43; oc.h = Math.min(st.h * 0.37, oc.w * 0.82);
@@ -580,16 +585,33 @@
   for (var e0 = 0; e0 < 28; e0++) LEDGER.push({ t: 34.6 + e0 * 0.3, node: (e0 * 7) % 15 });
   var ALERTS = [44.4, 45.6, 46.8, 48.0, 49.2];
 
-  /* the bot's game: feedback is computed, never typed in, so it is always legal */
-  var TARGET = 'SHIPS', GUESSES = ['CRANE', 'SLOTH', 'SHIPS'], ROW_T = [24.9, 26.1, 27.3];
-  var MARKS = GUESSES.map(function (g) {
+  /* WordWarz as it is played: four boards racing on one word in real time.
+     The match is illustrative (it says so on screen); the feedback on every
+     tile is computed from the target, never typed in, so it is always legal.
+     SOARE is the bot's opener because it is the high-information one. */
+  var TARGET = 'SHIPS';
+  function markWord(g) {
     var res = [0, 0, 0, 0, 0], pool = {}, j;
     for (j = 0; j < 5; j++) { if (g[j] === TARGET[j]) res[j] = 2; else pool[TARGET[j]] = (pool[TARGET[j]] || 0) + 1; }
     for (j = 0; j < 5; j++) if (res[j] !== 2 && pool[g[j]]) { res[j] = 1; pool[g[j]]--; }
     return res;
+  }
+  var BOARDS = [
+    { name: 'bot · entropy', words: ['SOARE', 'CHIPS', 'SHIPS'], rows: [24.7, 25.8, 26.9] },
+    { name: 'player 2', words: ['CRANE', 'SLOTH', 'SHIPS'], rows: [24.8, 25.95, 27.1] },
+    { name: 'player 3', words: ['AUDIO', 'SPINE', 'SHIPS'], rows: [24.9, 26.1, 27.3] },
+    { name: 'player 4', words: ['PLANT', 'MOIST', 'WHIPS'], rows: [25.0, 26.2, 27.4] }
+  ];
+  function typeT(b, r, j) { return BOARDS[b].rows[r] + j * 0.07; }
+  function flipT(b, r, j) { return BOARDS[b].rows[r] + 0.42 + j * 0.1; }
+  BOARDS.forEach(function (B, b) {
+    B.marks = B.words.map(markWord);
+    var L = B.words.length - 1;
+    B.solved = B.words[L] === TARGET ? flipT(b, L, 4) + 0.25 : Infinity;
   });
-  function typeT(r, j) { return ROW_T[r] + j * 0.075; }
-  function flipT(r, j) { return ROW_T[r] + 0.6 + j * 0.15; }
+  BOARDS.slice().sort(function (x, y) { return x.solved - y.solved; })
+    .forEach(function (B, r) { B.place = isFinite(B.solved) ? r : -1; });
+  var PLACES = ['1st', '2nd', '3rd'];
 
   function prep(t) {
     fr.calDim = smooth((t - SC.ai.sh - 14.4) / 0.8);
@@ -792,41 +814,69 @@
   }
 
   function drawBoard(t) {
-    var T = board.t, g = board.g, a = 1 - smooth((t - 29.2) / 0.6);
-    var fs = Math.round(T * 0.5);
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.font = '600 ' + fs + 'px ' + fontSans;
-    for (var r = 0; r < 6; r++) for (var j = 0; j < 5; j++) {
-      var pop = ease((t - 24.1 - (r * 5 + j) * 0.018) / 0.35);
-      if (pop <= 0) continue;
-      var x = board.x0 + j * (T + g), y = board.y0 + r * (T + g);
-      var hop = 0;
-      if (r === 2 && t > 28.8) hop = Math.max(0, Math.sin(clamp((t - 28.8 - j * 0.08) / 0.35, 0, 1) * Math.PI)) * T * 0.14;
-      var sc = pop * (1 - smooth((t - 29.2) / 0.6) * 0.3), sy = 1, mark = -1, letter = '';
-      if (r < 3) {
-        if (t >= typeT(r, j)) letter = GUESSES[r][j];
-        var ft = (t - flipT(r, j)) / 0.3;
-        if (ft > 0) { sy = Math.abs(Math.cos(Math.PI * clamp(ft, 0, 1))); if (ft >= 0.5) mark = MARKS[r][j]; }
+    var T = board.t, g = board.g, a = 1 - smooth((t - 29.2) / 0.6), fs = Math.round(T * 0.5);
+    var lf = Math.max(9, Math.round(T * 0.3));
+    /* the match header: this is live play, and it is a stand-in match */
+    var hy = board.y0 - lf * 1.6, gw = 2 * board.bw + board.G;
+    ctx.globalAlpha = a * smooth((t - 24.1) / 0.4);
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = css(col.accent);
+    ctx.beginPath(); ctx.arc(board.x0 + 4, hy, 3.2 * (0.75 + 0.25 * Math.sin(t * 6)), 0, 6.2832); ctx.fill();
+    ctx.font = '500 ' + lf + 'px ' + fontMono; ctx.fillStyle = css(col.text);
+    var tight = gw < 330;
+    ctx.fillText(tight ? 'live · 4 players' : 'live · 4 players · one word', board.x0 + 14, hy);
+    ctx.fillStyle = css(col.dim);
+    var il = tight ? 'illustrative' : 'illustrative match';
+    ctx.fillText(il, board.x0 + gw - ctx.measureText(il).width, hy);
+
+    for (var b = 0; b < BOARDS.length; b++) {
+      var B = BOARDS[b];
+      var bx = board.x0 + (b % 2) * (board.bw + board.G);
+      var by = board.y0 + Math.floor(b / 2) * (board.bh + board.L + board.G) + board.L;
+      /* name, and the place once the word falls */
+      ctx.globalAlpha = a * smooth((t - 24.1 - b * 0.05) / 0.4);
+      ctx.font = '600 ' + lf + 'px ' + fontSans; ctx.textAlign = 'left';
+      ctx.fillStyle = css(b === 0 ? col.accent : col.text);
+      ctx.fillText(B.name, bx, by - board.L * 0.5);
+      if (B.place >= 0 && t >= B.solved) {
+        ctx.globalAlpha = a * smooth((t - B.solved) / 0.3);
+        ctx.font = '600 ' + lf + 'px ' + fontMono; ctx.fillStyle = css(col.accent);
+        var pl = PLACES[B.place] + (tight ? '' : ' · ' + B.words.length + ' guesses');
+        ctx.fillText(pl, bx + board.bw - ctx.measureText(pl).width, by - board.L * 0.5);
       }
-      var w = T * sc, h = T * sc * sy, cx = x + T / 2, cy = y + T / 2 - hop;
-      ctx.globalAlpha = a;
-      rr(cx - w / 2, cy - h / 2, w, h, Math.min(6, h / 2));
-      if (mark === 2) { ctx.fillStyle = css(col.accent); ctx.fill(); }
-      else if (mark === 1) { ctx.fillStyle = css(col.g2, 0.85); ctx.fill(); }
-      else if (mark === 0) { ctx.fillStyle = css(col.dim, 0.55); ctx.fill(); }
-      else {
-        ctx.fillStyle = css(col.card, 0.9); ctx.fill();
-        ctx.strokeStyle = css(letter ? col.muted : col.border); ctx.lineWidth = 1.5; ctx.stroke();
+      ctx.textAlign = 'center';
+      ctx.font = '600 ' + fs + 'px ' + fontSans;
+      for (var r = 0; r < board.rows; r++) for (var j = 0; j < 5; j++) {
+        var pop = ease((t - 24.1 - b * 0.06 - (r * 5 + j) * 0.012) / 0.35);
+        if (pop <= 0) continue;
+        var x = bx + j * (T + g), y = by + r * (T + g), hop = 0;
+        if (r === B.words.length - 1 && t > B.solved) hop = Math.max(0, Math.sin(clamp((t - B.solved - j * 0.06) / 0.3, 0, 1) * Math.PI)) * T * 0.14;
+        var sc = pop * (1 - smooth((t - 29.2) / 0.6) * 0.3), sy = 1, mark = -1, letter = '';
+        if (r < B.words.length) {
+          if (t >= typeT(b, r, j)) letter = B.words[r][j];
+          var ft = (t - flipT(b, r, j)) / 0.25;
+          if (ft > 0) { sy = Math.abs(Math.cos(Math.PI * clamp(ft, 0, 1))); if (ft >= 0.5) mark = B.marks[r][j]; }
+        }
+        var w = T * sc, h = T * sc * sy, cx = x + T / 2, cy = y + T / 2 - hop;
+        ctx.globalAlpha = a;
+        rr(cx - w / 2, cy - h / 2, w, h, Math.min(5, h / 2));
+        if (mark === 2) { ctx.fillStyle = css(col.accent); ctx.fill(); }
+        else if (mark === 1) { ctx.fillStyle = css(col.g2, 0.85); ctx.fill(); }
+        else if (mark === 0) { ctx.fillStyle = css(col.dim, 0.55); ctx.fill(); }
+        else {
+          ctx.fillStyle = css(col.card, 0.9); ctx.fill();
+          ctx.strokeStyle = css(letter ? col.muted : col.border); ctx.lineWidth = 1.2; ctx.stroke();
+        }
+        if (letter && h > 4) {
+          ctx.save();
+          ctx.translate(cx, cy); ctx.scale(1, sy || 0.001);
+          ctx.fillStyle = css(mark >= 1 ? col.bg : col.text);
+          ctx.fillText(letter, 0, 1);
+          ctx.restore();
+        }
       }
-      if (letter && h > 4) {
-        ctx.save();
-        ctx.translate(cx, cy); ctx.scale(1, sy || 0.001);
-        ctx.fillStyle = css(mark >= 1 ? col.bg : col.text);
-        ctx.fillText(letter, 0, 1);
-        ctx.restore();
-      }
+      ctx.textAlign = 'left';
     }
-    ctx.textAlign = 'left';
     ctx.globalAlpha = 1;
   }
 
@@ -1561,16 +1611,23 @@
     }
     ev(14.5, 'bell', [86, 0.08, 3]); ev(14.8, 'bell', [93, 0.045, 3]);
     [16.6, 23.6, 28.7, 33.2, 42.8].forEach(function (t) { ev(t, 'whoosh', [0.5, 0.05, 1]); });
-    /* the board: a key for every letter, a note for every flip */
+    /* the race: the bot's board carries the melody, a key and a note per
+       tile; the other three are quiet keystrokes under it; a bell per finish */
     var WIN = [74, 77, 79, 81, 86];
-    for (var r = 0; r < 3; r++) for (j = 0; j < 5; j++) {
-      ev(typeT(r, j), 'tick', [0.04]);
-      var mk = MARKS[r][j], ft = flipT(r, j) + 0.15;
-      if (mk === 2) ev(ft, 'bell', [WIN[j], 0.06, 1.4]);
-      else if (mk === 1) ev(ft, 'bell', [76, 0.05, 1.2]);
-      else ev(ft, 'pluck', [57, 0.06, 700]);
-    }
-    [74, 77, 81, 86, 89].forEach(function (m, k) { ev(28.8 + k * 0.075, 'bell', [m, 0.055, 2]); });
+    BOARDS.forEach(function (B, bi) {
+      B.words.forEach(function (w, r) {
+        for (var c = 0; c < 5; c++) {
+          if (bi) { ev(typeT(bi, r, c), 'tick', [0.016]); continue; }
+          ev(typeT(0, r, c), 'tick', [0.04]);
+          var mk = B.marks[r][c], ft = flipT(0, r, c) + 0.12;
+          if (mk === 2) ev(ft, 'bell', [WIN[c], 0.05, 1.2]);
+          else if (mk === 1) ev(ft, 'bell', [76, 0.04, 1]);
+          else ev(ft, 'pluck', [57, 0.05, 700]);
+        }
+      });
+      if (B.place >= 0) ev(B.solved, 'bell', [[86, 81, 77][B.place], 0.06, 2]);
+    });
+    [74, 77, 81, 86, 89].forEach(function (m, k) { ev(28.6 + k * 0.075, 'bell', [m, 0.05, 2]); });
     for (j = 0; j < 27; j++) if (hash(j + 1300) < 0.35) ev(29.4 + j * 0.15, 'pluck', [PENT[Math.floor(hash(j + 1700) * 9)] + 24, 0.02, 7000]);
     LEDGER.forEach(function (L, e) { ev(L.t, 'bell', [[74, 77, 79, 81, 84][e % 5], 0.03, 0.8]); });
     ALERTS.forEach(function (t) { ev(t, 'bell', [86, 0.055, 1.6]); });

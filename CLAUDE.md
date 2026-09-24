@@ -54,7 +54,8 @@ fades.
   - The orchestration's roles (ChatGPT plans and designs, Claude Code builds,
     DeepSeek reviews), and the 20+ skills and 5 subagents under them, come from
     the owner's resume (`jobsift/resume.txt`) and `~/.claude/agents`. The work
-    shown inside its cards is illustrative.
+    shown inside its cards is illustrative, as is the WordWarz race, and the
+    race says so on screen.
 
   Re-check the exceptions when the repositories behind them change.
 - **The avatars are one sprite**, `assets/avatar-sprite-60.webp`. It is built by
