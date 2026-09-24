@@ -283,6 +283,11 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 201; padding: 1.25rem
 .ev-film-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem; height: 34px; padding: 0 0.9rem; border: 1px solid var(--border); border-radius: 100px; background: rgba(var(--bg-r),var(--bg-g),var(--bg-b),0.6); color: var(--text); font: inherit; letter-spacing: 0.04em; white-space: nowrap; cursor: pointer; transition: border-color 0.3s, color 0.3s; }
 .ev-film-btn:hover { border-color: var(--accent); color: var(--accent); }
 .ev-film-pp { width: 34px; padding: 0; }
+.ev-film-fs { display: none; width: 34px; padding: 0; }
+/* the hero as its own full-screen element: it needs its own ground, and the
+   hero's held content below the film must not make it scroll */
+.hero:fullscreen { background: var(--bg); overflow: hidden; }
+.hero:-webkit-full-screen { background: var(--bg); overflow: hidden; }
 .ev-film-sound.is-hint { border-color: var(--accent); color: var(--accent); animation: evSoundHint 1.8s ease-out infinite; }
 @keyframes evSoundHint { from { box-shadow: 0 0 0 0 rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.45); } to { box-shadow: 0 0 0 12px rgba(var(--accent-r),var(--accent-g),var(--accent-b),0); } }
 /* in the hero's own column under the CTAs, not pinned to a corner the CTAs
@@ -307,12 +312,17 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 201; padding: 1.25rem
   .ev-film-big { font-size: clamp(1.55rem, 6.4vw, 2.2rem); }
   .ev-film-sub { font-size: 0.92rem; }
   .ev-film-stat { font-size: 0.68rem; }
-  /* the bar sits above the chat launcher, which is fixed to the same corner */
-  .hero.ev-film-active .ev-film-ui { flex-wrap: wrap; gap: 0.5rem 0.6rem; left: 1.5rem; right: 1.5rem; top: calc(100vh - 88px); top: calc(100svh - 88px); }
+  /* the chat launcher shares the bottom-right corner, so on a phone it steps
+     aside while the film is on screen and the bar takes the full width */
+  .ev-film-boot .kchat, .ev-film-running .kchat { display: none; }
+  .hero.ev-film-active .ev-film-ui { flex-wrap: wrap; gap: 0.5rem 0.6rem; left: 1.5rem; right: 1.5rem; top: calc(100vh - 1.25rem); top: calc(100svh - 1.25rem); }
   .ev-film-track { order: -1; flex-basis: 100%; }
   .ev-film-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
   .ev-film-time, .ev-film-skip span { display: none; }
   .ev-film-skip { width: 34px; padding: 0; }
+  .ev-film-fs.is-able { display: inline-flex; }
+  .hero:fullscreen.ev-film-active .ev-film-caps { top: calc(58svh + 0.75rem); }
+  .hero:-webkit-full-screen.ev-film-active .ev-film-caps { top: calc(58svh + 0.75rem); }
 }
 @media (prefers-reduced-motion: reduce) { .ev-film-sound.is-hint { animation: none; } }
 

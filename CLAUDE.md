@@ -92,6 +92,15 @@ fades.
   always has, only later.
 - The stage splits at **900px**, not 768: beside the captions above that,
   above them below it. The CSS media query says 899 for that reason.
+- **On a phone the film takes the screen.** The chat launcher steps aside while
+  it plays (`ev-film-running` on <html>), since it shares the controls'
+  corner. The tap that starts the film, on the opening hold or the replay
+  chip, also puts the hero itself into full screen. The film leaves full screen
+  as the hand-off begins, so the page carries on as a page. iPhone Safari
+  allows full screen for video only, so there it plays in the page and the
+  full-screen button never shows. The hold opens on `touchend`, not a finger's
+  `pointerdown`: only the former counts as the tap that sound and full screen
+  both require.
 
 ## The AI Showcase
 

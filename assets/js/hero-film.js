@@ -249,7 +249,9 @@
     if (wide) {
       st.x = W * 0.44; st.y = 96; st.w = W * 0.51; st.h = vh - 96 - 120;
     } else {
-      st.x = 16; st.y = 84; st.w = W - 32; st.h = Math.max(220, vh * 0.5 - 84);
+      /* full screen has no nav to clear, so the stage takes the room */
+      var full = fsActive();
+      st.x = 16; st.y = full ? 36 : 84; st.w = W - 32; st.h = Math.max(220, vh * (full ? 0.58 : 0.5) - st.y);
     }
     st.cx = st.x + st.w / 2; st.cy = st.y + st.h / 2;
     st.m = Math.min(st.w, st.h);
@@ -1506,6 +1508,8 @@
     soundOff: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="m22 9-6 6M16 9l6 6"/></svg>',
     soundOn: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>',
     skip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M5 5.5v13a1 1 0 0 0 1.55.83L15 13.7V18a1 1 0 0 0 2 0V6a1 1 0 0 0-2 0v4.3L6.55 4.67A1 1 0 0 0 5 5.5z"/></svg>',
+    fsIn: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',
+    fsOut: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg>',
     replay: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>'
   };
 
@@ -1519,10 +1523,42 @@
     '<span class="ev-film-time"></span>' +
     '<button type="button" class="ev-film-btn ev-film-pp" aria-label="Pause">' + ICON.pause + '</button>' +
     '<button type="button" class="ev-film-btn ev-film-sound is-hint" aria-pressed="false">' + ICON.soundOff + '<span>Sound on</span></button>' +
+    '<button type="button" class="ev-film-btn ev-film-fs" aria-label="Full screen">' + ICON.fsIn + '</button>' +
     '<button type="button" class="ev-film-btn ev-film-skip">' + ICON.skip + '<span>Skip</span></button>';
   var nameEl = ui.querySelector('.ev-film-name'), timeEl = ui.querySelector('.ev-film-time');
   var track = ui.querySelector('.ev-film-track'), ppBtn = ui.querySelector('.ev-film-pp');
-  var soundBtn = ui.querySelector('.ev-film-sound'), skipBtn = ui.querySelector('.ev-film-skip');
+  var soundBtn = ui.querySelector('.ev-film-sound'), skipBtn = ui.querySelector('.ev-film-skip'), fsBtn = ui.querySelector('.ev-film-fs');
+
+  /* Full screen, on a phone. The hero itself goes full screen, so the film has
+     the whole display and the nav and browser bar are gone; it comes back out
+     as the hand-off to the hero begins, so the page carries on as a page.
+     Only a tap may ask for it, so it rides on the taps that start the film.
+     iPhone Safari allows it for video only, and there the button never shows. */
+  var canFs = !!((hero.requestFullscreen || hero.webkitRequestFullscreen) && (document.fullscreenEnabled || document.webkitFullscreenEnabled));
+  function isPhone() { return window.matchMedia('(max-width: 899px)').matches; }
+  function fsActive() { return (document.fullscreenElement || document.webkitFullscreenElement) === hero; }
+  function enterFs() {
+    if (!canFs || fsActive()) return;
+    try {
+      var r = (hero.requestFullscreen || hero.webkitRequestFullscreen).call(hero, { navigationUI: 'hide' });
+      if (r && r.catch) r.catch(function () {});
+    } catch (e) { /* refused: the film simply plays in the page */ }
+  }
+  function exitFs() {
+    if (!fsActive()) return;
+    try {
+      var r = (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+      if (r && r.catch) r.catch(function () {});
+    } catch (e) { /* already out */ }
+  }
+  if (canFs) fsBtn.classList.add('is-able');
+  function fsUI() {
+    var on = fsActive();
+    fsBtn.innerHTML = on ? ICON.fsOut : ICON.fsIn;
+    fsBtn.setAttribute('aria-label', on ? 'Exit full screen' : 'Full screen');
+  }
+  document.addEventListener('fullscreenchange', fsUI);
+  document.addEventListener('webkitfullscreenchange', fsUI);
   var fills = [];
   function buildTrack() {
     track.innerHTML = '';
@@ -2084,12 +2120,13 @@
   /* removing the class restarts the hero's own entrance animations — the ones
      that were held back under the film — so the page arrives exactly as it
      always has, just later */
-  function reveal() { revealed = true; hero.classList.remove('ev-film-on'); }
+  function reveal() { revealed = true; hero.classList.remove('ev-film-on'); exitFs(); }
 
   function start(name) {
     applyCut(name || cut);
     state = 'film';
     hero.classList.add('ev-film-active');
+    root.classList.add('ev-film-running');
     hero.classList.remove('ev-film-ended');
     conceal();
     layout();
@@ -2104,6 +2141,7 @@
     if (raf) { cancelAnimationFrame(raf); raf = 0; }
     reveal();
     hero.classList.remove('ev-film-active');
+    root.classList.remove('ev-film-running');
     hero.classList.add('ev-film-ended');
     storeSet(SEEN_KEY, String(Date.now()));
     if (au.on) {
@@ -2136,6 +2174,7 @@
     else if (!au.synced) { if (playing) au.c.resume().catch(function () {}); }   /* this click is the gesture */
     else soundOff();
   });
+  fsBtn.addEventListener('click', function () { if (fsActive()) exitFs(); else enterFs(); });
   skipBtn.addEventListener('click', function () {
     if (waiting) { waiting = false; clearTimeout(gateTimer); hero.classList.remove('ev-film-waiting'); }
     if (au.on) { endSession(au.S); au.S = null; }
@@ -2144,6 +2183,7 @@
   chip.addEventListener('click', function () {
     /* the chip plays the full cut "with sound", and its click is the gesture
        that lets the sound start */
+    if (isPhone()) enterFs();
     start('full');
     soundOn();
   });
@@ -2189,6 +2229,11 @@
   function restartGateBar() { var i = gate.querySelector('i'); i.style.animation = 'none'; void i.offsetWidth; i.style.animation = ''; }
   function openGate(e) {
     if (!waiting) return;
+    /* A finger's pointerdown is not yet a tap as far as the browser's gesture
+       rules go; touchend is. Opening on pointerdown would spend the wait on an
+       event that may neither start the sound nor go full screen. */
+    if (e && e.type === 'pointerdown' && e.pointerType === 'touch') return;
+    if (isPhone()) enterFs();
     /* the Space that starts the film must not also scroll it out of view */
     if (e && e.type === 'keydown' && (e.key === ' ' || e.key === 'Spacebar')) e.preventDefault();
     gateOpenedAt = performance.now();
