@@ -308,7 +308,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 201; padding: 1.25rem
 .ev-film-btn:focus-visible, .ev-film-seg:focus-visible, .ev-film-replay:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 /* 899 and not 768: the script lays the stage out beside the captions from 900px */
 @media (max-width: 899px) {
-  .hero.ev-film-active .ev-film-caps { left: 1.5rem; right: 1.5rem; width: auto; top: calc(50vh + 0.75rem); top: calc(50svh + 0.75rem); gap: 0.6rem; }
+  .hero.ev-film-active .ev-film-caps { left: 1.5rem; right: 1.5rem; width: auto; top: calc(100vh - 100px); top: calc(100svh - 100px); transform: translateY(-100%); gap: 0.6rem; }
   .ev-film-big { font-size: clamp(1.55rem, 6.4vw, 2.2rem); }
   .ev-film-sub { font-size: 0.92rem; }
   .ev-film-stat { font-size: 0.68rem; }
@@ -321,8 +321,6 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 201; padding: 1.25rem
   .ev-film-time, .ev-film-skip span { display: none; }
   .ev-film-skip { width: 34px; padding: 0; }
   .ev-film-fs.is-able { display: inline-flex; }
-  .hero:fullscreen.ev-film-active .ev-film-caps { top: calc(58svh + 0.75rem); }
-  .hero:-webkit-full-screen.ev-film-active .ev-film-caps { top: calc(58svh + 0.75rem); }
 }
 @media (prefers-reduced-motion: reduce) { .ev-film-sound.is-hint { animation: none; } }
 

@@ -238,6 +238,16 @@
   var OPEN_TEXT = 'hello, world';
   var fontMono = "'JetBrains Mono', monospace", fontSans = "'DM Sans', sans-serif";
 
+  var svProbe = null;
+  function smallVh() {
+    if (!svProbe) {
+      svProbe = document.createElement('div');
+      svProbe.style.cssText = 'position:fixed;top:0;left:0;width:0;height:100vh;height:100svh;visibility:hidden;pointer-events:none';
+      document.body.appendChild(svProbe);
+    }
+    return svProbe.offsetHeight || window.innerHeight;
+  }
+
   function layout() {
     W = hero.clientWidth; H = hero.clientHeight;
     dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -249,9 +259,14 @@
     if (wide) {
       st.x = W * 0.44; st.y = 96; st.w = W * 0.51; st.h = vh - 96 - 120;
     } else {
-      /* full screen has no nav to clear, so the stage takes the room */
-      var full = fsActive();
-      st.x = 16; st.y = full ? 36 : 84; st.w = W - 32; st.h = Math.max(220, vh * (full ? 0.58 : 0.5) - st.y);
+      /* The captions hang from just above the controls (the CSS puts their
+         bottom edge at 100svh - 100px) and grow upward. The stage takes
+         everything above the tallest block they ever reach: 154px at 375px
+         wide, measured across every chapter, so 160 with a margin. Full
+         screen has no nav to clear. Measured in svh, not innerHeight, so a
+         collapsing browser toolbar cannot slide the stage under the text. */
+      var full = fsActive(), sv = smallVh(), capTop = Math.max(sv * 0.5 + 12, sv - 100 - 160);
+      st.x = 16; st.y = full ? 36 : 84; st.w = W - 32; st.h = Math.max(220, capTop - 16 - st.y);
     }
     st.cx = st.x + st.w / 2; st.cy = st.y + st.h / 2;
     st.m = Math.min(st.w, st.h);
@@ -274,7 +289,7 @@
     board.y0 = st.cy - (2 * (board.bh + board.L) + board.G) / 2 + 12;
 
     /* the orchestration's four cards, clockwise from the top left */
-    oc.w = st.w * 0.43; oc.h = Math.min(st.h * 0.37, oc.w * 0.82);
+    oc.w = st.w * 0.43; oc.h = Math.min(st.h * (wide ? 0.37 : 0.42), oc.w * (wide ? 0.82 : 1.15));
     oc.gx = st.w * 0.14; oc.gy = Math.min(st.h * 0.12, 48);
     oc.x0 = st.cx - oc.w - oc.gx / 2; oc.y0 = st.cy - oc.h - oc.gy / 2;
 

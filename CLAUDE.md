@@ -106,6 +106,10 @@ fades.
   full-screen button never shows. The hold opens on `touchend`, not a finger's
   `pointerdown`: only the former counts as the tap that sound and full screen
   both require.
+  On a phone the captions hang from just above the controls and grow upward;
+  the stage takes everything above the tallest block they reach (154px at
+  375px wide, measured across every chapter), in `svh` rather than
+  `innerHeight` so a collapsing toolbar cannot slide the picture under them.
 
 ## The AI Showcase
 
