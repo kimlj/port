@@ -19,6 +19,42 @@ The `<style>` block has no nesting and no preprocessor. **Check brace balance
 after editing it**: an unclosed rule silently kills every rule after it, and the
 page renders as unstyled links rather than throwing anything.
 
+## The hero film
+
+`hero-film.js` plays a 57.6-second story over the hero, then hands the page to
+it: 24 bars at 100 BPM, seven chapters (hello world → contribution calendar → AI
+→ WordWarz → MDS Pro → pipelines → portrait). One set of 2,191 particles, one per
+calendar day 2021–2026, reshapes itself through every chapter and ends as a
+halftone of `profile.webp` sitting exactly on the source-code portrait, which is
+what appears when it fades.
+
+- **Render is a pure function of t.** A particle's position is an eased blend of
+  two formations, both functions of time, never a simulation. That is what makes
+  seek, chapter clicks, pause and the audio resync free. Do not add state that
+  carries from one frame to the next.
+- **It carries no figures of its own.** Contributions and Claude hours come from
+  the same JSON the Activity panel reads, and WordWarz and MDS Pro numbers come
+  from their project cards' `.project-metric-num`. Change a card and the film
+  follows. A figure that does not load drops its caption line; it is never
+  replaced with a guess.
+- **The score is synthesised** in Web Audio: oscillators and noise on the same
+  bar grid as the scenes. Browsers block audible autoplay, so the film starts
+  muted and joins the score mid-way when sound is turned on. With sound on, the
+  AudioContext clock drives the picture. `heroFilm.renderOffline()` renders the
+  whole score and reports peak and loudness per second. Run it after touching
+  levels: it currently peaks at 0.76 with no clipping.
+- **When it plays is decided in `<head>`**, as the `ev-film-boot` class, so the
+  hero never flashes before the film covers it. It plays once per visitor per
+  fortnight (`localStorage.heroFilmSeen`), never under reduced motion, and
+  always with `?film`. A 6-second failsafe releases the hold if the script never
+  arrives.
+- **`ev-film-on` holds the hero's own entrance animations**
+  (`animation: none; opacity: 0`) rather than hiding the hero some other way.
+  Removing the class restarts them, so the hero still arrives exactly as it
+  always has, only later.
+- The stage splits at **900px**, not 768: beside the captions above that,
+  above them below it. The CSS media query says 899 for that reason.
+
 ## The AI Showcase
 
 The most intricate part of the file, and the one place where the markup is not
@@ -128,6 +164,7 @@ feature and nothing else.
 |---|---|
 | `avatar-field.js` | The hero portrait, typeset from this file's own source. The cursor pushes its characters aside and the source shows in the clearing. |
 | `hero-particles.js` | Hero label, headline and lede split into glyphs the cursor pushes. |
+| `hero-film.js` | The 58-second story film that plays over the hero before handing it the page, with a synthesised score. |
 | `button-field.js` | Dot fields inside every CTA and the contact buttons. |
 | `section-ornaments.js` | Drift, trace and registration marks, Projects → footer. |
 | `ai-ledger.js` | The AI Showcase rows, transcripts and process logs, plus the Avatar pipeline's stage tabs. Two IIFEs. |
