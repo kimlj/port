@@ -66,8 +66,10 @@ fades.
   `AV_COUNT` change with it.
 - **The score is synthesised** in Web Audio: oscillators and noise on the same
   bar grid as the scenes, each event owned by a scene like everything else.
-  Browsers block audible autoplay, so the film starts muted, and the sound
-  button joins the score wherever the film has reached. While the AudioContext
+  Sound is on by default, as far as a browser allows: no page may make a
+  sound before the visitor interacts, so until then the button reads *Tap for
+  sound*, and the first click, tap or key anywhere on the page joins the score
+  wherever the film has reached. While the AudioContext
   runs, its clock drives the picture (`au.synced`). When it stops, whether from
   our pause or from the browser, the time goes back to the performance clock
   without a jump.

@@ -19,10 +19,12 @@
  *
  * THE SCORE IS SYNTHESISED, not a file: Web Audio oscillators and filtered
  * noise, scheduled on a 100 BPM grid the scenes are cut to (a bar is 2.4s).
- * Browsers refuse audible autoplay, so the film starts silent and the sound
- * button joins the score at whatever second the film has reached. While sound
- * runs, the AudioContext's clock drives the picture rather than the other way
- * round — audio cannot be nudged without a click, pictures can.
+ * Sound is on by default, but browsers let no page make a sound before the
+ * visitor has done something, so until then the button says "Tap for sound"
+ * and the first click, tap or key anywhere joins the score at whatever second
+ * the film has reached. While sound runs, the AudioContext's clock drives the
+ * picture rather than the other way round — audio cannot be nudged without a
+ * click, pictures can.
  *
  * TWO CUTS. The 58-second one autoplays, once per visitor per fortnight (the
  * head script decides, so the hero never flashes before the film covers it).
@@ -2044,7 +2046,7 @@
   if ((boot || forced) && !(reduced && !forced)) {
     /* fonts first — the opening line is typeset on the canvas, and a fallback
        face measured now would put the caret in the wrong place */
-    var go = function () { if (state === 'idle') start(bootCut); };
+    var go = function () { if (state === 'idle') { start(bootCut); soundOn(); } };
     if (document.fonts && document.fonts.ready) { document.fonts.ready.then(go); setTimeout(go, 700); }
     else go();
     conceal();
