@@ -279,14 +279,16 @@
     cal.y0 = st.cy - ch / 2 + cal.p / 2;
 
     /* four WordWarz boards, two by two, each with a name row above it */
-    /* a phone shows four rows, not six: nobody here needs more than three
-       guesses, and the two spare rows cost a third of the tile size */
-    board.rows = wide ? 6 : 4;
-    board.t = Math.min(st.w / 12.2, (st.h - 30) / (2 * board.rows * 1.12 + 2.7), 46);
-    board.g = board.t * 0.12; board.L = board.t * 0.8; board.G = board.t * 1.1;
+    /* six rows everywhere: the game gives six guesses, and a board with
+       fewer would not be the game */
+    board.rows = 6;
+    /* a phone is short of height, not width: its boards stack tighter */
+    var lk = wide ? 0.8 : 0.7, gyk = wide ? 1.1 : 0.55;
+    board.t = Math.min(st.w / 12.2, (st.h - 30) / (2 * board.rows * 1.12 + 2 * lk + gyk), 46);
+    board.g = board.t * 0.12; board.L = board.t * lk; board.G = board.t * 1.1; board.Gy = board.t * gyk;
     board.bw = 5 * board.t + 4 * board.g; board.bh = board.rows * board.t + (board.rows - 1) * board.g;
     board.x0 = st.cx - (2 * board.bw + board.G) / 2;
-    board.y0 = st.cy - (2 * (board.bh + board.L) + board.G) / 2 + 12;
+    board.y0 = st.cy - (2 * (board.bh + board.L) + board.Gy) / 2 + 12;
 
     /* the orchestration's four cards, clockwise from the top left */
     oc.w = st.w * 0.43; oc.h = Math.min(st.h * (wide ? 0.37 : 0.42), oc.w * (wide ? 0.82 : 1.15));
@@ -851,7 +853,7 @@
     for (var b = 0; b < BOARDS.length; b++) {
       var B = BOARDS[b];
       var bx = board.x0 + (b % 2) * (board.bw + board.G);
-      var by = board.y0 + Math.floor(b / 2) * (board.bh + board.L + board.G) + board.L;
+      var by = board.y0 + Math.floor(b / 2) * (board.bh + board.L + board.Gy) + board.L;
       /* name, and the place once the word falls */
       ctx.globalAlpha = a * smooth((t - 24.1 - b * 0.05) / 0.4);
       ctx.font = '600 ' + lf + 'px ' + fontSans; ctx.textAlign = 'left';
