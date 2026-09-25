@@ -85,7 +85,7 @@ fades.
   without a jump.
 - **`heroFilm.renderOffline('full')` renders a cut's score** and reports peak
   and loudness per second. Run it after touching levels. The full cut peaks at
-  0.81 and the autoplay cut at 0.77, both with no clipping.
+  0.78 and the autoplay cut at 0.77, both with no clipping.
 - **When it plays is decided in `<head>`**, as the `ev-film-boot` class, so the
   hero never flashes before the film covers it. It plays once per visitor per
   fortnight (`localStorage.heroFilmSeen`), never under reduced motion, and
