@@ -28,9 +28,9 @@
  * picture rather than the other way round — audio cannot be nudged without a
  * click, pictures can.
  *
- * TWO CUTS. The 74.4-second one autoplays, once per visitor per fortnight (the
+ * TWO CUTS. The 76.8-second one autoplays, once per visitor per fortnight (the
  * head script decides, so the hero never flashes before the film covers it).
- * The 88.8-second one adds Avatars and Open source, and plays from the
+ * The 91.2-second one adds Avatars and Open source, and plays from the
  * chip under the CTAs, or with ?film=full. Reduced motion and
  * returning visitors get the hero as it always was, plus that chip.
  */
@@ -62,7 +62,7 @@
     practice: { o: 4.8, bars: 4, n: 'Practice' },
     ai: { o: 14.4, bars: 4, n: 'AI' },
     orch: { o: 0, bars: 4, n: 'AI orchestration' },
-    ww: { o: 24, bars: 3, n: 'WordWarz.io' },
+    ww: { o: 24, bars: 4, n: 'WordWarz.io' },
     avatars: { o: 0, bars: 3, n: 'Avatars' },
     mds: { o: 33.6, bars: 8, n: 'MDS Pro' },
     pipe: { o: 43.2, bars: 3, n: 'Pipelines' },
@@ -234,7 +234,7 @@
   /* ----------------------------------------------------------- the layout */
 
   var W = 0, H = 0, dpr = 1, wide = true;
-  var st = {}, cal = {}, board = {}, pr = {}, av = {}, oc = {}, dc = {}, bc = {}, open = { cx: 0, cy: 0 };
+  var st = {}, cal = {}, board = {}, pr = {}, av = {}, oc = {}, dc = {}, bc = {}, dv = [], open = { cx: 0, cy: 0 };
 
   /* MDS Pro's second half: the three workbooks one pay calculation fills, and
      the benchmark chart. Both are fixed geometry, so they are laid out once per
@@ -337,6 +337,26 @@
     oc.w = st.w * 0.43; oc.h = Math.min(st.h * (wide ? 0.37 : 0.42), oc.w * (wide ? 0.82 : 1.15));
     oc.gx = st.w * 0.14; oc.gy = Math.min(st.h * 0.12, 48);
     oc.x0 = st.cx - oc.w - oc.gx / 2; oc.y0 = st.cy - oc.h - oc.gy / 2;
+
+    /* WordWarz on every screen it ships to: two phones, a tablet, a browser.
+       In a row beside the captions; two by two on a phone, where the row
+       would leave each screen too small to hold a board. */
+    var dg = st.w * 0.04, DW = [0.48, 0.48, 0.75, 1.3], DH = [1, 1, 1, 0.78], k;
+    dv = [];
+    if (wide) {
+      var hp = Math.min(st.h * 0.5, (st.w * 0.94 - 3 * dg) / 3.01), dx = st.cx - (3.01 * hp + 3 * dg) / 2, dbase = st.cy + hp / 2;
+      for (k = 0; k < 4; k++) {
+        dv.push({ x: dx, y: dbase - DH[k] * hp, w: DW[k] * hp, h: DH[k] * hp });
+        dx += DW[k] * hp + dg;
+      }
+    } else {
+      var cw = (st.w - dg) / 2, ch = st.h * 0.42, dm = ch * 0.84;
+      for (k = 0; k < 4; k++) {
+        var dw = Math.min(DW[k] * dm, cw * 0.96), dh = k === 3 ? dw / 1.3 : dm;
+        var ccx = st.x + (k % 2) * (cw + dg) + cw / 2, ccy = st.cy + (k < 2 ? -1 : 1) * (ch + dg) / 2 - 8;
+        dv.push({ x: ccx - dw / 2, y: ccy - dh / 2, w: dw, h: dh });
+      }
+    }
 
     /* MDS Pro: the pay calculation over its three workbooks, then the chart */
     dc.w = Math.min(st.w * 0.29, 210); dc.g = Math.min(st.w * 0.05, 30);
@@ -467,6 +487,17 @@
     o.s = 1 + H3[i] * 1.3; o.a = 0.08 + 0.14 * H3[i]; o.c = H4[i];
   }
 
+  /* the four screens' outlines; the rest of the days drift behind them */
+  function fDevices(i, t, o) {
+    if (H3[i] > 0.42) { fDust(i, t, o); o.a *= 0.4; return; }
+    var R = dv[i % 4], q = H1[i] * 2 * (R.w + R.h), x, y;
+    if (q < R.w) { x = R.x + q; y = R.y; }
+    else if ((q -= R.w) < R.h) { x = R.x + R.w; y = R.y + q; }
+    else if ((q -= R.h) < R.w) { x = R.x + R.w - q; y = R.y + R.h; }
+    else { x = R.x; y = R.y + R.h - (q - R.w); }
+    o.x = x; o.y = y; o.s = 1.4; o.a = 0.55 + 0.3 * H2[i]; o.c = (i % 4) / 3;
+  }
+
   function nodePos(k, out) {
     var a = -Math.PI / 2 + k * 2 * Math.PI / fr.K;
     out.x = st.cx + Math.cos(a) * st.w * (wide ? 0.42 : 0.43);
@@ -591,6 +622,7 @@
     { s: 'ai', at: 17.0, f: fSphere, dur: 1.7, sw: 0.9, d: function (i) { return (i / N) * 1.5; } },
     { s: 'orch', at: 0, f: fOrch, dur: 1.4, sw: 0.7, d: function (i) { return H2[i] * 0.6; } },
     { s: 'ww', at: 24.0, f: fDust, dur: 1.3, sw: 0.4, d: function (i) { return H1[i] * 0.5; } },
+    { s: 'ww', at: 28.8, f: fDevices, dur: 1.3, sw: 0.5, d: function (i) { return (i % 4) * 0.25 + H2[i] * 0.4; } },
     { s: 'avatars', at: 0, f: fDustDim, dur: 1.2, sw: 0.5, d: function (i) { return H1[i] * 0.5; } },
     { s: 'mds', at: 33.6, f: fClusters, dur: 1.5, sw: 0.7, d: function (i) { return H3[i] * 0.8; } },
     /* the workbooks fill a row at a time; the bars grow from the floor */
@@ -734,7 +766,8 @@
   var OVERLAYS = [
     { s: 'open', a: -1, b: 5.4, f: drawOpen },
     { s: 'practice', a: 4.6, b: 17.8, f: drawCalLabels },
-    { s: 'ww', a: 24, b: 31.2, f: drawBoard },
+    { s: 'ww', a: 24, b: 29.2, f: drawBoard },
+    { s: 'ww', a: 28.8, b: 33.6, f: drawDevices },
     { s: 'mds', a: 33.6, b: 43.8, f: drawLedger },
     { s: 'mds', a: 43.2, b: 48.4, f: drawDocs },
     { s: 'mds', a: 48.0, b: 53.2, f: drawBench },
@@ -852,7 +885,7 @@
   }
 
   function drawBoard(t) {
-    var T = board.t, g = board.g, a = 1 - smooth((t - 30.5) / 0.6), fs = Math.round(T * 0.5);
+    var T = board.t, g = board.g, a = 1 - smooth((t - 28.5) / 0.6), fs = Math.round(T * 0.5);
     var lf = Math.max(9, Math.round(T * 0.3));
     /* the match header: this is live play, and it is a stand-in match */
     var hy = board.y0 - lf * 1.6, gw = 2 * board.bw + board.G;
@@ -889,7 +922,7 @@
         if (pop <= 0) continue;
         var x = bx + j * (T + g), y = by + r * (T + g), hop = 0;
         if (r === B.words.length - 1 && t > B.solved) hop = Math.max(0, Math.sin(clamp((t - B.solved - j * 0.06) / 0.3, 0, 1) * Math.PI)) * T * 0.14;
-        var sc = pop * (1 - smooth((t - 30.5) / 0.6) * 0.3), sy = 1, mark = -1, letter = '';
+        var sc = pop * (1 - smooth((t - 28.5) / 0.6) * 0.3), sy = 1, mark = -1, letter = '';
         if (r < B.words.length) {
           if (t >= typeT(b, r, j)) letter = B.words[r][j];
           var ft = (t - flipT(b, r, j)) / 0.25;
@@ -916,6 +949,61 @@
       ctx.textAlign = 'left';
     }
     ctx.globalAlpha = 1;
+  }
+
+  /* The same illustrative match on each screen, a board apiece: the platforms
+     are as shipped (iOS live on the App Store, Android tested on devices; the client has a
+     tablet layout, and the web app is the front door). */
+  var DEV_LABEL = ['iOS · App Store', 'Android', 'tablet', 'web'];
+  function drawDevices(t) {
+    var a = env(t, 28.9, 33.5, 0.5, 0.5), fs = wide ? 11 : 9, k, r, j;
+    ctx.textBaseline = 'middle'; ctx.lineWidth = 1;
+    for (k = 0; k < 4; k++) {
+      var R = dv[k], web = k === 3, t0 = 29.0 + k * 0.25, pop = a * smooth((t - t0) / 0.4);
+      if (pop <= 0) continue;
+      ctx.globalAlpha = pop;
+      rr(R.x, R.y, R.w, R.h, web ? 6 : Math.min(R.w * 0.14, 14));
+      ctx.fillStyle = css(col.card, 0.92); ctx.fill();
+      var top;
+      if (web) {
+        top = R.y + 18;
+        ctx.fillStyle = css(col.border);
+        for (j = 0; j < 3; j++) { ctx.beginPath(); ctx.arc(R.x + 8 + j * 7, R.y + 9, 2, 0, 6.2832); ctx.fill(); }
+        rr(R.x + 34, R.y + 4, R.w - 42, 10, 5); ctx.fill();
+        ctx.font = '400 8px ' + fontMono; ctx.fillStyle = css(col.muted); ctx.textAlign = 'left';
+        ctx.fillText('wordwarz.io', R.x + 40, R.y + 9.5);
+      } else {
+        top = R.y + R.h * 0.07;
+        ctx.fillStyle = css(col.border);
+        rr(R.x + R.w * 0.36, R.y + R.h * 0.025, R.w * 0.28, 3, 1.5); ctx.fill();
+      }
+      /* a board, drawn in as its rows arrive */
+      var B = BOARDS[k], room = R.y + R.h - top - (web ? 6 : R.h * 0.05);
+      var T = Math.min((R.w * 0.84) / 5.5, room / 6.7), g = T * 0.12;
+      var bx = R.x + (R.w - (5 * T + 4 * g)) / 2, by = top + (room - (6 * T + 5 * g)) / 2;
+      ctx.font = '600 ' + Math.round(T * 0.55) + 'px ' + fontSans; ctx.textAlign = 'center';
+      for (r = 0; r < 6; r++) {
+        var ra = smooth((t - t0 - 0.2 - r * 0.12) / 0.25);
+        if (ra <= 0) break;
+        for (j = 0; j < 5; j++) {
+          var mark = r < B.words.length ? B.marks[r][j] : -1, x = bx + j * (T + g), y = by + r * (T + g);
+          ctx.globalAlpha = pop * ra;
+          rr(x, y, T, T, Math.min(3, T / 4));
+          if (mark === 2) { ctx.fillStyle = css(col.accent); ctx.fill(); }
+          else if (mark === 1) { ctx.fillStyle = css(col.g2, 0.85); ctx.fill(); }
+          else if (mark === 0) { ctx.fillStyle = css(col.dim, 0.55); ctx.fill(); }
+          else { ctx.strokeStyle = css(col.border); ctx.stroke(); }
+          if (mark >= 0 && T >= 13) {
+            ctx.fillStyle = css(mark >= 1 ? col.bg : col.text);
+            ctx.fillText(B.words[r][j], x + T / 2, y + T / 2 + 1);
+          }
+        }
+      }
+      ctx.globalAlpha = pop;
+      ctx.font = '500 ' + fs + 'px ' + fontMono; ctx.fillStyle = css(k < 2 ? col.accent : col.muted);
+      ctx.fillText(DEV_LABEL[k], R.x + R.w / 2, R.y + R.h + (wide ? 16 : 12));
+    }
+    ctx.textAlign = 'left'; ctx.globalAlpha = 1;
   }
 
   var KINDS = ['clock_in', 'clock_in', 'break_start', 'clock_out', 'break_end', 'clock_in'];
@@ -1421,10 +1509,12 @@
     { sc: 'orch', s: 'big', t0: 4.9, t1: 9.4, h: 'Reviewed by a *different model* than the one that wrote it.' },
     { sc: 'orch', s: 'sub', t0: 5.4, t1: 9.4, h: 'Driven by 20+ Claude Code skills and 5 subagents I wrote.' },
 
-    { s: 'kick', t0: 24.2, t1: 30.9, kick: 'WordWarz.io' },
-    { s: 'big', t0: 24.4, t1: 30.9, h: 'A real-time multiplayer *word game*.' },
-    { s: 'sub', t0: 25.0, t1: 30.9, h: 'Its bot guesses by Shannon entropy — maximum information per guess.' },
-    { s: 'stat', t0: 25.6, t1: 30.9, f: wwStat },
+    { s: 'kick', t0: 24.2, t1: 33.4, kick: 'WordWarz.io' },
+    { s: 'big', t0: 24.4, t1: 28.7, h: 'A real-time multiplayer *word game*.' },
+    { s: 'sub', t0: 25.0, t1: 28.7, h: 'Its bot guesses by Shannon entropy — maximum information per guess.' },
+    { s: 'stat', t0: 25.6, t1: 33.4, f: wwStat },
+    { s: 'big', t0: 29.0, t1: 33.4, h: 'One codebase, *every screen*.' },
+    { s: 'sub', t0: 29.5, t1: 33.4, h: 'iOS on the App Store, Android, tablet and the web — one React client.' },
 
     { sc: 'avatars', s: 'kick', t0: 0.2, t1: 7.0, kick: 'Avatars' },
     { sc: 'avatars', s: 'big', t0: 0.4, t1: 7.0, h: AV_COUNT + ' faces, *one pipeline*.' },
@@ -1691,7 +1781,7 @@
       if (hash(j + 400) < 0.12 + (j / 44) * 0.5) ev(ts, 'pluck', [PENT[Math.floor(hash(j + 900) * PENT.length)] + 12, 0.025, 6000]);
     }
     ev(14.5, 'bell', [86, 0.08, 3]); ev(14.8, 'bell', [93, 0.045, 3]);
-    [16.6, 23.6, 30.8, 42.8].forEach(function (t) { ev(t, 'whoosh', [0.5, 0.05, 1]); });
+    [16.6, 23.6, 28.7, 33.2, 42.8].forEach(function (t) { ev(t, 'whoosh', [0.5, 0.05, 1]); });
     /* the race: the bot's board carries the melody, a key and a note per
        tile; the other three are quiet keystrokes under it; a bell per finish */
     var WIN = [74, 77, 79, 81, 86];
@@ -1709,7 +1799,9 @@
       if (B.place >= 0) ev(B.solved, 'bell', [[86, 81, 77][B.place], 0.06, 2]);
     });
     [74, 77, 81, 86, 89].forEach(function (m, k) { ev(28.6 + k * 0.075, 'bell', [m, 0.05, 2]); });
-    for (j = 0; j < 10; j++) if (hash(j + 1300) < 0.35) ev(29.4 + j * 0.15, 'pluck', [PENT[Math.floor(hash(j + 1700) * 9)] + 24, 0.02, 7000]);
+    /* a bell as each screen lights, then a scatter of high notes over them */
+    [74, 77, 81, 86].forEach(function (m, k) { ev(29.1 + k * 0.25, 'bell', [m, 0.045, 1.6]); });
+    for (j = 0; j < 17; j++) if (hash(j + 1300) < 0.35) ev(30.6 + j * 0.15, 'pluck', [PENT[Math.floor(hash(j + 1700) * 9)] + 24, 0.02, 7000]);
     LEDGER.forEach(function (L, e) { ev(L.t, 'bell', [[74, 77, 79, 81, 84][e % 5], 0.03, 0.8]); });
     ALERTS.forEach(function (t) { ev(t, 'bell', [86, 0.055, 1.6]); });
     /* owned by the finale, so it always rises into the impact, whatever
