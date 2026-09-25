@@ -22,9 +22,9 @@ page renders as unstyled links rather than throwing anything.
 ## The hero film
 
 `hero-film.js` tells a story over the hero, then hands the page to it. It has
-**two cuts**. The 64.8-second one autoplays: hello world → contribution
+**two cuts**. The 74.4-second one autoplays: hello world → contribution
 calendar → AI → AI orchestration → WordWarz → MDS Pro → pipelines → portrait.
-The 79.2-second full cut adds Avatars and Open source, and plays from
+The 88.8-second full cut adds Avatars and Open source, and plays from
 the chip under the CTAs or with `?film=full`. Everything is cut to a 100 BPM bar grid (a
 bar is 2.4s). One set of 2,191 particles, one per calendar day 2021–2026,
 reshapes itself through every chapter and ends as a halftone of `profile.webp`
@@ -85,7 +85,7 @@ fades.
   without a jump.
 - **`heroFilm.renderOffline('full')` renders a cut's score** and reports peak
   and loudness per second. Run it after touching levels. The full cut peaks at
-  0.78 and the autoplay cut at 0.81, both with no clipping.
+  0.81 and the autoplay cut at 0.77, both with no clipping.
 - **When it plays is decided in `<head>`**, as the `ev-film-boot` class, so the
   hero never flashes before the film covers it. It plays once per visitor per
   fortnight (`localStorage.heroFilmSeen`), never under reduced motion, and
@@ -220,7 +220,7 @@ feature and nothing else.
 |---|---|
 | `avatar-field.js` | The hero portrait, typeset from this file's own source. The cursor pushes its characters aside and the source shows in the clearing. |
 | `hero-particles.js` | Hero label, headline and lede split into glyphs the cursor pushes. |
-| `hero-film.js` | The story film over the hero, in two cuts (58s autoplay, 89s from the chip), with a synthesised score. |
+| `hero-film.js` | The story film over the hero, in two cuts (74s autoplay, 89s from the chip), with a synthesised score. |
 | `button-field.js` | Dot fields inside every CTA and the contact buttons. |
 | `section-ornaments.js` | Drift, trace and registration marks, Projects → footer. |
 | `ai-ledger.js` | The AI Showcase rows, transcripts and process logs, plus the Avatar pipeline's stage tabs. Two IIFEs. |

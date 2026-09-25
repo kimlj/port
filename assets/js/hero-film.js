@@ -2,7 +2,8 @@
  *
  * One particle system, one clock, one score. Every particle is a day of the
  * contribution calendar first, and the same 2,191 particles become a sphere,
- * fifteen people clocking in, a job pipeline and finally the
+ * fifteen people clocking in, three workbooks, a benchmark chart, a job
+ * pipeline and finally the
  * portrait, which dissolves into the real one as the hero arrives underneath.
  *
  * RENDER IS A PURE FUNCTION OF TIME. No particle carries velocity from one frame
@@ -27,9 +28,9 @@
  * picture rather than the other way round — audio cannot be nudged without a
  * click, pictures can.
  *
- * TWO CUTS. The 64.8-second one autoplays, once per visitor per fortnight (the
+ * TWO CUTS. The 74.4-second one autoplays, once per visitor per fortnight (the
  * head script decides, so the hero never flashes before the film covers it).
- * The 79.2-second one adds Avatars and Open source, and plays from the
+ * The 88.8-second one adds Avatars and Open source, and plays from the
  * chip under the CTAs, or with ?film=full. Reduced motion and
  * returning visitors get the hero as it always was, plus that chip.
  */
@@ -63,7 +64,7 @@
     orch: { o: 0, bars: 4, n: 'AI orchestration' },
     ww: { o: 24, bars: 3, n: 'WordWarz.io' },
     avatars: { o: 0, bars: 3, n: 'Avatars' },
-    mds: { o: 33.6, bars: 4, n: 'MDS Pro' },
+    mds: { o: 33.6, bars: 8, n: 'MDS Pro' },
     pipe: { o: 43.2, bars: 3, n: 'Pipelines' },
     oss: { o: 0, bars: 3, n: 'Open source' },
     kim: { o: 50.4, bars: 3, n: 'Kim' }
@@ -233,7 +234,50 @@
   /* ----------------------------------------------------------- the layout */
 
   var W = 0, H = 0, dpr = 1, wide = true;
-  var st = {}, cal = {}, board = {}, pr = {}, av = {}, oc = {}, open = { cx: 0, cy: 0 };
+  var st = {}, cal = {}, board = {}, pr = {}, av = {}, oc = {}, dc = {}, bc = {}, open = { cx: 0, cy: 0 };
+
+  /* MDS Pro's second half: the three workbooks one pay calculation fills, and
+     the benchmark chart. Both are fixed geometry, so they are laid out once per
+     resize and the formations only look a particle up. The bar values are
+     illustrative, and the chart says so; the arrangement is the dashboard's. */
+  var DOC_ROWS = 6, BENCH_K = 12, BENCH_V = [];
+  for (var b0 = 0; b0 < BENCH_K; b0++) BENCH_V.push(74 + hash(b0 * 5.3 + 2) * 50);
+  var DX = new Float32Array(N), DY = new Float32Array(N), DR = new Int8Array(N);
+  var BX = new Float32Array(N), BY = new Float32Array(N), BF = new Float32Array(N);
+  function docX(k) { return dc.x0 + k * (dc.w + dc.g); }
+  function docRowY(r) { return dc.y + dc.hh + 8 + (r + 0.5) * dc.rp; }
+  function buildMds() {
+    var sp = wide ? 3.4 : 2.8, cols = Math.max(8, Math.floor((dc.w - 2 * dc.pad) / sp)), i, r, c, ln;
+    /* a table per workbook: a label on the left and a figure on the right,
+       each two lines of dots; the last row is the total */
+    var slots = [];
+    for (var k = 0; k < 3; k++) {
+      var list = [];
+      for (r = 0; r < DOC_ROWS; r++) {
+        var tot = r === DOC_ROWS - 1;
+        var lab = Math.round(cols * (tot ? 0.28 : 0.22 + 0.22 * hash(k * 17 + r * 3.7)));
+        var fig = Math.round(cols * (tot ? 0.55 : 0.68 + 0.1 * hash(k * 11 + r * 5.1)));
+        for (ln = 0; ln < 2; ln++) for (c = 0; c < cols; c++) {
+          if (c >= lab && c < fig) continue;
+          list.push([docX(k) + dc.pad + (c + 0.5) * sp, docRowY(r) + (ln - 0.5) * sp, r]);
+        }
+      }
+      slots.push(list);
+    }
+    for (i = 0; i < N; i++) {
+      var L = slots[i % 3], j = Math.floor(i / 3);
+      if (j < L.length) { DX[i] = L[j][0]; DY[i] = L[j][1]; DR[i] = L[j][2]; } else DR[i] = -1;
+    }
+    /* the chart: three dots across per bar, spread up to its value */
+    var pitch = bc.w / BENCH_K, bw = Math.min(pitch * 0.45, 20);
+    for (i = 0; i < N; i++) {
+      var b = i % BENCH_K, jj = Math.floor(i / BENCH_K), n = Math.floor((N - 1 - b) / BENCH_K) + 1;
+      var f = (Math.floor(jj / 3) + 0.5) / Math.ceil(n / 3);
+      BX[i] = bc.x + (b + 0.5) * pitch + ((jj % 3) - 1) * bw / 3;
+      BY[i] = bc.base - f * BENCH_V[b] * bc.u;
+      BF[i] = f;
+    }
+  }
   var OPEN_TEXT = 'hello, world';
   var fontMono = "'JetBrains Mono', monospace", fontSans = "'DM Sans', sans-serif";
 
@@ -293,6 +337,15 @@
     oc.w = st.w * 0.43; oc.h = Math.min(st.h * (wide ? 0.37 : 0.42), oc.w * (wide ? 0.82 : 1.15));
     oc.gx = st.w * 0.14; oc.gy = Math.min(st.h * 0.12, 48);
     oc.x0 = st.cx - oc.w - oc.gx / 2; oc.y0 = st.cy - oc.h - oc.gy / 2;
+
+    /* MDS Pro: the pay calculation over its three workbooks, then the chart */
+    dc.w = Math.min(st.w * 0.29, 210); dc.g = Math.min(st.w * 0.05, 30);
+    dc.h = Math.min(st.h * 0.5, dc.w * 1.3); dc.hh = wide ? 28 : 22; dc.pad = wide ? 12 : 8;
+    dc.rp = (dc.h - dc.hh - 16) / DOC_ROWS;
+    dc.x0 = st.cx - (3 * dc.w + 2 * dc.g) / 2; dc.y = st.cy - dc.h / 2 + st.h * 0.1;
+    dc.cy = dc.y - Math.min(st.h * 0.2, 80);
+    bc.x = st.x + st.w * 0.08; bc.w = st.w * 0.84; bc.base = st.cy + st.h * 0.28; bc.u = st.h * 0.52 / 125;
+    buildMds();
 
     av.t = Math.min(st.w / 11.9, st.h / 6.9);
     av.g = av.t * 0.1;
@@ -429,6 +482,19 @@
     o.s = 1.3 + H3[i] * 1.1; o.a = 0.32 + 0.4 * H3[i] + fr.flash[k] * 0.5; o.c = k / (fr.K - 1);
   }
 
+  function fDocs(i, t, o) {
+    var r = DR[i];
+    if (r < 0) { fDust(i, t, o); o.a *= 0.35; return; }
+    var tot = r === DOC_ROWS - 1;
+    o.x = DX[i]; o.y = DY[i];
+    o.s = tot ? 2 : 1.5; o.a = tot ? 0.95 : 0.7; o.c = tot ? 0.85 : 0.1 + 0.1 * (i % 3);
+  }
+  function fBench(i, t, o) {
+    var up = BENCH_V[i % BENCH_K] >= 100;
+    o.x = BX[i]; o.y = BY[i];
+    o.s = 1.7; o.a = up ? 0.9 : 0.45; o.c = up ? 0.5 + 0.45 * BF[i] : 0.05;
+  }
+
   var GATES = [0.25, 0.55];
   function fStream(i, t, o) {
     var ph = frac(H1[i] + (t - 43.2) * 0.14);
@@ -527,6 +593,9 @@
     { s: 'ww', at: 24.0, f: fDust, dur: 1.3, sw: 0.4, d: function (i) { return H1[i] * 0.5; } },
     { s: 'avatars', at: 0, f: fDustDim, dur: 1.2, sw: 0.5, d: function (i) { return H1[i] * 0.5; } },
     { s: 'mds', at: 33.6, f: fClusters, dur: 1.5, sw: 0.7, d: function (i) { return H3[i] * 0.8; } },
+    /* the workbooks fill a row at a time; the bars grow from the floor */
+    { s: 'mds', at: 43.2, f: fDocs, dur: 1.0, sw: 0.5, d: function (i) { return DR[i] < 0 ? H1[i] * 0.6 : DR[i] * 0.3 + (i % 3) * 0.08 + H1[i] * 0.12; } },
+    { s: 'mds', at: 48.0, f: fBench, dur: 1.0, sw: 0.4, d: function (i) { return BF[i] * 0.9 + (i % BENCH_K) * 0.04; } },
     { s: 'pipe', at: 43.2, f: fStream, dur: 1.3, sw: 0.5, d: function (i) { return H4[i] * 0.9; } },
     { s: 'oss', at: 0, f: fLanes, dur: 1.3, sw: 0.6, d: function (i) { return H4[i] * 0.6; } },
     { s: 'kim', at: 50.4, f: fPortrait, dur: 1.9, sw: 1.1, d: function (i) { return TV[i] * 0.6 + H1[i] * 0.5; } }
@@ -667,6 +736,8 @@
     { s: 'practice', a: 4.6, b: 17.8, f: drawCalLabels },
     { s: 'ww', a: 24, b: 31.2, f: drawBoard },
     { s: 'mds', a: 33.6, b: 43.8, f: drawLedger },
+    { s: 'mds', a: 43.2, b: 48.4, f: drawDocs },
+    { s: 'mds', a: 48.0, b: 53.2, f: drawBench },
     { s: 'pipe', a: 43.2, b: 50.8, f: drawPipeline },
     { s: 'oss', a: 0, b: 7.5, f: drawOss },
     { s: 'kim', a: 50.4, b: 99, f: drawFinale },
@@ -848,8 +919,11 @@
   }
 
   var KINDS = ['clock_in', 'clock_in', 'break_start', 'clock_out', 'break_end', 'clock_in'];
+  /* one task left running, trimmed by the server at its last active minute:
+     the idle sweep that needs nobody watching (autoClose.ts in MDS Pro) */
+  var AUTO_ROW = 19;
   function drawLedger(t) {
-    var a = env(t, 33.9, 43.6, 0.6, 0.6);
+    var a = env(t, 33.9, 43.4, 0.6, 0.5);
     var lw = Math.min(st.w * (wide ? 0.46 : 0.6), 330), rh = wide ? 22 : 17, rows = 6;
     var lh = rh * (rows + 1.6), lx = st.cx - lw / 2, ly = st.cy - lh / 2;
     var fs = wide ? 11 : 9;
@@ -890,15 +964,114 @@
       var fresh = r === 0 ? 1 - smooth((t - LEDGER[idx].t) / 0.6) : 0;
       ctx.globalAlpha = a * (0.55 + 0.45 * fresh + (r === 0 ? 0.2 : 0));
       if (fresh > 0) { ctx.fillStyle = css(col.accent, 0.08 * fresh); ctx.fillRect(lx + 1, y - rh / 2, lw - 2, rh); }
-      ctx.fillStyle = css(fresh > 0.2 ? col.text : col.muted);
-      ctx.fillText(KINDS[idx % KINDS.length], lx + 14, y);
+      var auto = idx === AUTO_ROW;
+      ctx.fillStyle = css(auto ? col.accent : fresh > 0.2 ? col.text : col.muted);
+      ctx.fillText(auto ? 'auto_closed' : KINDS[idx % KINDS.length], lx + 14, y);
       ctx.fillStyle = css(col.dim);
-      ctx.fillText('now()', lx + lw * 0.52, y);
+      ctx.fillText(auto ? 'idle 2h' : 'now()', lx + lw * 0.52, y);
       ctx.fillStyle = css(col.accent);
       ctx.fillText('rls ✓', lx + lw - 14 - ctx.measureText('rls ✓').width, y);
     }
     ctx.restore();
+    /* the second beat: it runs round the clock with nobody at it */
+    var lv = a * smooth((t - 38.6) / 0.4);
+    if (lv > 0) {
+      var lt = 'live · 24/7 · unattended', ltw;
+      ctx.font = '500 ' + fs + 'px ' + fontMono; ltw = ctx.measureText(lt).width;
+      ctx.globalAlpha = lv; ctx.fillStyle = css(col.accent);
+      ctx.fillText(lt, lx + lw - ltw, ly - rh * 0.7);
+      ctx.globalAlpha = lv * (0.55 + 0.45 * Math.sin(t * 5));
+      ctx.beginPath(); ctx.arc(lx + lw - ltw - 9, ly - rh * 0.7, 3, 0, 6.2832); ctx.fill();
+    }
     ctx.globalAlpha = 1;
+  }
+
+  var DOCS = ['timesheet', 'payroll', 'invoice'];
+  function drawDocs(t) {
+    var a = env(t, 43.3, 48.2, 0.5, 0.5), fs = wide ? 11 : 9, k, r, x;
+    var bw = wide ? 176 : 132, bh = wide ? 28 : 24, bx = st.cx - bw / 2, by = dc.cy - bh / 2;
+    ctx.lineWidth = 1; ctx.textBaseline = 'middle';
+    /* the one calculation wired to all three, a packet down each wire per row */
+    for (k = 0; k < 3; k++) {
+      var tx = docX(k) + dc.w / 2;
+      ctx.globalAlpha = a * 0.7; ctx.strokeStyle = css(col.border);
+      ctx.beginPath(); ctx.moveTo(st.cx, by + bh); ctx.lineTo(tx, dc.y); ctx.stroke();
+      for (r = 0; r < DOC_ROWS; r++) {
+        var p = (t - (43.5 + r * 0.3 + k * 0.08)) / 0.5;
+        if (p <= 0 || p >= 1) continue;
+        var e = ease(p);
+        ctx.globalAlpha = a; ctx.fillStyle = css(col.g2);
+        ctx.beginPath(); ctx.arc(st.cx + (tx - st.cx) * e, by + bh + (dc.y - by - bh) * e, 2.4, 0, 6.2832); ctx.fill();
+      }
+    }
+    ctx.globalAlpha = a;
+    rr(bx, by, bw, bh, bh / 2); ctx.fillStyle = css(col.card, 0.95); ctx.fill();
+    ctx.strokeStyle = css(col.accent); ctx.stroke();
+    ctx.font = '500 ' + fs + 'px ' + fontMono; ctx.textAlign = 'center'; ctx.fillStyle = css(col.accent);
+    ctx.fillText('one pay calculation', st.cx, by + bh / 2);
+    /* the workbooks; the invoice previews first and is issued once it adds up */
+    for (k = 0; k < 3; k++) {
+      x = docX(k);
+      var done = 45.9 + k * 0.25, hy = dc.y + dc.hh / 2 + 1;
+      ctx.globalAlpha = a * smooth((t - 43.4 - k * 0.1) / 0.4);
+      rr(x, dc.y, dc.w, dc.h, 8); ctx.fillStyle = css(col.card, 0.92); ctx.fill();
+      ctx.strokeStyle = css(col.border); ctx.stroke();
+      ctx.fillStyle = css(col.border); ctx.fillRect(x + 1, dc.y + dc.hh, dc.w - 2, 1);
+      ctx.textAlign = 'left'; ctx.fillStyle = css(col.text);
+      ctx.fillText(DOCS[k], x + dc.pad, hy);
+      var mark = t >= done ? (k === 2 && wide ? '✓ issued' : '✓') : (k === 2 ? 'preview' : '');
+      if (mark) {
+        ctx.textAlign = 'right'; ctx.fillStyle = css(t >= done ? col.accent : col.dim);
+        ctx.fillText(mark, x + dc.w - dc.pad, hy);
+      }
+    }
+    /* the totals agree: an equals sign in each gap */
+    var eq = smooth((t - 45.9) / 0.3);
+    if (eq > 0) {
+      ctx.globalAlpha = a * eq; ctx.textAlign = 'center'; ctx.fillStyle = css(col.accent);
+      ctx.font = '600 ' + (fs + 5) + 'px ' + fontMono;
+      for (k = 1; k < 3; k++) ctx.fillText('=', docX(k) - dc.g / 2, docRowY(DOC_ROWS - 1));
+    }
+    var q = (t - 46.4) / 1.0;
+    if (q > 0 && q < 1) {
+      ctx.globalAlpha = a * (1 - q); ctx.strokeStyle = css(col.accent); ctx.lineWidth = 1.5;
+      rr(docX(2) - q * 10, dc.y - q * 10, dc.w + q * 20, dc.h + q * 20, 8 + q * 10); ctx.stroke(); ctx.lineWidth = 1;
+    }
+    ctx.textAlign = 'left'; ctx.globalAlpha = 1;
+  }
+
+  function drawBench(t) {
+    var a = env(t, 48.1, 53.0, 0.5, 0.6), fs = wide ? 11 : 9;
+    var top = bc.base - 125 * bc.u, y100 = bc.base - 100 * bc.u, x1 = bc.x + bc.w, ly = bc.base + 20;
+    ctx.globalAlpha = a; ctx.textBaseline = 'middle'; ctx.lineWidth = 1;
+    ctx.font = '500 ' + fs + 'px ' + fontMono;
+    ctx.textAlign = 'left'; ctx.fillStyle = css(col.text);
+    ctx.fillText(wide ? 'case time vs benchmark · per nurse' : 'vs benchmark · per nurse', bc.x, top - 18);
+    ctx.textAlign = 'right'; ctx.fillStyle = css(col.dim);
+    ctx.fillText('illustrative', x1, top - 18);
+    ctx.fillStyle = css(col.border); ctx.fillRect(bc.x, bc.base + 5, bc.w, 1);
+    /* a faint body under each bar's dots, rising with them */
+    var pitch = bc.w / BENCH_K, bw = Math.min(pitch * 0.45, 20);
+    for (var b = 0; b < BENCH_K; b++) {
+      var up = BENCH_V[b] >= 100, hgt = BENCH_V[b] * bc.u * ease((t - 48.3 - b * 0.04) / 1.4);
+      if (hgt <= 0) continue;
+      ctx.fillStyle = css(up ? col.g2 : col.accent, up ? 0.1 : 0.05);
+      ctx.fillRect(bc.x + (b + 0.5) * pitch - bw / 2 - 3, bc.base - hgt, bw + 6, hgt);
+    }
+    /* the benchmark, drawn across once the bars are up */
+    var ln = ease((t - 49.4) / 0.6);
+    if (ln > 0) {
+      ctx.strokeStyle = css(col.accent); ctx.setLineDash([4, 4]);
+      ctx.beginPath(); ctx.moveTo(bc.x, y100); ctx.lineTo(bc.x + bc.w * ln, y100); ctx.stroke();
+      ctx.globalAlpha = a * smooth((t - 49.8) / 0.3);
+      ctx.beginPath(); ctx.moveTo(bc.x, ly); ctx.lineTo(bc.x + 18, ly); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.textAlign = 'left'; ctx.fillStyle = css(col.muted);
+      ctx.fillText('on benchmark', bc.x + 26, ly);
+      ctx.textAlign = 'right';
+      ctx.fillText(wide ? 'above it: faster than target' : 'above: faster', x1, ly);
+    }
+    ctx.textAlign = 'left'; ctx.globalAlpha = 1;
   }
 
   function drawPipeline(t) {
@@ -1258,11 +1431,16 @@
     { sc: 'avatars', s: 'sub', t0: 1.0, t1: 7.0, h: 'WordWarz’s avatars, generated through a custom ComfyUI pipeline.' },
     { sc: 'avatars', s: 'stat', t0: 1.4, t1: 7.0, f: avStat },
 
-    { s: 'kick', t0: 33.8, t1: 43.0, kick: 'MDS Pro Solutions' },
-    { s: 'big', t0: 34.0, t1: 38.5, h: 'A US healthcare company runs its *payroll* on my code.' },
-    { s: 'sub', t0: 34.6, t1: 38.5, h: 'Sole developer. In production, used every workday.' },
-    { s: 'big', t0: 38.7, t1: 43.0, h: 'The server sets the time. *No row is edited in place.*' },
-    { s: 'stat', t0: 39.2, t1: 43.0, f: mdsStat },
+    { s: 'kick', t0: 33.8, t1: 52.6, kick: 'MDS Pro Solutions' },
+    { s: 'big', t0: 34.0, t1: 38.2, h: 'A US healthcare company runs its *payroll* on my code.' },
+    { s: 'sub', t0: 34.6, t1: 38.2, h: 'Sole developer. Server-set timestamps; no row edited in place.' },
+    { s: 'stat', t0: 35.2, t1: 43.0, f: mdsStat },
+    { s: 'big', t0: 38.5, t1: 43.0, h: 'Runs *24/7*, unsupervised.' },
+    { s: 'sub', t0: 39.0, t1: 43.0, h: 'Streams in real time. Idle tasks close themselves; backups run nightly.' },
+    { sc: 'mds', s: 'big', t0: 43.3, t1: 47.8, h: 'Payroll and invoices *build themselves*.' },
+    { sc: 'mds', s: 'sub', t0: 43.8, t1: 47.8, h: 'One pay calculation behind all three — never a cent apart.' },
+    { sc: 'mds', s: 'big', t0: 48.1, t1: 52.6, h: 'Every nurse, measured against a *benchmark*.' },
+    { sc: 'mds', s: 'sub', t0: 48.6, t1: 52.6, h: 'A live KPI dashboard: case time against its target, per nurse.' },
 
     { s: 'kick', t0: 43.4, t1: 50.2, kick: 'Pipelines' },
     { s: 'big', t0: 43.6, t1: 47.1, h: 'Software that does the *reading* for me.' },
@@ -1572,6 +1750,15 @@
     for (j = 0; j < AV_COUNT; j += 2) ev(0.35 + j * 0.075, 'pluck', [PENT[j % 9] + 24, 0.016, 8000], 0, false, 'avatars');
     ev(4.95, 'bell', [86, 0.05, 2.5], 0, false, 'avatars');
     ev(6.7, 'whoosh', [0.5, 0.05, 1], 0, false, 'avatars');
+    /* MDS Pro's second half: a tick per workbook row, a bell as the totals
+       agree and the invoice goes out, then a note per bar as the chart rises */
+    for (b = 0; b < 4; b++) groove('mds', 43.2 + b * BAR, b, { bright: 2500 + b * 150, snare: b > 0 });
+    for (j = 0; j < DOC_ROWS; j++) ev(44.0 + j * 0.3, 'tick', [0.04], 0, false, 'mds');
+    [81, 84, 86].forEach(function (m, k) { ev(45.9 + k * 0.25, 'bell', [m, 0.05, 1.8], 0, false, 'mds'); });
+    ev(47.7, 'whoosh', [0.5, 0.05, 1], 0, false, 'mds');
+    BENCH_V.forEach(function (v, k) { ev(48.4 + k * 0.08, 'pluck', [PENT[clamp(Math.round((v - 74) / 50 * 8), 0, 8)] + 12, 0.03, 5000], 0, false, 'mds'); });
+    ev(49.4, 'bell', [86, 0.055, 2], 0, false, 'mds');
+    ev(52.4, 'whoosh', [0.5, 0.05, 1], 0, false, 'mds');
     /* orchestration: a bar per role, Dm, Bb, F/C, C between the globe's C
        and WordWarz's Dm; a bell as each model takes the work */
     for (b = 0; b < 4; b++) groove('orch', b * BAR, b, { bright: 2000 + b * 250, snare: b >= 2 });
