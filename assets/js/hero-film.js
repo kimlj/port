@@ -1594,6 +1594,14 @@
     var sh = { kick: 0, big: 0, sub: 0, stat: 0 };
     for (var q = 0; q < CUES.length; q++) {
       var cq = CUES[q];
+      /* figures arrive by fetch after the slots were measured, so a cue whose
+         text changes is measured again, before its slot is sized from it: a
+         frame that sized first and wrote after held a stale height, which a
+         paused seek never corrected, and the figures hung into the controls */
+      if (cq.f && t > cq.T0 - 0.05 && t < cq.T1 + 0.05) {
+        var sq = cq.f(ease((t - cq.T0) / 1.4));
+        if (sq !== cq.last) { cq.el.innerHTML = sq; cq.last = sq; cq.hgt = cq.el.offsetHeight; }
+      }
       var wq = smooth((t - cq.T0 + 0.1) / 0.5) * (1 - smooth((t - (cq.T1 - 0.2)) / 0.5));
       if (wq > 0 && cq.hgt * wq > sh[cq.s]) sh[cq.s] = cq.hgt * wq;
     }
@@ -1603,12 +1611,6 @@
       if (!live) { if (c.on) { c.el.style.opacity = '0'; c.el.style.visibility = 'hidden'; c.on = false; } continue; }
       if (!c.on) { c.el.style.visibility = 'visible'; c.on = true; }
       var inn = smooth((t - c.T0) / 0.6), out = smooth((t - (c.T1 - 0.45)) / 0.45);
-      if (c.f) {
-        /* figures arrive by fetch after the slots were measured, so a cue
-           whose text changes is measured again */
-        var s = c.f(ease((t - c.T0) / 1.4));
-        if (s !== c.last) { c.el.innerHTML = s; c.last = s; c.hgt = c.el.offsetHeight; }
-      }
       if (c.words) {
         for (var w = 0; w < c.words.length; w++) {
           var e = ease((t - c.T0 - w * 0.07) / 0.55);
