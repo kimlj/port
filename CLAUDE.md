@@ -24,7 +24,7 @@ page renders as unstyled links rather than throwing anything.
 `hero-film.js` tells a story over the hero, then hands the page to it. It has
 **two cuts**. The 67.2-second one autoplays: hello world → contribution
 calendar → AI → AI orchestration → WordWarz → MDS Pro → pipelines → portrait.
-The 91.2-second full cut adds Avatars, RecodeAI and Open source, and plays from
+The 81.6-second full cut adds Avatars and Open source, and plays from
 the chip under the CTAs or with `?film=full`. Everything is cut to a 100 BPM bar grid (a
 bar is 2.4s). One set of 2,191 particles, one per calendar day 2021–2026,
 reshapes itself through every chapter and ends as a halftone of `profile.webp`
@@ -36,8 +36,8 @@ fades.
   seek, chapter clicks, pause and the audio resync free. Do not add state that
   carries from one frame to the next.
 - **Every scene keeps its own clock.** The first cut's seven scenes keep the
-  absolute times they were written against (`o` in `SC`). The four added
-  since (orchestration, avatars, RecodeAI, open source) count from zero. A cut is a list of scenes, and `applyCut()` lays them end to
+  absolute times they were written against (`o` in `SC`). The three added
+  since (orchestration, avatars, open source) count from zero. A cut is a list of scenes, and `applyCut()` lays them end to
   end and gives each a shift. Formations, overlays, captions and score events
   all name their scene, so adding or reordering a scene is an edit to `CUTS`
   plus that scene's own parts. Scenes are whole bars, so the beat never slips

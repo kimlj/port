@@ -29,8 +29,8 @@
  *
  * TWO CUTS. The 67-second one autoplays, once per visitor per fortnight (the
  * head script decides, so the hero never flashes before the film covers it).
- * The 91-second one adds Avatars, RecodeAI and Open source, and plays
- * from the chip under the CTAs, or with ?film=full. Reduced motion and
+ * The 81.6-second one adds Avatars and Open source, and plays from the
+ * chip under the CTAs, or with ?film=full. Reduced motion and
  * returning visitors get the hero as it always was, plus that chip.
  */
 (function () {
@@ -51,8 +51,8 @@
 
   /* SCENES AND CUTS. The first cut was written against one absolute clock, and
      its seven scenes keep that clock as their own: `o` is where each started on
-     it, so every time written inside them still means what it did. The four
-     scenes only the full cut has count from their own zero. A cut is a list of
+     it, so every time written inside them still means what it did. The
+     scenes added since count from their own zero. A cut is a list of
      scenes; applyCut() lays them end to end and gives each a shift `sh`, the
      distance from its own clock to the film's. Scenes are whole bars, so every
      shift is too, and the beat grid never slips at a join. */
@@ -64,14 +64,13 @@
     ww: { o: 24, bars: 4, n: 'WordWarz.io' },
     avatars: { o: 0, bars: 3, n: 'Avatars' },
     mds: { o: 33.6, bars: 4, n: 'MDS Pro' },
-    recode: { o: 0, bars: 4, n: 'RecodeAI' },
     pipe: { o: 43.2, bars: 3, n: 'Pipelines' },
     oss: { o: 0, bars: 3, n: 'Open source' },
     kim: { o: 50.4, bars: 3, n: 'Kim' }
   };
   var CUTS = {
     short: ['open', 'practice', 'ai', 'orch', 'ww', 'mds', 'pipe', 'kim'],
-    full: ['open', 'practice', 'ai', 'orch', 'ww', 'avatars', 'mds', 'recode', 'pipe', 'oss', 'kim']
+    full: ['open', 'practice', 'ai', 'orch', 'ww', 'avatars', 'mds', 'pipe', 'oss', 'kim']
   };
   function origScene(t) {
     var s = 'open';
@@ -234,7 +233,7 @@
   /* ----------------------------------------------------------- the layout */
 
   var W = 0, H = 0, dpr = 1, wide = true;
-  var st = {}, cal = {}, board = {}, pr = {}, rc = {}, av = {}, oc = {}, open = { cx: 0, cy: 0 };
+  var st = {}, cal = {}, board = {}, pr = {}, av = {}, oc = {}, open = { cx: 0, cy: 0 };
   var OPEN_TEXT = 'hello, world';
   var fontMono = "'JetBrains Mono', monospace", fontSans = "'DM Sans', sans-serif";
 
@@ -294,11 +293,6 @@
     oc.w = st.w * 0.43; oc.h = Math.min(st.h * (wide ? 0.37 : 0.42), oc.w * (wide ? 0.82 : 1.15));
     oc.gx = st.w * 0.14; oc.gy = Math.min(st.h * 0.12, 48);
     oc.x0 = st.cx - oc.w - oc.gx / 2; oc.y0 = st.cy - oc.h - oc.gy / 2;
-
-    /* RecodeAI's page, raised a little to leave room for what the crawl
-       extracts and the deploy line underneath it */
-    rc.w = Math.min(st.w * 0.82, st.h * 1.2); rc.h = rc.w * 0.6;
-    rc.x = st.cx - rc.w / 2; rc.y = st.cy - rc.h / 2 - st.h * 0.07;
 
     av.t = Math.min(st.w / 11.9, st.h / 6.9);
     av.g = av.t * 0.1;
@@ -483,41 +477,6 @@
 
   function fDustDim(i, t, o) { fDust(i, t, o); o.a *= 0.55; }
 
-  /* the page RecodeAI takes apart, and the one it builds: rects in page units,
-     [x, y, w, h], a zero height being a line of text */
-  var WIRE_OLD = [[0, 0, 1, 1], [0, 0, 1, 0.15], [0, 0.15, 0.2, 0.85], [0.25, 0.2, 0.7, 0.1], [0.25, 0.34, 0.7, 0.1],
-    [0.25, 0.48, 0.7, 0.1], [0.25, 0.63, 0.33, 0.27], [0.62, 0.63, 0.33, 0.27], [0.04, 0.25, 0.12, 0], [0.04, 0.33, 0.12, 0], [0.04, 0.41, 0.12, 0]];
-  var WIRE_NEW = [[0, 0, 1, 1], [0.05, 0.09, 0.9, 0], [0.05, 0.19, 0.5, 0.07], [0.05, 0.28, 0.38, 0.07], [0.05, 0.41, 0.15, 0.06],
-    [0.62, 0.17, 0.33, 0.33], [0.05, 0.6, 0.27, 0.32], [0.365, 0.6, 0.27, 0.32], [0.68, 0.6, 0.27, 0.32]];
-  function wirePoints(R) {
-    var X = new Float32Array(N), Y = new Float32Array(N), F = new Uint8Array(N), per = [], tot = 0, k;
-    for (k = 0; k < R.length; k++) { per.push(2 * (R[k][2] + R[k][3])); tot += per[k]; }
-    for (var i = 0; i < N; i++) {
-      var u = H1[i] * tot;
-      for (k = 0; k < R.length - 1 && u > per[k]; k++) u -= per[k];
-      var r = R[k];
-      if (r[3] > 0 && H3[i] < 0.2) { X[i] = r[0] + H2[i] * r[2]; Y[i] = r[1] + H4[i] * r[3]; F[i] = 1; continue; }
-      var q = H2[i] * per[k];
-      if (q < r[2]) { X[i] = r[0] + q; Y[i] = r[1]; }
-      else if ((q -= r[2]) < r[3]) { X[i] = r[0] + r[2]; Y[i] = r[1] + q; }
-      else if ((q -= r[3]) < r[2]) { X[i] = r[0] + r[2] - q; Y[i] = r[1] + r[3]; }
-      else { X[i] = r[0]; Y[i] = r[1] + r[3] - (q - r[2]); }
-    }
-    return { x: X, y: Y, f: F };
-  }
-  var WO = wirePoints(WIRE_OLD), WN = wirePoints(WIRE_NEW);
-  function fWireOld(i, t, o) {
-    o.x = rc.x + WO.x[i] * rc.w; o.y = rc.y + WO.y[i] * rc.h;
-    o.s = WO.f[i] ? 1.1 : 1.5; o.a = WO.f[i] ? 0.16 : 0.5; o.c = -2;
-    /* the crawler's scan lights what it passes */
-    var d = Math.abs(WO.y[i] - (t - 1.4) / 2.0);
-    if (t > 1.4 && t < 3.5 && d < 0.05) { o.a += (1 - d / 0.05) * 0.6; o.c = 0; }
-  }
-  function fWireNew(i, t, o) {
-    o.x = rc.x + WN.x[i] * rc.w; o.y = rc.y + WN.y[i] * rc.h;
-    o.s = WN.f[i] ? 1.1 : 1.8; o.a = WN.f[i] ? 0.22 : 0.85; o.c = WN.x[i] * 0.9;
-  }
-
   /* AI orchestration: one brief through four roles. The roles are the owner's
      own split (resume: ChatGPT for planning and images, Claude Code for code,
      DeepSeek for audits and reviews); the work inside the cards is illustrative. */
@@ -576,8 +535,6 @@
     { s: 'ww', at: 28.9, f: fNet, dur: 1.4, sw: 0.6, d: function (i) { return H2[i] * 0.7; } },
     { s: 'avatars', at: 0, f: fDustDim, dur: 1.2, sw: 0.5, d: function (i) { return H1[i] * 0.5; } },
     { s: 'mds', at: 33.6, f: fClusters, dur: 1.5, sw: 0.7, d: function (i) { return H3[i] * 0.8; } },
-    { s: 'recode', at: 0, f: fWireOld, dur: 1.3, sw: 0.6, d: function (i) { return H2[i] * 0.5; } },
-    { s: 'recode', at: 3.6, f: fWireNew, dur: 1.4, sw: 0.9, d: function (i) { return H3[i] * 0.6; } },
     { s: 'pipe', at: 43.2, f: fStream, dur: 1.3, sw: 0.5, d: function (i) { return H4[i] * 0.9; } },
     { s: 'oss', at: 0, f: fLanes, dur: 1.3, sw: 0.6, d: function (i) { return H4[i] * 0.6; } },
     { s: 'kim', at: 50.4, f: fPortrait, dur: 1.9, sw: 1.1, d: function (i) { return TV[i] * 0.6 + H1[i] * 0.5; } }
@@ -720,7 +677,6 @@
     { s: 'ww', a: 24, b: 30, f: drawBoard },
     { s: 'ww', a: 29.2, b: 34.2, f: drawNetwork },
     { s: 'mds', a: 33.6, b: 43.8, f: drawLedger },
-    { s: 'recode', a: 0, b: 9.8, f: drawRecode },
     { s: 'pipe', a: 43.2, b: 50.8, f: drawPipeline },
     { s: 'oss', a: 0, b: 7.5, f: drawOss },
     { s: 'kim', a: 50.4, b: 99, f: drawFinale },
@@ -1080,75 +1036,6 @@
     ctx.globalAlpha = 1;
   }
 
-  var RECODE_STEPS = [[0, 'the site you point it at'], [1.4, 'crawling · reading the brand'], [3.6, 'redesigning with Claude'], [5.8, 'deploying'], [7.0, '✓ live']];
-  function drawRecode(tl) {
-    var a = env(tl, 0.1, 9.7, 0.5, 0.5), fs = wide ? 11 : 9, k;
-    var bh = wide ? 20 : 16, by = rc.y - bh - (wide ? 10 : 8);
-    ctx.globalAlpha = a; ctx.lineWidth = 1;
-    /* the browser the page lives in, whose address bar narrates the run */
-    rr(rc.x, by, rc.w, bh, bh / 2);
-    ctx.fillStyle = css(col.card, 0.9); ctx.fill(); ctx.strokeStyle = css(col.border); ctx.stroke();
-    ctx.fillStyle = css(col.dim);
-    for (k = 0; k < 3; k++) { ctx.beginPath(); ctx.arc(rc.x + 12 + k * 9, by + bh / 2, 2.3, 0, 6.2832); ctx.fill(); }
-    var step = RECODE_STEPS[0][1];
-    for (k = 0; k < RECODE_STEPS.length; k++) if (tl >= RECODE_STEPS[k][0]) step = RECODE_STEPS[k][1];
-    if (tl > 3.6 && tl < 5.8) step += ' ' + new Array(1 + Math.floor((tl - 3.6) / 0.15) % 4).join('·');
-    ctx.font = '400 ' + fs + 'px ' + fontMono; ctx.textBaseline = 'middle';
-    ctx.fillStyle = css(tl >= 7 ? col.accent : col.muted);
-    ctx.fillText(step, rc.x + 46, by + bh / 2);
-    if (tl > 7 && tl < 8.2) {
-      var q = (tl - 7) / 1.2;
-      ctx.globalAlpha = a * (1 - q); ctx.strokeStyle = css(col.accent); ctx.lineWidth = 1.5;
-      rr(rc.x - q * 10, by - q * 10, rc.w + q * 20, bh + q * 20, bh / 2 + q * 10); ctx.stroke(); ctx.lineWidth = 1;
-    }
-    /* the crawl */
-    if (tl > 1.4 && tl < 3.5) {
-      var sy = rc.y + clamp((tl - 1.4) / 2.0, 0, 1) * rc.h;
-      var gr = ctx.createLinearGradient(0, sy - 44, 0, sy);
-      gr.addColorStop(0, css(col.accent, 0)); gr.addColorStop(1, css(col.accent, 0.14));
-      ctx.globalAlpha = a; ctx.fillStyle = gr; ctx.fillRect(rc.x, sy - 44, rc.w, 44);
-      ctx.fillStyle = css(col.accent); ctx.fillRect(rc.x - 6, sy, rc.w + 12, 1.5);
-    }
-    /* what it extracts: the swatches are the page's own tokens, standing for
-       whatever palette the real run would have read */
-    var ss = wide ? 18 : 14, ry = rc.y + rc.h + (wide ? 16 : 12), out = 1 - smooth((tl - 5.5) / 0.4);
-    var sw = [col.accent, col.g2, col.text, col.muted];
-    for (k = 0; k < 4; k++) {
-      var ap = smooth((tl - 2.0 - k * 0.4) / 0.3) * out;
-      if (ap <= 0) continue;
-      ctx.globalAlpha = a * ap;
-      rr(rc.x + k * (ss + 8), ry, ss, ss, 4); ctx.fillStyle = css(sw[k]); ctx.fill(); ctx.strokeStyle = css(col.border); ctx.stroke();
-    }
-    var tp = smooth((tl - 3.3) / 0.3) * out;
-    if (tp > 0) {
-      ctx.globalAlpha = a * tp;
-      ctx.font = 'italic 400 ' + Math.round(ss * 1.3) + "px 'Instrument Serif', serif"; ctx.fillStyle = css(col.text);
-      ctx.fillText('Aa', rc.x + 4 * (ss + 8) + 2, ry + ss / 2);
-      ctx.font = '400 ' + fs + 'px ' + fontMono; ctx.fillStyle = css(col.muted);
-      ctx.fillText('palette · type · tone', rc.x + 4 * (ss + 8) + ss * 1.7 + 8, ry + ss / 2);
-    }
-    /* the new page takes colour once it has a shape */
-    var np = smooth((tl - 5.0) / 0.8);
-    if (np > 0) {
-      ctx.globalAlpha = a * np;
-      var bt = WIRE_NEW[4], im = WIRE_NEW[5];
-      rr(rc.x + bt[0] * rc.w, rc.y + bt[1] * rc.h, bt[2] * rc.w, bt[3] * rc.h, bt[3] * rc.h / 2);
-      ctx.fillStyle = css(col.accent); ctx.fill();
-      ctx.fillStyle = css(col.g2, 0.12); ctx.fillRect(rc.x + im[0] * rc.w, rc.y + im[1] * rc.h, im[2] * rc.w, im[3] * rc.h);
-      ctx.fillStyle = css(col.text, 0.5);
-      [WIRE_NEW[2], WIRE_NEW[3]].forEach(function (h) { ctx.fillRect(rc.x + h[0] * rc.w, rc.y + (h[1] + h[3] * 0.3) * rc.h, h[2] * rc.w, h[3] * rc.h * 0.4); });
-    }
-    var dp = tl - 5.8;
-    if (dp > 0) {
-      ctx.globalAlpha = a * smooth(dp / 0.3);
-      ctx.font = '400 ' + fs + 'px ' + fontMono; ctx.fillStyle = css(col.text);
-      var cmd = '▸ deploy';
-      ctx.fillText(cmd.slice(0, Math.floor(dp / 0.075)), rc.x, ry + ss / 2);
-      if (tl > 7) { ctx.fillStyle = css(col.accent); ctx.fillText('✓ live', rc.x + ctx.measureText(cmd + '   ').width, ry + ss / 2); }
-    }
-    ctx.globalAlpha = 1;
-  }
-
   var PLAN = ['brief & scope', 'art direction', 'build tasks', 'review pass'];
   var PLAN_DONE = [2.4, 4.7, 6.8, 8.5];
   var CODE = ['export async function match(job) {', '  const fit = await score(job)', '  if (fit < FLOOR) return skip(job)', '  return notify(job, fit)', '}'];
@@ -1381,7 +1268,7 @@
   }
 
   /* Captions. The first seven scenes' cues carry times on the old absolute
-     clock and find their scene from it; the four new ones name theirs (sc) and
+     clock and find their scene from it; the ones added since name theirs (sc) and
      count from its zero. Kickers are numbered by position in whichever cut is
      playing, so the full cut's chapters renumber themselves. */
   var CUES = [
@@ -1418,13 +1305,6 @@
     { s: 'sub', t0: 34.6, t1: 38.5, h: 'Sole developer. In production, used every workday.' },
     { s: 'big', t0: 38.7, t1: 43.0, h: 'The server sets the time. *No row is edited in place.*' },
     { s: 'stat', t0: 39.2, t1: 43.0, f: mdsStat },
-
-    { sc: 'recode', s: 'kick', t0: 0.2, t1: 9.4, kick: 'RecodeAI' },
-    { sc: 'recode', s: 'big', t0: 0.3, t1: 4.9, h: 'Point it at *any website*.' },
-    { sc: 'recode', s: 'sub', t0: 0.9, t1: 4.9, h: 'RecodeAI crawls it and reads the brand with Claude.' },
-    { sc: 'recode', s: 'big', t0: 5.1, t1: 9.4, h: 'It redesigns it — and *ships it live*.' },
-    { sc: 'recode', s: 'sub', t0: 5.7, t1: 9.4, h: 'Streamed step by step over Server-Sent Events.' },
-
 
     { s: 'kick', t0: 43.4, t1: 50.2, kick: 'Pipelines' },
     { s: 'big', t0: 43.6, t1: 47.1, h: 'Software that does the *reading* for me.' },
@@ -1716,10 +1596,7 @@
         tt2 = t0 + x * 0.15;
         if (o.end && tt2 >= o.end) break;
         var nt = chd[PAT[x % 8] % chd.length] + 12;
-        if (o.glitch && hash(t0 * 13 + x) < 0.2) nt += 12;
         ev(tt2, 'pluck', [nt, 0.045 * (x % 4 === 0 ? 1.3 : 1), br * 2.2], 0, false, own);
-        /* RecodeAI's stutter: a 32nd-note echo here and there */
-        if (o.glitch && hash(t0 * 7 + x) < 0.14) ev(tt2 + 0.075, 'pluck', [nt, 0.027, 6000], 0, false, own);
       }
       for (x = 0; x < 4; x++) {
         tt2 = t0 + x * BEAT;
@@ -1737,16 +1614,6 @@
     for (j = 0; j < AV_COUNT; j += 2) ev(0.35 + j * 0.075, 'pluck', [PENT[j % 9] + 24, 0.016, 8000], 0, false, 'avatars');
     ev(4.95, 'bell', [86, 0.05, 2.5], 0, false, 'avatars');
     ev(6.7, 'whoosh', [0.5, 0.05, 1], 0, false, 'avatars');
-    /* RecodeAI: the progression with a glitching arp; the scan, the four
-       swatches, the deploy keystrokes and the moment it goes live */
-    for (b = 0; b < 4; b++) groove('recode', b * BAR, b, { glitch: true, snare: true, bright: 2200 + b * 200 });
-    ev(1.4, 'whoosh', [2.0, 0.05, 1], 0, false, 'recode');
-    [74, 77, 81, 84].forEach(function (m, k) { ev(2.0 + k * 0.4, 'bell', [m, 0.045, 1.4], 0, false, 'recode'); });
-    ev(3.6, 'whoosh', [0.8, 0.04, -1], 0, false, 'recode');
-    for (j = 0; j < 8; j++) ev(5.8 + j * 0.075, 'tick', [0.035], 0, false, 'recode');
-    ev(7.0, 'bell', [81, 0.06, 2.5], 0, false, 'recode'); ev(7.0, 'bell', [86, 0.045, 2.5], 0, false, 'recode');
-    ev(7.0, 'crash', [0.04, 1.6], 0, false, 'recode');
-    ev(9.2, 'whoosh', [0.5, 0.05, 1], 0, false, 'recode');
     /* orchestration: a bar per role, Dm, Bb, F/C, C between the globe's C
        and WordWarz's Dm; a bell as each model takes the work */
     for (b = 0; b < 4; b++) groove('orch', b * BAR, b, { bright: 2000 + b * 250, snare: b >= 2 });
