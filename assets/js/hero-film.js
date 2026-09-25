@@ -1638,9 +1638,11 @@
     CUTS[name].forEach(function (id) { m[id] = t - SC[id].o; t += SC[id].bars * BAR; });
     return m;
   }
+  /* An event at or past its scene's last bar is dropped, so a scene can be
+     cut shorter without its tail sounding over the next one. */
   function scoreFor(name) {
     var m = shiftsFor(name);
-    return SCORE_DEFS.filter(function (e) { return e.o in m; })
+    return SCORE_DEFS.filter(function (e) { return e.o in m && e.t < SC[e.o].o + SC[e.o].bars * BAR; })
       .map(function (e) { return { t: e.t + m[e.o], k: e.k, a: e.a, d: e.d, h: e.h }; })
       .sort(function (x, y) { return x.t - y.t; });
   }
