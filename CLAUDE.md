@@ -22,9 +22,9 @@ page renders as unstyled links rather than throwing anything.
 ## The hero film
 
 `hero-film.js` tells a story over the hero, then hands the page to it. It has
-**two cuts**. The 67.2-second one autoplays: hello world → contribution
+**two cuts**. The 64.8-second one autoplays: hello world → contribution
 calendar → AI → AI orchestration → WordWarz → MDS Pro → pipelines → portrait.
-The 81.6-second full cut adds Avatars and Open source, and plays from
+The 79.2-second full cut adds Avatars and Open source, and plays from
 the chip under the CTAs or with `?film=full`. Everything is cut to a 100 BPM bar grid (a
 bar is 2.4s). One set of 2,191 particles, one per calendar day 2021–2026,
 reshapes itself through every chapter and ends as a halftone of `profile.webp`

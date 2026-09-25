@@ -1,8 +1,8 @@
 /* Hero film — a 57.6-second story told before the hero, then handed to it.
  *
  * One particle system, one clock, one score. Every particle is a day of the
- * contribution calendar first, and the same 2,191 particles become a sphere, a
- * player network, fifteen people clocking in, a job pipeline and finally the
+ * contribution calendar first, and the same 2,191 particles become a sphere,
+ * fifteen people clocking in, a job pipeline and finally the
  * portrait, which dissolves into the real one as the hero arrives underneath.
  *
  * RENDER IS A PURE FUNCTION OF TIME. No particle carries velocity from one frame
@@ -27,9 +27,9 @@
  * picture rather than the other way round — audio cannot be nudged without a
  * click, pictures can.
  *
- * TWO CUTS. The 67-second one autoplays, once per visitor per fortnight (the
+ * TWO CUTS. The 64.8-second one autoplays, once per visitor per fortnight (the
  * head script decides, so the hero never flashes before the film covers it).
- * The 81.6-second one adds Avatars and Open source, and plays from the
+ * The 79.2-second one adds Avatars and Open source, and plays from the
  * chip under the CTAs, or with ?film=full. Reduced motion and
  * returning visitors get the hero as it always was, plus that chip.
  */
@@ -61,7 +61,7 @@
     practice: { o: 4.8, bars: 4, n: 'Practice' },
     ai: { o: 14.4, bars: 4, n: 'AI' },
     orch: { o: 0, bars: 4, n: 'AI orchestration' },
-    ww: { o: 24, bars: 4, n: 'WordWarz.io' },
+    ww: { o: 24, bars: 3, n: 'WordWarz.io' },
     avatars: { o: 0, bars: 3, n: 'Avatars' },
     mds: { o: 33.6, bars: 4, n: 'MDS Pro' },
     pipe: { o: 43.2, bars: 3, n: 'Pipelines' },
@@ -414,13 +414,6 @@
     o.s = 1 + H3[i] * 1.3; o.a = 0.08 + 0.14 * H3[i]; o.c = H4[i];
   }
 
-  function fNet(i, t, o) {
-    if (i >= fr.players) { fDust(i, t, o); o.a *= 0.45; return; }
-    var rr = 0.26 + 0.74 * Math.sqrt(H1[i]), ang = i * 2.399963 + t * 0.07 * (1.2 - rr);
-    o.x = st.cx + Math.cos(ang) * fr.Rx * rr; o.y = st.cy + Math.sin(ang) * fr.Ry * rr;
-    o.s = 1.8 + H2[i] * 1.4; o.a = (0.5 + 0.45 * H3[i]) * (0.78 + 0.22 * Math.sin(t * 3 + i)); o.c = H4[i] * 0.9;
-  }
-
   function nodePos(k, out) {
     var a = -Math.PI / 2 + k * 2 * Math.PI / fr.K;
     out.x = st.cx + Math.cos(a) * st.w * (wide ? 0.42 : 0.43);
@@ -532,7 +525,6 @@
     { s: 'ai', at: 17.0, f: fSphere, dur: 1.7, sw: 0.9, d: function (i) { return (i / N) * 1.5; } },
     { s: 'orch', at: 0, f: fOrch, dur: 1.4, sw: 0.7, d: function (i) { return H2[i] * 0.6; } },
     { s: 'ww', at: 24.0, f: fDust, dur: 1.3, sw: 0.4, d: function (i) { return H1[i] * 0.5; } },
-    { s: 'ww', at: 28.9, f: fNet, dur: 1.4, sw: 0.6, d: function (i) { return H2[i] * 0.7; } },
     { s: 'avatars', at: 0, f: fDustDim, dur: 1.2, sw: 0.5, d: function (i) { return H1[i] * 0.5; } },
     { s: 'mds', at: 33.6, f: fClusters, dur: 1.5, sw: 0.7, d: function (i) { return H3[i] * 0.8; } },
     { s: 'pipe', at: 43.2, f: fStream, dur: 1.3, sw: 0.5, d: function (i) { return H4[i] * 0.9; } },
@@ -596,7 +588,6 @@
     var ang = t * 0.42, tl = 0.38 + 0.08 * Math.sin(t * 0.5);
     fr.ca = Math.cos(ang); fr.sa = Math.sin(ang); fr.ct = Math.cos(tl); fr.stl = Math.sin(tl);
     fr.R = st.m * 0.4 * (1 + 0.035 * Math.exp(-((t % BEAT) / BEAT) * 6));
-    fr.players = data.ww ? Math.min(data.ww.players, N) : Math.round(N * 0.26);
     var R = st.m * 0.46;
     fr.Ry = R; fr.Rx = Math.min(st.w * 0.47, R * (st.w > st.h ? 1.3 : 1));
     fr.K = data.mds && data.mds.users > 1 ? Math.min(data.mds.users, 24) : 15;
@@ -674,8 +665,7 @@
   var OVERLAYS = [
     { s: 'open', a: -1, b: 5.4, f: drawOpen },
     { s: 'practice', a: 4.6, b: 17.8, f: drawCalLabels },
-    { s: 'ww', a: 24, b: 30, f: drawBoard },
-    { s: 'ww', a: 29.2, b: 34.2, f: drawNetwork },
+    { s: 'ww', a: 24, b: 31.2, f: drawBoard },
     { s: 'mds', a: 33.6, b: 43.8, f: drawLedger },
     { s: 'pipe', a: 43.2, b: 50.8, f: drawPipeline },
     { s: 'oss', a: 0, b: 7.5, f: drawOss },
@@ -791,7 +781,7 @@
   }
 
   function drawBoard(t) {
-    var T = board.t, g = board.g, a = 1 - smooth((t - 29.2) / 0.6), fs = Math.round(T * 0.5);
+    var T = board.t, g = board.g, a = 1 - smooth((t - 30.5) / 0.6), fs = Math.round(T * 0.5);
     var lf = Math.max(9, Math.round(T * 0.3));
     /* the match header: this is live play, and it is a stand-in match */
     var hy = board.y0 - lf * 1.6, gw = 2 * board.bw + board.G;
@@ -828,7 +818,7 @@
         if (pop <= 0) continue;
         var x = bx + j * (T + g), y = by + r * (T + g), hop = 0;
         if (r === B.words.length - 1 && t > B.solved) hop = Math.max(0, Math.sin(clamp((t - B.solved - j * 0.06) / 0.3, 0, 1) * Math.PI)) * T * 0.14;
-        var sc = pop * (1 - smooth((t - 29.2) / 0.6) * 0.3), sy = 1, mark = -1, letter = '';
+        var sc = pop * (1 - smooth((t - 30.5) / 0.6) * 0.3), sy = 1, mark = -1, letter = '';
         if (r < B.words.length) {
           if (t >= typeT(b, r, j)) letter = B.words[r][j];
           var ft = (t - flipT(b, r, j)) / 0.25;
@@ -855,36 +845,6 @@
       ctx.textAlign = 'left';
     }
     ctx.globalAlpha = 1;
-  }
-
-  function drawNetwork(t) {
-    var a = env(t, 29.3, 34.1, 0.6, 0.6);
-    var np = fr.players;
-    ctx.lineWidth = 1;
-    for (var s = 0; s < 44; s++) {
-      var cyc = t * 1.7 + s * 0.137, ep = Math.floor(cyc), ph = cyc - ep;
-      var i = Math.floor(hash(s * 97 + ep * 13) * np);
-      var la = a * Math.sin(Math.PI * ph);
-      ctx.globalAlpha = la * 0.3;
-      ctx.strokeStyle = css(col.accent);
-      ctx.beginPath(); ctx.moveTo(PX[i], PY[i]); ctx.lineTo(st.cx, st.cy); ctx.stroke();
-      var dir = s % 2 ? ph : 1 - ph;
-      ctx.globalAlpha = la;
-      ctx.fillStyle = css(col.g2);
-      ctx.fillRect(PX[i] + (st.cx - PX[i]) * dir - 1.5, PY[i] + (st.cy - PY[i]) * dir - 1.5, 3, 3);
-    }
-    var pulse = Math.exp(-((t % BEAT) / BEAT) * 5);
-    ctx.globalAlpha = a;
-    ctx.fillStyle = css(col.accent);
-    ctx.beginPath(); ctx.arc(st.cx, st.cy, 6 + pulse * 2, 0, 6.2832); ctx.fill();
-    ctx.globalAlpha = a * pulse * 0.6;
-    ctx.strokeStyle = css(col.accent);
-    ctx.beginPath(); ctx.arc(st.cx, st.cy, 10 + (1 - pulse) * 26, 0, 6.2832); ctx.stroke();
-    ctx.globalAlpha = a * 0.8;
-    ctx.font = '400 10px ' + fontMono; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    ctx.fillStyle = css(col.muted);
-    ctx.fillText('websocket', st.cx, st.cy + 16);
-    ctx.textAlign = 'left'; ctx.globalAlpha = 1;
   }
 
   var KINDS = ['clock_in', 'clock_in', 'break_start', 'clock_out', 'break_end', 'clock_in'];
@@ -1288,12 +1248,10 @@
     { sc: 'orch', s: 'big', t0: 4.9, t1: 9.4, h: 'Reviewed by a *different model* than the one that wrote it.' },
     { sc: 'orch', s: 'sub', t0: 5.4, t1: 9.4, h: 'Driven by 20+ Claude Code skills and 5 subagents I wrote.' },
 
-    { s: 'kick', t0: 24.2, t1: 33.4, kick: 'WordWarz.io' },
-    { s: 'big', t0: 24.4, t1: 28.9, h: 'A real-time multiplayer *word game*.' },
-    { s: 'sub', t0: 25.0, t1: 28.9, h: 'Its bot guesses by Shannon entropy — maximum information per guess.' },
-    { s: 'big', t0: 29.2, t1: 33.4, h: 'Grown by *word of mouth*.' },
-    { s: 'sub', t0: 29.7, t1: 33.4, h: 'Live on the App Store. No ads, no marketing spend.' },
-    { s: 'stat', t0: 30.0, t1: 33.4, f: wwStat },
+    { s: 'kick', t0: 24.2, t1: 30.9, kick: 'WordWarz.io' },
+    { s: 'big', t0: 24.4, t1: 30.9, h: 'A real-time multiplayer *word game*.' },
+    { s: 'sub', t0: 25.0, t1: 30.9, h: 'Its bot guesses by Shannon entropy — maximum information per guess.' },
+    { s: 'stat', t0: 25.6, t1: 30.9, f: wwStat },
 
     { sc: 'avatars', s: 'kick', t0: 0.2, t1: 7.0, kick: 'Avatars' },
     { sc: 'avatars', s: 'big', t0: 0.4, t1: 7.0, h: AV_COUNT + ' faces, *one pipeline*.' },
@@ -1555,7 +1513,7 @@
       if (hash(j + 400) < 0.12 + (j / 44) * 0.5) ev(ts, 'pluck', [PENT[Math.floor(hash(j + 900) * PENT.length)] + 12, 0.025, 6000]);
     }
     ev(14.5, 'bell', [86, 0.08, 3]); ev(14.8, 'bell', [93, 0.045, 3]);
-    [16.6, 23.6, 28.7, 33.2, 42.8].forEach(function (t) { ev(t, 'whoosh', [0.5, 0.05, 1]); });
+    [16.6, 23.6, 30.8, 42.8].forEach(function (t) { ev(t, 'whoosh', [0.5, 0.05, 1]); });
     /* the race: the bot's board carries the melody, a key and a note per
        tile; the other three are quiet keystrokes under it; a bell per finish */
     var WIN = [74, 77, 79, 81, 86];
@@ -1573,7 +1531,7 @@
       if (B.place >= 0) ev(B.solved, 'bell', [[86, 81, 77][B.place], 0.06, 2]);
     });
     [74, 77, 81, 86, 89].forEach(function (m, k) { ev(28.6 + k * 0.075, 'bell', [m, 0.05, 2]); });
-    for (j = 0; j < 27; j++) if (hash(j + 1300) < 0.35) ev(29.4 + j * 0.15, 'pluck', [PENT[Math.floor(hash(j + 1700) * 9)] + 24, 0.02, 7000]);
+    for (j = 0; j < 10; j++) if (hash(j + 1300) < 0.35) ev(29.4 + j * 0.15, 'pluck', [PENT[Math.floor(hash(j + 1700) * 9)] + 24, 0.02, 7000]);
     LEDGER.forEach(function (L, e) { ev(L.t, 'bell', [[74, 77, 79, 81, 84][e % 5], 0.03, 0.8]); });
     ALERTS.forEach(function (t) { ev(t, 'bell', [86, 0.055, 1.6]); });
     /* owned by the finale, so it always rises into the impact, whatever
