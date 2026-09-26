@@ -44,3 +44,4 @@ letter points at.
 | 2026-09-23 | Technology and Automation Specialist, employer 829602 (onlinejobs.ph #479) | `/r/techautomationspecialist-23ff3d59.pdf` | `Kim_Julongbayan_Resume_TechAutomationSpecialist.pdf` |
 | 2026-09-24 | AI Automation and Operations Developer, Australian hard-surface repair company (onlinejobs) | `/r/footpath-dec4047b.pdf` | `Kim_Julongbayan_Resume_Footpath.pdf` |
 | 2026-09-25 | Full Stack Software Developer, R-H Platform (onlinejobs) | `/r/rhplatform-7c55b24d.pdf` | `Kim_Julongbayan_Resume_RHPlatform.pdf` |
+| 2026-09-26 | Local AI technical operator, part time, 20 h/week, employer hidden (onlinejobs.ph) | `/r/localaioperator-cec5eb18.pdf` | `Kim_Julongbayan_Resume_LocalAIOperator.pdf` |
