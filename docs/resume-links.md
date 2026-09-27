@@ -46,3 +46,4 @@ letter points at.
 | 2026-09-25 | Full Stack Software Developer, R-H Platform (onlinejobs) | `/r/rhplatform-7c55b24d.pdf` | `Kim_Julongbayan_Resume_RHPlatform.pdf` |
 | 2026-09-26 | Local AI technical operator, part time, 20 h/week, employer hidden (onlinejobs.ph) | `/r/localaioperator-cec5eb18.pdf` | `Kim_Julongbayan_Resume_LocalAIOperator.pdf` |
 | 2026-09-27 | AI Integration & Automation Manager, $12.14/h, employer hidden (onlinejobs.ph job 997) | `/r/aiintegrationmanager-8e9ff9e9.pdf` | `Kim_Julongbayan_Resume_AIIntegrationManager.pdf` |
+| 2026-09-27 | Web Designer (AI-Assisted), Northern Built Systems, $870/mo (onlinejobs.ph job 993) | `/r/northernbuilt-f9e3271b.pdf` | `Kim_Julongbayan_Resume_NorthernBuilt.pdf` |
