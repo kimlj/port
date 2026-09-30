@@ -54,3 +54,4 @@ letter points at.
 | 2026-09-30 | Founder's Associate, AI, Automation & Executive Support, Profit Launch, onlinejobs job 1739761 (onlinejobs) | `/r/profitlaunch-85cc14b7.pdf` | `Kim_Julongbayan_Resume_ProfitLaunch.pdf` |
 | 2026-09-30 | Full Stack Developer, Humera (bot detection), onlinejobs job 1544864 (onlinejobs) | `/r/humera-e561f6ca.pdf` | `Kim_Julongbayan_Resume_Humera.pdf` |
 | 2026-09-30 | QA Engineer (web and mobile, manual testing, Katalon automation bonus), onlinejobs job 1740521, employer hidden (onlinejobs) | `/r/qaengineer1740521-905e2936.pdf` | `Kim_Julongbayan_Resume_QAEngineer1740521.pdf` |
+| 2026-09-30 | Founding Product Engineer (Bubble.io), Scale Smart (onlinejobs.ph) | `/r/scalesmart-8cede407.pdf` | `Kim_Julongbayan_Resume_ScaleSmart.pdf` |
