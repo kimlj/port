@@ -52,3 +52,4 @@ letter points at.
 | 2026-09-30 | Software Engineer (Full-Stack, AI & Integrations), onlinejobs job 1739442, employer hidden (onlinejobs) | `/r/aiintegrations-cf06d2fb.pdf` | `Kim_Julongbayan_Resume_AIIntegrations.pdf` |
 | 2026-09-30 | Software Engineer (Full-Stack, AI & Integrations), onlinejobs job 1739442, employer hidden (onlinejobs) | `/r/aiintegrations-3937be72.pdf` | `Kim_Julongbayan_Resume_AIIntegrations.pdf` |
 | 2026-09-30 | Founder's Associate, AI, Automation & Executive Support, Profit Launch, onlinejobs job 1739761 (onlinejobs) | `/r/profitlaunch-85cc14b7.pdf` | `Kim_Julongbayan_Resume_ProfitLaunch.pdf` |
+| 2026-09-30 | Full Stack Developer, Humera (bot detection), onlinejobs job 1544864 (onlinejobs) | `/r/humera-e561f6ca.pdf` | `Kim_Julongbayan_Resume_Humera.pdf` |
