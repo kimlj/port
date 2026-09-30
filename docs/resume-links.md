@@ -50,3 +50,4 @@ letter points at.
 | 2026-09-27 | Full Stack Developer with AI (Atlas, healthcare AI agents), $800-1000/mo, employer hidden (onlinejobs.ph job 1000) | `/r/atlas-ec11fda2.pdf` | `Kim_Julongbayan_Resume_Atlas.pdf` |
 | 2026-09-30 | Operations & Automation Manager, Amazon advertising agency, ClickUp + automations (onlinejobs) | `/r/amazonagencyops-d24343b6.pdf` | `Kim_Julongbayan_Resume_AmazonAgencyOps.pdf` |
 | 2026-09-30 | Software Engineer (Full-Stack, AI & Integrations), onlinejobs job 1739442, employer hidden (onlinejobs) | `/r/aiintegrations-cf06d2fb.pdf` | `Kim_Julongbayan_Resume_AIIntegrations.pdf` |
+| 2026-09-30 | Software Engineer (Full-Stack, AI & Integrations), onlinejobs job 1739442, employer hidden (onlinejobs) | `/r/aiintegrations-3937be72.pdf` | `Kim_Julongbayan_Resume_AIIntegrations.pdf` |
