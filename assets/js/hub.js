@@ -117,9 +117,11 @@
 
   // ── MDS Pro: overview / live demo ─────────────────────────────────────
   //
-  // Swaps the panel body for the real dashboard in demo mode. The frame's src
-  // is only set the first time the demo is opened, so the hub does not reach
-  // the client's site on every view - and after that the frame is kept, so
+  // Swaps the panel body for the real dashboard in demo mode. The demo is the
+  // view MDS Pro opens on, because it is what a visitor came to see. The
+  // frame's src is only set once the demo is actually on screen - MDS Pro
+  // selected and the demo view showing - so a visit that lands on #shiftops
+  // does not reach the client's site. After that the frame is kept, so
   // switching back and forth mid-walkthrough does not reload the dashboard and
   // lose where the viewer was in it.
   (function demoView() {
@@ -132,6 +134,13 @@
     var frames = panel.querySelectorAll('.demo-frame iframe');
     if (!buttons.length || !frames.length) return;
 
+    function loadIfShown() {
+      if (panel.getAttribute('data-active') !== 'true' || panel.getAttribute('data-view') !== 'demo') return;
+      Array.prototype.forEach.call(frames, function (f) {
+        if (!f.getAttribute('src')) f.setAttribute('src', f.getAttribute('data-src'));
+      });
+    }
+
     function show(view) {
       Array.prototype.forEach.call(buttons, function (b) {
         b.setAttribute('aria-selected', b.getAttribute('data-view') === view ? 'true' : 'false');
@@ -140,16 +149,19 @@
         v.hidden = v.getAttribute('data-view') !== view;
       });
       panel.setAttribute('data-view', view);
-      if (view === 'demo') {
-        Array.prototype.forEach.call(frames, function (f) {
-          if (!f.getAttribute('src')) f.setAttribute('src', f.getAttribute('data-src'));
-        });
-      }
+      loadIfShown();
     }
 
     Array.prototype.forEach.call(buttons, function (b) {
       b.addEventListener('click', function () { show(b.getAttribute('data-view')); });
     });
+
+    // select() flips data-active; the frame loads the first time MDS Pro is
+    // brought up with the demo showing.
+    if (window.MutationObserver) {
+      new MutationObserver(loadIfShown).observe(panel, { attributes: true, attributeFilter: ['data-active'] });
+    }
+    show('demo');
 
     // Minimise the nurse panel, giving the dashboard the whole stage. The
     // state is written on the stage, not on the frame: the CSS animates the
