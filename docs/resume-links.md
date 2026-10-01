@@ -58,3 +58,4 @@ letter points at.
 | 2026-09-30 | Revenue Operations & AI Automation Coordinator, Met Company (onlinejobs.ph) | `/r/metcompany-6a9c3696.pdf` | `Kim_Julongbayan_Resume_MetCompany.pdf` |
 | 2026-10-01 | AI Operations Lead, ARC Group / Kipkeh / NewLLC, employer 923909 (onlinejobs.ph #1130) | `/r/newllc-0e812e32.pdf` | `Kim_Julongbayan_Resume_NewLLC.pdf` |
 | 2026-10-01 | Developer/Programmer - AI assist projects, $1400/month (onlinejobs.ph) | `/r/claudedevolj-209df39b.pdf` | `Kim_Julongbayan_Resume_ClaudeDevOLJ.pdf` |
+| 2026-10-01 | Senior Front-End Developer - React, SaaS platform, $1000/month (onlinejobs.ph) | `/r/reactsaas-1f551b29.pdf` | `Kim_Julongbayan_Resume_ReactSaaS.pdf` |
