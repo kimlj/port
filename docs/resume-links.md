@@ -56,3 +56,4 @@ letter points at.
 | 2026-09-30 | QA Engineer (web and mobile, manual testing, Katalon automation bonus), onlinejobs job 1740521, employer hidden (onlinejobs) | `/r/qaengineer1740521-905e2936.pdf` | `Kim_Julongbayan_Resume_QAEngineer1740521.pdf` |
 | 2026-09-30 | Founding Product Engineer (Bubble.io), Scale Smart (onlinejobs.ph) | `/r/scalesmart-8cede407.pdf` | `Kim_Julongbayan_Resume_ScaleSmart.pdf` |
 | 2026-09-30 | Revenue Operations & AI Automation Coordinator, Met Company (onlinejobs.ph) | `/r/metcompany-6a9c3696.pdf` | `Kim_Julongbayan_Resume_MetCompany.pdf` |
+| 2026-10-01 | AI Operations Lead, ARC Group / Kipkeh / NewLLC, employer 923909 (onlinejobs.ph #1130) | `/r/newllc-0e812e32.pdf` | `Kim_Julongbayan_Resume_NewLLC.pdf` |
