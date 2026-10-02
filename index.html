@@ -629,8 +629,8 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 .project-tag { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent); margin-bottom: 1rem; }
 /* align-self is load-bearing: .project-info is a flex column, so a bare span
    stretches to full width and the pill stops looking like a pill. */
-/* Lifts the one word in a status worth reading — "App Store" in "Live on the
-   App Store" — out of the pill's uniform dim without breaking it into two
+/* Lifts the words in a status worth reading — the store names in "Live on the
+   App Store · Google Play" — out of the pill's uniform dim without breaking it into two
    colours of chip. */
 .project-status b { color: var(--accent); font-weight: 500; }
 .project-status { align-self: flex-start; font-family: var(--mono); font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); background: var(--white-overlay); border: 1px solid var(--border); padding: 0.2rem 0.6rem; border-radius: 999px; margin-bottom: 0.9rem; }
@@ -702,6 +702,18 @@ section { padding: 6rem 5vw; position: relative; overflow: hidden; }
 /* A card whose site is down keeps the CTA's place in the layout but not its
    promise: no arrow and no accent, because both read as "this goes somewhere". */
 .project-link.is-inactive { color: var(--text-dim); font-weight: 400; }
+/* A card that goes to more than one place. An <a> cannot hold other links, so
+   such a card is a div, its links sit in a row where the single CTA was, and
+   its media is the link to the site that the whole card used to be. The store
+   links are quieter than the site's: the web is the front door. */
+.project-links { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 1rem; margin-top: 1.25rem; }
+.project-links .project-link { margin-top: 0; text-decoration: none; }
+.work-stage .project-links { margin-top: 0.8rem; }
+.project-link.is-store { color: var(--text-muted); font-weight: 400; }
+.project-link.is-store svg { width: 13px; height: 13px; stroke: currentColor; }
+.project-link.is-store:hover, .project-link.is-store:focus-visible { color: var(--accent); }
+.project-card:hover .project-link.is-store svg { transform: none; }
+a.project-visual { text-decoration: none; color: inherit; }
 
 /* -- 05 / Experience --------------------------------------------------------
    Two entries do not need a progress rail, ripple dots and a sidebar; the
@@ -1985,14 +1997,14 @@ footer .footer-accent { color: var(--accent); }
   <div class="work" id="work">
   <div class="work-index" id="workIndex"></div>
   <div class="work-stage">
-    <div class="work-item" data-name="WordWarz.io" data-class="Web &amp; Mobile" data-fig="570" data-figlabel="players" data-appstore="https://apps.apple.com/us/app/word-warz-royale/id6758613687" data-appstore-name="Word Warz: Royale">
+    <div class="work-item" data-name="WordWarz.io" data-class="Web &amp; Mobile" data-fig="570" data-figlabel="players" data-appstore="https://apps.apple.com/us/app/word-warz-royale/id6758613687" data-appstore-name="Word Warz: Royale" data-playstore="https://play.google.com/store/apps/details?id=io.wordwarz.royale">
       <div class="project-stuck">
-        <a href="https://wordwarz.io" target="_blank" class="project-card reveal spotlight-card">
+        <div class="project-card reveal spotlight-card">
           <div class="project-info">
             <span class="project-tag">Web &amp; Mobile App</span>
             <div class="project-head">
               <h3>WordWarz.io</h3>
-              <span class="project-status">Live on the <b>App Store</b> &middot; Android in review</span>
+              <span class="project-status">Live on the <b>App Store</b> &middot; <b>Google Play</b></span>
             </div>
             <p>A real-time multiplayer word game with a Shannon entropy–based AI bot engine that maximizes information gain per guess. Features a constraint-satisfaction solver for edge cases, 5-tier ELO matchmaking (600–2000) with probabilistic human imperfection modeling, adaptive difficulty scaling, and 60+ AI-generated avatars via custom ComfyUI pipelines.</p>
             <div class="project-tech"><span class="hl">React</span><span class="hl">Capacitor</span><span>Node.js</span><span class="hl">WebSocket</span><span class="hl">Shannon Entropy</span><span class="hl">AI Bot Engine</span></div>
@@ -2002,14 +2014,18 @@ footer .footer-accent { color: var(--accent); }
               <div><div class="project-metric-num">39%</div><div class="project-metric-label">Came back<br>a later day</div></div>
               <div><div class="project-metric-num">40&ndash;70</div><div class="project-metric-label">Playing<br>daily</div></div>
             </div>
-            <p class="project-metrics-note">As of Sep 2026 — shipped to the iOS App Store as Word Warz: Royale, with the Android build in review. Grown entirely by word of mouth, with no ads and no marketing spend.</p>
-            <div class="project-link">Visit Site <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+            <p class="project-metrics-note">As of Sep 2026 — shipped as Word Warz: Royale to the App Store and Google Play. Grown entirely by word of mouth, with no ads and no marketing spend.</p>
+            <div class="project-links">
+              <a class="project-link" href="https://wordwarz.io" target="_blank" rel="noopener">Visit Site <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+              <a class="project-link is-store" href="https://apps.apple.com/us/app/word-warz-royale/id6758613687" target="_blank" rel="noopener">App Store <svg viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
+              <a class="project-link is-store" href="https://play.google.com/store/apps/details?id=io.wordwarz.royale" target="_blank" rel="noopener">Google Play <svg viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
+            </div>
           </div>
-          <div class="project-visual">
+          <a class="project-visual" href="https://wordwarz.io" target="_blank" rel="noopener" tabindex="-1" aria-label="WordWarz.io">
             <div class="project-visual-bg pv-1"></div>
             <img src="assets/wordwarz-collage-2.webp" alt="WordWarz.io on iPhone — the App Store listing, a live match board, and the spectator view of all players" class="project-visual-img" loading="lazy" width="1248" height="867">
-          </div>
-        </a>
+          </a>
+        </div>
       </div>
     </div>
     <div class="work-item" data-name="MDS Pro Solutions" data-class="Healthcare SaaS" data-fig="15" data-figlabel="daily users">

@@ -952,9 +952,9 @@
   }
 
   /* The same illustrative match on each screen, a board apiece: the platforms
-     are as shipped (iOS live on the App Store, Android tested on devices; the client has a
+     are as shipped (iOS on the App Store, Android on Google Play; the client has a
      tablet layout, and the web app is the front door). */
-  var DEV_LABEL = ['iOS · App Store', 'Android', 'tablet', 'web'];
+  var DEV_LABEL = ['iOS · App Store', 'Android · Google Play', 'tablet', 'web'];
   function drawDevices(t) {
     var a = env(t, 28.9, 33.5, 0.5, 0.5), fs = wide ? 11 : 9, k, r, j;
     ctx.textBaseline = 'middle'; ctx.lineWidth = 1;
@@ -1514,7 +1514,7 @@
     { s: 'sub', t0: 25.0, t1: 28.7, h: 'Its bot guesses by Shannon entropy — maximum information per guess.' },
     { s: 'stat', t0: 25.6, t1: 33.4, f: wwStat },
     { s: 'big', t0: 29.0, t1: 33.4, h: 'One codebase, *every screen*.' },
-    { s: 'sub', t0: 29.5, t1: 33.4, h: 'iOS on the App Store, Android, tablet and the web — one React client.' },
+    { s: 'sub', t0: 29.5, t1: 33.4, h: 'The App Store, Google Play, tablet and the web — one React client.' },
 
     { sc: 'avatars', s: 'kick', t0: 0.2, t1: 7.0, kick: 'Avatars' },
     { sc: 'avatars', s: 'big', t0: 0.4, t1: 7.0, h: AV_COUNT + ' faces, *one pipeline*.' },
