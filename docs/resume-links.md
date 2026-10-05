@@ -60,3 +60,4 @@ letter points at.
 | 2026-10-01 | Developer/Programmer - AI assist projects, $1400/month (onlinejobs.ph) | `/r/claudedevolj-209df39b.pdf` | `Kim_Julongbayan_Resume_ClaudeDevOLJ.pdf` |
 | 2026-10-01 | Senior Front-End Developer - React, SaaS platform, $1000/month (onlinejobs.ph) | `/r/reactsaas-1f551b29.pdf` | `Kim_Julongbayan_Resume_ReactSaaS.pdf` |
 | 2026-10-01 | Part-Time Software Developer - Technical Collaboration, unnamed employer (onlinejobs.ph) | `/r/techcollab-697cb231.pdf` | `Kim_Julongbayan_Resume_TechCollab.pdf` |
+| 2026-10-05 | AI-Assisted Developer and QA, US technology services business, $8.50/hr full time (onlinejobs.ph) | `/r/aidevqa-22a8143b.pdf` | `Kim_Julongbayan_Resume_AIDevQA.pdf` |
