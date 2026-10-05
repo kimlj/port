@@ -62,3 +62,4 @@ letter points at.
 | 2026-10-01 | Part-Time Software Developer - Technical Collaboration, unnamed employer (onlinejobs.ph) | `/r/techcollab-697cb231.pdf` | `Kim_Julongbayan_Resume_TechCollab.pdf` |
 | 2026-10-05 | AI-Assisted Developer and QA, US technology services business, $8.50/hr full time (onlinejobs.ph) | `/r/aidevqa-22a8143b.pdf` | `Kim_Julongbayan_Resume_AIDevQA.pdf` |
 | 2026-10-05 | Wix Developer + Automation Specialist, fitness and lifestyle coach (onlinejobs.ph) | `/r/fitnesswix-84601476.pdf` | `Kim_Julongbayan_Resume_FitnessWix.pdf` |
+| 2026-10-05 | AI-Assisted Developer and QA, US technology services business, $8.50/hr full time (onlinejobs.ph) | `/r/aidevqa-a6074737.pdf` | `Kim_Julongbayan_Resume_AIDevQA.pdf` |
