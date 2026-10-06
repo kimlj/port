@@ -69,3 +69,4 @@ letter points at.
 | 2026-10-06 | AI Product Builder, UI/UX and Claude Code, unnamed employer 169728, $5/hr full time (onlinejobs.ph) | `/r/aiproductbuilder-554076f1.pdf` | `Kim_Julongbayan_Resume_AIProductBuilder.pdf` |
 | 2026-10-06 | AI Product Builder, UI/UX and Claude Code, unnamed employer 169728, $5/hr full time (onlinejobs.ph) | `/r/aiproductbuilder-3e2ce255.pdf` | `Kim_Julongbayan_Resume_AIProductBuilder.pdf` |
 | 2026-10-06 | Automation Specialist, employer name not given (onlinejobs.ph, updated Oct 5 2026) | `/r/automationspecialist-249feae7.pdf` | `Kim_Julongbayan_Resume_AutomationSpecialist.pdf` |
+| 2026-10-06 | Automation Specialist, employer name not given (onlinejobs.ph, updated Oct 5 2026) | `/r/automationspecialist-a17e64e9.pdf` | `Kim_Julongbayan_Resume_AutomationSpecialist.pdf` |
