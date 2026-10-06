@@ -65,3 +65,4 @@ letter points at.
 | 2026-10-05 | AI-Assisted Developer and QA, US technology services business, $8.50/hr full time (onlinejobs.ph) | `/r/aidevqa-a6074737.pdf` | `Kim_Julongbayan_Resume_AIDevQA.pdf` |
 | 2026-10-05 | AI Ecommerce Generalist, Jan and Tashy, Davao (onlinejobs.ph) | `/r/janecom-c9fe83f1.pdf` | `Kim_Julongbayan_Resume_JanEcom.pdf` |
 | 2026-10-06 | Automation Specialist, employer name not given (onlinejobs.ph, updated Oct 5 2026) | `/r/automationspecialist-2a9efba7.pdf` | `Kim_Julongbayan_Resume_AutomationSpecialist.pdf` |
+| 2026-10-06 | Business Automation Analyst, US-based MSP, name not given (onlinejobs.ph, apply form u247.us/bepartofourteam) | `/r/u247-9dc8e735.pdf` | `Kim_Julongbayan_Resume_U247.pdf` |
