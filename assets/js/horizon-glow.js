@@ -1,4 +1,4 @@
-/* Horizon Glow — animated horizon light behind the contact section.
+/*! Horizon Glow — animated horizon light behind the contact section.
  * Ported from ThreeUI Community "emerald-horizon"
  * (https://github.com/MengTo/threeui), MIT License © 2026 Meng To.
  * Reworked: three.js replaced with a raw WebGL fullscreen triangle (one quad
@@ -7,11 +7,21 @@
  * than an opaque background so it can layer over the page. Pauses offscreen,
  * on hidden tabs, and under prefers-reduced-motion (single settled frame).
  */
-(function () {
+(function initializeHorizon() {
   'use strict';
 
   var canvas = document.getElementById('horizonCanvas');
   if (!canvas) return;
+  if (!initializeHorizon.observed && 'IntersectionObserver' in window) {
+    initializeHorizon.observed = true;
+    var observer = new IntersectionObserver(function (entries) {
+      if (!entries[0].isIntersecting) return;
+      observer.disconnect();
+      setTimeout(initializeHorizon, 0);
+    }, { rootMargin: '300px' });
+    observer.observe(canvas.closest('section') || canvas);
+    return;
+  }
   var gl = canvas.getContext('webgl', { alpha: true, antialias: false }) ||
            canvas.getContext('experimental-webgl');
   if (!gl) { canvas.style.display = 'none'; return; }

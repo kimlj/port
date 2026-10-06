@@ -22,13 +22,24 @@
  * what a canvas can allocate, and drawing only what is on screen makes the cost
  * independent of how long the page gets.
  */
-(function () {
+(function initializeOrnaments() {
   'use strict';
 
   var start = document.getElementById('projects');
   var foot = document.querySelector('footer');
   if (!start || !foot || !window.matchMedia) return;
 
+  var coarse = matchMedia('(hover: none), (pointer: coarse)').matches;
+  if (coarse && !initializeOrnaments.observed && 'IntersectionObserver' in window) {
+    initializeOrnaments.observed = true;
+    var observer = new IntersectionObserver(function (entries) {
+      if (!entries[0].isIntersecting) return;
+      observer.disconnect();
+      setTimeout(initializeOrnaments, 0);
+    });
+    observer.observe(start);
+    return;
+  }
   var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* All three run at every width; what changes is their scale. A phone has a
@@ -306,10 +317,12 @@
 
   /* ── the frame ──────────────────────────────────────────────── */
 
-  var last = 0;
+  var last = 0, lastPaint = 0;
 
   function frame(now) {
     requestAnimationFrame(frame);
+    if (coarse && now - lastPaint < 32) return;
+    lastPaint = now;
     var dt = Math.min(40, now - last) / 16.67; last = now;
     if (document.hidden) return;
 

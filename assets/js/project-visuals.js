@@ -1,4 +1,4 @@
-/* Project Visuals — animated shader layers behind project-card media.
+/*! Project Visuals — animated shader layers behind project-card media.
  * Adapted from ThreeUI Community "warp-field" and "data-pixel-arc"
  * (https://github.com/MengTo/threeui), MIT License © 2026 Meng To.
  * Reworked: three.js replaced with hand-rolled perspective projection on a

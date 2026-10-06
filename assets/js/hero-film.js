@@ -34,11 +34,41 @@
  * chip under the CTAs, or with ?film=full. Reduced motion and
  * returning visitors get the hero as it always was, plus that chip.
  */
-(function () {
+(function initializeHeroFilm() {
   'use strict';
 
   var root = document.documentElement;
   var hero = document.querySelector('.hero');
+  // On phones, a replay chip is sufficient until the visitor requests the film.
+  // Initialize synchronously on that click so sound keeps its user gesture.
+  if (hero && isPhone() && !/[?&]film\b/.test(location.search) && !initializeHeroFilm.requested) {
+    var launch = document.createElement('button');
+    launch.type = 'button';
+    launch.className = 'ev-film-replay';
+    launch.innerHTML = 'Watch the story <em>91 s &#183; with sound</em>';
+    hero.classList.add('ev-film-ended');
+    hero.appendChild(launch);
+    function activate(method, args) {
+      initializeHeroFilm.requested = true;
+      launch.remove();
+      initializeHeroFilm();
+      if (window.heroFilm !== deferred) {
+        var member = window.heroFilm[method];
+        return typeof member === 'function' ? member.apply(window.heroFilm, args) : member;
+      }
+    }
+    var deferred = { pause: function () {}, time: 0, cut: 'short', get duration() { return activate('duration', []); }, debug: { playing: false, deferred: true, audio: 'none', on: false, synced: false } };
+    ['play', 'seek', 'renderOffline'].forEach(function (method) {
+      deferred[method] = function () { return activate(method, arguments); };
+    });
+    window.heroFilm = deferred;
+    launch.addEventListener('click', function () {
+      activate('pause', []);
+      var replay = hero.querySelector('.ev-film-replay');
+      if (replay) replay.click();
+    });
+    return;
+  }
   var cv = document.createElement('canvas');
   var ctx = cv.getContext && cv.getContext('2d');
   if (!hero || !ctx || !window.requestAnimationFrame) {
@@ -1649,7 +1679,7 @@
     '<button type="button" class="ev-film-btn ev-film-pp" aria-label="Pause">' + ICON.pause + '</button>' +
     '<button type="button" class="ev-film-btn ev-film-sound is-hint" aria-pressed="false">' + ICON.soundOff + '<span>Sound on</span></button>' +
     '<button type="button" class="ev-film-btn ev-film-fs" aria-label="Full screen">' + ICON.fsIn + '</button>' +
-    '<button type="button" class="ev-film-btn ev-film-skip">' + ICON.skip + '<span>Skip</span></button>';
+    '<button type="button" class="ev-film-btn ev-film-skip" aria-label="Skip intro film">' + ICON.skip + '<span>Skip</span></button>';
   var nameEl = ui.querySelector('.ev-film-name'), timeEl = ui.querySelector('.ev-film-time');
   var track = ui.querySelector('.ev-film-track'), ppBtn = ui.querySelector('.ev-film-pp');
   var soundBtn = ui.querySelector('.ev-film-sound'), skipBtn = ui.querySelector('.ev-film-skip'), fsBtn = ui.querySelector('.ev-film-fs');

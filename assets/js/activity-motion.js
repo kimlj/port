@@ -19,11 +19,22 @@
  * so a data file that arrives late, or not at all, costs an animation rather
  * than a section.
  */
-(function () {
+(function initializeActivityMotion() {
   'use strict';
 
   var section = document.getElementById('activity');
   if (!section || !window.matchMedia) return;
+  // Begin the 15-second data watch near the section, not while an intro plays.
+  if (!initializeActivityMotion.observed && 'IntersectionObserver' in window) {
+    initializeActivityMotion.observed = true;
+    var observer = new IntersectionObserver(function (entries) {
+      if (!entries[0].isIntersecting) return;
+      observer.disconnect();
+      setTimeout(initializeActivityMotion, 0);
+    }, { rootMargin: '600px' });
+    observer.observe(section);
+    return;
+  }
 
   tooltip();   /* wanted whether or not the section is allowed to animate */
 

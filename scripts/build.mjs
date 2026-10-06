@@ -1,10 +1,9 @@
 #!/usr/bin/env node
-// The Vercel build. Three steps, in this order and no other:
+// The Vercel build preserves the assistant sync before assembling public output:
 //
 //   1. pull the assistant's private half into this checkout
 //   2. generate lib/kb.json from index.html, the resume and lib/owner.json
-//   3. leave everything else alone — the page itself has no build step and is
-//      not going to get one
+//   3. assemble the public allowlist, inline font faces and minify delivered CSS/JS
 //
 // Step 2 has to follow step 1 because build-kb.mjs reads lib/owner.json, which
 // only exists after the sync. There is no committed kb.json in either repo: a
@@ -19,7 +18,8 @@
 import { execFileSync } from 'node:child_process';
 import { cpSync, existsSync, mkdirSync, rmSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
+import { optimizePublic } from './optimize-public.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -32,7 +32,8 @@ const run = (script, args = []) => {
   try {
     execFileSync(process.execPath, [join(ROOT, 'scripts', script), ...args], {
       stdio: 'inherit',
-      cwd: ROOT
+      cwd: ROOT,
+      windowsHide: true
     });
   } catch {
     console.error(`\nbuild failed in scripts/${script}.`);
@@ -40,8 +41,11 @@ const run = (script, args = []) => {
   }
 };
 
-run('sync-assistant.mjs');
-run('build-kb.mjs');
+// Static verification does not sync private assistant data or regenerate it.
+if (!process.argv.includes('--static-only')) {
+  run('sync-assistant.mjs');
+  run('build-kb.mjs');
+}
 
 // ---------------------------------------------------------------- publish
 //
@@ -79,6 +83,7 @@ const PUBLIC = [
 const OUT = join(ROOT, 'dist');
 
 console.log('\n> publish');
+if (resolve(OUT) !== resolve(ROOT, 'dist')) throw new Error('Unexpected public output path');
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
 
@@ -92,4 +97,5 @@ for (const entry of PUBLIC) {
   console.log(`  ${entry}`);
 }
 
+await optimizePublic(OUT);
 console.log('\nbuild complete.');

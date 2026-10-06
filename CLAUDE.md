@@ -1,8 +1,9 @@
 # kimlj.dev — portfolio
 
-A single-page portfolio. **One hand-written `index.html`** — markup, styles and
-most behaviour — plus a small set of standalone scripts in `assets/js/`. No build
-step, no framework, no package.json. Deployed on Vercel from `main`.
+A single-page portfolio. **One hand-written `index.html`** contains markup, styles
+and most behaviour, with standalone scripts in `assets/js/` and no framework.
+The public build minifies CSS/JS and inlines self-hosted font faces;
+`package.json` holds build-only esbuild. Deployed on Vercel from `main`.
 
 Open it with any static server (`python -m http.server 8081`); the only thing
 that will not work is `api/pitch.js`, which needs `vercel dev`.
@@ -22,7 +23,7 @@ page renders as unstyled links rather than throwing anything.
 ## The hero film
 
 `hero-film.js` tells a story over the hero, then hands the page to it. It has
-**two cuts**. The 76.8-second one autoplays: hello world → contribution
+**two cuts**. The 76.8-second one autoplays on desktop: hello world → contribution
 calendar → AI → AI orchestration → WordWarz → MDS Pro → pipelines → portrait.
 The 91.2-second full cut adds Avatars and Open source, and plays from
 the chip under the CTAs or with `?film=full`. Everything is cut to a 100 BPM bar grid (a
@@ -220,7 +221,9 @@ feature and nothing else.
 |---|---|
 | `avatar-field.js` | The hero portrait, typeset from this file's own source. The cursor pushes its characters aside and the source shows in the clearing. |
 | `hero-particles.js` | Hero label, headline and lede split into glyphs the cursor pushes. |
-| `hero-film.js` | The story film over the hero, in two cuts (77s autoplay, 91s from the chip), with a synthesised score. |
+| `hero-film.js` | The story film over the hero, in two cuts (77s desktop autoplay, 91s from the chip), with a synthesised score. Phone setup is deferred until requested. |
+| `media.js` | Visibility-based demo video playback and lazy gallery sources, with image sizes reserved. |
+| `turnstile-loader.js` | Form verification loaded near the pitch form or on focus. |
 | `button-field.js` | Dot fields inside every CTA and the contact buttons. |
 | `section-ornaments.js` | Drift, trace and registration marks, Projects → footer. |
 | `ai-ledger.js` | The AI Showcase rows, transcripts and process logs, plus the Avatar pipeline's stage tabs. Two IIFEs. |
@@ -540,6 +543,19 @@ reference 404s loudly; a year of the wrong picture is silent.
 numbered avatars, a `comfyui-workflow.webp` screenshot, and the `batch`,
 `fashion`, `ipadapter` and `comparisons` sets. The hero film reads the 60
 through `assets/avatar-sprite-60.webp` (see The hero film).
+
+## Performance verification
+
+`npm run build:static` assembles the allowlisted public output without syncing
+private assistant inputs. `npm run build` retains the production assistant sync
+and corpus generation before public minification. `npm test` checks compiled
+script syntax, semantic content, font resources and deferred media. Source files
+keep their comments, original callback names and readable formatting.
+
+Both themes, 390/768/1440px, reduced motion, cinematic controls, project videos,
+galleries and calendar interactions must be checked after layout changes. Fonts
+are self-hosted under content-hashed filenames with their OFL licenses. A changed
+image still requires a new filename because WebP assets are immutable.
 
 ## Working here
 

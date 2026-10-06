@@ -19,3 +19,6 @@ scripts/devserver.mjs
 # A generated file with a copy in git is a file that goes stale.
 lib/kb.json
 dist
+
+# Local browser and Lighthouse verification artifacts.
+.performance-reports/

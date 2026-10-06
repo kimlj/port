@@ -4,15 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1, viewport-fit=cover">
 <title>Kim Julongbayan | Full Stack Developer | AI Developer | Backend Systems</title>
+<meta name="description" content="Kim Julongbayan builds web and mobile products, AI integrations, and backend systems. Explore shipped projects, technical work, and ways to get in touch.">
+<link rel="canonical" href="https://www.kimlj.dev/">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/fonts.css">
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/jetbrains-mono-latin-normal-400-83c005d49d.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/dm-sans-latin-normal-300-9fea608a94.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/instrument-serif-latin-normal-400-5eb09b5ac0.woff2" crossorigin>
 <script>(function(){if(localStorage.getItem('theme')==='light'){document.documentElement.setAttribute('data-theme','light')}})();</script>
 <!-- Decides before first paint whether the hero film plays, so the hero never
      flashes before the film covers it: once a fortnight per visitor, never under
      reduced motion, always with ?film. If hero-film.js has not claimed the page
      in 6s the hold is released and the hero shows as it always did. -->
-<script>(function(){try{var d=document.documentElement,f=/[?&]film\b/.test(location.search),r=matchMedia('(prefers-reduced-motion: reduce)').matches,s=+localStorage.getItem('heroFilmSeen')||0;if(f||(!r&&Date.now()-s>12096e5)){d.classList.add('ev-film-boot');setTimeout(function(){if(!window.heroFilm)d.classList.remove('ev-film-boot')},6000)}}catch(e){}})();</script>
+<script>(function(){try{var d=document.documentElement,f=/[?&]film\b/.test(location.search),r=matchMedia('(prefers-reduced-motion: reduce)').matches,s=+localStorage.getItem('heroFilmSeen')||0;if(f||(!r&&!matchMedia('(max-width: 899px)').matches&&Date.now()-s>12096e5)){d.classList.add('ev-film-boot');setTimeout(function(){if(!window.heroFilm)d.classList.remove('ev-film-boot')},6000)}}catch(e){}})();</script>
 <style>
 :root {
   --bg: #0a0a0b;
@@ -22,7 +26,7 @@
   --border-hover: #333338;
   --text: #f0f0f2;
   --text-muted: #8a8a95;
-  --text-dim: #55555f;
+  --text-dim: #858590;
   --accent: #c8ff00;
   --accent-dim: rgba(var(--accent-r),var(--accent-g),var(--accent-b), 0.08);
   --accent-glow: rgba(var(--accent-r),var(--accent-g),var(--accent-b), 0.15);
@@ -51,7 +55,7 @@
   --border-hover: #c8c8c2;
   --text: #1a1a1f;
   --text-muted: #5a5a65;
-  --text-dim: #8a8a95;
+  --text-dim: #5a5a65;
   --accent: #0891b2;
   --accent-dim: rgba(8, 145, 178, 0.08);
   --accent-glow: rgba(8, 145, 178, 0.15);
@@ -1190,7 +1194,7 @@ footer .footer-accent { color: var(--accent); }
    width of the panel the node graph was 602px tall for a screenshot nobody reads
    node labels off anyway — it is an overview, and it costs less as one. */
 .workflow-image-wrap { border-radius: 16px; overflow: hidden; border: 1px solid var(--border); background: linear-gradient(135deg, rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.06) 0%, rgba(0,255,200,0.04) 50%, rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.06) 100%); padding: 1.25rem; max-width: 1100px; margin-left: auto; margin-right: auto; }
-.workflow-image-wrap img { width: 100%; display: block; border-radius: 10px; }
+.workflow-image-wrap img { width: 100%; height: auto; display: block; border-radius: 10px; }
 
 .batch-flow { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 0.75rem; align-items: stretch; margin-top: 2rem; }
 .batch-flow-step { align-self: center; display: flex; align-items: center; }
@@ -1228,18 +1232,18 @@ footer .footer-accent { color: var(--accent); }
 .batch-output-grid::-webkit-scrollbar { width: 3px; }
 .batch-output-grid::-webkit-scrollbar-track { background: transparent; }
 .batch-output-grid::-webkit-scrollbar-thumb { background: rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.15); border-radius: 3px; }
-.batch-output-grid img { width: 100%; display: block; border-radius: 4px; aspect-ratio: 1; object-fit: cover; }
+.batch-output-grid img { width: 100%; height: auto; display: block; border-radius: 4px; aspect-ratio: 1; object-fit: cover; }
 
 /* IPAdapter Style Transfer */
 .ipadapter-demo { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem; }
 .ipadapter-ref { display: flex; flex-direction: column; gap: 0.5rem; flex-shrink: 0; width: 180px; }
-.ipadapter-ref img { width: 100%; border-radius: 12px; border: 2px solid var(--border); background: var(--bg-card); }
+.ipadapter-ref img { width: 100%; height: auto; border-radius: 12px; border: 2px solid var(--border); background: var(--bg-card); }
 .ipadapter-arrow { flex-shrink: 0; }
 .ipadapter-arrow svg { width: 28px; height: 28px; color: var(--accent); opacity: 0.5; animation: batchArrowPulse 2s ease-in-out infinite; }
 .ipadapter-outputs { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
 .ipadapter-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
 .ipadapter-cell { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
-.ipadapter-cell img { width: 100%; border-radius: 12px; border: 2px solid var(--border); transition: transform, opacity, color, background-color, border-color, box-shadow; transition-duration: 0.3s; background: var(--bg-card); }
+.ipadapter-cell img { width: 100%; height: auto; border-radius: 12px; border: 2px solid var(--border); transition: transform, opacity, color, background-color, border-color, box-shadow; transition-duration: 0.3s; background: var(--bg-card); }
 .ipadapter-cell:hover img { border-color: var(--accent); transform: scale(1.03); box-shadow: 0 0 20px rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.12); }
 .ipadapter-cell span { font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; }
 .ipadapter-tech { display: flex; gap: 0.75rem; flex-wrap: wrap; }
@@ -1257,17 +1261,17 @@ footer .footer-accent { color: var(--accent); }
 /* Fashion Generation */
 .fashion-demo { display: flex; align-items: center; gap: 1.5rem; }
 .fashion-source { display: flex; flex-direction: column; gap: 0.5rem; flex-shrink: 0; width: 180px; }
-.fashion-source img { width: 100%; border-radius: 12px; border: 2px solid var(--border); background: var(--bg-card); }
+.fashion-source img { width: 100%; height: auto; border-radius: 12px; border: 2px solid var(--border); background: var(--bg-card); }
 .fashion-outputs { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
 .fashion-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
 .fashion-cell { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
-.fashion-cell img { width: 100%; border-radius: 12px; border: 2px solid var(--border); transition: transform, opacity, color, background-color, border-color, box-shadow; transition-duration: 0.3s; background: var(--bg-card); }
+.fashion-cell img { width: 100%; height: auto; border-radius: 12px; border: 2px solid var(--border); transition: transform, opacity, color, background-color, border-color, box-shadow; transition-duration: 0.3s; background: var(--bg-card); }
 .fashion-cell:hover img { border-color: var(--accent); transform: scale(1.03); box-shadow: 0 0 20px rgba(var(--accent-r),var(--accent-g),var(--accent-b),0.12); }
 .fashion-cell span { font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; }
 .fashion-demo-compact { justify-content: flex-start; }
 .fashion-before-after { display: flex; align-items: center; gap: 1.5rem; }
 .fashion-ba-item { display: flex; flex-direction: column; gap: 0.5rem; width: 180px; flex-shrink: 0; }
-.fashion-ba-item img { width: 100%; border-radius: 12px; border: 2px solid var(--border); background: var(--bg-card); }
+.fashion-ba-item img { width: 100%; height: auto; border-radius: 12px; border: 2px solid var(--border); background: var(--bg-card); }
 
 /* Style transfer and Fashion generation are the same figure twice — one source,
    an arrow, and what came out of it — with almost no prose around it. Stacked
@@ -1902,7 +1906,19 @@ footer .footer-accent { color: var(--accent); }
 .ai-week-val { font-family: var(--mono); font-size: 0.6rem; color: var(--text-muted); min-width: 5.4rem; text-align: right; }
 .ai-week-note { font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim); margin-top: 0.7rem; }
 .ai-meta { font-family: var(--mono); font-size: 0.6rem; color: var(--text-dim); margin-top: 0.9rem; padding-top: 0.8rem; border-top: 1px solid var(--border); }
+/* Phones show the portfolio immediately; the film remains available on demand. */
+@media (max-width: 899px) {
+  .hero-label, .hero-sub, .hero-cta, .hero-avatar, .hero-line {
+    animation: none;
+    opacity: 1;
+  }
+  .hero-label, .hero-sub, .hero-cta, .hero-line { transform: none; }
+  .hero h1 em::after { animation: none; width: 100%; }
+  .hero.ev-film-ended .ev-film-replay { animation: none; opacity: 1; }
+  .hero::before { animation: none; }
+}
 </style>
+<noscript><style>img[data-src]{display:none!important}</style></noscript>
 </head>
 <body>
 <a class="skip-link" href="#projects">Skip to content</a>
@@ -1930,14 +1946,14 @@ footer .footer-accent { color: var(--accent); }
       <svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
     </button></li>
   </ul>
-  <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
+  <button class="nav-hamburger" id="navHamburger" aria-label="Open menu" aria-controls="mobileMenu" aria-expanded="false">
     <span></span>
     <span></span>
     <span></span>
   </button>
 </nav>
 
-<div class="mobile-menu" id="mobileMenu">
+<div class="mobile-menu" id="mobileMenu" role="navigation" aria-label="Mobile navigation" aria-hidden="true" inert>
   <span class="mobile-menu-label">Navigation</span>
   <a href="#projects">Projects</a>
   <a href="/hub">Hub</a>
@@ -1953,6 +1969,7 @@ footer .footer-accent { color: var(--accent); }
   </button>
 </div>
 
+<main id="main-content">
 <section class="hero">
   <p class="hero-label">Full Stack Developer | AI Developer | Backend Systems</p>
   <h1>
@@ -1985,7 +2002,7 @@ footer .footer-accent { color: var(--accent); }
     </div>
   </div>
   <div class="hero-avatar">
-    <img src="assets/profile.webp" alt="Kim Julongbayan" width="480" height="480">
+    <img src="assets/profile-512-v1.webp" srcset="assets/profile-512-v1.webp 512w, assets/profile.webp 1024w" sizes="(max-width: 768px) 240px, (max-width: 1200px) 320px, 480px" alt="Kim Julongbayan" width="480" height="480">
   </div>
 </section>
 
@@ -2048,8 +2065,8 @@ footer .footer-accent { color: var(--accent); }
           </div>
           <div class="project-visual is-stacked">
             <div class="project-visual-bg pv-7"></div>
-            <video class="project-visual-img" autoplay loop muted playsinline>
-              <source src="assets/mdspro-demo-2.mp4" type="video/mp4">
+            <video class="project-visual-img" loop muted playsinline preload="none">
+              <source data-src="assets/mdspro-demo-2.mp4" type="video/mp4">
             </video>
             <div class="project-visual-meta">
               <div class="project-metrics is-three">
@@ -2076,8 +2093,8 @@ footer .footer-accent { color: var(--accent); }
           </div>
           <div class="project-visual">
             <div class="project-visual-bg pv-4"></div>
-            <video class="project-visual-img" autoplay loop muted playsinline>
-              <source src="assets/recode-demo.mp4" type="video/mp4">
+            <video class="project-visual-img" loop muted playsinline preload="none">
+              <source data-src="assets/recode-demo.mp4" type="video/mp4">
             </video>
           </div>
         </a>
@@ -2097,8 +2114,8 @@ footer .footer-accent { color: var(--accent); }
           </div>
           <div class="project-visual">
             <div class="project-visual-bg pv-5"></div>
-            <video class="project-visual-img" autoplay loop muted playsinline>
-              <source src="assets/jobmatch-demo.mp4" type="video/mp4">
+            <video class="project-visual-img" loop muted playsinline preload="none">
+              <source data-src="assets/jobmatch-demo.mp4" type="video/mp4">
             </video>
           </div>
         </div>
@@ -2244,7 +2261,7 @@ footer .footer-accent { color: var(--accent); }
        data-bar="mdsprosolutions.com &middot; site assistant">
     <p class="ev-lede reveal">A public assistant that answers about the company and the remote nurse role from a fixed knowledge file. It has no tools and no database, so there is nothing for it to invent from &mdash; and when a question falls outside what it was given, it offers to send it to the team rather than guessing.</p>
     <div class="ev-split">
-      <div class="ev-chat" data-chat="assistant" aria-label="Example exchange"></div>
+      <div class="ev-chat" role="group" data-chat="assistant" aria-label="Example exchange"></div>
       <ul class="ev-rules">
         <li><strong>No tools and no database.</strong> Answers come from a knowledge file, not a live system.</li>
         <li><strong>Scope follows the page.</strong> The careers assistant answers about the role, the home one about the company.</li>
@@ -2262,7 +2279,7 @@ footer .footer-accent { color: var(--accent); }
        data-bar="MDS Pro admin &middot; ask the database">
     <p class="ev-lede reveal">Inside the admin system, a question in English becomes a query the model composes and a read-only role executes. The answer is built only from the rows that came back, and every question carries its own cost.</p>
     <div class="ev-split">
-      <div class="ev-chat" data-chat="dbquery" aria-label="Example exchange"></div>
+      <div class="ev-chat" role="group" data-chat="dbquery" aria-label="Example exchange"></div>
       <ul class="ev-rules">
         <li><strong>Read-only Postgres role.</strong> The model can compose a query; it cannot write, drop or escalate.</li>
         <li><strong>Row-level security underneath</strong>, so the role cannot reach what the asker could not.</li>
@@ -2319,12 +2336,12 @@ footer .footer-accent { color: var(--accent); }
       <div class="showcase-compare" id="compare-animal">
         <div class="showcase-compare-side">
           <span class="showcase-compare-label before">Before</span>
-          <div class="compare-img"><img id="img-animal-before" src="assets/ai-showcase/comparisons/animal/before_1.webp" alt="Before"></div>
+          <div class="compare-img"><img id="img-animal-before" data-src="assets/ai-showcase/comparisons/animal/before_1.webp" alt="Before" width="1024" height="1024"><noscript><img src="assets/ai-showcase/comparisons/animal/before_1.webp" alt="Before"></noscript></div>
         </div>
         <span class="showcase-compare-arrow">&rarr;</span>
         <div class="showcase-compare-side">
           <span class="showcase-compare-label after">After</span>
-          <div class="compare-img"><img id="img-animal-after" src="assets/ai-showcase/comparisons/animal/after_1.webp" alt="After"></div>
+          <div class="compare-img"><img id="img-animal-after" data-src="assets/ai-showcase/comparisons/animal/after_1.webp" alt="After" width="1024" height="1024"><noscript><img src="assets/ai-showcase/comparisons/animal/after_1.webp" alt="After"></noscript></div>
         </div>
       </div>
       <p class="prompt-seed" id="seed-animal">same seed: 300003</p>
@@ -2344,12 +2361,12 @@ footer .footer-accent { color: var(--accent); }
       <div class="showcase-compare" id="compare-specificity">
         <div class="showcase-compare-side">
           <span class="showcase-compare-label before">Before</span>
-          <div class="compare-img"><img id="img-specificity-before" src="assets/ai-showcase/comparisons/specificity/before_1.webp" alt="Before"></div>
+          <div class="compare-img"><img id="img-specificity-before" data-src="assets/ai-showcase/comparisons/specificity/before_1.webp" alt="Before" width="1024" height="1024"><noscript><img src="assets/ai-showcase/comparisons/specificity/before_1.webp" alt="Before"></noscript></div>
         </div>
         <span class="showcase-compare-arrow">&rarr;</span>
         <div class="showcase-compare-side">
           <span class="showcase-compare-label after">After</span>
-          <div class="compare-img"><img id="img-specificity-after" src="assets/ai-showcase/comparisons/specificity/after_1.webp" alt="After"></div>
+          <div class="compare-img"><img id="img-specificity-after" data-src="assets/ai-showcase/comparisons/specificity/after_1.webp" alt="After" width="1024" height="1024"><noscript><img src="assets/ai-showcase/comparisons/specificity/after_1.webp" alt="After"></noscript></div>
         </div>
       </div>
       <p class="prompt-seed" id="seed-specificity">same seed: 510001</p>
@@ -2369,12 +2386,12 @@ footer .footer-accent { color: var(--accent); }
       <div class="showcase-compare" id="compare-double-meaning">
         <div class="showcase-compare-side">
           <span class="showcase-compare-label before">Before</span>
-          <div class="compare-img"><img id="img-double-meaning-before" src="assets/ai-showcase/comparisons/double-meaning/before_1.webp" alt="Before"></div>
+          <div class="compare-img"><img id="img-double-meaning-before" data-src="assets/ai-showcase/comparisons/double-meaning/before_1.webp" alt="Before" width="1024" height="1024"><noscript><img src="assets/ai-showcase/comparisons/double-meaning/before_1.webp" alt="Before"></noscript></div>
         </div>
         <span class="showcase-compare-arrow">&rarr;</span>
         <div class="showcase-compare-side">
           <span class="showcase-compare-label after">After</span>
-          <div class="compare-img"><img id="img-double-meaning-after" src="assets/ai-showcase/comparisons/double-meaning/after_1.webp" alt="After"></div>
+          <div class="compare-img"><img id="img-double-meaning-after" data-src="assets/ai-showcase/comparisons/double-meaning/after_1.webp" alt="After" width="1024" height="1024"><noscript><img src="assets/ai-showcase/comparisons/double-meaning/after_1.webp" alt="After"></noscript></div>
         </div>
       </div>
       <p class="prompt-seed" id="seed-double-meaning">same seed: 310001</p>
@@ -2394,12 +2411,12 @@ footer .footer-accent { color: var(--accent); }
       <div class="showcase-compare" id="compare-literal">
         <div class="showcase-compare-side">
           <span class="showcase-compare-label before">Before</span>
-          <div class="compare-img"><img id="img-literal-before" src="assets/ai-showcase/comparisons/literal/before_1.webp" alt="Before"></div>
+          <div class="compare-img"><img id="img-literal-before" data-src="assets/ai-showcase/comparisons/literal/before_1.webp" alt="Before" width="1024" height="1024"><noscript><img src="assets/ai-showcase/comparisons/literal/before_1.webp" alt="Before"></noscript></div>
         </div>
         <span class="showcase-compare-arrow">&rarr;</span>
         <div class="showcase-compare-side">
           <span class="showcase-compare-label after">After</span>
-          <div class="compare-img"><img id="img-literal-after" src="assets/ai-showcase/comparisons/literal/after_1.webp" alt="After"></div>
+          <div class="compare-img"><img id="img-literal-after" data-src="assets/ai-showcase/comparisons/literal/after_1.webp" alt="After" width="1024" height="1024"><noscript><img src="assets/ai-showcase/comparisons/literal/after_1.webp" alt="After"></noscript></div>
         </div>
       </div>
       <p class="prompt-seed" id="seed-literal">same seed: 410001</p>
@@ -2454,7 +2471,7 @@ footer .footer-accent { color: var(--accent); }
       <p class="showcase-caption">With the right prompts figured out, I built a visual pipeline in ComfyUI — a node graph with full control over each generation parameter.</p>
     </div>
     <div class="workflow-image-wrap">
-      <img src="assets/ai-showcase/comfyui-workflow.webp" alt="ComfyUI node-based workflow showing model loading, prompt conditioning, sampling, background removal, and output" loading="lazy">
+      <img data-src="assets/ai-showcase/comfyui-workflow.webp" alt="ComfyUI node-based workflow showing model loading, prompt conditioning, sampling, background removal, and output" loading="lazy" width="1830" height="745"><noscript><img src="assets/ai-showcase/comfyui-workflow.webp" alt="ComfyUI node-based workflow showing model loading, prompt conditioning, sampling, background removal, and output" loading="lazy"></noscript>
     </div>
   </div>
 
@@ -2556,8 +2573,8 @@ footer .footer-accent { color: var(--accent); }
 
       <div class="batch-flow-card">
         <div class="batch-flow-card-content">
-          <video autoplay loop muted playsinline>
-            <source src="assets/ai-showcase/batch-demo.mp4" type="video/mp4">
+          <video loop muted playsinline preload="none">
+            <source data-src="assets/ai-showcase/batch-demo.mp4" type="video/mp4">
           </video>
         </div>
         <div class="batch-flow-card-label">
@@ -2570,30 +2587,30 @@ footer .footer-accent { color: var(--accent); }
 
       <div class="batch-flow-card">
         <div class="batch-flow-card-content batch-output-grid">
-          <img src="assets/ai-showcase/batch/hair-expression_red-hair-peace.webp" alt="Red Hair Peace" loading="lazy">
-          <img src="assets/ai-showcase/batch/hair-expression_pink-hair-wink.webp" alt="Pink Hair Wink" loading="lazy">
-          <img src="assets/ai-showcase/batch/hair-expression_blonde-smug.webp" alt="Blonde Smug" loading="lazy">
-          <img src="assets/ai-showcase/batch/props-accessories_boba-tea.webp" alt="Boba Tea" loading="lazy">
-          <img src="assets/ai-showcase/batch/props-accessories_catgirl-lollipop.webp" alt="Catgirl Lollipop" loading="lazy">
-          <img src="assets/ai-showcase/batch/props-accessories_cap-coffee.webp" alt="Cap Coffee" loading="lazy">
-          <img src="assets/ai-showcase/batch/gamer-variants_headphones-jacket.webp" alt="Headphones Jacket" loading="lazy">
-          <img src="assets/ai-showcase/batch/gamer-variants_catear-streamer.webp" alt="Catear Streamer" loading="lazy">
-          <img src="assets/ai-showcase/batch/gamer-variants_energy-drink.webp" alt="Energy Drink" loading="lazy">
-          <img src="assets/ai-showcase/batch/street-style_cap-chains.webp" alt="Cap Chains" loading="lazy">
-          <img src="assets/ai-showcase/batch/street-style_sunglasses-street.webp" alt="Sunglasses Street" loading="lazy">
-          <img src="assets/ai-showcase/batch/street-style_purple-chains.webp" alt="Purple Chains" loading="lazy">
-          <img src="assets/ai-showcase/batch/archetypes-fantasy_mysterious-hoodie.webp" alt="Mysterious Hoodie" loading="lazy">
-          <img src="assets/ai-showcase/batch/archetypes-fantasy_witch-hat.webp" alt="Witch Hat" loading="lazy">
-          <img src="assets/ai-showcase/batch/archetypes-fantasy_cyber-white-hair.webp" alt="Cyber White Hair" loading="lazy">
-          <img src="assets/ai-showcase/batch/royalty_royal-crown.webp" alt="Royal Crown" loading="lazy">
-          <img src="assets/ai-showcase/batch/royalty_tiara-pearls.webp" alt="Tiara Pearls" loading="lazy">
-          <img src="assets/ai-showcase/batch/royalty_golden-tiara.webp" alt="Golden Tiara" loading="lazy">
-          <img src="assets/ai-showcase/batch/scientists-tech_lab-coat-goggles.webp" alt="Lab Coat Goggles" loading="lazy">
-          <img src="assets/ai-showcase/batch/scientists-tech_vr-scientist.webp" alt="VR Scientist" loading="lazy">
-          <img src="assets/ai-showcase/batch/scientists-tech_professor.webp" alt="Professor" loading="lazy">
-          <img src="assets/ai-showcase/batch/athletic-combat_boxer-intense.webp" alt="Boxer Intense" loading="lazy">
-          <img src="assets/ai-showcase/batch/athletic-combat_basketball.webp" alt="Basketball" loading="lazy">
-          <img src="assets/ai-showcase/batch/athletic-combat_muscular-peace.webp" alt="Muscular Peace" loading="lazy">
+          <img data-src="assets/ai-showcase/batch/hair-expression_red-hair-peace.webp" alt="Red Hair Peace" loading="lazy" width="1024" height="1024"><noscript><img src="assets/ai-showcase/batch/hair-expression_red-hair-peace.webp" alt="Red Hair Peace" loading="lazy"></noscript>
+          <img data-src="assets/ai-showcase/batch/hair-expression_pink-hair-wink.webp" alt="Pink Hair Wink" loading="lazy" width="1024" height="1024"><noscript><img src="assets/ai-showcase/batch/hair-expression_pink-hair-wink.webp" alt="Pink Hair Wink" loading="lazy"></noscript>
+          <img data-src="assets/ai-showcase/batch/hair-expression_blonde-smug.webp" alt="Blonde Smug" loading="lazy" width="1024" height="1024"><noscript><img src="assets/ai-showcase/batch/hair-expression_blonde-smug.webp" alt="Blonde Smug" loading="lazy"></noscript>
+          <img data-src="assets/ai-showcase/batch/props-accessories_boba-tea.webp" alt="Boba Tea" loading="lazy" width="1024" height="1024"><noscript><img src="assets/ai-showcase/batch/props-accessories_boba-tea.webp" alt="Boba Tea" loading="lazy"></noscript>
+          <img data-src="assets/ai-showcase/batch/props-accessories_catgirl-lollipop.webp" alt="Catgirl Lollipop" loading="lazy" width="1024" height="1024"><noscript><img src="assets/ai-showcase/batch/props-accessories_catgirl-lollipop.webp" alt="Catgirl Lollipop" loading="lazy"></noscript>
+          <img data-src="assets/ai-showcase/batch/props-accessories_cap-coffee.webp" alt="Cap Coffee" loading="lazy" width="1024" height="1024"><noscript><img src="assets/ai-showcase/batch/props-accessories_cap-coffee.webp" alt="Cap Coffee" loading="lazy"></noscript>
+          <img data-src="assets/ai-showcase/batch/gamer-variants_headphones-jacket.webp" alt="Headphones Jacket" loading="lazy" width="1024" height="1024"><noscript><img src="assets/ai-showcase/batch/gamer-variants_headphones-jacket.webp" alt="Headphones Jacket" loading="lazy"></noscript>
+          <img data-src="assets/ai-showcase/batch/gamer-variants_catear-streamer.webp" alt="Catear Streamer" loading="lazy" width="1024" height="1024"><noscript><img src="assets/ai-showcase/batch/gamer-variants_catear-streamer.webp" alt="Catear Streamer" loading="lazy"></noscript>
+          <img data-src="assets/ai-showcase/batch/gamer-variants_energy-drink.webp" alt="Energy Drink" loading="lazy" width="1024" height="1024"><noscript><img src="assets/ai-showcase/batch/gamer-variants_energy-drink.webp" alt="Energy Drink" loading="lazy"></noscript>
+          <img data-src="assets/ai-showcase/batch/street-style_cap-chains.webp" alt="Cap Chains" loading="lazy" width="944" height="896"><noscript><img src="assets/ai-showcase/batch/street-style_cap-chains.webp" alt="Cap Chains" loading="lazy"></noscript>
+          <img data-src="assets/ai-showcase/batch/street-style_sunglasses-street.webp" alt="Sunglasses Street" loading="lazy" width="1024" height="1024"><noscript><img src="assets/ai-showcase/batch/street-style_sunglasses-street.webp" alt="Sunglasses Street" loading="lazy"></noscript>
+          <img data-src="assets/ai-showcase/batch/street-style_purple-chains.webp" alt="Purple Chains" loading="lazy" width="1024" height="1024"><noscript><img src="assets/ai-showcase/batch/street-style_purple-chains.webp" alt="Purple Chains" loading="lazy"></noscript>
+          <img data-src="assets/ai-showcase/batch/archetypes-fantasy_mysterious-hoodie.webp" alt="Mysterious Hoodie" loading="lazy" width="1024" height="1024"><noscript><img src="assets/ai-showcase/batch/archetypes-fantasy_mysterious-hoodie.webp" alt="Mysterious Hoodie" loading="lazy"></noscript>
+          <img data-src="assets/ai-showcase/batch/archetypes-fantasy_witch-hat.webp" alt="Witch Hat" loading="lazy" width="1024" height="1024"><noscript><img src="assets/ai-showcase/batch/archetypes-fantasy_witch-hat.webp" alt="Witch Hat" loading="lazy"></noscript>
+          <img data-src="assets/ai-showcase/batch/archetypes-fantasy_cyber-white-hair.webp" alt="Cyber White Hair" loading="lazy" width="1024" height="1024"><noscript><img src="assets/ai-showcase/batch/archetypes-fantasy_cyber-white-hair.webp" alt="Cyber White Hair" loading="lazy"></noscript>
+          <img data-src="assets/ai-showcase/batch/royalty_royal-crown.webp" alt="Royal Crown" loading="lazy" width="1024" height="1024"><noscript><img src="assets/ai-showcase/batch/royalty_royal-crown.webp" alt="Royal Crown" loading="lazy"></noscript>
+          <img data-src="assets/ai-showcase/batch/royalty_tiara-pearls.webp" alt="Tiara Pearls" loading="lazy" width="1024" height="1024"><noscript><img src="assets/ai-showcase/batch/royalty_tiara-pearls.webp" alt="Tiara Pearls" loading="lazy"></noscript>
+          <img data-src="assets/ai-showcase/batch/royalty_golden-tiara.webp" alt="Golden Tiara" loading="lazy" width="955" height="740"><noscript><img src="assets/ai-showcase/batch/royalty_golden-tiara.webp" alt="Golden Tiara" loading="lazy"></noscript>
+          <img data-src="assets/ai-showcase/batch/scientists-tech_lab-coat-goggles.webp" alt="Lab Coat Goggles" loading="lazy" width="1024" height="1024"><noscript><img src="assets/ai-showcase/batch/scientists-tech_lab-coat-goggles.webp" alt="Lab Coat Goggles" loading="lazy"></noscript>
+          <img data-src="assets/ai-showcase/batch/scientists-tech_vr-scientist.webp" alt="VR Scientist" loading="lazy" width="1024" height="1024"><noscript><img src="assets/ai-showcase/batch/scientists-tech_vr-scientist.webp" alt="VR Scientist" loading="lazy"></noscript>
+          <img data-src="assets/ai-showcase/batch/scientists-tech_professor.webp" alt="Professor" loading="lazy" width="1024" height="1024"><noscript><img src="assets/ai-showcase/batch/scientists-tech_professor.webp" alt="Professor" loading="lazy"></noscript>
+          <img data-src="assets/ai-showcase/batch/athletic-combat_boxer-intense.webp" alt="Boxer Intense" loading="lazy" width="1024" height="1024"><noscript><img src="assets/ai-showcase/batch/athletic-combat_boxer-intense.webp" alt="Boxer Intense" loading="lazy"></noscript>
+          <img data-src="assets/ai-showcase/batch/athletic-combat_basketball.webp" alt="Basketball" loading="lazy" width="1024" height="1024"><noscript><img src="assets/ai-showcase/batch/athletic-combat_basketball.webp" alt="Basketball" loading="lazy"></noscript>
+          <img data-src="assets/ai-showcase/batch/athletic-combat_muscular-peace.webp" alt="Muscular Peace" loading="lazy" width="1024" height="1024"><noscript><img src="assets/ai-showcase/batch/athletic-combat_muscular-peace.webp" alt="Muscular Peace" loading="lazy"></noscript>
         </div>
         <div class="batch-flow-card-label">
           <span>3. Output</span>
@@ -2624,14 +2641,14 @@ footer .footer-accent { color: var(--accent); }
         <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
       <div class="avatar-accordion-body">
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/01-consistency-girl-redhair-peace.webp" alt="Red hair chibi"><div class="prompt-overlay"><span>red hair, peace sign, cheerful smile</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/02-consistency-girl-purplehair-peace.webp" alt="Purple hair chibi"><div class="prompt-overlay"><span>purple hair, peace sign, gentle expression</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/03-consistency-girl-pinkhair-wink.webp" alt="Pink hair chibi"><div class="prompt-overlay"><span>pink hair, winking, playful</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/04-expression-girl-blonde-smug.webp" alt="Blonde smug chibi"><div class="prompt-overlay"><span>blonde hair, smug expression, confident</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/05-expression-girl-gradient-starryeyes.webp" alt="Starry-eyed chibi"><div class="prompt-overlay"><span>gradient hair, starry eyes, sparkling</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/06-expression-girl-purple-excited.webp" alt="Excited purple chibi"><div class="prompt-overlay"><span>purple hair, excited, open mouth</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/45-expression-girl-pink-catears-lollipop.webp" alt="Pink catears girl lollipop"><div class="prompt-overlay"><span>pink hair, cat ears, lollipop, wink, green eyes</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/46-expression-girl-pink-catears-smirk.webp" alt="Pink catears girl smirk"><div class="prompt-overlay"><span>pink hair, cat ears, smirk, green eyes</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/01-consistency-girl-redhair-peace.webp" alt="Red hair chibi" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/01-consistency-girl-redhair-peace.webp" alt="Red hair chibi"></noscript><div class="prompt-overlay"><span>red hair, peace sign, cheerful smile</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/02-consistency-girl-purplehair-peace.webp" alt="Purple hair chibi" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/02-consistency-girl-purplehair-peace.webp" alt="Purple hair chibi"></noscript><div class="prompt-overlay"><span>purple hair, peace sign, gentle expression</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/03-consistency-girl-pinkhair-wink.webp" alt="Pink hair chibi" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/03-consistency-girl-pinkhair-wink.webp" alt="Pink hair chibi"></noscript><div class="prompt-overlay"><span>pink hair, winking, playful</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/04-expression-girl-blonde-smug.webp" alt="Blonde smug chibi" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/04-expression-girl-blonde-smug.webp" alt="Blonde smug chibi"></noscript><div class="prompt-overlay"><span>blonde hair, smug expression, confident</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/05-expression-girl-gradient-starryeyes.webp" alt="Starry-eyed chibi" width="1024" height="954"><noscript><img loading="lazy" src="assets/ai-showcase/05-expression-girl-gradient-starryeyes.webp" alt="Starry-eyed chibi"></noscript><div class="prompt-overlay"><span>gradient hair, starry eyes, sparkling</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/06-expression-girl-purple-excited.webp" alt="Excited purple chibi" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/06-expression-girl-purple-excited.webp" alt="Excited purple chibi"></noscript><div class="prompt-overlay"><span>purple hair, excited, open mouth</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/45-expression-girl-pink-catears-lollipop.webp" alt="Pink catears girl lollipop" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/45-expression-girl-pink-catears-lollipop.webp" alt="Pink catears girl lollipop"></noscript><div class="prompt-overlay"><span>pink hair, cat ears, lollipop, wink, green eyes</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/46-expression-girl-pink-catears-smirk.webp" alt="Pink catears girl smirk" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/46-expression-girl-pink-catears-smirk.webp" alt="Pink catears girl smirk"></noscript><div class="prompt-overlay"><span>pink hair, cat ears, smirk, green eyes</span></div></div>
       </div>
     </div>
 
@@ -2641,14 +2658,14 @@ footer .footer-accent { color: var(--accent); }
         <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
       <div class="avatar-accordion-body">
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/11-prop-girl-redhair-bubblegum.webp" alt="Red hair bubblegum girl"><div class="prompt-overlay"><span>red hair, blowing bubblegum</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/12-prop-girl-blonde-cap-bubblegum.webp" alt="Cap bubblegum girl"><div class="prompt-overlay"><span>blonde, baseball cap, bubblegum</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/13-prop-girl-pink-catears-lollipop.webp" alt="Cat ears lollipop girl"><div class="prompt-overlay"><span>pink hair, cat ears, lollipop</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/14-prop-girl-brown-bobatea.webp" alt="Boba tea girl"><div class="prompt-overlay"><span>brown hair, sipping boba tea</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/29-catgirl-pink-boba.webp" alt="Pink catgirl boba"><div class="prompt-overlay"><span>pink hair, cat ears, sipping drink, wink</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/30-catgirl-orange-lollipop.webp" alt="Orange catgirl lollipop"><div class="prompt-overlay"><span>orange hair, cat ears, lollipop, puffed cheeks</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/47-prop-boy-leather-pocky-earring.webp" alt="Leather boy pocky"><div class="prompt-overlay"><span>leather jacket, pocky stick, earring, smirk</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/48-prop-boy-cap-coffee-shy.webp" alt="Cap boy coffee"><div class="prompt-overlay"><span>baseball cap, holding coffee, shy expression</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/11-prop-girl-redhair-bubblegum.webp" alt="Red hair bubblegum girl" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/11-prop-girl-redhair-bubblegum.webp" alt="Red hair bubblegum girl"></noscript><div class="prompt-overlay"><span>red hair, blowing bubblegum</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/12-prop-girl-blonde-cap-bubblegum.webp" alt="Cap bubblegum girl" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/12-prop-girl-blonde-cap-bubblegum.webp" alt="Cap bubblegum girl"></noscript><div class="prompt-overlay"><span>blonde, baseball cap, bubblegum</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/13-prop-girl-pink-catears-lollipop.webp" alt="Cat ears lollipop girl" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/13-prop-girl-pink-catears-lollipop.webp" alt="Cat ears lollipop girl"></noscript><div class="prompt-overlay"><span>pink hair, cat ears, lollipop</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/14-prop-girl-brown-bobatea.webp" alt="Boba tea girl" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/14-prop-girl-brown-bobatea.webp" alt="Boba tea girl"></noscript><div class="prompt-overlay"><span>brown hair, sipping boba tea</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/29-catgirl-pink-boba.webp" alt="Pink catgirl boba" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/29-catgirl-pink-boba.webp" alt="Pink catgirl boba"></noscript><div class="prompt-overlay"><span>pink hair, cat ears, sipping drink, wink</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/30-catgirl-orange-lollipop.webp" alt="Orange catgirl lollipop" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/30-catgirl-orange-lollipop.webp" alt="Orange catgirl lollipop"></noscript><div class="prompt-overlay"><span>orange hair, cat ears, lollipop, puffed cheeks</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/47-prop-boy-leather-pocky-earring.webp" alt="Leather boy pocky" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/47-prop-boy-leather-pocky-earring.webp" alt="Leather boy pocky"></noscript><div class="prompt-overlay"><span>leather jacket, pocky stick, earring, smirk</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/48-prop-boy-cap-coffee-shy.webp" alt="Cap boy coffee" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/48-prop-boy-cap-coffee-shy.webp" alt="Cap boy coffee"></noscript><div class="prompt-overlay"><span>baseball cap, holding coffee, shy expression</span></div></div>
       </div>
     </div>
 
@@ -2658,14 +2675,14 @@ footer .footer-accent { color: var(--accent); }
         <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
       <div class="avatar-accordion-body">
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/07-gamer-girl-headphones-jacket.webp" alt="Gamer girl headphones"><div class="prompt-overlay"><span>headphones, gaming jacket, confident</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/08-gamer-girl-catears-streamer.webp" alt="Cat ears streamer"><div class="prompt-overlay"><span>cat ear headphones, streamer setup</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/09-gamer-boy-energydrink-headphones.webp" alt="Gamer boy energy drink"><div class="prompt-overlay"><span>headphones, energy drink, intense gaze</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/10-gamer-boy-pocky-chillgamer.webp" alt="Chill gamer boy"><div class="prompt-overlay"><span>headphones, pocky stick, relaxed</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/34-gamer-girl-red-headphones.webp" alt="Red hair gamer girl"><div class="prompt-overlay"><span>red hair, gaming headset, devil horns, sipping</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/26-gamer-boy-headphones-shy.webp" alt="Shy gamer boy"><div class="prompt-overlay"><span>brown hair, red headphones, shy expression</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/49-gamer-girl-red-headphones-sipping.webp" alt="Red gamer girl sipping"><div class="prompt-overlay"><span>red hair, devil horn headphones, sipping drink</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/50-gamer-girl-purple-headphones-sipping.webp" alt="Purple gamer girl sipping"><div class="prompt-overlay"><span>purple hair, pink headphones, hoodie, sipping drink</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/07-gamer-girl-headphones-jacket.webp" alt="Gamer girl headphones" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/07-gamer-girl-headphones-jacket.webp" alt="Gamer girl headphones"></noscript><div class="prompt-overlay"><span>headphones, gaming jacket, confident</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/08-gamer-girl-catears-streamer.webp" alt="Cat ears streamer" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/08-gamer-girl-catears-streamer.webp" alt="Cat ears streamer"></noscript><div class="prompt-overlay"><span>cat ear headphones, streamer setup</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/09-gamer-boy-energydrink-headphones.webp" alt="Gamer boy energy drink" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/09-gamer-boy-energydrink-headphones.webp" alt="Gamer boy energy drink"></noscript><div class="prompt-overlay"><span>headphones, energy drink, intense gaze</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/10-gamer-boy-pocky-chillgamer.webp" alt="Chill gamer boy" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/10-gamer-boy-pocky-chillgamer.webp" alt="Chill gamer boy"></noscript><div class="prompt-overlay"><span>headphones, pocky stick, relaxed</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/34-gamer-girl-red-headphones.webp" alt="Red hair gamer girl" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/34-gamer-girl-red-headphones.webp" alt="Red hair gamer girl"></noscript><div class="prompt-overlay"><span>red hair, gaming headset, devil horns, sipping</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/26-gamer-boy-headphones-shy.webp" alt="Shy gamer boy" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/26-gamer-boy-headphones-shy.webp" alt="Shy gamer boy"></noscript><div class="prompt-overlay"><span>brown hair, red headphones, shy expression</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/49-gamer-girl-red-headphones-sipping.webp" alt="Red gamer girl sipping" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/49-gamer-girl-red-headphones-sipping.webp" alt="Red gamer girl sipping"></noscript><div class="prompt-overlay"><span>red hair, devil horn headphones, sipping drink</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/50-gamer-girl-purple-headphones-sipping.webp" alt="Purple gamer girl sipping" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/50-gamer-girl-purple-headphones-sipping.webp" alt="Purple gamer girl sipping"></noscript><div class="prompt-overlay"><span>purple hair, pink headphones, hoodie, sipping drink</span></div></div>
       </div>
     </div>
 
@@ -2675,12 +2692,12 @@ footer .footer-accent { color: var(--accent); }
         <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
       <div class="avatar-accordion-body">
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/21-street-girl-cap-bubblegum-chains.webp" alt="Street girl chains"><div class="prompt-overlay"><span>cap, bubblegum, chain necklace, streetwear</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/22-street-boy-sunglasses-bubblegum.webp" alt="Street boy sunglasses"><div class="prompt-overlay"><span>sunglasses, bubblegum, street fashion</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/32-street-girl-cap-bubblegum2.webp" alt="Street girl cap bubblegum"><div class="prompt-overlay"><span>blonde, baseball cap, bubblegum, jacket</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/44-street-girl-cap-bubblegum3.webp" alt="Street girl cap bubblegum v2"><div class="prompt-overlay"><span>blonde bob, cap, bubblegum, stud earrings</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/33-street-boy-cap-sunglasses-bubblegum.webp" alt="Street boy cap chains"><div class="prompt-overlay"><span>orange hair, cap, sunglasses on head, bubblegum, chains</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/38-street-boy-purple-bubblegum.webp" alt="Purple street boy"><div class="prompt-overlay"><span>purple hair, cap, sunglasses, bubblegum, chains, earbuds</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/21-street-girl-cap-bubblegum-chains.webp" alt="Street girl chains" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/21-street-girl-cap-bubblegum-chains.webp" alt="Street girl chains"></noscript><div class="prompt-overlay"><span>cap, bubblegum, chain necklace, streetwear</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/22-street-boy-sunglasses-bubblegum.webp" alt="Street boy sunglasses" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/22-street-boy-sunglasses-bubblegum.webp" alt="Street boy sunglasses"></noscript><div class="prompt-overlay"><span>sunglasses, bubblegum, street fashion</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/32-street-girl-cap-bubblegum2.webp" alt="Street girl cap bubblegum" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/32-street-girl-cap-bubblegum2.webp" alt="Street girl cap bubblegum"></noscript><div class="prompt-overlay"><span>blonde, baseball cap, bubblegum, jacket</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/44-street-girl-cap-bubblegum3.webp" alt="Street girl cap bubblegum v2" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/44-street-girl-cap-bubblegum3.webp" alt="Street girl cap bubblegum v2"></noscript><div class="prompt-overlay"><span>blonde bob, cap, bubblegum, stud earrings</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/33-street-boy-cap-sunglasses-bubblegum.webp" alt="Street boy cap chains" width="1024" height="980"><noscript><img loading="lazy" src="assets/ai-showcase/33-street-boy-cap-sunglasses-bubblegum.webp" alt="Street boy cap chains"></noscript><div class="prompt-overlay"><span>orange hair, cap, sunglasses on head, bubblegum, chains</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/38-street-boy-purple-bubblegum.webp" alt="Purple street boy" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/38-street-boy-purple-bubblegum.webp" alt="Purple street boy"></noscript><div class="prompt-overlay"><span>purple hair, cap, sunglasses, bubblegum, chains, earbuds</span></div></div>
       </div>
     </div>
 
@@ -2690,12 +2707,12 @@ footer .footer-accent { color: var(--accent); }
         <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
       <div class="avatar-accordion-body">
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/15-archetype-boy-mysterious-hoodie-mask.webp" alt="Mysterious hooded boy"><div class="prompt-overlay"><span>hoodie, face mask, mysterious, glowing eyes</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/16-archetype-boy-edgelord-eyepatch.webp" alt="Edgelord eyepatch boy"><div class="prompt-overlay"><span>eyepatch, edgy expression, dark clothes</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/18-archetype-girl-witch-hat.webp" alt="Witch girl"><div class="prompt-overlay"><span>witch hat, magical girl, mystical</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/25-nerd-boy-beret-glasses.webp" alt="Nerd boy beret"><div class="prompt-overlay"><span>beret, round glasses, artistic, shy</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/28-cyber-boy-whitehair-glasses.webp" alt="Cyber boy white hair"><div class="prompt-overlay"><span>white hair, glasses, choker, cyberpunk</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/43-rebel-boy-leather-jacket.webp" alt="Rebel leather jacket"><div class="prompt-overlay"><span>leather jacket, pocky stick, earring, rebellious</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/15-archetype-boy-mysterious-hoodie-mask.webp" alt="Mysterious hooded boy" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/15-archetype-boy-mysterious-hoodie-mask.webp" alt="Mysterious hooded boy"></noscript><div class="prompt-overlay"><span>hoodie, face mask, mysterious, glowing eyes</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/16-archetype-boy-edgelord-eyepatch.webp" alt="Edgelord eyepatch boy" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/16-archetype-boy-edgelord-eyepatch.webp" alt="Edgelord eyepatch boy"></noscript><div class="prompt-overlay"><span>eyepatch, edgy expression, dark clothes</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/18-archetype-girl-witch-hat.webp" alt="Witch girl" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/18-archetype-girl-witch-hat.webp" alt="Witch girl"></noscript><div class="prompt-overlay"><span>witch hat, magical girl, mystical</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/25-nerd-boy-beret-glasses.webp" alt="Nerd boy beret" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/25-nerd-boy-beret-glasses.webp" alt="Nerd boy beret"></noscript><div class="prompt-overlay"><span>beret, round glasses, artistic, shy</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/28-cyber-boy-whitehair-glasses.webp" alt="Cyber boy white hair" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/28-cyber-boy-whitehair-glasses.webp" alt="Cyber boy white hair"></noscript><div class="prompt-overlay"><span>white hair, glasses, choker, cyberpunk</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/43-rebel-boy-leather-jacket.webp" alt="Rebel leather jacket" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/43-rebel-boy-leather-jacket.webp" alt="Rebel leather jacket"></noscript><div class="prompt-overlay"><span>leather jacket, pocky stick, earring, rebellious</span></div></div>
       </div>
     </div>
 
@@ -2705,14 +2722,14 @@ footer .footer-accent { color: var(--accent); }
         <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
       <div class="avatar-accordion-body">
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/17-archetype-boy-royalty-crown.webp" alt="Royalty crown boy"><div class="prompt-overlay"><span>crown, royal cape, proud expression</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/35-royalty-boy-crown-brown.webp" alt="Royalty boy brown hair"><div class="prompt-overlay"><span>small crown, gold earrings, red cape, charming</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/36-royalty-boy-crown-purple.webp" alt="Royalty boy purple hair"><div class="prompt-overlay"><span>purple hair, crown, gold earrings, military jacket</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/37-stylish-boy-earrings.webp" alt="Stylish boy earrings"><div class="prompt-overlay"><span>dark hair, gold hoop earrings, smirk, elegant</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/27-explorer-boy-goggles-adventurer.webp" alt="Explorer boy goggles"><div class="prompt-overlay"><span>aviator goggles, backpack, adventurer, curious</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/31-explorer-girl-goggles-aviator.webp" alt="Explorer girl aviator"><div class="prompt-overlay"><span>aviator goggles, orange hair, wink, explorer outfit</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/51-royalty-girl-red-tiara-pearls.webp" alt="Royalty girl tiara pearls"><div class="prompt-overlay"><span>red hair, tiara, pearl earrings, regal gaze</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/52-royalty-girl-red-tiara-golden.webp" alt="Royalty girl tiara golden"><div class="prompt-overlay"><span>red hair, golden tiara, cheerful, warm smile</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/17-archetype-boy-royalty-crown.webp" alt="Royalty crown boy" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/17-archetype-boy-royalty-crown.webp" alt="Royalty crown boy"></noscript><div class="prompt-overlay"><span>crown, royal cape, proud expression</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/35-royalty-boy-crown-brown.webp" alt="Royalty boy brown hair" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/35-royalty-boy-crown-brown.webp" alt="Royalty boy brown hair"></noscript><div class="prompt-overlay"><span>small crown, gold earrings, red cape, charming</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/36-royalty-boy-crown-purple.webp" alt="Royalty boy purple hair" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/36-royalty-boy-crown-purple.webp" alt="Royalty boy purple hair"></noscript><div class="prompt-overlay"><span>purple hair, crown, gold earrings, military jacket</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/37-stylish-boy-earrings.webp" alt="Stylish boy earrings" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/37-stylish-boy-earrings.webp" alt="Stylish boy earrings"></noscript><div class="prompt-overlay"><span>dark hair, gold hoop earrings, smirk, elegant</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/27-explorer-boy-goggles-adventurer.webp" alt="Explorer boy goggles" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/27-explorer-boy-goggles-adventurer.webp" alt="Explorer boy goggles"></noscript><div class="prompt-overlay"><span>aviator goggles, backpack, adventurer, curious</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/31-explorer-girl-goggles-aviator.webp" alt="Explorer girl aviator" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/31-explorer-girl-goggles-aviator.webp" alt="Explorer girl aviator"></noscript><div class="prompt-overlay"><span>aviator goggles, orange hair, wink, explorer outfit</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/51-royalty-girl-red-tiara-pearls.webp" alt="Royalty girl tiara pearls" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/51-royalty-girl-red-tiara-pearls.webp" alt="Royalty girl tiara pearls"></noscript><div class="prompt-overlay"><span>red hair, tiara, pearl earrings, regal gaze</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/52-royalty-girl-red-tiara-golden.webp" alt="Royalty girl tiara golden" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/52-royalty-girl-red-tiara-golden.webp" alt="Royalty girl tiara golden"></noscript><div class="prompt-overlay"><span>red hair, golden tiara, cheerful, warm smile</span></div></div>
       </div>
     </div>
 
@@ -2722,15 +2739,15 @@ footer .footer-accent { color: var(--accent); }
         <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
       <div class="avatar-accordion-body">
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/19-archetype-girl-scientist-labcoat.webp" alt="Scientist girl labcoat"><div class="prompt-overlay"><span>lab coat, safety goggles, test tubes</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/20-archetype-boy-techscientist-vrvisor.webp" alt="Tech scientist VR"><div class="prompt-overlay"><span>VR visor, tech gear, futuristic scientist</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/39-scientist-boy-labcoat-goggles.webp" alt="Scientist boy lab goggles"><div class="prompt-overlay"><span>lab coat, safety goggles, test tube, excited</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/40-scientist-girl-goggles-colorful.webp" alt="Scientist girl colorful"><div class="prompt-overlay"><span>lab goggles, colorful lab coat, sparkles, messy hair</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/41-scientist-boy-goggles-red.webp" alt="Scientist boy red goggles"><div class="prompt-overlay"><span>red tinted goggles, lab coat, gloves, confident smirk</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/42-athletic-boy-muscular-jersey.webp" alt="Athletic muscular boy"><div class="prompt-overlay"><span>muscular, athletic jersey, earbuds, energetic grin</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/53-scientist-boy-visor-labcoat-blue.webp" alt="Scientist boy blue visor"><div class="prompt-overlay"><span>blue visor, lab coat, serious, blue eyes</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/54-scientist-boy-glasses-beard.webp" alt="Scientist boy glasses beard"><div class="prompt-overlay"><span>glasses, goatee, lab coat, thinking pose</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/55-scientist-girl-purple-glasses-labcoat.webp" alt="Scientist girl purple glasses"><div class="prompt-overlay"><span>purple hair, glasses, lab coat, gentle smile</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/19-archetype-girl-scientist-labcoat.webp" alt="Scientist girl labcoat" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/19-archetype-girl-scientist-labcoat.webp" alt="Scientist girl labcoat"></noscript><div class="prompt-overlay"><span>lab coat, safety goggles, test tubes</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/20-archetype-boy-techscientist-vrvisor.webp" alt="Tech scientist VR" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/20-archetype-boy-techscientist-vrvisor.webp" alt="Tech scientist VR"></noscript><div class="prompt-overlay"><span>VR visor, tech gear, futuristic scientist</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/39-scientist-boy-labcoat-goggles.webp" alt="Scientist boy lab goggles" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/39-scientist-boy-labcoat-goggles.webp" alt="Scientist boy lab goggles"></noscript><div class="prompt-overlay"><span>lab coat, safety goggles, test tube, excited</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/40-scientist-girl-goggles-colorful.webp" alt="Scientist girl colorful" width="1024" height="964"><noscript><img loading="lazy" src="assets/ai-showcase/40-scientist-girl-goggles-colorful.webp" alt="Scientist girl colorful"></noscript><div class="prompt-overlay"><span>lab goggles, colorful lab coat, sparkles, messy hair</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/41-scientist-boy-goggles-red.webp" alt="Scientist boy red goggles" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/41-scientist-boy-goggles-red.webp" alt="Scientist boy red goggles"></noscript><div class="prompt-overlay"><span>red tinted goggles, lab coat, gloves, confident smirk</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/42-athletic-boy-muscular-jersey.webp" alt="Athletic muscular boy" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/42-athletic-boy-muscular-jersey.webp" alt="Athletic muscular boy"></noscript><div class="prompt-overlay"><span>muscular, athletic jersey, earbuds, energetic grin</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/53-scientist-boy-visor-labcoat-blue.webp" alt="Scientist boy blue visor" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/53-scientist-boy-visor-labcoat-blue.webp" alt="Scientist boy blue visor"></noscript><div class="prompt-overlay"><span>blue visor, lab coat, serious, blue eyes</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/54-scientist-boy-glasses-beard.webp" alt="Scientist boy glasses beard" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/54-scientist-boy-glasses-beard.webp" alt="Scientist boy glasses beard"></noscript><div class="prompt-overlay"><span>glasses, goatee, lab coat, thinking pose</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/55-scientist-girl-purple-glasses-labcoat.webp" alt="Scientist girl purple glasses" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/55-scientist-girl-purple-glasses-labcoat.webp" alt="Scientist girl purple glasses"></noscript><div class="prompt-overlay"><span>purple hair, glasses, lab coat, gentle smile</span></div></div>
       </div>
     </div>
 
@@ -2740,13 +2757,13 @@ footer .footer-accent { color: var(--accent); }
         <svg class="avatar-accordion-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
       <div class="avatar-accordion-body">
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/23-athletic-boy-boxer-intense.webp" alt="Boxer boy"><div class="prompt-overlay"><span>boxing gloves, intense stare, fighter stance</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/24-athletic-girl-gym-wink.webp" alt="Gym girl wink"><div class="prompt-overlay"><span>sports top, wink, gym accessories, athletic</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/56-street-girl-cap-bubblegum-crop.webp" alt="Street athletic girl"><div class="prompt-overlay"><span>cap, bubblegum, crop top, chain necklace</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/57-athletic-boy-swimmer-towel.webp" alt="Swimmer boy"><div class="prompt-overlay"><span>swimmer, towel, goggles, muscular, friendly</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/58-athletic-boy-headband-basketball.webp" alt="Basketball boy"><div class="prompt-overlay"><span>red headband, basketball jersey, grin</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/59-athletic-girl-muscular-peace.webp" alt="Muscular girl peace"><div class="prompt-overlay"><span>tank top, muscular, peace sign, wink</span></div></div>
-        <div class="avatar-cell"><img loading="lazy" src="assets/ai-showcase/60-athletic-girl-cap-bubblegum-muscular.webp" alt="Athletic girl bubblegum"><div class="prompt-overlay"><span>trucker cap, bubblegum, muscular, gold earrings</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/23-athletic-boy-boxer-intense.webp" alt="Boxer boy" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/23-athletic-boy-boxer-intense.webp" alt="Boxer boy"></noscript><div class="prompt-overlay"><span>boxing gloves, intense stare, fighter stance</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/24-athletic-girl-gym-wink.webp" alt="Gym girl wink" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/24-athletic-girl-gym-wink.webp" alt="Gym girl wink"></noscript><div class="prompt-overlay"><span>sports top, wink, gym accessories, athletic</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/56-street-girl-cap-bubblegum-crop.webp" alt="Street athletic girl" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/56-street-girl-cap-bubblegum-crop.webp" alt="Street athletic girl"></noscript><div class="prompt-overlay"><span>cap, bubblegum, crop top, chain necklace</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/57-athletic-boy-swimmer-towel.webp" alt="Swimmer boy" width="1024" height="980"><noscript><img loading="lazy" src="assets/ai-showcase/57-athletic-boy-swimmer-towel.webp" alt="Swimmer boy"></noscript><div class="prompt-overlay"><span>swimmer, towel, goggles, muscular, friendly</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/58-athletic-boy-headband-basketball.webp" alt="Basketball boy" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/58-athletic-boy-headband-basketball.webp" alt="Basketball boy"></noscript><div class="prompt-overlay"><span>red headband, basketball jersey, grin</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/59-athletic-girl-muscular-peace.webp" alt="Muscular girl peace" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/59-athletic-girl-muscular-peace.webp" alt="Muscular girl peace"></noscript><div class="prompt-overlay"><span>tank top, muscular, peace sign, wink</span></div></div>
+        <div class="avatar-cell"><img loading="lazy" data-src="assets/ai-showcase/60-athletic-girl-cap-bubblegum-muscular.webp" alt="Athletic girl bubblegum" width="1024" height="1024"><noscript><img loading="lazy" src="assets/ai-showcase/60-athletic-girl-cap-bubblegum-muscular.webp" alt="Athletic girl bubblegum"></noscript><div class="prompt-overlay"><span>trucker cap, bubblegum, muscular, gold earrings</span></div></div>
       </div>
     </div>
   </div>
@@ -2790,7 +2807,7 @@ footer .footer-accent { color: var(--accent); }
     <div class="ipadapter-demo">
       <div class="ipadapter-ref">
         <span class="prompt-label">Reference</span>
-        <img src="assets/ai-showcase/ipadapter/14.webp" alt="Original cowgirl character reference" loading="lazy">
+        <img data-src="assets/ai-showcase/ipadapter/14.webp" alt="Original cowgirl character reference" loading="lazy" width="618" height="800"><noscript><img src="assets/ai-showcase/ipadapter/14.webp" alt="Original cowgirl character reference" loading="lazy"></noscript>
       </div>
       <div class="ipadapter-arrow">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 6 15 12 9 18"/></svg>
@@ -2799,19 +2816,19 @@ footer .footer-accent { color: var(--accent); }
         <span class="prompt-label">Generated Angles</span>
         <div class="ipadapter-grid">
           <div class="ipadapter-cell">
-            <img src="assets/ai-showcase/ipadapter/front.webp" alt="Front view" loading="lazy">
+            <img data-src="assets/ai-showcase/ipadapter/front.webp" alt="Front view" loading="lazy" width="800" height="800"><noscript><img src="assets/ai-showcase/ipadapter/front.webp" alt="Front view" loading="lazy"></noscript>
             <span>Front</span>
           </div>
           <div class="ipadapter-cell">
-            <img src="assets/ai-showcase/ipadapter/back.webp" alt="Back view" loading="lazy">
+            <img data-src="assets/ai-showcase/ipadapter/back.webp" alt="Back view" loading="lazy" width="800" height="800"><noscript><img src="assets/ai-showcase/ipadapter/back.webp" alt="Back view" loading="lazy"></noscript>
             <span>Back</span>
           </div>
           <div class="ipadapter-cell">
-            <img src="assets/ai-showcase/ipadapter/shocked.webp" alt="Shocked expression" loading="lazy">
+            <img data-src="assets/ai-showcase/ipadapter/shocked.webp" alt="Shocked expression" loading="lazy" width="800" height="800"><noscript><img src="assets/ai-showcase/ipadapter/shocked.webp" alt="Shocked expression" loading="lazy"></noscript>
             <span>Shocked</span>
           </div>
           <div class="ipadapter-cell">
-            <img src="assets/ai-showcase/ipadapter/side_view2.webp" alt="Side view" loading="lazy">
+            <img data-src="assets/ai-showcase/ipadapter/side_view2.webp" alt="Side view" loading="lazy" width="800" height="800"><noscript><img src="assets/ai-showcase/ipadapter/side_view2.webp" alt="Side view" loading="lazy"></noscript>
             <span>Side</span>
           </div>
         </div>
@@ -2857,7 +2874,7 @@ footer .footer-accent { color: var(--accent); }
     <div class="fashion-demo">
       <div class="fashion-source">
         <span class="prompt-label">Base Mannequin</span>
-        <img src="assets/ai-showcase/fashion/mannequin-base.webp" alt="Base mannequin with white t-shirt" loading="lazy">
+        <img data-src="assets/ai-showcase/fashion/mannequin-base.webp" alt="Base mannequin with white t-shirt" loading="lazy" width="533" height="800"><noscript><img src="assets/ai-showcase/fashion/mannequin-base.webp" alt="Base mannequin with white t-shirt" loading="lazy"></noscript>
       </div>
       <div class="ipadapter-arrow">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 6 15 12 9 18"/></svg>
@@ -2866,19 +2883,19 @@ footer .footer-accent { color: var(--accent); }
         <span class="prompt-label">Generated Outfits</span>
         <div class="fashion-grid">
           <div class="fashion-cell">
-            <img src="assets/ai-showcase/fashion/leather-jacket.webp" alt="Leather jacket" loading="lazy">
+            <img data-src="assets/ai-showcase/fashion/leather-jacket.webp" alt="Leather jacket" loading="lazy" width="800" height="800"><noscript><img src="assets/ai-showcase/fashion/leather-jacket.webp" alt="Leather jacket" loading="lazy"></noscript>
             <span>Leather Jacket</span>
           </div>
           <div class="fashion-cell">
-            <img src="assets/ai-showcase/fashion/overcoat.webp" alt="Overcoat" loading="lazy">
+            <img data-src="assets/ai-showcase/fashion/overcoat.webp" alt="Overcoat" loading="lazy" width="800" height="800"><noscript><img src="assets/ai-showcase/fashion/overcoat.webp" alt="Overcoat" loading="lazy"></noscript>
             <span>Overcoat</span>
           </div>
           <div class="fashion-cell">
-            <img src="assets/ai-showcase/fashion/trench-coat.webp" alt="Trench coat" loading="lazy">
+            <img data-src="assets/ai-showcase/fashion/trench-coat.webp" alt="Trench coat" loading="lazy" width="800" height="800"><noscript><img src="assets/ai-showcase/fashion/trench-coat.webp" alt="Trench coat" loading="lazy"></noscript>
             <span>Trench Coat</span>
           </div>
           <div class="fashion-cell">
-            <img src="assets/ai-showcase/fashion/dress-shirt.webp" alt="Dress shirt" loading="lazy">
+            <img data-src="assets/ai-showcase/fashion/dress-shirt.webp" alt="Dress shirt" loading="lazy" width="800" height="800"><noscript><img src="assets/ai-showcase/fashion/dress-shirt.webp" alt="Dress shirt" loading="lazy"></noscript>
             <span>Dress Shirt</span>
           </div>
         </div>
@@ -3038,7 +3055,7 @@ footer .footer-accent { color: var(--accent); }
     </div>
     </div>
     <div class="about-aside reveal">
-      <img class="about-portrait" src="assets/profile.webp" alt="Kim Julongbayan"
+      <img class="about-portrait" src="assets/profile-512-v1.webp" srcset="assets/profile-512-v1.webp 512w, assets/profile.webp 1024w" sizes="(max-width: 768px) 240px, (max-width: 1200px) 320px, 480px" alt="Kim Julongbayan"
            width="1024" height="1024" loading="lazy" decoding="async">
       <p class="about-figures" id="aboutFigures" hidden></p>
     </div>
@@ -3106,6 +3123,7 @@ footer .footer-accent { color: var(--accent); }
   </div>
 </section>
 
+</main>
 <footer>
   <p>&copy; 2026 Kim Julongbayan</p>
   <p>Built with <span class="footer-accent">meticulous</span> attention to detail</p>
@@ -3151,7 +3169,24 @@ document.querySelectorAll('.nav-links a[href^="#"]').forEach(link => {
   hamburger.addEventListener('click', () => {
     hamburger.classList.toggle('active');
     mobileMenu.classList.toggle('open');
-    if (mobileMenu.classList.contains('open')) { lockScroll(); } else { unlockScroll(); }
+    const open = mobileMenu.classList.contains('open');
+    hamburger.setAttribute('aria-expanded', String(open));
+    hamburger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    mobileMenu.setAttribute('aria-hidden', String(!open));
+    mobileMenu.inert = !open;
+    if (open) { lockScroll(); } else { unlockScroll(); }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape' || !mobileMenu.classList.contains('open')) return;
+    hamburger.classList.remove('active');
+    mobileMenu.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
+    hamburger.setAttribute('aria-label', 'Open menu');
+    mobileMenu.setAttribute('aria-hidden', 'true');
+    mobileMenu.inert = true;
+    unlockScroll();
+    hamburger.focus();
   });
 
   menuLinks.forEach(link => {
@@ -3159,8 +3194,14 @@ document.querySelectorAll('.nav-links a[href^="#"]').forEach(link => {
       e.preventDefault();
       hamburger.classList.remove('active');
       mobileMenu.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', 'false');
+      hamburger.setAttribute('aria-label', 'Open menu');
+      mobileMenu.setAttribute('aria-hidden', 'true');
+      mobileMenu.inert = true;
       unlockScroll();
-      const target = document.querySelector(link.getAttribute('href'));
+      const href = link.getAttribute('href');
+      if (!href.startsWith('#')) { location.assign(href); return; }
+      const target = document.querySelector(href);
       if (target) {
         const navHeight = document.querySelector('nav').offsetHeight;
         const targetPos = target.getBoundingClientRect().top + window.scrollY - navHeight - 20;
@@ -3337,14 +3378,14 @@ if (window.innerWidth > 768) {
   if (!host) return;
 
   var seen = Object.create(null);
-  document.querySelectorAll('img[src*="assets/ai-showcase/"]').forEach(function (img) {
-    seen[img.getAttribute('src')] = 1;
+  document.querySelectorAll('img[src*="assets/ai-showcase/"], img[data-src*="assets/ai-showcase/"]').forEach(function (img) {
+    seen[img.dataset.src || img.getAttribute('src')] = 1;
   });
 
   [[document.querySelectorAll('.work-item').length, 'projects'],
    [document.querySelectorAll('.ai-tab-content').length, 'AI systems'],
    [Object.keys(seen).length, 'generated images on this page'],
-   [1, 'hand-written HTML file, no build step']
+   [1, 'hand-written portfolio page']
   ].forEach(function (pair) {
     var span = document.createElement('span');
     var num = document.createElement('b');
@@ -3368,21 +3409,7 @@ document.querySelectorAll('.avatar-accordion-header').forEach(header => {
   });
 });
 
-// Preload all avatar images when AI showcase section nears viewport
-const aiSection = document.getElementById('ai-showcase');
-if (aiSection) {
-  const preloadObserver = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting) {
-      aiSection.querySelectorAll('img[loading="lazy"]').forEach(img => {
-        img.loading = 'eager';
-        if (!img.complete) img.src = img.src;
-      });
-      preloadObserver.disconnect();
-    }
-  }, { rootMargin: '200px' });
-  preloadObserver.observe(aiSection);
-}
-
+// Gallery sources are attached by assets/js/media.js only when revealed.
 // Tap-to-reveal prompt overlays on avatar cells (Safari-safe)
 function togglePrompt(cell) {
   const wasActive = cell.classList.contains('show-prompt');
@@ -3487,12 +3514,18 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
 
   var state = { animal: 0, 'double-meaning': 0, literal: 0, specificity: 0 };
 
-  function update(cat) {
+  function update(cat, requested) {
     var idx = state[cat];
     var pair = data[cat].pairs[idx];
     var n = (idx + 1);
-    document.getElementById('img-' + cat + '-before').src = base + cat + '/before_' + n + '.webp';
-    document.getElementById('img-' + cat + '-after').src = base + cat + '/after_' + n + '.webp';
+    var before = document.getElementById('img-' + cat + '-before');
+    var beforeURL = base + cat + '/before_' + n + '.webp';
+    if (requested || before.dataset.loaded) { before.src = beforeURL; delete before.dataset.src; }
+    else before.dataset.src = beforeURL;
+    var after = document.getElementById('img-' + cat + '-after');
+    var afterURL = base + cat + '/after_' + n + '.webp';
+    if (requested || after.dataset.loaded) { after.src = afterURL; delete after.dataset.src; }
+    else after.dataset.src = afterURL;
     document.getElementById('prompt-' + cat + '-before').textContent = pair.before;
     document.getElementById('prompt-' + cat + '-after').textContent = pair.after;
     document.getElementById('nav-' + cat).textContent = n + ' / ' + data[cat].count;
@@ -3500,8 +3533,10 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
     // preload adjacent
     var nextIdx = (idx + 1) % data[cat].count;
     var nn = nextIdx + 1;
-    new Image().src = base + cat + '/before_' + nn + '.webp';
-    new Image().src = base + cat + '/after_' + nn + '.webp';
+    if (requested) {
+      new Image().src = base + cat + '/before_' + nn + '.webp';
+      new Image().src = base + cat + '/after_' + nn + '.webp';
+    }
   }
 
   // Init all categories
@@ -3529,7 +3564,7 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
       var count = data[cat].count;
       if (dir === 'next') state[cat] = (state[cat] + 1) % count;
       else state[cat] = (state[cat] - 1 + count) % count;
-      update(cat);
+      update(cat, true);
     });
   });
 })();
@@ -3543,7 +3578,7 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
 
   /* ---- Character-by-character scroll reveal ---- */
   var para = document.querySelector('.char-reveal');
-  if (para && !reduced) {
+  if (para && !reduced && !matchMedia('(hover: none), (pointer: coarse)').matches) {
     var text = para.textContent;
     para.textContent = '';
     var chars = [];
@@ -3629,7 +3664,9 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
       // Hover opens it on a pointer; focus does the same for a keyboard, so
       // tabbing the list walks the panels rather than skipping past them.
       row.style.setProperty('--r', i);
-      row.addEventListener('mouseenter', function() { open(i); });
+      if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+        row.addEventListener('mouseenter', function() { open(i); });
+      }
       row.addEventListener('focus', function() { open(i); });
       row.addEventListener('click', function() { open(i); });
 
@@ -3645,13 +3682,13 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
         rows[n].setAttribute('aria-expanded', n === i ? 'true' : 'false');
         panels[n].classList.toggle('is-on', n === i);
       }
+      window.dispatchEvent(new Event('portfolio:media-change'));
       // Videos only play in the open panel: six autoplaying loops decoding at
       // once is real battery for five things nobody is looking at.
       panels.forEach(function(panel, n) {
         var v = panel.querySelector('video');
         if (!v) return;
-        if (n === i) { var pr = v.play(); if (pr && pr.catch) pr.catch(function(){}); }
-        else v.pause();
+        if (n !== i) v.pause();
       });
     }
 
@@ -3748,7 +3785,8 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
   });
 })();
 </script>
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script src="assets/js/turnstile-loader.js" defer></script>
+<script src="assets/js/media.js" defer></script>
 <script src="assets/js/horizon-glow.js" defer></script>
 <script src="assets/js/project-visuals.js" defer></script>
 <script src="assets/js/hero-particles.js" defer></script>
@@ -3775,7 +3813,21 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
  * Kept deliberately plain: no library, no animation, no observer - it is a table
  * of facts, and the facts are the interesting part.
  */
-(function () {
+(function initializeContributions() {
+  // The calendar's 2,191 labeled days are needed when its section approaches.
+  // Building closed years during hero loading blocks the initial interaction.
+  var activity = document.getElementById('activity');
+  if (activity && !initializeContributions.observed && 'IntersectionObserver' in window) {
+    initializeContributions.observed = true;
+    var observer = new IntersectionObserver(function (entries) {
+      if (!entries[0].isIntersecting) return;
+      observer.disconnect();
+      setTimeout(initializeContributions, 0);
+    }, { rootMargin: '600px' });
+    observer.observe(activity);
+    return;
+  }
+
   'use strict';
   var host = document.getElementById('aiActivity');
   if (!host) return;
@@ -3883,6 +3935,7 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
         var count = data.days[iso] || 0;
         var cell = document.createElement('span');
         cell.className = 'ai-cell';
+        cell.setAttribute('role', 'img');
         cell.setAttribute('data-level', level(count));
         // The count is in the accessible name, so the grid does not convey its
         // meaning through colour alone.
@@ -4046,7 +4099,19 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
  * context counted again on every turn. Output tokens and message count are what
  * actually happened.
  */
-(function () {
+(function initializeUsageStrip() {
+  var section = document.getElementById('activity');
+  if (section && !initializeUsageStrip.observed && 'IntersectionObserver' in window) {
+    initializeUsageStrip.observed = true;
+    var observer = new IntersectionObserver(function (entries) {
+      if (!entries[0].isIntersecting) return;
+      observer.disconnect();
+      setTimeout(initializeUsageStrip, 0);
+    }, { rootMargin: '600px' });
+    observer.observe(section);
+    return;
+  }
+
   'use strict';
   var strip = document.getElementById('aiStats');
   var caption = document.getElementById('aiStatsCaption');
@@ -4189,7 +4254,19 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
  * a fifth of 2023, and a bar inviting "what happened in 2024" answers nothing
  * this section is about.
  */
-(function () {
+(function initializePriorHistory() {
+  var section = document.getElementById('activity');
+  if (section && !initializePriorHistory.observed && 'IntersectionObserver' in window) {
+    initializePriorHistory.observed = true;
+    var observer = new IntersectionObserver(function (entries) {
+      if (!entries[0].isIntersecting) return;
+      observer.disconnect();
+      setTimeout(initializePriorHistory, 0);
+    }, { rootMargin: '600px' });
+    observer.observe(section);
+    return;
+  }
+
   'use strict';
   var host = document.getElementById('aiPrior');
   if (!host) return;
@@ -4272,7 +4349,19 @@ document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
  * accordion in the block above now: the bar IS the calendar's control, so a
  * year states its total once and there is no second copy of the scale to drift.
  */
-(function () {
+(function initializeUsageCharts() {
+  var section = document.getElementById('activity');
+  if (section && !initializeUsageCharts.observed && 'IntersectionObserver' in window) {
+    initializeUsageCharts.observed = true;
+    var observer = new IntersectionObserver(function (entries) {
+      if (!entries[0].isIntersecting) return;
+      observer.disconnect();
+      setTimeout(initializeUsageCharts, 0);
+    }, { rootMargin: '600px' });
+    observer.observe(section);
+    return;
+  }
+
   'use strict';
   var cols = document.getElementById('aiCols');
   if (!cols) return;

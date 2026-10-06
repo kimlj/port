@@ -1,0 +1,11 @@
+{
+  "name": "kimlj-portfolio",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "build:static": "node scripts/build.mjs --static-only",
+    "test": "node --test scripts/performance.test.mjs"
+  },
+  "devDependencies": { "esbuild": "0.28.2" }
+}
