@@ -73,3 +73,4 @@ letter points at.
 | 2026-10-06 | AI Product Builder, UI/UX and Claude Code, unnamed employer 169728, $5/hr full time (onlinejobs.ph) | `/r/aiproductbuilder-4ee4de40.pdf` | `Kim_Julongbayan_Resume_AIProductBuilder.pdf` |
 | 2026-10-07 | Virtual Assistant, digital marketing company, employer not disclosed (onlinejobs.ph) | `/r/digitalmarketingva-87fad4c6.pdf` | `Kim_Julongbayan_Resume_DigitalMarketingVA.pdf` |
 | 2026-10-07 | AI Utilization Expert (Claude and ChatGPT), employer undisclosed, onlinejobs.ph job 1736121 | `/r/aiutilization1736121-a893472b.pdf` | `Kim_Julongbayan_Resume_AIUtilization1736121.pdf` |
+| 2026-10-07 | AI Utilization Expert (Claude and ChatGPT), employer undisclosed, onlinejobs.ph job 1736121 | `/r/aiutilization1736121-5515bd38.pdf` | `Kim_Julongbayan_Resume_AIUtilization1736121.pdf` |
