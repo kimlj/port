@@ -71,3 +71,4 @@ letter points at.
 | 2026-10-06 | Automation Specialist, employer name not given (onlinejobs.ph, updated Oct 5 2026) | `/r/automationspecialist-249feae7.pdf` | `Kim_Julongbayan_Resume_AutomationSpecialist.pdf` |
 | 2026-10-06 | Automation Specialist, employer name not given (onlinejobs.ph, updated Oct 5 2026) | `/r/automationspecialist-a17e64e9.pdf` | `Kim_Julongbayan_Resume_AutomationSpecialist.pdf` |
 | 2026-10-06 | AI Product Builder, UI/UX and Claude Code, unnamed employer 169728, $5/hr full time (onlinejobs.ph) | `/r/aiproductbuilder-4ee4de40.pdf` | `Kim_Julongbayan_Resume_AIProductBuilder.pdf` |
+| 2026-10-07 | Virtual Assistant, digital marketing company, employer not disclosed (onlinejobs.ph) | `/r/digitalmarketingva-87fad4c6.pdf` | `Kim_Julongbayan_Resume_DigitalMarketingVA.pdf` |
