@@ -75,3 +75,4 @@ letter points at.
 | 2026-10-07 | AI Utilization Expert (Claude and ChatGPT), employer undisclosed, onlinejobs.ph job 1736121 | `/r/aiutilization1736121-a893472b.pdf` | `Kim_Julongbayan_Resume_AIUtilization1736121.pdf` |
 | 2026-10-07 | AI Utilization Expert (Claude and ChatGPT), employer undisclosed, onlinejobs.ph job 1736121 | `/r/aiutilization1736121-5515bd38.pdf` | `Kim_Julongbayan_Resume_AIUtilization1736121.pdf` |
 | 2026-10-07 | AI Automation & Systems Specialist, FunnelKween (OnlineJobs.ph, Millie Marie) | `/r/funnelkween-21f21c4d.pdf` | `Kim_Julongbayan_Resume_FunnelKween.pdf` |
+| 2026-10-08 | Software Developer, Operations, Delivery & AI, Token of Trust (onlinejobs.ph) | `/r/tokenoftrust-bb7d7873.pdf` | `Kim_Julongbayan_Resume_TokenOfTrust.pdf` |
