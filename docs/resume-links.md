@@ -81,3 +81,4 @@ letter points at.
 | 2026-10-09 | AI Creative Producer, Sora (Vitrubuild), A$500/week (onlinejobs.ph) | `/r/sora-b8f56917.pdf` | `Kim_Julongbayan_Resume_Sora.pdf` |
 | 2026-10-09 | AI Creative Producer, Sora (Vitrubuild): five WordWarz spec ads (onlinejobs.ph) | `/r/sora-ads-585bcfed/` | `r/sora-ads-585bcfed/` |
 | 2026-10-09 | AI Developer / Full-Stack (maintenance and debugging), employer not named, $6/hr quoted (onlinejobs.ph) | `/r/aidevsupport-9940b4e3.pdf` | `Kim_Julongbayan_Resume_AIDevSupport.pdf` |
+| 2026-10-10 | Virtual Assistant, Cellexia Labs / Cellexia LTD (OnlineJobs.ph) | `/r/cellexia-12c1eb4f.pdf` | `Kim_Julongbayan_Resume_Cellexia.pdf` |
