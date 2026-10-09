@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>WordWarz Spec Ads</title>
+<style>
+  :root {
+    --bg: #f6f5f2; --surface: #ffffff; --text: #1c1c1a; --muted: #6b6a64; --line: #dcdad3; --accent: #1f8a4c;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg: #0a0a0b; --surface: #111113; --text: #f0f0f2; --muted: #8a8a95; --line: #26262b; --accent: #c8ff00; }
+  }
+  :root[data-theme="dark"] { --bg: #0a0a0b; --surface: #111113; --text: #f0f0f2; --muted: #8a8a95; --line: #26262b; --accent: #c8ff00; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.55 "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 1200px; margin: 0 auto; padding: 40px 16px 64px; }
+  h1 { font-size: clamp(26px, 4vw, 38px); line-height: 1.15; margin: 0 0 10px; letter-spacing: -0.01em; }
+  .lead { color: var(--muted); max-width: 720px; margin: 0 0 32px; }
+  .lead a { color: var(--text); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 20px; }
+  figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+  figure a { display: block; }
+  img { display: block; width: 100%; height: auto; aspect-ratio: 941 / 1672; background: #121417; }
+  figcaption { padding: 12px 14px 14px; font-size: 14px; }
+  figcaption b { display: block; font-size: 15px; margin-bottom: 2px; }
+  figcaption span { color: var(--muted); }
+  .num { color: var(--accent); font-weight: 600; }
+  footer { margin-top: 36px; color: var(--muted); font-size: 14px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Five spec ads for WordWarz</h1>
+  <p class="lead">Static 9:16 ads I made for the Sora application, for my own game, <a href="https://wordwarz.io">WordWarz.io</a>. Each has one angle, a real number from the game, and a real in-game screenshot or the game's real item and mode list. Tap an ad to open it full size.</p>
+
+  <div class="grid">
+    <figure>
+      <a href="01-same-word.jpg"><img src="01-same-word.jpg" alt="Ad: Same word. 7 players. One winner. A phone shows every player's board filling up live." width="941" height="1672"></a>
+      <figcaption><b>Live head-to-head</b><span>Number: <span class="num">7 players</span>, the room in the screenshot.</span></figcaption>
+    </figure>
+    <figure>
+      <a href="02-players-daily.jpg"><img src="02-players-daily.jpg" alt="Ad: 40 to 70 players every day. A phone shows a board mid-game." width="941" height="1672" loading="lazy"></a>
+      <figcaption><b>Always someone to play</b><span>Number: <span class="num">40 to 70</span> players on a given day.</span></figcaption>
+    </figure>
+    <figure>
+      <a href="03-items.jpg"><img src="03-items.jpg" alt="Ad: 11 items, 6 are for your rivals. Cards for Flip It, Keyboard Shuffle, Identity Theft and Shield." width="941" height="1672" loading="lazy"></a>
+      <figcaption><b>Items turn it into a fight</b><span>Number: <span class="num">11 items</span>, 6 of them sabotages.</span></figcaption>
+    </figure>
+    <figure>
+      <a href="04-modes.jpg"><img src="04-modes.jpg" alt="Ad: 3 modes, pick your war. Classic, Blitz and Elimination." width="941" height="1672" loading="lazy"></a>
+      <figcaption><b>Three ways to play</b><span>Number: <span class="num">3 modes</span>, with their real round rules.</span></figcaption>
+    </figure>
+    <figure>
+      <a href="05-leaderboards.jpg"><img src="05-leaderboards.jpg" alt="Ad: Win a match, watch your rank move. A phone shows the ranked leaderboard." width="941" height="1672" loading="lazy"></a>
+      <figcaption><b>Ranked climbing</b><span>Number: leaderboards refresh every <span class="num">15 minutes</span>.</span></figcaption>
+    </figure>
+  </div>
+
+  <footer>Kim Julongbayan · kimlj.dev</footer>
+</main>
+</body>
+</html>

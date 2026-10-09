@@ -79,3 +79,4 @@ letter points at.
 | 2026-10-08 | Full-Stack Developer, Recruiting Dashboard from Google Sheets, Outreach Hiring / Sam (onlinejobs.ph) | `/r/outreachhiring-62789cab.pdf` | `Kim_Julongbayan_Resume_OutreachHiring.pdf` |
 | 2026-10-09 | AI Creative Producer, Sora (Vitrubuild), A$500/week (onlinejobs.ph) | `/r/sora-4e04fd6c.pdf` | `Kim_Julongbayan_Resume_Sora.pdf` |
 | 2026-10-09 | AI Creative Producer, Sora (Vitrubuild), A$500/week (onlinejobs.ph) | `/r/sora-b8f56917.pdf` | `Kim_Julongbayan_Resume_Sora.pdf` |
+| 2026-10-09 | AI Creative Producer, Sora (Vitrubuild): five WordWarz spec ads (onlinejobs.ph) | `/r/sora-ads-585bcfed/` | `r/sora-ads-585bcfed/` |
