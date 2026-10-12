@@ -86,3 +86,4 @@ letter points at.
 | 2026-10-12 | BlueGeko - QA Engineer Manual & Automation (OnlineJobs.ph) | `/r/bluegeko-5b2d39e2.pdf` | `Kim_Julongbayan_Resume_BlueGeko.pdf` |
 | 2026-10-12 | Unnamed employer - Automation Dashboard Setup gig (OnlineJobs.ph, updated Oct 10, 2026) | `/r/automationdashboard-5440ff3c.pdf` | `Kim_Julongbayan_Resume_AutomationDashboard.pdf` |
 | 2026-10-12 | Luke Hutchinson - React Native Mobile App Developer iOS & Android (OnlineJobs.ph) | `/r/lukehutchinson-99ac1fcf.pdf` | `Kim_Julongbayan_Resume_LukeHutchinson.pdf` |
+| 2026-10-12 | Maddie - AI-First Operations Manager, Australian adventure travel (OnlineJobs.ph) | `/r/maddieadventure-cd69a622.pdf` | `Kim_Julongbayan_Resume_MaddieAdventure.pdf` |
