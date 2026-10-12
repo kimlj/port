@@ -85,3 +85,4 @@ letter points at.
 | 2026-10-12 | Telemed Studios - Software Developer: API Integrations, Webhooks and Landing Pages (OnlineJobs.ph) | `/r/telemedstudios-fa48b9c9.pdf` | `Kim_Julongbayan_Resume_TelemedStudios.pdf` |
 | 2026-10-12 | BlueGeko - QA Engineer Manual & Automation (OnlineJobs.ph) | `/r/bluegeko-5b2d39e2.pdf` | `Kim_Julongbayan_Resume_BlueGeko.pdf` |
 | 2026-10-12 | Unnamed employer - Automation Dashboard Setup gig (OnlineJobs.ph, updated Oct 10, 2026) | `/r/automationdashboard-5440ff3c.pdf` | `Kim_Julongbayan_Resume_AutomationDashboard.pdf` |
+| 2026-10-12 | Luke Hutchinson - React Native Mobile App Developer iOS & Android (OnlineJobs.ph) | `/r/lukehutchinson-99ac1fcf.pdf` | `Kim_Julongbayan_Resume_LukeHutchinson.pdf` |
