@@ -67,6 +67,12 @@ const PUBLIC = [
   'index.html',
   'hub.html',
   'favicon.svg',
+  // Crawler and AI-agent files at the site root: one robots, one sitemap
+  // (the single public page; /hub and /r/* are noindex and stay out of it),
+  // and an llms.txt map of the site.
+  'robots.txt',
+  'sitemap.xml',
+  'llms.txt',
   'assets',
   'Kim_Julongbayan_Resume.pdf',
   'Kim_Julongbayan_Resume.docx',

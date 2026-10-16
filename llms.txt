@@ -1,0 +1,17 @@
+# Kim Julongbayan
+
+> Full stack and AI developer. This is his portfolio: shipped projects, technical work, experience and how to get in touch. Every project on it was built solo.
+
+## Main
+
+- [Portfolio](https://www.kimlj.dev/): projects, activity, AI work, skills, experience and contact, on one page
+- [Resume (PDF)](https://www.kimlj.dev/Kim_Julongbayan_Resume.pdf): the current general resume
+- [GitHub](https://github.com/kimlj): source code and open-source contributions
+- [LinkedIn](https://www.linkedin.com/in/kimjulongbayan)
+
+## Projects
+
+- [WordWarz](https://www.wordwarz.io/): a real-time multiplayer word game, live on the App Store and Google Play, with an entropy-based AI bot engine and ELO matchmaking
+- [MDS Pro Solutions](https://www.mdsprosolutions.com/): the internal system a US healthcare company runs its payroll and billing on, used every workday by its nursing team; Kim is its sole developer
+- [RecodeAI](https://recode.kimlj.dev): an AI website redesigner that crawls a site, reads its brand with Claude, and deploys a redesign to a live URL
+- Jobsift: a self-hosted Python job pipeline that reads job boards' APIs and alert emails, extracts listings with an LLM and scores them against a resume

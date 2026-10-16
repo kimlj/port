@@ -1,0 +1,5 @@
+# robots.txt for www.kimlj.dev
+User-agent: *
+Allow: /
+
+Sitemap: https://www.kimlj.dev/sitemap.xml
