@@ -90,3 +90,4 @@ letter points at.
 | 2026-10-12 | Maddie - AI-First Operations Manager, Australian adventure travel (OnlineJobs.ph) | `/r/maddieadventure-3bf4f3e2.pdf` | `Kim_Julongbayan_Resume_MaddieAdventure.pdf` |
 | 2026-10-17 | Node.js Developer (Full-Time): Keep Our Live Systems Running, small media company, employer 584161 (onlinejobs.ph) | `/r/nodemedia-3b74527e.pdf` | `Kim_Julongbayan_Resume_NodeMedia.pdf` |
 | 2026-10-17 | Full Stack Developer, ChowaCo LLC (onlinejobs.ph) | `/r/chowaco-2a9638d8.pdf` | `Kim_Julongbayan_Resume_ChowaCo.pdf` |
+| 2026-10-17 | AI Automation Specialist / AI Operations Architect, GFC toronto (onlinejobs.ph) | `/r/gfc-0eae45d1.pdf` | `Kim_Julongbayan_Resume_GFC.pdf` |
