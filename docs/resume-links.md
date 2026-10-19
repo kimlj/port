@@ -91,3 +91,4 @@ letter points at.
 | 2026-10-17 | Node.js Developer (Full-Time): Keep Our Live Systems Running, small media company, employer 584161 (onlinejobs.ph) | `/r/nodemedia-3b74527e.pdf` | `Kim_Julongbayan_Resume_NodeMedia.pdf` |
 | 2026-10-17 | Full Stack Developer, ChowaCo LLC (onlinejobs.ph) | `/r/chowaco-2a9638d8.pdf` | `Kim_Julongbayan_Resume_ChowaCo.pdf` |
 | 2026-10-17 | AI Automation Specialist / AI Operations Architect, GFC toronto (onlinejobs.ph) | `/r/gfc-0eae45d1.pdf` | `Kim_Julongbayan_Resume_GFC.pdf` |
+| 2026-10-19 | Web Assistant (Remote) for US Startup, Dave / E2 (OnlineJobs.ph, Oct 19 2026) | `/r/e2life-f4f7a8e7.pdf` | `Kim_Julongbayan_Resume_E2Life.pdf` |
