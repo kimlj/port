@@ -66,6 +66,8 @@ if (!process.argv.includes('--static-only')) {
 const PUBLIC = [
   'index.html',
   'hub.html',
+  // The Cockpit film (personal project page, linked from /hub).
+  'cockpit.html',
   'favicon.svg',
   // Crawler and AI-agent files at the site root: one robots, one sitemap
   // (the single public page; /hub and /r/* are noindex and stay out of it),

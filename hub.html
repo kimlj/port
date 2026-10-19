@@ -319,6 +319,16 @@ body {
 
 .panel-sub { margin: 0; color: var(--text-muted); font-size: 16px; max-width: 78ch; }
 
+/* Cockpit: a poster that opens the film page. */
+.cockpit-film { position: relative; display: block; max-width: 1040px; aspect-ratio: 16 / 9; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); background: #05080f; }
+.cockpit-film img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+.cockpit-film:hover img, .cockpit-film:focus-visible img { transform: scale(1.02); }
+.cockpit-play { position: absolute; left: 50%; bottom: 7%; transform: translateX(-50%); display: flex; align-items: center; gap: 12px; padding: 10px 18px 10px 10px; border-radius: 999px; background: rgba(5, 8, 15, 0.72); border: 1px solid rgba(255, 255, 255, 0.16); color: #eef2f8; font-family: var(--sans); white-space: nowrap; }
+.cockpit-play svg { width: 40px; height: 40px; padding: 11px 9px 11px 13px; border-radius: 50%; background: linear-gradient(135deg, #4f8cff, #7c6cff); fill: #fff; }
+.cockpit-play span { display: grid; gap: 1px; text-align: left; }
+.cockpit-play b { font-size: 14px; font-weight: 600; }
+.cockpit-play em { font-style: normal; font-size: 12px; color: #93a1b8; }
+
 /* Metrics. Four across at full width, and they are the first thing on the
    screen because they are the argument; the prose underneath supports them. */
 .metrics {
@@ -1206,8 +1216,12 @@ body {
       <span class="key">5</span><span class="tab-name">Shift Ops</span>
     </button>
 
-    <button class="tab" role="tab" id="tab-infrastructure" aria-controls="panel-infrastructure" aria-selected="false" data-target="infrastructure"><span class="key">6</span><span class="tab-name">Backend / VPS</span></button><div class="rail-foot">
-      <kbd>1</kbd>–<kbd>6</kbd> jump · <kbd>←</kbd><kbd>→</kbd> cycle
+    <button class="tab" role="tab" id="tab-cockpit" aria-controls="panel-cockpit" aria-selected="false" data-target="cockpit">
+      <span class="key">6</span><span class="tab-name">Cockpit</span>
+    </button>
+
+    <button class="tab" role="tab" id="tab-infrastructure" aria-controls="panel-infrastructure" aria-selected="false" data-target="infrastructure"><span class="key">7</span><span class="tab-name">Backend / VPS</span></button><div class="rail-foot">
+      <kbd>1</kbd>–<kbd>7</kbd> jump · <kbd>←</kbd><kbd>→</kbd> cycle
     </div>
   </nav>
 
@@ -2765,6 +2779,30 @@ body {
 </div>
 </div>
 </section>
+
+    <!-- ── Cockpit ──────────────────────────────────────────────────────
+         Cockpit runs on Kim's own machine, so there is nothing live to show
+         here; the panel points at the film on /cockpit instead. The figures
+         are facts about the product (dsh-workbench docs and source) and the
+         Vault count was taken on 19 Oct 2026.
+    -->
+    <section class="panel" id="panel-cockpit" role="tabpanel" aria-labelledby="tab-cockpit">
+      <div class="panel-head">
+        <h1 class="panel-title">Cockpit</h1>
+        <span class="badge">Personal project · local</span>
+      </div>
+      <p class="panel-sub">My agent development control plane: every coding agent in one window, with an agent workflow, an image rail, automations, infrastructure and my knowledge vault around them. Built with AI on DeepSeek Harness.</p>
+      <div class="metrics">
+        <div class="metric" data-series="1"><span class="metric-value">4</span><span class="metric-label">Coding agents</span><span class="metric-note">Claude Code, Codex, OpenCode, Hermes</span></div>
+        <div class="metric" data-series="3"><span class="metric-value">7</span><span class="metric-label">Workflow stages</span><span class="metric-note">plan to checkpoint</span></div>
+        <div class="metric" data-series="4"><span class="metric-value">5</span><span class="metric-label">Schedulers watched</span><span class="metric-note">Task Scheduler to GitHub Actions</span></div>
+        <div class="metric" data-series="2"><span class="metric-value">316</span><span class="metric-label">Vault notes</span><span class="metric-note">read by every agent · 19 Oct 2026</span></div>
+      </div>
+      <a class="cockpit-film" href="/cockpit" aria-label="Watch the Cockpit film, 1 minute 33 seconds, with sound">
+        <img src="/assets/cockpit-film/poster.webp" alt="" width="1280" height="720" loading="lazy" decoding="async">
+        <span class="cockpit-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.4-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5Z"/></svg><span><b>Watch the film</b><em>1:33 · with sound</em></span></span>
+      </a>
+    </section>
 
 <section class="panel infra" id="panel-infrastructure" role="tabpanel" aria-labelledby="tab-infrastructure">
 <div class="panel-head">

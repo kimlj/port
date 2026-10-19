@@ -112,6 +112,10 @@
     {
       "source": "/hub",
       "destination": "/hub.html"
+    },
+    {
+      "source": "/cockpit",
+      "destination": "/cockpit.html"
     }
   ]
 }

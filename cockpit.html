@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cockpit · Kim Julongbayan</title>
+<meta name="description" content="Cockpit is Kim Julongbayan's agent development control plane: Claude Code, Codex, OpenCode and Hermes in one window, with an agent workflow, an image rail, automations, infrastructure and a knowledge vault around them.">
+<meta name="theme-color" content="#05080f">
+<link rel="icon" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Cockpit film. Colours are Cockpit's Aurora tokens (dsh-workbench
+   cockpit-app/src/client/tokens.js), not the portfolio's: a near-black navy
+   ground, and colour only where it carries state. Blue is work, violet is
+   knowledge and review, emerald is healthy, amber is attention, cyan is
+   runtimes, rose is failure. */
+:root {
+  --bg: #05080f;
+  --ground: #070b14;
+  --text: #eef2f8;
+  --text-2: #cbd5e6;
+  --muted: #93a1b8;
+  --dim: #64748b;
+  --faint: #475569;
+  --line: rgba(255,255,255,.1);
+  --line-soft: rgba(255,255,255,.07);
+  --blue: #4f8cff;
+  --violet: #a78bfa;
+  --emerald: #34d399;
+  --amber: #fbbf24;
+  --cyan: #67e8f9;
+  --rose: #fb7185;
+  --grad: linear-gradient(100deg, #22d3ee 0%, #4f8cff 38%, #7c6cff 68%, #d062ff 100%);
+  --ui: 'Inter', system-ui, sans-serif;
+  --display: 'Inter Tight', 'Inter', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--ui); }
+body { -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+
+/* ---------------------------------------------------------------- page */
+.film { position: relative; min-height: 100svh; display: grid; place-items: center; padding: 24px 16px; }
+.film-frame { position: relative; width: min(100%, calc((100svh - 48px) * 16 / 9)); aspect-ratio: 16 / 9; border-radius: 18px; overflow: hidden; background: #000; box-shadow: 0 40px 140px -30px rgba(40,90,255,.35), 0 0 0 1px var(--line-soft); }
+.stage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; overflow: hidden; background: var(--bg); contain: strict; }
+
+.film-start { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: center; gap: 14px; padding: 0 0 4.5%; border: 0; background: linear-gradient(transparent 62%, rgba(3,5,10,.7)); color: var(--text); font: 500 15px var(--ui); cursor: pointer; z-index: 3; }
+.film-start .label { display: grid; gap: 4px; text-align: left; font-size: 16px; }
+.film-start .ring { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,.08); box-shadow: 0 0 0 1px rgba(255,255,255,.18), 0 0 60px rgba(79,140,255,.45); transition: transform .3s cubic-bezier(.22,1,.36,1), background .3s; }
+.film-start:hover .ring, .film-start:focus-visible .ring { transform: scale(1.06); background: rgba(255,255,255,.14); }
+.film-start svg { width: 24px; height: 24px; margin-left: 3px; }
+@media (max-width: 700px) {
+  .film { min-height: 0; padding: 64px 12px 8px; }
+  .film-start .ring { width: 44px; height: 44px; }
+  .film-start svg { width: 18px; height: 18px; }
+  .film-start .label { font-size: 13px; }
+}
+.film-start em { font-style: normal; color: var(--muted); font-size: 13px; letter-spacing: .04em; }
+.film-start[hidden] { display: none; }
+
+.film-controls { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; display: flex; align-items: center; gap: 12px; padding: 40px 18px 14px; background: linear-gradient(transparent, rgba(3,5,10,.75)); opacity: 0; transition: opacity .35s; }
+.film-frame:hover .film-controls, .film-frame.show-controls .film-controls, .film-controls:focus-within { opacity: 1; }
+.film-controls button { flex: none; width: 36px; height: 36px; border-radius: 10px; border: 0; background: rgba(255,255,255,.08); color: var(--text); display: grid; place-items: center; cursor: pointer; }
+.film-controls button:hover { background: rgba(255,255,255,.16); }
+.film-controls svg { width: 16px; height: 16px; }
+.film-track { position: relative; flex: 1; height: 28px; cursor: pointer; }
+.film-track .rail { position: absolute; left: 0; right: 0; top: 12px; height: 4px; border-radius: 4px; background: rgba(255,255,255,.14); overflow: hidden; }
+.film-track .fill { position: absolute; inset: 0; transform-origin: 0 50%; background: var(--grad); }
+.film-track .chap { position: absolute; top: 9px; width: 2px; height: 10px; border-radius: 2px; background: rgba(255,255,255,.4); }
+.film-track .chap span { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%); white-space: nowrap; font: 500 11px var(--ui); color: var(--text-2); background: rgba(10,14,24,.9); padding: 4px 8px; border-radius: 6px; opacity: 0; pointer-events: none; transition: opacity .2s; }
+.film-track .chap:hover span { opacity: 1; }
+.film-time { font: 500 12px var(--mono); color: var(--muted); min-width: 92px; text-align: right; }
+
+.about { max-width: 1120px; margin: 0 auto; padding: 72px 24px 120px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 56px; }
+.about h1 { margin: 0 0 18px; font: 600 clamp(40px, 6vw, 64px)/1 var(--display); letter-spacing: -.035em; }
+.about h1 span { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.about .lede { color: var(--text-2); font-size: 18px; line-height: 1.6; margin: 0 0 18px; }
+.about p { color: var(--muted); line-height: 1.65; }
+.about .kicker { font: 500 12px var(--mono); letter-spacing: .22em; text-transform: uppercase; color: var(--blue); margin: 0 0 14px; }
+.about ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.about li { padding: 16px 18px; border-radius: 14px; background: rgba(255,255,255,.035); box-shadow: inset 0 0 0 1px var(--line-soft); }
+.about li b { display: block; font: 600 15px var(--ui); margin-bottom: 4px; }
+.about li span { color: var(--muted); font-size: 14.5px; line-height: 1.55; }
+.about .back { display: inline-block; margin-top: 10px; font: 500 14px var(--mono); color: var(--cyan); text-decoration: none; }
+@media (max-width: 860px) { .about { grid-template-columns: 1fr; gap: 36px; padding-top: 40px; } }
+
+/* --------------------------------------------------------------- stage */
+.stage canvas.bg { position: absolute; inset: 0; width: 1920px; height: 1080px; }
+.world { position: absolute; inset: 0; perspective: 1800px; perspective-origin: 50% 46%; }
+.over { position: absolute; inset: 0; pointer-events: none; }
+.sc { position: absolute; inset: 0; transform-style: preserve-3d; display: none; }
+.o2 { position: absolute; inset: 0; display: none; }
+.n { position: absolute; left: 50%; top: 50%; transform-style: preserve-3d; }
+.n0 { position: absolute; left: 50%; top: 50%; transform-origin: 0 0; transform-style: preserve-3d; }
+.fx { position: absolute; inset: 0; pointer-events: none; }
+.vignette { background: radial-gradient(120% 95% at 50% 45%, transparent 55%, rgba(0,0,0,.55) 100%); }
+.grain { opacity: .07; mix-blend-mode: overlay; background-size: 256px 256px; }
+.flash { background: radial-gradient(60% 60% at 50% 48%, rgba(200,225,255,.95), rgba(120,150,255,.35) 45%, transparent 75%); opacity: 0; mix-blend-mode: screen; }
+.black { background: #000; opacity: 1; }
+
+/* Panels: lifted glass, opaque enough to read in 3D (backdrop-filter does
+   not survive a preserve-3d context, so depth comes from the gradient). */
+.pn { border-radius: 18px; background: linear-gradient(180deg, rgba(24,31,51,.94), rgba(10,14,25,.96)); box-shadow: 0 50px 120px -30px rgba(0,0,0,.8), inset 0 0 0 1px rgba(255,255,255,.09), inset 0 1px 0 rgba(255,255,255,.1); color: var(--text); font: 400 16px var(--ui); overflow: hidden; --sh: -1; }
+.pn::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: linear-gradient(105deg, transparent calc(var(--sh) * 140% - 30%), rgba(190,215,255,.13) calc(var(--sh) * 140% - 10%), transparent calc(var(--sh) * 140% + 10%)); }
+.chip { display: inline-flex; align-items: center; gap: 7px; height: 28px; padding: 0 11px; border-radius: 8px; font: 500 13px var(--mono); color: var(--text-2); background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px var(--line-soft); white-space: nowrap; }
+.chip i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex: none; }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 40px; padding: 0 18px; border-radius: 11px; font: 600 15px var(--ui); color: #fff; background: linear-gradient(135deg, #4f8cff, #7c6cff); box-shadow: 0 10px 30px -8px rgba(79,140,255,.7); white-space: nowrap; }
+.btn.ghost { background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px var(--line); color: var(--text-2); font-weight: 500; }
+.lbl { font: 500 12px var(--mono); letter-spacing: .2em; text-transform: uppercase; color: var(--dim); }
+
+/* Terminals */
+.term { display: flex; flex-direction: column; background: linear-gradient(180deg, rgba(14,19,33,.97), rgba(5,8,15,.98)); }
+.term-hd { flex: none; display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 16px; border-bottom: 1px solid var(--line-soft); font: 500 14px var(--mono); color: var(--text-2); }
+.term-hd i { width: 9px; height: 9px; border-radius: 50%; box-shadow: 0 0 12px currentColor; }
+.term-hd span { margin-left: auto; color: var(--dim); font-size: 12.5px; }
+.term-body { position: relative; flex: 1; overflow: hidden; padding: 16px 20px; }
+.term-inner { font: 400 17px/28px var(--mono); color: var(--text-2); white-space: pre; }
+.tl { min-height: 28px; }
+.cur { display: inline-block; width: 10px; height: 20px; margin-left: 2px; vertical-align: -3px; background: var(--blue); }
+.p { color: var(--text); font-weight: 500; }
+.g { color: var(--emerald); } .b { color: #7aa7ff; } .a { color: var(--amber); } .r { color: var(--rose); }
+.m { color: var(--dim); } .v { color: var(--violet); } .c { color: var(--cyan); } .w { color: var(--text); }
+.k-claude { color: #e8845c; } .k-codex { color: #e5e7eb; } .k-open { color: #f5c542; } .k-hermes { color: #c084fc; } .k-pwsh { color: #60a5fa; } .k-ds { color: #6f8bff; }
+
+/* Captions */
+.cap { position: absolute; left: 116px; width: 780px; transform-origin: 0 50%; }
+.cap-bl { bottom: 112px; }
+.cap-tl { top: 104px; }
+.cap::before { content: ''; position: absolute; left: -260px; top: -220px; right: -320px; bottom: -220px; background: radial-gradient(closest-side, rgba(3,6,12,.82), rgba(3,6,12,.5) 55%, transparent); z-index: -1; }
+.cap-k { display: flex; align-items: center; gap: 14px; font: 500 15px var(--mono); letter-spacing: .24em; text-transform: uppercase; margin-bottom: 22px; }
+.cap-k span { color: var(--text); opacity: .55; }
+.cap-k::after { content: ''; width: 64px; height: 1px; background: currentColor; opacity: .6; }
+.cap-h { font: 600 76px/1.02 var(--display); letter-spacing: -.04em; color: var(--text); margin-bottom: 24px; }
+.cap-h .w8 { display: inline-block; white-space: pre; }
+.hl { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; padding-right: .04em; }
+.cap-b { margin: 0; max-width: 680px; font: 400 24px/1.5 var(--ui); color: var(--muted); }
+
+/* Big centred type */
+.mega { position: absolute; left: 0; right: 0; text-align: center; font: 600 84px/1.05 var(--display); letter-spacing: -.045em; }
+.mega .w8 { display: inline-block; white-space: pre; }
+
+/* Cursor */
+.cursor { position: absolute; left: 0; top: 0; width: 34px; height: 34px; pointer-events: none; }
+.cursor svg { width: 30px; height: 30px; filter: drop-shadow(0 4px 10px rgba(0,0,0,.6)); }
+.cursor .rip { position: absolute; left: -26px; top: -26px; width: 56px; height: 56px; border-radius: 50%; box-shadow: 0 0 0 2px rgba(169,197,255,.9); opacity: 0; }
+
+/* Shell (workbench) */
+.shell-piece { border-radius: 0; }
+.tb { display: flex; align-items: center; gap: 16px; height: 100%; padding: 0 22px; }
+.tb .brand { display: flex; align-items: center; gap: 12px; }
+.tb .brand b { display: block; font: 700 19px var(--display); letter-spacing: .14em; }
+.tb .brand small { display: block; font: 400 11px var(--mono); color: var(--dim); letter-spacing: .08em; }
+.tb .search { margin-left: 120px; flex: 0 0 440px; height: 40px; border-radius: 11px; display: flex; align-items: center; gap: 10px; padding: 0 14px; color: var(--dim); font-size: 15px; box-shadow: inset 0 0 0 1px var(--line); background: rgba(255,255,255,.03); }
+.tb .search kbd { margin-left: auto; font: 500 11px var(--mono); color: var(--dim); padding: 3px 7px; border-radius: 6px; box-shadow: inset 0 0 0 1px var(--line); }
+.tb .health { margin-left: auto; display: flex; align-items: center; gap: 8px; font-size: 15px; color: var(--text-2); }
+.nav { padding: 22px 14px; }
+.nav .lbl { padding: 0 12px 12px; font-size: 11px; }
+.nav .it { display: flex; align-items: center; gap: 12px; height: 44px; padding: 0 12px; border-radius: 11px; font-size: 16px; color: var(--text-2); }
+.nav .it em { font: 600 11px var(--mono); font-style: normal; color: var(--dim); width: 30px; height: 26px; border-radius: 7px; display: grid; place-items: center; background: rgba(255,255,255,.05); }
+.nav .it.on { background: rgba(79,140,255,.14); box-shadow: inset 0 0 0 1px rgba(79,140,255,.38); color: #fff; }
+.nav .it.on em { color: #a9c5ff; background: rgba(79,140,255,.2); }
+.nav .sep { height: 22px; }
+.ph { display: flex; align-items: center; gap: 14px; height: 100%; padding: 0 22px; }
+.ph .fold { width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center; background: rgba(79,140,255,.14); color: #a9c5ff; }
+.ph b { font: 600 19px var(--ui); display: block; }
+.ph small { font: 400 12px var(--mono); color: var(--dim); }
+.tabs { display: flex; align-items: center; gap: 6px; height: 54px; padding: 0 14px; border-bottom: 1px solid var(--line-soft); position: relative; }
+.tab { display: flex; align-items: center; gap: 9px; height: 36px; padding: 0 16px; border-radius: 9px; font: 500 15px var(--mono); color: var(--dim); position: relative; z-index: 1; }
+.tab i { width: 8px; height: 8px; border-radius: 50%; }
+.tab sub { font: 500 10px var(--mono); color: var(--faint); vertical-align: 0; }
+.tab-hi { position: absolute; top: 9px; height: 36px; border-radius: 9px; background: rgba(255,255,255,.07); box-shadow: inset 0 0 0 1px var(--line); }
+.status { position: absolute; left: 0; right: 0; bottom: 0; height: 38px; display: flex; align-items: center; gap: 18px; padding: 0 18px; border-top: 1px solid var(--line-soft); font: 400 12.5px var(--mono); color: var(--dim); background: rgba(5,8,15,.9); }
+.rail-tabs { display: flex; gap: 6px; padding: 16px; border-bottom: 1px solid var(--line-soft); }
+.rail-tabs span { height: 34px; padding: 0 14px; border-radius: 9px; display: grid; place-items: center; font: 500 14px var(--ui); color: var(--muted); }
+.rail-tabs span.on { background: linear-gradient(135deg, #4f8cff, #7c6cff); color: #fff; }
+.msg { margin: 16px; font-size: 15.5px; line-height: 1.55; color: var(--text-2); }
+.msg.me { margin-left: 50px; padding: 13px 16px; border-radius: 14px; background: rgba(79,140,255,.13); box-shadow: inset 0 0 0 1px rgba(79,140,255,.35); color: var(--text); }
+.msg.bot { display: grid; grid-template-columns: 30px 1fr; gap: 12px; }
+.msg.bot > i { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; font: 600 13px var(--mono); font-style: normal; background: rgba(79,140,255,.18); color: #a9c5ff; }
+.edit { margin: 0 16px 0 58px; padding: 13px 14px; border-radius: 12px; box-shadow: inset 0 0 0 1px var(--line); background: rgba(255,255,255,.03); font: 500 12.5px var(--mono); color: var(--muted); }
+.edit .bar { height: 5px; border-radius: 5px; background: rgba(255,255,255,.08); margin-top: 10px; overflow: hidden; }
+.edit .bar b { display: block; height: 100%; width: 100%; transform-origin: 0 50%; background: linear-gradient(90deg, #34d399, #67e8f9); }
+
+/* Workflow */
+.modal { padding: 30px 32px; }
+.modal h3 { margin: 0; font: 600 28px var(--display); letter-spacing: -.02em; }
+.modal .sub { color: var(--dim); font-size: 14px; margin: 6px 0 22px; }
+.field { padding: 14px 16px; border-radius: 12px; box-shadow: inset 0 0 0 1px rgba(79,140,255,.45), 0 0 0 4px rgba(79,140,255,.1); background: rgba(5,8,15,.6); font: 400 17px/1.5 var(--ui); min-height: 82px; color: var(--text); }
+.assign { display: grid; grid-template-columns: 120px 1fr auto; align-items: center; gap: 10px 14px; margin: 20px 0; font-size: 15px; }
+.assign .role { color: var(--muted); }
+.assign .perm { font: 400 12.5px var(--mono); color: var(--dim); }
+.floor-grid { position: absolute; left: -2200px; top: -1300px; width: 4400px; height: 2600px; background-image: linear-gradient(rgba(79,140,255,.2) 1.5px, transparent 1.5px), linear-gradient(90deg, rgba(79,140,255,.2) 1.5px, transparent 1.5px); background-size: 120px 120px; -webkit-mask-image: radial-gradient(closest-side, #000 30%, transparent); mask-image: radial-gradient(closest-side, #000 30%, transparent); }
+.track { position: absolute; left: -1800px; top: -700px; width: 3600px; height: 1400px; overflow: visible; }
+.comet { position: absolute; left: -9px; top: -9px; width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: 0 0 18px 6px rgba(120,170,255,.95), 0 0 70px 24px rgba(79,140,255,.6); }
+.stagecard { width: 250px; padding: 18px 18px 16px; border-radius: 16px; }
+.stagecard .top { display: flex; align-items: center; gap: 12px; }
+.stagecard .ic { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; font: 600 14px var(--mono); background: rgba(255,255,255,.06); color: var(--muted); flex: none; }
+.stagecard b { display: block; font: 600 19px var(--ui); }
+.stagecard small { display: block; font: 400 12.5px var(--mono); color: var(--dim); margin-top: 2px; }
+.stagecard .st { margin-top: 14px; height: 30px; border-radius: 9px; display: flex; align-items: center; gap: 8px; padding: 0 11px; font: 500 13px var(--mono); background: rgba(255,255,255,.04); color: var(--dim); }
+.finding { width: 420px; padding: 18px 20px; border-radius: 16px; background: linear-gradient(180deg, rgba(60,18,32,.96), rgba(28,10,18,.97)); box-shadow: 0 30px 80px -20px rgba(251,113,133,.45), inset 0 0 0 1px rgba(251,113,133,.5); }
+.finding .lbl { color: var(--rose); }
+.finding p { margin: 8px 0 6px; font: 500 18px/1.4 var(--ui); color: #ffe4e8; }
+.finding code { font: 400 13px var(--mono); color: #fda4af; }
+.checkpoint { width: 400px; padding: 20px 22px; border-radius: 16px; background: linear-gradient(180deg, rgba(12,48,40,.96), rgba(6,24,22,.97)); box-shadow: 0 30px 90px -20px rgba(52,211,153,.5), inset 0 0 0 1px rgba(52,211,153,.55); }
+.checkpoint .lbl { color: var(--emerald); }
+.checkpoint p { margin: 8px 0 4px; font: 600 22px var(--display); }
+.checkpoint code { font: 400 13.5px var(--mono); color: #a7f3d0; }
+.ringfloor { position: absolute; left: -150px; top: -150px; width: 300px; height: 300px; border-radius: 50%; box-shadow: 0 0 0 3px rgba(52,211,153,.8), 0 0 40px rgba(52,211,153,.5); }
+.approve { position: absolute; right: 16px; top: 16px; height: 32px; padding: 0 14px; border-radius: 9px; font: 600 13px var(--ui); display: grid; place-items: center; color: #1a1205; background: var(--amber); }
+
+/* Agent cards */
+.acard { width: 300px; height: 400px; border-radius: 20px; transform-style: preserve-3d; }
+.acard .face { position: absolute; inset: 0; border-radius: 20px; backface-visibility: hidden; overflow: hidden; }
+.acard .back { transform: rotateY(180deg); display: grid; place-items: center; background: radial-gradient(70% 60% at 50% 40%, rgba(79,140,255,.35), transparent), linear-gradient(160deg, #0d1426, #070b14); box-shadow: inset 0 0 0 1px rgba(255,255,255,.12); }
+.acard .front { padding: 24px; }
+.acard .av { width: 76px; height: 76px; border-radius: 50%; display: grid; place-items: center; font: 600 22px var(--mono); color: #fff; }
+.acard h4 { margin: 18px 0 10px; font: 600 27px var(--display); letter-spacing: -.02em; }
+.acard p { margin: 16px 0 0; color: var(--muted); font-size: 15.5px; line-height: 1.5; }
+.acard .perm { position: absolute; left: 24px; right: 24px; bottom: 22px; padding-top: 14px; border-top: 1px solid var(--line-soft); font: 400 12.5px var(--mono); color: var(--dim); }
+.suggest { position: absolute; left: 50%; top: -18px; transform: translateX(-50%); }
+
+/* Image rail */
+.rail-card { margin: 16px; padding: 16px; border-radius: 14px; background: rgba(255,255,255,.03); box-shadow: inset 0 0 0 1px var(--line-soft); }
+.rail-card .ttl { font: 600 16px var(--ui); }
+.rail-card .meta { display: flex; gap: 8px; margin: 10px 0 14px; }
+.imgbox { position: relative; width: 356px; height: 356px; border-radius: 12px; overflow: hidden; background: #0b1020; }
+.imgbox img, .hero-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.imgbox .gen { position: absolute; inset: 0; display: grid; place-items: center; align-content: center; gap: 14px; font: 500 13px var(--mono); color: var(--muted); }
+.imgbox .shimmer { position: absolute; inset: -50%; background: conic-gradient(from 0deg, rgba(79,140,255,.0), rgba(79,140,255,.25), rgba(208,98,255,.25), rgba(34,211,238,.2), rgba(79,140,255,0)); filter: blur(40px); }
+.imgbox .scan { position: absolute; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, #cfe1ff, transparent); box-shadow: 0 0 24px 6px rgba(150,190,255,.7); }
+.hero-img { width: 560px; height: 560px; border-radius: 26px; overflow: hidden; box-shadow: 0 60px 140px -30px rgba(79,140,255,.6), 0 0 0 1px rgba(255,255,255,.18); background: #fff; }
+.prog { width: 74px; height: 74px; }
+
+/* Automations */
+.auto { padding: 26px 28px; }
+.auto h3 { margin: 0; font: 600 28px var(--display); letter-spacing: -.02em; }
+.auto .row { display: grid; grid-template-columns: 1.5fr 1.2fr 1.1fr .9fr .9fr; align-items: center; height: 56px; padding: 0 14px; border-radius: 11px; font-size: 15.5px; color: var(--text-2); }
+.auto .row.hd { height: 34px; font: 500 11.5px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--dim); }
+.auto .row .s { font: 400 13.5px var(--mono); color: var(--muted); }
+.gantt { padding: 24px 26px; }
+.gantt .g-row { display: grid; grid-template-columns: 210px 1fr 76px; align-items: center; gap: 14px; height: 50px; font-size: 15px; color: var(--text-2); }
+.gantt .g-track { position: relative; height: 12px; border-radius: 6px; background: rgba(255,255,255,.05); }
+.gantt .g-bar { position: absolute; top: 0; height: 12px; border-radius: 6px; transform-origin: 0 50%; }
+.gantt .g-d { font: 500 13.5px var(--mono); color: var(--muted); text-align: right; }
+.retry { position: absolute; top: -26px; transform: translateX(-50%); }
+
+/* Infrastructure */
+.infra { width: 400px; padding: 22px; border-radius: 18px; }
+.infra h4 { margin: 0 0 4px; font: 600 22px var(--display); }
+.infra .sub { font: 400 13px var(--mono); color: var(--dim); margin-bottom: 14px; }
+.infra .li { display: flex; align-items: center; gap: 10px; height: 38px; font-size: 15px; color: var(--text-2); border-top: 1px solid var(--line-soft); }
+.infra .li .r { margin-left: auto; font: 500 13px var(--mono); color: var(--muted); }
+.gauges { display: flex; gap: 14px; margin-top: 14px; }
+.gauge { flex: 1; text-align: center; font: 500 12px var(--mono); color: var(--dim); }
+.gauge svg { width: 84px; height: 84px; display: block; margin: 0 auto 4px; }
+.gauge b { font: 600 18px var(--ui); color: var(--text); }
+
+/* Knowledge */
+.hub-l { position: absolute; left: 0; top: 0; display: flex; align-items: center; gap: 8px; padding: 6px 11px; border-radius: 9px; background: rgba(8,12,22,.82); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); font: 600 15px var(--ui); white-space: nowrap; }
+.hub-l small { font: 500 12px var(--mono); color: var(--muted); }
+.note { width: 540px; padding: 28px; }
+.note .tags { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+.note h4 { margin: 12px 0 12px; font: 600 28px/1.15 var(--display); letter-spacing: -.02em; }
+.note p { margin: 0; color: var(--muted); font-size: 16.5px; line-height: 1.6; }
+.readby { position: absolute; left: 0; top: 0; }
+.stat { position: absolute; display: flex; gap: 26px; padding: 16px 24px; border-radius: 14px; background: rgba(8,12,22,.85); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); }
+.stat div { font: 400 12.5px var(--ui); color: var(--muted); }
+.stat b { display: block; font: 600 26px var(--display); color: var(--text); letter-spacing: -.02em; }
+
+/* Outro ring */
+.mini { width: 340px; height: 210px; padding: 20px; border-radius: 18px; }
+.mini .t { display: flex; align-items: center; gap: 10px; font: 600 18px var(--ui); }
+.mini .t i { width: 10px; height: 10px; border-radius: 50%; }
+.mini svg { display: block; margin-top: 14px; width: 300px; height: 120px; }
+.wordmark { position: absolute; left: 0; right: 0; text-align: center; font: 600 156px/1 var(--display); letter-spacing: -.055em; }
+.wordmark span { display: inline-block; }
+.tagline { position: absolute; left: 0; right: 0; text-align: center; font: 500 19px var(--mono); letter-spacing: .5em; text-transform: uppercase; color: var(--muted); }
+.credit { position: absolute; left: 0; right: 0; text-align: center; font: 400 26px/1.5 var(--ui); color: var(--text-2); }
+.credit b { font-weight: 600; color: var(--text); }
+.url { position: absolute; left: 0; right: 0; text-align: center; font: 500 22px var(--mono); letter-spacing: .12em; }
+</style>
+</head>
+<body>
+<main>
+  <section class="film" aria-label="Cockpit, a 93-second film">
+    <div class="film-frame" id="film-frame">
+      <div class="stage" id="film-stage" aria-hidden="true"></div>
+      <button type="button" class="film-start" id="film-start" aria-label="Play the Cockpit film with sound, 1 minute 33 seconds">
+        <span class="ring"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.4-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5Z"/></svg></span>
+        <span class="label"><b>Watch Cockpit</b><em>1:33 · with sound</em></span>
+      </button>
+      <div class="film-controls" id="film-controls">
+        <button type="button" id="film-play" aria-label="Pause"></button>
+        <div class="film-track" id="film-track" role="slider" aria-label="Film position" tabindex="0" aria-valuemin="0" aria-valuemax="93" aria-valuenow="0">
+          <div class="rail"><div class="fill" id="film-fill"></div></div>
+        </div>
+        <span class="film-time" id="film-time">0:00 / 1:33</span>
+        <button type="button" id="film-sound" aria-label="Mute"></button>
+        <button type="button" id="film-full" aria-label="Full screen"></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="about">
+    <div>
+      <p class="kicker">Personal project · 2026</p>
+      <h1><span>Cockpit</span></h1>
+      <p class="lede">My agent development control plane: every coding agent I use in one window, with the work around them made visible.</p>
+      <p>It runs locally on DeepSeek Harness. Claude Code, Codex, OpenCode and Hermes run as real terminals in the project I pick, each with its own login, skills and MCP servers. Around them sit an agent workflow, an image rail, automations, infrastructure and my knowledge vault.</p>
+      <p>I designed and built it with AI: ChatGPT for planning and images, Claude Code for building, Codex and DeepSeek for review. The film above is hand-written HTML, CSS and canvas, with a score synthesised in the browser.</p>
+      <a class="back" href="/">kimlj.dev →</a>
+    </div>
+    <ol>
+      <li><b>Workbench</b><span>Real, persistent terminals for every coding agent, side by side in one project. Nothing about the agents is reimplemented.</span></li>
+      <li><b>Agent workflow</b><span>One prompt runs plan, build, test and an independent review. Findings go back for at most two automatic fixes, then validation, my approval and a checkpoint.</span></li>
+      <li><b>Agents</b><span>Roles are profiles with their own instructions and permissions, so any runtime can fill one, and a specialist is suggested when the task fits.</span></li>
+      <li><b>Image rail</b><span>Claude Code and Codex terminals get an image tool. Results land in the rail beside the conversation, and I approve or revise them in chat.</span></li>
+      <li><b>Automations</b><span>Jobs from Task Scheduler, systemd, cron, GitHub Actions and Hermes in one list, with instrumented runs reporting their real steps and retries.</span></li>
+      <li><b>Infrastructure</b><span>Machines, containers, services and endpoints, read from the systems that own them with read-only checks.</span></li>
+      <li><b>Knowledge</b><span>My Obsidian vault as a live graph. Agents read it before they plan and write back what they learned.</span></li>
+    </ol>
+  </section>
+</main>
+<script src="/assets/js/cockpit-film.js" defer></script>
+</body>
+</html>
