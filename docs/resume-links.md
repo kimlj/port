@@ -93,3 +93,4 @@ letter points at.
 | 2026-10-17 | AI Automation Specialist / AI Operations Architect, GFC toronto (onlinejobs.ph) | `/r/gfc-0eae45d1.pdf` | `Kim_Julongbayan_Resume_GFC.pdf` |
 | 2026-10-19 | Web Assistant (Remote) for US Startup, Dave / E2 (OnlineJobs.ph, Oct 19 2026) | `/r/e2life-f4f7a8e7.pdf` | `Kim_Julongbayan_Resume_E2Life.pdf` |
 | 2026-10-19 | AI Automation Developer (Python, n8n, Claude Code), Nexus Digital, Melbourne, USD 1,200/month full time (onlinejobs.ph) | `/r/nexusdigital-8eda2b6f.pdf` | `Kim_Julongbayan_Resume_NexusDigital.pdf` |
+| 2026-10-19 | AI Systems and Operations Specialist, two retail stores and wholesale in Houston, US$7-10/hr full time (onlinejobs.ph) | `/r/houstonretail-8ea6b80f.pdf` | `Kim_Julongbayan_Resume_HoustonRetail.pdf` |
