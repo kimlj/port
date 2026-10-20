@@ -95,3 +95,4 @@ letter points at.
 | 2026-10-19 | AI Automation Developer (Python, n8n, Claude Code), Nexus Digital, Melbourne, USD 1,200/month full time (onlinejobs.ph) | `/r/nexusdigital-8eda2b6f.pdf` | `Kim_Julongbayan_Resume_NexusDigital.pdf` |
 | 2026-10-19 | AI Systems and Operations Specialist, two retail stores and wholesale in Houston, US$7-10/hr full time (onlinejobs.ph) | `/r/houstonretail-8ea6b80f.pdf` | `Kim_Julongbayan_Resume_HoustonRetail.pdf` |
 | 2026-10-20 | AI Connector Quality Assurance (QA), test AI agents and integrations, employer name not given (onlinejobs) | `/r/aiconnectorqa-68cbf170.pdf` | `Kim_Julongbayan_Resume_AIConnectorQA.pdf` |
+| 2026-10-20 | AI Engineer, Blue Harbour (onlinejobs.ph) | `/r/blueharbour-c66fae1f.pdf` | `Kim_Julongbayan_Resume_BlueHarbour.pdf` |
