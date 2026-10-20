@@ -97,3 +97,4 @@ letter points at.
 | 2026-10-20 | AI Connector Quality Assurance (QA), test AI agents and integrations, employer name not given (onlinejobs) | `/r/aiconnectorqa-68cbf170.pdf` | `Kim_Julongbayan_Resume_AIConnectorQA.pdf` |
 | 2026-10-20 | AI Engineer, Blue Harbour (onlinejobs.ph) | `/r/blueharbour-c66fae1f.pdf` | `Kim_Julongbayan_Resume_BlueHarbour.pdf` |
 | 2026-10-20 | AI Automation Developer (Claude API), Boston property management, Kelsey (onlinejobs.ph) | `/r/kelseypm-45ba66d9.pdf` | `Kim_Julongbayan_Resume_KelseyPM.pdf` |
+| 2026-10-20 | AI-Assisted Full-Stack Developer, internal tools for a US real estate company, posted by Ted (onlinejobs) | `/r/retechtools-27dd8ebe.pdf` | `Kim_Julongbayan_Resume_RETechTools.pdf` |
