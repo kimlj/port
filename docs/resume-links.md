@@ -99,3 +99,4 @@ letter points at.
 | 2026-10-20 | AI Automation Developer (Claude API), Boston property management, Kelsey (onlinejobs.ph) | `/r/kelseypm-45ba66d9.pdf` | `Kim_Julongbayan_Resume_KelseyPM.pdf` |
 | 2026-10-20 | AI-Assisted Full-Stack Developer, internal tools for a US real estate company, posted by Ted (onlinejobs) | `/r/retechtools-27dd8ebe.pdf` | `Kim_Julongbayan_Resume_RETechTools.pdf` |
 | 2026-10-21 | Full-Stack Product Engineer (Mobile & Web), The STEM Academy / STEM 101, posted by Jess Boon (onlinejobs) | `/r/stem101-74eca4a6.pdf` | `Kim_Julongbayan_Resume_STEM101.pdf` |
+| 2026-10-21 | Web Developer with SEO and AI Integration Skills, Holistic SEO and Digital (onlinejobs.ph) | `/r/holisticseo-d7f77d8e.pdf` | `Kim_Julongbayan_Resume_HolisticSEO.pdf` |
