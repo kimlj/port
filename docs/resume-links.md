@@ -101,3 +101,4 @@ letter points at.
 | 2026-10-21 | Full-Stack Product Engineer (Mobile & Web), The STEM Academy / STEM 101, posted by Jess Boon (onlinejobs) | `/r/stem101-74eca4a6.pdf` | `Kim_Julongbayan_Resume_STEM101.pdf` |
 | 2026-10-21 | Web Developer with SEO and AI Integration Skills, Holistic SEO and Digital (onlinejobs.ph) | `/r/holisticseo-d7f77d8e.pdf` | `Kim_Julongbayan_Resume_HolisticSEO.pdf` |
 | 2026-10-21 | Claude Code Automation Developer (Claude Code, TypeScript), US digital marketing and lead-gen agency, posted by Joseph (onlinejobs) | `/r/josephagency-fd22deff.pdf` | `Kim_Julongbayan_Resume_JosephAgency.pdf` |
+| 2026-10-21 | Claude Code Automation Developer (Claude Code, TypeScript), US digital marketing and lead-gen agency, posted by Joseph (onlinejobs) | `/r/josephagency-907451c2.pdf` | `Kim_Julongbayan_Resume_JosephAgency.pdf` |
