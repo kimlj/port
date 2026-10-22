@@ -104,3 +104,4 @@ letter points at.
 | 2026-10-21 | Claude Code Automation Developer (Claude Code, TypeScript), US digital marketing and lead-gen agency, posted by Joseph (onlinejobs) | `/r/josephagency-907451c2.pdf` | `Kim_Julongbayan_Resume_JosephAgency.pdf` |
 | 2026-10-21 | Claude Code Automation Developer (Claude Code, TypeScript), US digital marketing and lead-gen agency, posted by Joseph (onlinejobs) | `/r/josephagency-de6d428e.pdf` | `Kim_Julongbayan_Resume_JosephAgency.pdf` |
 | 2026-10-22 | Detail-Oriented Tech Pro (Admin & Data), CRG (OnlineJobs.ph) | `/r/crg-48ed90a8.pdf` | `Kim_Julongbayan_Resume_CRG.pdf` |
+| 2026-10-22 | AI Brain Architect, New Wave Digital (OnlineJobs.ph) | `/r/newwavedigital-1d83b999.pdf` | `Kim_Julongbayan_Resume_NewWaveDigital.pdf` |
