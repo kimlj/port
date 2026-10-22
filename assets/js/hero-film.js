@@ -1524,7 +1524,7 @@
      playing, so the full cut's chapters renumber themselves. */
   var CUES = [
     { s: 'kick', t0: 5.0, t1: 14.1, kick: 'Practice' },
-    { s: 'big', t0: 5.3, t1: 9.1, h: 'Five years of *building*.' },
+    { s: 'big', t0: 5.3, t1: 9.1, h: 'Three years of *professional development*.' },
     { s: 'big', t0: 9.3, t1: 14.1, h: 'On and off — then *all at once*.' },
     { s: 'stat', t0: 5.8, t1: 14.1, f: contribStat },
 
