@@ -107,3 +107,4 @@ letter points at.
 | 2026-10-22 | AI Brain Architect, New Wave Digital (OnlineJobs.ph) | `/r/newwavedigital-1d83b999.pdf` | `Kim_Julongbayan_Resume_NewWaveDigital.pdf` |
 | 2026-10-22 | AI Brain Architect, New Wave Digital (OnlineJobs.ph) | `/r/newwavedigital-e8c50c11.pdf` | `Kim_Julongbayan_Resume_NewWaveDigital.pdf` |
 | 2026-10-22 | AI Automation Engineer (N8n, Zapier, APIs), Maria (OnlineJobs.ph) | `/r/mariaautomation-1f80ae14.pdf` | `Kim_Julongbayan_Resume_MariaAutomation.pdf` |
+| 2026-10-22 | AI Brain Architect, New Wave Digital (OnlineJobs.ph) | `/r/newwavedigital-9887b075.pdf` | `Kim_Julongbayan_Resume_NewWaveDigital.pdf` |
