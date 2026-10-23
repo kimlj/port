@@ -111,3 +111,4 @@ letter points at.
 | 2026-10-22 | Website Developer, BoutiQ Outsource Solutions / Lanz (OnlineJobs.ph, 60-day project) | `/r/boutiq-2b19726f.pdf` | `Kim_Julongbayan_Resume_BoutiQ.pdf` |
 | 2026-10-22 | React / Remotion Developer, AI video platform, employer not named (OnlineJobs.ph, full time) | `/r/remotionaivideo-bca4b6bd.pdf` | `Kim_Julongbayan_Resume_RemotionAIVideo.pdf` |
 | 2026-10-22 | React / Remotion Developer, AI video platform, employer not named (OnlineJobs.ph, full time) | `/r/remotionaivideo-4f2c9f42.pdf` | `Kim_Julongbayan_Resume_RemotionAIVideo.pdf` |
+| 2026-10-23 | Learning Game Designer (Web Platform), Acton Academy, Jake (OnlineJobs.ph) | `/r/actonacademy-d38341e6.pdf` | `Kim_Julongbayan_Resume_ActonAcademy.pdf` |
