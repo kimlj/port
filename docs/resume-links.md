@@ -112,3 +112,4 @@ letter points at.
 | 2026-10-22 | React / Remotion Developer, AI video platform, employer not named (OnlineJobs.ph, full time) | `/r/remotionaivideo-bca4b6bd.pdf` | `Kim_Julongbayan_Resume_RemotionAIVideo.pdf` |
 | 2026-10-22 | React / Remotion Developer, AI video platform, employer not named (OnlineJobs.ph, full time) | `/r/remotionaivideo-4f2c9f42.pdf` | `Kim_Julongbayan_Resume_RemotionAIVideo.pdf` |
 | 2026-10-23 | Learning Game Designer (Web Platform), Acton Academy, Jake (OnlineJobs.ph) | `/r/actonacademy-d38341e6.pdf` | `Kim_Julongbayan_Resume_ActonAcademy.pdf` |
+| 2026-10-23 | Product Data Researcher - AI + Spreadsheets, Nagia LLC (OnlineJobs.ph) | `/r/nagia-7a86e5fb.pdf` | `Kim_Julongbayan_Resume_Nagia.pdf` |
