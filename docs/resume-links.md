@@ -115,3 +115,4 @@ letter points at.
 | 2026-10-23 | Product Data Researcher - AI + Spreadsheets, Nagia LLC (OnlineJobs.ph) | `/r/nagia-7a86e5fb.pdf` | `Kim_Julongbayan_Resume_Nagia.pdf` |
 | 2026-10-23 | Undisclosed employer - Full Stack Developer (AI-First, Fast Shipper, US Hours Overlap), OnlineJobs.ph, updated Oct 23 2026 | `/r/shipitai-9f18146e.pdf` | `Kim_Julongbayan_Resume_ShipItAI.pdf` |
 | 2026-10-23 | Software Developer, Internal Tools (React / TypeScript), unnamed US commercial real estate firm (OnlineJobs.ph, Oct 22 2026) | `/r/internaltoolsre-8784054c.pdf` | `Kim_Julongbayan_Resume_InternalToolsRE.pdf` |
+| 2026-10-29 | Full-Stack Developer, service marketplace MVP (web, mobile, admin), Independent Project Owner (OnlineJobs.ph, Oct 29 2026) | `/r/servicemarketplace-d66ac06c.pdf` | `Kim_Julongbayan_Resume_ServiceMarketplace.pdf` |
