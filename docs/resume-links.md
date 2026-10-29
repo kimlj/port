@@ -118,3 +118,4 @@ letter points at.
 | 2026-10-29 | Full-Stack Developer, service marketplace MVP (web, mobile, admin), Independent Project Owner (OnlineJobs.ph, Oct 29 2026) | `/r/servicemarketplace-d66ac06c.pdf` | `Kim_Julongbayan_Resume_ServiceMarketplace.pdf` |
 | 2026-10-29 | AI Implementation Specialist (accounting automation, Xero, QuickBooks, Zoho), accounting practice via Sprint Labs (OnlineJobs.ph, Oct 27 2026) | `/r/sprintlabsai-5f68d212.pdf` | `Kim_Julongbayan_Resume_SprintLabsAI.pdf` |
 | 2026-10-29 | AI Automation Engineer, SoFyre (OnlineJobs.ph, Oct 28 2026) | `/r/sofyre-ef2191a7.pdf` | `Kim_Julongbayan_Resume_SoFyre.pdf` |
+| 2026-10-29 | Full Stack Developer (React / Next.js / React Native) with UI/UX Skills, unnamed UK technical agency (OnlineJobs.ph, Oct 27 2026) | `/r/ukagencyfullstack-351fd4fd.pdf` | `Kim_Julongbayan_Resume_UKAgencyFullStack.pdf` |
