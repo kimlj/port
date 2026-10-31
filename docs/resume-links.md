@@ -121,3 +121,4 @@ letter points at.
 | 2026-10-29 | Full Stack Developer (React / Next.js / React Native) with UI/UX Skills, unnamed UK technical agency (OnlineJobs.ph, Oct 27 2026) | `/r/ukagencyfullstack-351fd4fd.pdf` | `Kim_Julongbayan_Resume_UKAgencyFullStack.pdf` |
 | 2026-10-30 | Full-Stack Web & Mobile Developer, unnamed college student marketplace (onlinejobs.ph) | `/r/campusmarketplace-1141a64f.pdf` | `Kim_Julongbayan_Resume_CampusMarketplace.pdf` |
 | 2026-10-31 | Full-Stack Software Engineer, unnamed boutique fitness studio platform (OnlineJobs.ph, Oct 30 2026) | `/r/fitnessstudiofullstack-a7c18001.pdf` | `Kim_Julongbayan_Resume_FitnessStudioFullStack.pdf` |
+| 2026-10-31 | Charlie - Full-Stack Next.js Developer, Directory & SaaS Platform (OnlineJobs.ph) | `/r/charliedirectory-8ebc2e09.pdf` | `Kim_Julongbayan_Resume_CharlieDirectory.pdf` |
