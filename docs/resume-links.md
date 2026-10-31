@@ -124,3 +124,4 @@ letter points at.
 | 2026-10-31 | Charlie - Full-Stack Next.js Developer, Directory & SaaS Platform (OnlineJobs.ph) | `/r/charliedirectory-8ebc2e09.pdf` | `Kim_Julongbayan_Resume_CharlieDirectory.pdf` |
 | 2026-10-31 | Kenneth - WordPress Developer, US digital marketing agency (OnlineJobs.ph) | `/r/kennethweb-25640088.pdf` | `Kim_Julongbayan_Resume_KennethWeb.pdf` |
 | 2026-10-31 | Unnamed technical marketing consultancy - AI Production Lead (OnlineJobs.ph, updated Oct 29, 2026) | `/r/aiproductionlead-5ecee5c6.pdf` | `Kim_Julongbayan_Resume_AIProductionLead.pdf` |
+| 2026-10-31 | AI Business Automation & Process Optimization Specialist, unnamed AU/NZ healthcare employer (OnlineJobs.ph, Oct 30 2026) | `/r/auznhealthcareai-fd84cba3.pdf` | `Kim_Julongbayan_Resume_AUZNHealthcareAI.pdf` |
