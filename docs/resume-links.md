@@ -123,3 +123,4 @@ letter points at.
 | 2026-10-31 | Full-Stack Software Engineer, unnamed boutique fitness studio platform (OnlineJobs.ph, Oct 30 2026) | `/r/fitnessstudiofullstack-a7c18001.pdf` | `Kim_Julongbayan_Resume_FitnessStudioFullStack.pdf` |
 | 2026-10-31 | Charlie - Full-Stack Next.js Developer, Directory & SaaS Platform (OnlineJobs.ph) | `/r/charliedirectory-8ebc2e09.pdf` | `Kim_Julongbayan_Resume_CharlieDirectory.pdf` |
 | 2026-10-31 | Kenneth - WordPress Developer, US digital marketing agency (OnlineJobs.ph) | `/r/kennethweb-25640088.pdf` | `Kim_Julongbayan_Resume_KennethWeb.pdf` |
+| 2026-10-31 | Unnamed technical marketing consultancy - AI Production Lead (OnlineJobs.ph, updated Oct 29, 2026) | `/r/aiproductionlead-5ecee5c6.pdf` | `Kim_Julongbayan_Resume_AIProductionLead.pdf` |
