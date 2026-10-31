@@ -5,7 +5,9 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "build:static": "node scripts/build.mjs --static-only",
-    "test": "node --test scripts/performance.test.mjs"
+    "test": "node --test scripts/performance.test.mjs scripts/activity-policy.test.mjs"
   },
-  "devDependencies": { "esbuild": "0.28.2" }
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
 }

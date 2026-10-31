@@ -40,6 +40,7 @@ function graphql(query) {
     return JSON.parse(
       execFileSync("gh", ["api", "graphql", "-f", `query=${query}`], {
         encoding: "utf8",
+        windowsHide: true,
         maxBuffer: 20 * 1024 * 1024,
       })
     );

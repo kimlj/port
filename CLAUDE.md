@@ -499,11 +499,14 @@ in more detail.
 
 `assets/contributions.json`, `assets/claude-usage.json` and
 `assets/chatgpt-history.json` are **committed snapshots**, not live reads — none
-of them can be fetched from the browser, and `TODO.md` says why. The GitHub half
-refreshes itself daily through
-`.github/workflows/refresh-activity.yml`; the Claude half is still
-`node scripts/fetch-claude-usage.mjs` by hand, because the transcripts it reads
-only exist on the machine that did the work.
+of them can be fetched from the browser, and `TODO.md` says why. The local
+`kimlj.dev build activity` task runs `scripts/sync-claude-usage.mjs` at 22:00
+Philippine time with logon catch-up. It fetches GitHub through the existing `gh`
+login, reads local Claude transcripts, checks for a collapsed contribution count,
+and publishes both snapshots in one commit. A daily record outside its dedicated
+clone prevents repeated logons from creating extra deployments.
+`.github/workflows/refresh-activity.yml` is manual-only. All published `/r/` files
+remain permanent; shorter deployment retention must never remove those files.
 
 The third has **no refresh path at all**: a ChatGPT export is requested by hand and emailed, so
 `node scripts/fetch-chatgpt-history.mjs` can only be re-run when a new export

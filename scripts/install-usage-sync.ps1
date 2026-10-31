@@ -1,5 +1,5 @@
 <#
-    Registers the scheduled task that keeps the Claude Code half of Build
+    Registers the scheduled task that keeps both halves of Build
     Activity current. Run it once, from anywhere:
 
         powershell -ExecutionPolicy Bypass -File scripts\install-usage-sync.ps1
@@ -48,13 +48,15 @@ if (-not (Test-Path $Script)) {
     }
 }
 
-# 22:00 local. The GitHub half runs 16:10 UTC from a runner; this is 14:00 UTC,
-# so the two are never pushing at the same moment.
+# One daily combined publish at 22:00 local, with logon catch-up. The sync script
+# records successful publication by Philippine date and suppresses duplicate runs.
+$HiddenHost = Join-Path $env:SystemRoot 'System32\conhost.exe'
+$arguments = [System.Security.SecurityElement]::Escape('--headless "' + $node + '" "' + $Script + '"')
 $xml = @"
 <?xml version="1.0" encoding="UTF-16"?>
 <Task version="1.4" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
   <RegistrationInfo>
-    <Description>Refreshes assets/claude-usage.json on kimlj.dev from this machine's Claude Code transcripts, and pushes it.</Description>
+    <Description>Refreshes GitHub contributions and local Claude Code activity together; publishes once per Philippine date.</Description>
     <URI>\$TaskName</URI>
   </RegistrationInfo>
   <Triggers>
@@ -87,8 +89,8 @@ $xml = @"
   </Settings>
   <Actions Context="Author">
     <Exec>
-      <Command>$node</Command>
-      <Arguments>"$Script"</Arguments>
+      <Command>$HiddenHost</Command>
+      <Arguments>$arguments</Arguments>
       <WorkingDirectory>$SyncDir</WorkingDirectory>
     </Exec>
   </Actions>

@@ -36,9 +36,9 @@ So "live" means *automatically refreshed*, not *fetched by the page*.
 
 ### Done
 
-- **`.github/workflows/refresh-activity.yml`** runs the contributions script
-  daily at 16:10 UTC (00:10 Manila, so it picks up the day GitHub just closed),
-  commits the file if it moved, and lets Vercel redeploy on the push.
+- **One daily activity publish.** `scripts/sync-claude-usage.mjs` fetches GitHub
+  contributions and local Claude usage, validates the contribution count, then
+  commits both snapshots together. The GitHub workflow is manual-only.
 - **A dateline on each half**, built from the `generatedAt` both payloads
   already carried. The halves refresh on different schedules, so each states its
   own date rather than sharing one that would describe the older of them.
@@ -50,11 +50,13 @@ So "live" means *automatically refreshed*, not *fetched by the page*.
   being scoped to this repository while ~93% of this account's contributions are
   in private repos it cannot see. The scheduled run has been succeeding since
   2026-09-05 — two failures that day were the setup attempts, not the schedule.
-- **The Claude Code half refreshes from this machine.**
-  `scripts/sync-claude-usage.mjs` reads the local transcripts, commits only
-  `assets/claude-usage.json` and pushes; `scripts/install-usage-sync.ps1`
+- **Both activity snapshots refresh from this machine.**
+  `scripts/sync-claude-usage.mjs` reads the local transcripts and GitHub calendar,
+  commits both JSON snapshots and pushes; `scripts/install-usage-sync.ps1`
   registers it as a scheduled task at 22:00 daily, and at logon so a day the
-  machine was off is caught up rather than skipped.
+  machine was off is caught up rather than skipped. A publication record under
+  `LOCALAPPDATA/kimlj-port-usage-sync` prevents a second publish on the same
+  Philippine date.
 
   It works in a clone of its own under `LOCALAPPDATA`, never in a working tree.
   A task that ran `git commit` in a checkout would eventually fire in the middle

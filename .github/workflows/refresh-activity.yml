@@ -1,30 +1,10 @@
-# Keeps the GitHub half of Build Activity current.
-#
-# The page loads a committed JSON file rather than calling GitHub, because the
-# contribution calendar is GraphQL-only and needs an authenticated token, and a
-# token that reaches the browser is a token that has leaked. So the fetch runs
-# here, on a runner, and the RESULT is what ships: this commits the file, Vercel
-# redeploys on the push, and the page keeps knowing nothing about GitHub.
-#
-# This cannot do the Claude Code half. Those figures only exist as session
-# transcripts on the machine that did the work, so scripts/fetch-claude-usage.mjs
-# has to run there. See TODO.md.
-#
-# Requires one secret, CONTRIBUTIONS_TOKEN: a personal access token with `repo`
-# and `read:user`. The workflow's own GITHUB_TOKEN cannot stand in for it — it is
-# scoped to this repository, and roughly 93% of the contributions on this account
-# are in private repos it cannot see. Reading them is the entire point of the
-# figure, so a run without the secret fails loudly rather than silently
-# publishing a number 20x too small.
+# Manual GitHub-only refresh for troubleshooting. Routine GitHub and Claude
+# snapshots are published together by the local daily activity task.
+# CONTRIBUTIONS_TOKEN remains available for this optional manual run.
 
 name: Refresh build activity
 
 on:
-  schedule:
-    # 16:10 UTC is 00:10 in Manila, so this picks up the day that just ended in
-    # the timezone GitHub buckets the contribution days by. GitHub delays cron
-    # under load; nothing here needs it to be punctual.
-    - cron: "10 16 * * *"
   workflow_dispatch:
 
 permissions:
