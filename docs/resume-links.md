@@ -125,3 +125,4 @@ letter points at.
 | 2026-10-31 | Kenneth - WordPress Developer, US digital marketing agency (OnlineJobs.ph) | `/r/kennethweb-25640088.pdf` | `Kim_Julongbayan_Resume_KennethWeb.pdf` |
 | 2026-10-31 | Unnamed technical marketing consultancy - AI Production Lead (OnlineJobs.ph, updated Oct 29, 2026) | `/r/aiproductionlead-5ecee5c6.pdf` | `Kim_Julongbayan_Resume_AIProductionLead.pdf` |
 | 2026-10-31 | AI Business Automation & Process Optimization Specialist, unnamed AU/NZ healthcare employer (OnlineJobs.ph, Oct 30 2026) | `/r/auznhealthcareai-fd84cba3.pdf` | `Kim_Julongbayan_Resume_AUZNHealthcareAI.pdf` |
+| 2026-11-02 | AI Automation Expert, BKG home-renovation group, Netherlands (onlinejobs.ph) | `/r/bkg-0408760c.pdf` | `Kim_Julongbayan_Resume_BKG.pdf` |
