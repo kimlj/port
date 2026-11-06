@@ -128,3 +128,4 @@ letter points at.
 | 2026-11-02 | AI Automation Expert, BKG home-renovation group, Netherlands (onlinejobs.ph) | `/r/bkg-0408760c.pdf` | `Kim_Julongbayan_Resume_BKG.pdf` |
 | 2026-11-02 | Full Stack Developer – Fintech, unnamed AU/HK/SG fintech company (OnlineJobs.ph, updated Oct 31 2026) | `/r/fintechfullstack-38a82ebe.pdf` | `Kim_Julongbayan_Resume_FintechFullStack.pdf` |
 | 2026-11-06 | Remote AI Specialist VA, unnamed US insurance district, $1250/month (OnlineJobs.ph, updated October 29, 2026) | `/r/insuranceaiva-219b7bb3.pdf` | `Kim_Julongbayan_Resume_InsuranceAIVA.pdf` |
+| 2026-11-06 | Python Data Engineer, unnamed data intelligence platform (OnlineJobs.ph, Nov 4 2026) | `/r/dataintelpython-6974b008.pdf` | `Kim_Julongbayan_Resume_DataIntelPython.pdf` |
