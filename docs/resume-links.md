@@ -131,3 +131,4 @@ letter points at.
 | 2026-11-06 | Python Data Engineer, unnamed data intelligence platform (OnlineJobs.ph, Nov 4 2026) | `/r/dataintelpython-6974b008.pdf` | `Kim_Julongbayan_Resume_DataIntelPython.pdf` |
 | 2026-11-10 | AI-Assisted Website Developer, Apex Operations (OnlineJobs.ph, Nov 10 2026) | `/r/apexoperations-42a33f70.pdf` | `Kim_Julongbayan_Resume_ApexOperations.pdf` |
 | 2026-11-11 | Claude Fable Automation Specialist, The Oak and Clay Group (OnlineJobs.ph) | `/r/oakandclay-a592840c.pdf` | `Kim_Julongbayan_Resume_OakAndClay.pdf` |
+| 2026-11-11 | AI Automation & Integration Specialist, Villa Vision Builders (OnlineJobs.ph) | `/r/villavisionbuilders-1148062e.pdf` | `Kim_Julongbayan_Resume_VillaVisionBuilders.pdf` |
