@@ -1,4 +1,4 @@
-/* Cockpit film: a 93.6-second tour of Cockpit, told the way the hero film is.
+/* Cockpit film: a 122.4-second tour of Cockpit, told the way the hero film is.
  *
  * RENDER IS A PURE FUNCTION OF TIME. render(t) sets every canvas pixel and
  * every DOM style from t alone: no element carries state from one frame to
@@ -21,6 +21,15 @@
  * are real counts taken on 2026-10-19. The pilot avatar was generated through
  * Cockpit's own image rail for this film. Terminal transcripts, test counts,
  * run timings and endpoint latencies are illustrative.
+ *
+ * The Agents chapters (Run a goal, Teams, Goal overview) were added on
+ * 2026-11-09. Their labels, layout and bot sprites follow the Agents page
+ * source (agents.jsx, agent-teams.jsx, goal-workspace.jsx, agent-crew.jsx).
+ * The teams, their step order, send-backs, pauses and release steps, the
+ * agents' ids, roles and output files, and the counts of 11 teams and 38
+ * agents (18 built in, 20 custom) are read from ~/.dsh/cockpit on that day.
+ * The goal itself, the run's states, timings, the QA finding and the other
+ * metric tiles are illustrative.
  */
 (function initializeCockpitFilm() {
   'use strict';
@@ -731,7 +740,390 @@
     };
   });
 
-  /* 6 · Image rail ------------------------------------------------------- */
+  /* Crew bots: Cockpit's own sprite (dsh-workbench src/client/agent-crew.jsx),
+     a gem with a face and a state badge, coloured by mood as it is there. */
+  var MOOD = { idle: '#8b93f5', working: '#14b8a6', checking: '#3b82f6', waiting: '#f59e0b', stuck: '#ef4444', sentback: '#8b5cf6', done: '#22c55e', stopped: '#64748b' };
+  var MOOD_CAP = { idle: 'up next', working: 'on it', checking: 'being checked', waiting: 'waiting for you', stuck: 'needs you', done: 'done', sentback: 'sent it back', stopped: 'stopped' };
+  var DOTS = '<circle cx="17" cy="22" r="2"/><circle cx="25" cy="22" r="2"/>';
+  var FACE = {
+    checking: '<path d="M14.6 21.6q2.4 2.2 4.8 0M22.6 21.6q2.4 2.2 4.8 0"/>',
+    done: '<path d="M14.6 23q2.4-3 4.8 0M22.6 23q2.4-3 4.8 0"/>',
+    sentback: '<path d="M15 20l3.6 2-3.6 2M27 20l-3.6 2 3.6 2"/>',
+    stuck: DOTS + '<path d="M14.8 18.4l3.4 1.2M27.2 18.4l-3.4 1.2"/>',
+    stopped: '<path d="M15 22h4M23 22h4"/>'
+  };
+  var GLYPH = {
+    idle: '<path d="M-2.2-2.6h4.4M-2.2 2.6h4.4M-1.7-2.6q0 2 1.7 2.6q1.7-.6 1.7-2.6M-1.7 2.6q0-2 1.7-2.6q1.7.6 1.7 2.6"/>',
+    working: '<circle class="f" cx="-2.2" cy="0" r=".9"/><circle class="f" cx="0" cy="0" r=".9"/><circle class="f" cx="2.2" cy="0" r=".9"/>',
+    checking: '<circle cx="-.6" cy="-.6" r="1.9"/><path d="M.8.8l1.8 1.8"/>',
+    waiting: '<circle cx="0" cy="-1.3" r="1.2"/><path d="M-2.3 2.6q.3-2.2 2.3-2.2t2.3 2.2"/>',
+    stuck: '<path d="M0-2.6v2.6M0 2.3v.1"/>',
+    sentback: '<path d="M1.9 2.2a2.4 2.4 0 1 0-2.6-3.5M-.9-2.9v1.8h1.8"/>',
+    done: '<path d="M-2.2.1l1.5 1.5 2.9-3"/>',
+    stopped: '<rect x="-1.6" y="-1.6" width="3.2" height="3.2" rx=".5"/>'
+  };
+  function botHTML(m) {
+    return '<svg class="bot" viewBox="0 0 42 42" style="--hue:' + MOOD[m] + '"><circle class="halo" cx="21" cy="21" r="17"/><g class="body"><rect class="gem" x="9" y="9" width="24" height="24" rx="7" transform="rotate(45 21 21)"/><path class="shine" d="M14.2 16.4q3.4-4.2 6.8-6.2"/><g class="face">' + (FACE[m] || DOTS) + '</g></g><g class="bdg" transform="translate(32 32)"><circle r="5.6"/><g class="gl">' + GLYPH[m] + '</g></g></svg>';
+  }
+  /* A bot is rebuilt only when its mood changes; its halo and bob come from
+     u, so it stays a function of time like everything else. */
+  function makeBot(parent, size) {
+    var b = el('span', 'botw', null, parent), mood = null, halo = null, body = null;
+    b.style.width = b.style.height = size + 'px';
+    return {
+      el: b,
+      set: function (m, u, seed) {
+        if (m !== mood) { mood = m; b.innerHTML = botHTML(m); halo = b.querySelector('.halo'); body = b.querySelector('.body'); }
+        var live = m === 'working' || m === 'waiting', ph = u * 5 + (seed || 0);
+        halo.style.opacity = live ? (0.14 + 0.12 * Math.sin(ph)).toFixed(3) : 0;
+        body.style.transform = live ? 'translateY(' + (Math.sin(ph * 1.2) * 1.3).toFixed(2) + 'px)' : '';
+      }
+    };
+  }
+  /* The value a [[from u, value], ...] timeline holds at u. */
+  function at(list, u) { var v = list[0][1]; for (var i = 0; i < list.length; i++) if (u >= list[i][0]) v = list[i][1]; return v; }
+  function setText(e, s) { if (e._s !== s) { e._s = s; e.textContent = s; } }
+  function setHTML(e, s) { if (e._h !== s) { e._h = s; e.innerHTML = s; } }
+
+  /* Icons, after the ones Cockpit's Glyph component draws. */
+  function ico(d) { return '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">' + d + '</svg>'; }
+  var I = {
+    spark: ico('<path d="M12 3l1.9 5.6L19.5 10.5l-5.6 1.9L12 18l-1.9-5.6L4.5 10.5l5.6-1.9z"/><path d="M19 3v4M17 5h4"/>'),
+    play: ico('<path d="M7 5v14l11-7z"/>'),
+    upload: ico('<path d="M12 16V4M7 9l5-5 5 5M5 20h14"/>'),
+    cloud: ico('<path d="M7 18h10a4 4 0 0 0 .6-7.95A6 6 0 0 0 6.2 9.2 4.5 4.5 0 0 0 7 18z"/>'),
+    target: ico('<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".8"/>'),
+    search: ico('<circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/>'),
+    bug: ico('<rect x="8" y="7" width="8" height="12" rx="4"/><path d="M12 7V4M4 13h4M16 13h4M5 8l3 2M19 8l-3 2M5 18l3-2M19 18l-3-2"/>'),
+    pencil: ico('<path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/>'),
+    builder: ico('<path d="M14.5 6.5a4 4 0 0 0-5.3 5.3L4 17l3 3 5.2-5.2a4 4 0 0 0 5.3-5.3l-2.6 2.6-2.4-.6-.6-2.4z"/>'),
+    repo: ico('<path d="M6 4h11v14H7.5A1.5 1.5 0 0 0 6 19.5zM6 19.5A1.5 1.5 0 0 0 7.5 21H17"/>'),
+    branch: ico('<circle cx="7" cy="5" r="2"/><circle cx="7" cy="19" r="2"/><circle cx="17" cy="9" r="2"/><path d="M7 7v10M17 11c0 4-10 2-10 6"/>'),
+    sitemap: ico('<rect x="9" y="3" width="6" height="5" rx="1"/><rect x="3" y="16" width="6" height="5" rx="1"/><rect x="15" y="16" width="6" height="5" rx="1"/><path d="M12 8v4M6 16v-4h12v4"/>'),
+    agent: ico('<rect x="5" y="7" width="14" height="11" rx="3"/><path d="M12 7V4M9 12h.01M15 12h.01"/>'),
+    info: ico('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>'),
+    check: ico('<path d="M5 12.5l4.5 4.5L19 7.5"/>'),
+    activity: ico('<path d="M3 12h4l3-7 4 14 3-7h4"/>')
+  };
+
+  /* 6 · Run a goal ------------------------------------------------------- */
+  scene('goal', 'Run a goal', 4, 0.1, 0.2, function (s) {
+    var rig = el('div', 'n', null, s.s3);
+    function tiles(v) {
+      var T = [['play', '#22c7e8', 'Agents running'], ['info', '#fbbf24', 'Needs attention'], ['check', '#22d3a5', 'Completed (24h)'], ['target', '#4f8cff', 'Active goals'], ['sitemap', '#a78bfa', 'Teams'], ['agent', '#93a1b8', 'Total agents']];
+      return '<div class="metrics6">' + T.map(function (t, i) { return '<div class="mt" style="--tone:' + t[1] + '"><span class="mi">' + I[t[0]] + '</span><span><b>' + v[i] + '</b><span class="l">' + t[2] + '</span></span></div>'; }).join('') + '</div>';
+    }
+    var page = sized(el('div', 'n pn apage', null, rig), 1060, 640);
+    page.innerHTML = '<div class="ap-head"><div><h3>Agents</h3><div class="sub">Orchestrate your agents, teams and goals in one place.</div></div>' +
+      '<span class="ap-acts"><span class="btn ghost">Create agent</span><span class="btn go">' + I.spark + 'Run a goal</span></span></div>' +
+      '<div class="ap-tabs"><span class="on">Overview</span><span>Goals</span><span>Runs</span><span>Teams <em>11</em></span><span>Agents <em>38</em></span></div>' +
+      '<div class="ap-ghost">' + tiles([0, 0, 2, 0, 11, 38]) + '<div class="ap-cols"><div></div><div></div><div></div></div></div>';
+    var goBtn = page.querySelector('.go');
+
+    var comp = sized(el('div', 'n pn compo', null, rig), 640);
+    var STEPS = [
+      ['Game Designer', 'Claude Code', 'Writes work/daily-streak-bonus/design.md', ''],
+      ['Frontend Engineer', 'Claude Code', 'Builds it for web, iOS and Android', ''],
+      ['Game QA Tester', 'Claude Code', 'Can send it back to Frontend Engineer', 'loop'],
+      ['Mobile Release Engineer', 'Claude Code', 'Waits for your approval before Git Publisher pushes', 'pause'],
+      ['Git Publisher', '', 'Cockpit runs this step itself, with no model.', '']
+    ];
+    comp.innerHTML = '<div class="cp-head"><span class="mk">' + I.spark + '</span><span><b>Run a goal</b><small>Give your crew a direction.</small></span><span class="x">×</span></div>' +
+      '<div class="cp-phases"><span><i>1</i>Describe</span><span><i>2</i>Review plan</span><span><i>3</i>Run</span></div>' +
+      '<div class="cp-body"><div class="cp-scroll"><div class="lbl2">What do you want done?</div><div class="field cp-goal"><span class="tx"></span><span class="cur" style="height:18px"></span></div>' +
+      '<div class="cp-row"><div class="lbl2">Project</div><span class="sel">Multiwordle<i>▾</i></span></div>' +
+      '<div class="cp-foot"><span class="hint">You review the plan before anything runs.</span><span class="btn ghost plan"></span></div>' +
+      '<div class="cp-prop"><div class="lbl2">Proposed team · WordWarz Game Studio</div><div class="crew"></div><ol class="steps">' +
+      STEPS.map(function (st, i) {
+        return '<li><span class="num">' + (i + 1) + '</span><b>' + st[0] + '</b>' + (st[1] ? chip(st[1], TOOL.claude) : '<span></span>') + '<small class="' + st[3] + '">' + st[2] + '</small></li>';
+      }).join('') + '</ol></div></div></div>' +
+      '<div class="cp-end"><span class="btn ghost">Cancel</span><span class="btn run"></span></div>';
+    var phases = comp.querySelectorAll('.cp-phases span'), gtx = comp.querySelector('.cp-goal .tx'), gcur = comp.querySelector('.cp-goal .cur');
+    var planBtn = comp.querySelector('.plan'), runBtn = comp.querySelector('.run'), prop = comp.querySelector('.cp-prop');
+    var rows = comp.querySelectorAll('.steps li'), crewBox = comp.querySelector('.crew'), scroller = comp.querySelector('.cp-scroll');
+    var crew = STEPS.map(function (st) {
+      var m = el('div', 'cm', null, crewBox), b = makeBot(m, 44);
+      el('b', null, st[0], m); m._cap = el('small', null, '', m);
+      return { el: m, bot: b };
+    });
+    var GOAL = 'Add a daily streak bonus to WordWarz and ship it to web, iOS and Android.';
+
+    var capA = makeCap(s.s2, { n: '04', k: 'Run a goal', color: '#5eead4', pos: 'tl', h: 'Describe the goal.|*Get a team.*', b: 'Codex reads the agents I already have and proposes who does it, in what order, and where one may send work back. It plans once, read-only, before anything runs.' });
+    var capB = makeCap(s.s2, { n: '04', k: 'Run a goal', color: '#5eead4', pos: 'tl', h: 'I approve|*the order.*', b: 'I can reorder it, leave a step out or pause after one. Once it runs, no model picks the next agent: the team follows the plan I approved.' });
+
+    return function (u) {
+      var a = eo5(P(u, -0.2, 1.1)), out = eio(P(u, 8.9, 9.6));
+      rig.style.transform = 'translate3d(0px,40px,' + lerp(-360, 0, a).toFixed(1) + 'px) rotateY(' + lerp(12, 3, eio(P(u, 0, 9.6))).toFixed(2) + 'deg)';
+      var ci = eo5(P(u, 1.65, 2.6)), dim = ci * 0.55;
+      place(page, { x: 470 - ci * 120, y: 40, z: -220 - ci * 260, ry: -8, o: P(u, -0.2, 0.4) * (1 - dim) * (1 - out), blur: (1 - a) * 10 + ci * 4 + out * 8 });
+      place(comp, { x: lerp(1200, 560, ci), y: 10, z: 80, ry: lerp(-30, -12, ci), o: P(u, 1.65, 2.0) * (1 - out), blur: (1 - ci) * 10 + out * 10 });
+      sheen(comp, P(u, 2.2, 3.2));
+      var press = bump(u, 1.55, 0.05, 0.1);
+      goBtn.style.transform = 'scale(' + (1 - press * 0.06).toFixed(3) + ')';
+
+      setText(gtx, GOAL.slice(0, Math.floor(clamp((u - 2.45) * 46, 0, GOAL.length))));
+      gcur.style.opacity = u < 4.2 || (u < 4.6 && Math.floor(u * 2.4) % 2) ? 1 : 0;
+      var phase = u < 5.75 ? 0 : u < 8.45 ? 1 : 2;
+      for (var k = 0; k < 3; k++) phases[k].className = k === phase ? 'on' : '';
+      setHTML(planBtn, I.spark + (u < 4.62 ? 'Plan it' : u < 5.75 ? 'Planning… ' + (1 + Math.floor((u - 4.62) * 7)) + ' s' : 'Plan again'));
+      planBtn.style.transform = 'scale(' + (1 - bump(u, 4.62, 0.05, 0.1) * 0.06).toFixed(3) + ')';
+      setHTML(runBtn, I.play + (u < 8.45 ? 'Run it' : 'Starting…'));
+      runBtn.style.transform = 'scale(' + (1 - bump(u, 8.45, 0.05, 0.1) * 0.06).toFixed(3) + ')';
+      runBtn.style.opacity = u < 5.75 ? 0.45 : 1;
+
+      prop.style.opacity = P(u, 5.7, 6.0).toFixed(3);
+      // The real composer scrolls; it does here once the plan is in.
+      scroller.style.transform = 'translateY(' + (-160 * eio(P(u, 6.2, 7.3))).toFixed(1) + 'px)';
+      crew.forEach(function (c, i) {
+        var p = back(P(u, 5.8 + i * 0.12, 6.3 + i * 0.12));
+        c.el.style.transform = 'translateY(' + ((1 - p) * 20).toFixed(1) + 'px) scale(' + (0.6 + 0.4 * p).toFixed(3) + ')';
+        c.el.style.opacity = P(u, 5.8 + i * 0.12, 6.0 + i * 0.12).toFixed(3);
+        var m = u >= 8.6 && i === 0 ? 'working' : 'idle';
+        c.bot.set(m, u, i);
+        setText(c.el._cap, MOOD_CAP[m]);
+        c.el._cap.style.color = m === 'idle' ? '' : MOOD[m];
+      });
+      for (var r = 0; r < rows.length; r++) {
+        var rp = eo(P(u, 6.1 + r * 0.16, 6.6 + r * 0.16));
+        rows[r].style.opacity = rp.toFixed(3);
+        rows[r].style.transform = 'translateX(' + ((1 - rp) * 24).toFixed(1) + 'px)';
+      }
+
+      if (u > 0.7 && u < 2.1) drawCursor({ x: 1500, y: 1000 }, centreOf(goBtn), u, 0.9, 1.4, 1.55, 2.0);
+      else if (u > 3.9 && u < 5.2) drawCursor({ x: 1720, y: 900 }, centreOf(planBtn), u, 4.05, 4.5, 4.62, 5.05);
+      else if (u > 7.4 && u < 8.95) drawCursor({ x: 1300, y: 760 }, centreOf(runBtn), u, 7.6, 8.3, 8.45, 8.9);
+      else hideCursor();
+
+      capA(u, 0.35, 5.55);
+      capB(u, 5.75, 9.3);
+    };
+  });
+
+  /* 7 · Teams ------------------------------------------------------------ */
+  scene('teams', 'Teams', 3, 0.1, 0.2, function (s) {
+    var rig = el('div', 'n', null, s.s3);
+    /* Six of the eleven saved teams, in their saved order. Kinds and hues
+       follow Cockpit's team-theme.js. */
+    var TEAMS = [
+      ['Feature Squad', 'Coding', 'builder', 220, [['Feature Planner'], ['Builder'], ['Test Engineer'], ['Independent Reviewer', '', 'pauses'], ['Git Publisher', 'upload'], ['Deploy Watcher', 'cloud']], 'push + deploy check'],
+      ['Bug Squash', 'Bug fixing', 'bug', 354, [['Debugger'], ['Test Engineer'], ['Independent Reviewer', '', 'pauses'], ['Git Publisher', 'upload']], 'a push'],
+      ['WordWarz Game Studio', 'Game', 'target', 278, [['Game Designer'], ['Frontend Engineer'], ['Game QA Tester', '', '↺ step 2'], ['Mobile Release Engineer', '', 'pauses'], ['Git Publisher', 'upload']], 'a push'],
+      ['SEO Team', 'SEO', 'search', 152, [['SEO Strategist'], ['Frontend Engineer'], ['SEO Auditor', '', '↺ step 2'], ['Git Publisher', 'upload'], ['Deploy Watcher', 'cloud']], 'push + deploy check'],
+      ['Blog Publishing Team', 'Writing', 'pencil', 196, [['Blog Researcher'], ['Blog Writer'], ['Blog Editor', '', '↺ step 2'], ['Blog Publisher', '', 'pauses'], ['Git Publisher', 'upload'], ['Deploy Watcher', 'cloud']], 'push + deploy check'],
+      ['AI Feature Lab', 'AI', 'spark', 316, [['AI Feature Engineer'], ['Test Engineer'], ['Independent Reviewer']], '']
+    ];
+    var cards = TEAMS.map(function (t) {
+      var acc = 'hsl(' + t[3] + ' 72% 62%)';
+      var c = el('div', 'n pn tcard', null, rig);
+      c.style.setProperty('--acc', acc);
+      c.innerHTML = '<div class="tc-head"><span class="tc-mark">' + I[t[2]] + '</span><span><b>' + t[0] + '</b><small>' + t[1] + ' · ' + t[4].length + ' steps' + (t[5] ? ' · ships with ' + t[5] : '') + '</small></span><span class="tc-st" style="--tone:#22d3a5"><i></i><span>Ready</span></span></div>' +
+        '<ol class="tc-roster"></ol><div class="tc-acts"><span class="btn">' + I.play + 'Run team</span><span class="btn ghost">Edit</span></div>';
+      var ol = c.querySelector('.tc-roster');
+      c._rows = t[4].map(function (st, i) {
+        var li = el('li', null, null, ol), bot = null;
+        el('span', 'num', String(i + 1), li);
+        if (st[1]) el('span', 'rel', I[st[1]], li); else bot = makeBot(li, 30);
+        el('span', 'nm', st[0], li);
+        if (st[2]) el('span', 'tag' + (st[2] === 'pauses' ? ' pz' : ''), st[2], li);
+        return { li: li, bot: bot, rel: !!st[1] };
+      });
+      c._st = c.querySelector('.tc-st'); c._stx = c.querySelector('.tc-st span');
+      return c;
+    });
+    /* Feature Squad runs: [working from, done from] per step; the reviewer
+       pauses for approval before Git Publisher pushes. */
+    var RUN = [[2.55, 2.95], [2.95, 3.4], [3.4, 3.8], [3.8, 4.85], [4.9, 5.3], [5.35, 5.8]];
+    var cap = makeCap(s.s2, { n: '05', k: 'Teams', color: '#a78bfa', pos: 'tl', h: 'Teams that|*hand off.*', b: 'Eleven so far. Agents run in order from one Start, each writing a file for the next. A reviewer can send work back, and the last steps push it and check the deploy.' });
+    return function (u) {
+      var spin = 2.4 * (1 - eio(P(u, -0.2, 2.3))), lift = eo5(P(u, 2.2, 2.9)) * (1 - eio(P(u, 6.0, 6.6))), out = eio(P(u, 6.4, 7.1));
+      rig.style.transform = 'translate3d(80px,' + (150 - lift * 40).toFixed(1) + 'px,' + (-220 + lift * 120).toFixed(1) + 'px) rotateX(' + (4 + out * 12).toFixed(2) + 'deg)';
+      cards.forEach(function (c, i) {
+        var ang = (i - spin) * Math.PI / 3, R = 760;
+        var front = Math.cos(ang), isF = i === 0 ? lift : 0;
+        place(c, { x: Math.sin(ang) * R * 1.1, y: isF * -30 + out * 160, z: (front - 1) * R * 0.75 + isF * 180, ry: -Math.sin(ang) * 38, s: 1 + isF * 0.12, o: clamp(front * 1.6 + 0.35, 0, 1) * P(u, -0.2 + i * 0.05, 0.4 + i * 0.05) * (1 - out) * (i === 0 ? 1 : 1 - lift * 0.45), blur: (1 - clamp(front, 0, 1)) * 5 + out * 10 + (i === 0 ? 0 : lift * 3) });
+        sheen(c, P(u, 0.6 + i * 0.1, 1.8 + i * 0.1));
+      });
+      var fs = cards[0], active = -1;
+      fs._rows.forEach(function (r, i) {
+        var w = RUN[i], m = u < w[0] ? 'idle' : u < w[1] ? 'working' : 'done';
+        if (i === 3 && u >= 4.2 && u < w[1]) m = 'waiting';
+        if (m === 'working' || m === 'waiting') active = i;
+        if (r.bot) r.bot.set(m, u, i);
+        else {
+          var g = m === 'working' ? 1 : m === 'done' ? 0.55 : 0;
+          r.li.querySelector('.rel').style.boxShadow = g ? 'inset 0 0 0 1px rgba(103,232,249,' + (0.25 + g * 0.5).toFixed(2) + '), 0 0 ' + (g * 26).toFixed(0) + 'px rgba(103,232,249,.4)' : '';
+        }
+        var on = m === 'working' || m === 'waiting';
+        r.li.style.background = on ? (m === 'waiting' ? 'rgba(251,191,36,.12)' : 'rgba(20,184,166,.13)') : '';
+        r.li.style.boxShadow = on ? 'inset 0 0 0 1px ' + (m === 'waiting' ? 'rgba(251,191,36,.5)' : 'rgba(20,184,166,.45)') : '';
+      });
+      var running = u >= RUN[0][0] && u < RUN[5][1];
+      var st = !running ? ['Ready', '#22d3a5'] : active === 3 && u >= 4.2 ? ['Needs you', '#fbbf24'] : ['1 open', '#4f8cff'];
+      setText(fs._stx, st[0]); fs._st.style.setProperty('--tone', st[1]);
+      cap(u, 0.4, 6.7);
+    };
+  });
+
+  /* 8 · Goal overview ---------------------------------------------------- */
+  scene('overview', 'Goal overview', 5, 0.1, 0.2, function (s) {
+    var rig = el('div', 'n', null, s.s3);
+    var NAMES = ['Game Designer', 'Frontend Engineer', 'Game QA Tester', 'Mobile Release Engineer', 'Git Publisher'];
+    /* One run of WordWarz Game Studio: each step's mood over time. QA sends
+       the work back once, and the release step pauses for my approval. */
+    var STORY = [
+      [[0, 'done']],
+      [[0, 'working'], [2.6, 'done'], [5.9, 'working'], [7.0, 'done']],
+      [[0, 'idle'], [2.8, 'working'], [5.4, 'sentback'], [7.4, 'working'], [8.2, 'done']],
+      [[0, 'idle'], [8.6, 'working'], [9.0, 'waiting'], [10.05, 'done']],
+      [[0, 'idle'], [10.4, 'working'], [10.9, 'done']]
+    ];
+    /* Packets between stations: [from u, to u, from step, to step]. */
+    var PACKETS = [[2.6, 2.8, 1, 2], [5.4, 5.9, 2, 1], [7.0, 7.4, 1, 2], [8.2, 8.6, 2, 3], [10.05, 10.4, 3, 4]];
+    function moodAt(i, u) { return at(STORY[i], u); }
+
+    var metrics = sized(el('div', 'n', null, rig), 1560);
+    var MT = [['play', '#22c7e8', 'Agents running', ''], ['info', '#fbbf24', 'Needs attention', ''], ['check', '#22d3a5', 'Completed (24h)', ''], ['target', '#4f8cff', 'Active goals', ''], ['sitemap', '#a78bfa', 'Teams', '1 working'], ['agent', '#93a1b8', 'Total agents', '']];
+    metrics.innerHTML = '<div class="metrics6">' + MT.map(function (t) { return '<div class="mt pn" style="--tone:' + t[1] + '"><span class="mi">' + I[t[0]] + '</span><span><b>0</b><span class="l">' + t[2] + (t[3] ? '<em>' + t[3] + '</em>' : '') + '</span></span></div>'; }).join('') + '</div>';
+    var mtiles = metrics.querySelectorAll('.mt'), mnums = metrics.querySelectorAll('.mt b');
+
+    var nav = sized(el('div', 'n pn gw-col', null, rig), 340, 660);
+    function gcard(cls, title, team, repo, done) {
+      return '<div class="gcard ' + cls + '"><div class="top"><span class="bd"></span><span class="tm"></span></div><b>' + title + '</b><span class="ln">' + team + '</span><span class="ln">' + repo + '</span><div class="ft"><span class="sn"></span><span class="segs">' + '<i></i>'.repeat(5) + '</span></div>' + (done === null ? '<div class="cr"></div>' : '') + '</div>';
+    }
+    nav.innerHTML = '<div class="gw-h">Goals <em class="act">1 active</em></div><div class="gw-search">' + I.search + 'Search goals, teams, repos, agents…</div>' +
+      '<div class="gw-chips"><span class="on">All <em>3</em></span><span class="c-run">Running <em>1</em></span><span class="c-you">Needs you <em>0</em></span><span>Done <em>2</em></span></div>' +
+      '<div class="gw-grp g-now">Running · 1</div>' + gcard('pick g1', 'Daily streak bonus', 'WordWarz Game Studio', 'Multiwordle', null) +
+      '<div class="gw-grp">Done · 2</div>' + gcard('g2', 'Fix: dock reopens after reload', 'Bug Squash', 'dsh-workbench', true) + gcard('g3', 'Schema for the pricing page', 'SEO Team', 'port', true);
+    var g1 = nav.querySelector('.g1'), g1bd = g1.querySelector('.bd'), g1tm = g1.querySelector('.tm'), g1sn = g1.querySelector('.sn'), g1segs = g1.querySelectorAll('.segs i'), g1cr = g1.querySelector('.cr');
+    var g1bots = NAMES.map(function () { return makeBot(g1cr, 22); });
+    var chipRun = nav.querySelector('.c-run em'), chipYou = nav.querySelector('.c-you em'), grpNow = nav.querySelector('.g-now'), navAct = nav.querySelector('.act');
+    [['.g2', 4, 'Done', '2h ago'], ['.g3', 5, 'Done', 'yesterday']].forEach(function (g) {
+      var c = nav.querySelector(g[0]);
+      c.querySelector('.bd').innerHTML = '<span class="badge" style="--tone:#22d3a5"><i></i>' + g[2] + '</span>';
+      c.querySelector('.tm').textContent = g[3];
+      c.querySelector('.sn').textContent = 'Step ' + g[1] + '/' + g[1];
+      c.querySelectorAll('.segs i').forEach(function (x, k) { x.style.background = k < g[1] ? '#22c55e' : 'transparent'; x.style.display = k < g[1] ? '' : 'none'; });
+    });
+
+    var det = sized(el('div', 'n pn gw-col', null, rig), 800, 660);
+    det.innerHTML = '<div class="gd-head"><span class="mk">' + I.target + '</span><span><h4>Daily streak bonus</h4><div class="gd-meta"><span class="bd"></span><span>' + I.sitemap + 'WordWarz Game Studio</span><span>' + I.repo + 'Multiwordle</span><span>' + I.branch + 'feat/daily-streak</span></div></span><span class="gd-acts"><span class="btn ghost">Cancel goal</span></span></div>' +
+      '<div class="gd-tabs"><span class="on">Overview</span><span>Agents (5)</span><span class="t-steps"></span><span>Files (4)</span><span>Commits (2)</span><span>Logs</span></div>' +
+      '<div class="gpanel"><div class="ph">' + I.activity + 'Goal progress<span class="r"></span></div><div style="display:flex;margin-top:12px"><span class="segs big">' + '<i></i>'.repeat(5) + '</span></div>' +
+      '<div class="legend"><span><i style="background:#22c55e"></i>Done <b class="l0"></b></span><span><i style="background:#14b8a6"></i>Running <b class="l1"></b></span><span><i style="background:#f59e0b"></i>Needs you <b class="l2"></b></span><span><i style="background:rgba(255,255,255,.18)"></i>Queued <b class="l3"></b></span></div></div>' +
+      '<div class="gpanel"><div class="ph">' + I.agent + 'Agents in this goal (5)<span class="vt"><span>List</span><span class="on">Pipeline</span></span></div><div class="pipe"></div><p class="gw-sub">Steps run in this order; each starts when the one before it passes.</p></div>';
+    var dbd = det.querySelector('.gd-head .bd'), dsteps = det.querySelector('.t-steps'), dr = det.querySelector('.gpanel .r'), dsegs = det.querySelectorAll('.segs.big i');
+    var leg = [0, 1, 2, 3].map(function (k) { return det.querySelector('.l' + k); });
+    var pipe = det.querySelector('.pipe'), SX = [70, 222, 374, 526, 678];
+    for (var li = 0; li < 4; li++) { var ln = el('div', 'link', null, pipe); ln.style.left = (SX[li] + 36) + 'px'; ln.style.width = (SX[li + 1] - SX[li] - 72) + 'px'; }
+    var pk = el('div', 'pk', null, pipe);
+    var stations = NAMES.map(function (n, i) {
+      var st = el('div', 'stn', null, pipe); st.style.left = SX[i] + 'px';
+      var bot = i === 4 ? null : makeBot(st, 60);
+      if (i === 4) el('span', 'rel', I.upload, st);
+      el('b', null, n, st);
+      return { el: st, bot: bot, cap: el('small', null, '', st) };
+    });
+
+    var ins = sized(el('div', 'n pn gw-col', null, rig), 380, 660);
+    ins.innerHTML = '<div class="ins-top">Run details<span>×</span></div><div class="ins-who"></div><div class="attn"><b>Needs your input</b>Waits for your approval before Git Publisher pushes.<br><span class="btn cont">' + I.play + 'Continue</span></div>' +
+      '<div class="live"><div class="lh"><i></i>Output</div></div><dl class="dl"><dt>Agent ID</dt><dd class="aid"></dd><dt>Step</dt><dd class="ast"></dd><dt>Repo</dt><dd>Multiwordle · feat/daily-streak</dd></dl>';
+    var who = ins.querySelector('.ins-who'), wbot = makeBot(who, 46), wtx = el('span', null, null, who);
+    var attn = ins.querySelector('.attn'), cont = ins.querySelector('.cont'), live = ins.querySelector('.live'), aid = ins.querySelector('.aid'), ast = ins.querySelector('.ast');
+    var QA = makeLines(live, [
+      { at: 3.0, s: [['m', '› '], ['', 'Reading work/daily-streak-bonus/design.md']] },
+      { at: 3.6, s: [['m', '› '], ['', 'Playtest on web, three matches']] },
+      { at: 4.5, s: [['r', '✕ '], ['', 'Streak resets at UTC midnight, not the player\'s']] },
+      { at: 5.4, s: [['v', '↺ '], ['', 'Verdict: revise. Back to Frontend Engineer']] },
+      { at: 7.5, s: [['m', '› '], ['', 'Round 2: web, iOS and Android']] },
+      { at: 8.2, s: [['g', '✓ '], ['', 'Pass. Wrote qa.md']] }
+    ], 9);
+    var live2 = el('div', 'live', '<div class="lh"><i></i>Output</div>', null);
+    live.parentNode.insertBefore(live2, live.nextSibling);
+    var REL = makeLines(live2, [
+      { at: 8.7, s: [['m', '› '], ['', 'Capacitor sync for iOS and Android']] },
+      { at: 8.9, s: [['g', '✓ '], ['', 'Wrote release.md']] },
+      { at: 9.0, s: [['a', '‖ '], ['', 'Paused before Git Publisher pushes']] },
+      { at: 10.05, s: [['g', '✓ '], ['', 'Continued by Kim']] }
+    ], 9);
+
+    var cap = makeCap(s.s2, { n: '06', k: 'Goal overview', color: '#67e8f9', pos: 'tl', h: 'What runs, who works,|*what needs me.*', b: 'Every goal shows its steps, each agent\'s repo, branch and runtime, and what it recorded. When a step pauses for me, the goal says so.' });
+    function stamp(sec) { sec = Math.floor(sec); return Math.floor(sec / 60) + 'm ' + ('0' + sec % 60).slice(-2) + 's'; }
+
+    return function (u) {
+      var a = eo5(P(u, -0.2, 1.4)), cam = eio(P(u, 4.0, 5.3)), out = eio(P(u, 11.3, 12.0));
+      rig.style.transform = 'translate3d(' + lerp(560, 0, cam).toFixed(1) + 'px,' + lerp(70, 30, cam).toFixed(1) + 'px,' + (lerp(-700, -420, a) + cam * 300 - out * 200).toFixed(1) + 'px) rotateY(' + lerp(-16, -2, cam).toFixed(2) + 'deg) rotateX(' + (2 + out * 8).toFixed(2) + 'deg)';
+      var oo = 1 - out;
+      place(metrics, { x: 0, y: -380, z: 0, o: P(u, -0.1, 0.4) * oo, blur: (1 - eo5(P(u, -0.1, 0.9))) * 8 + out * 8 });
+      place(nav, { x: -610, y: 30, z: 0, o: P(u, 0.1, 0.6) * oo, blur: (1 - eo5(P(u, 0.1, 1.1))) * 8 + out * 8 });
+      place(det, { x: -20, y: 30, z: 0, o: P(u, 0.2, 0.7) * oo, blur: (1 - eo5(P(u, 0.2, 1.2))) * 8 + out * 8 });
+      place(ins, { x: 600, y: 30, z: 0, o: P(u, 0.3, 0.8) * oo, blur: (1 - eo5(P(u, 0.3, 1.3))) * 8 + out * 8 });
+      sheen(det, P(u, 1.0, 2.4));
+
+      var moods = STORY.map(function (_, i) { return moodAt(i, u); });
+      var done = moods.filter(function (m) { return m === 'done'; }).length;
+      var runningN = moods.filter(function (m) { return m === 'working'; }).length;
+      var waiting = moods.indexOf('waiting') >= 0, finished = done === 5;
+      var current = 1; moods.forEach(function (m, i) { if (m !== 'idle') current = i + 1; });
+      var badge = finished ? ['Done', '#22d3a5'] : waiting ? ['Needs you', '#fbbf24'] : ['Running', '#22c7e8'];
+      var bHTML = '<span class="badge" style="--tone:' + badge[1] + '"><i></i>' + badge[0] + '</span>';
+
+      // Metrics count up, then follow the run.
+      var cu = eo(P(u, 0.3, 1.4));
+      var vals = [Math.round(cu * 1) * (finished ? 0 : runningN ? 1 : 0), waiting ? 1 : 0, Math.round(cu * 2) + (finished ? 1 : 0), finished ? 0 : Math.round(cu * 1), Math.round(cu * 11), Math.round(cu * 38)];
+      for (var k = 0; k < 6; k++) setText(mnums[k], String(vals[k]));
+      mtiles[1].className = 'mt pn' + (waiting ? ' alert' : '');
+
+      // Navigator
+      setHTML(g1bd, bHTML); setText(g1tm, stamp(372 + u * 9));
+      setText(g1sn, 'Step ' + current + '/5');
+      var SEGC = { done: '#22c55e', working: '#14b8a6', waiting: '#f59e0b', sentback: '#8b5cf6', idle: 'rgba(255,255,255,.08)' };
+      moods.forEach(function (m, i) { g1segs[i].style.background = SEGC[m] || SEGC.idle; dsegs[i].style.background = SEGC[m] || SEGC.idle; g1bots[i].set(m, u, i); });
+      setText(chipRun, finished ? '0' : '1'); setText(chipYou, waiting ? '1' : '0');
+      setText(grpNow, finished ? 'Done · 3' : waiting ? 'Needs you · 1' : 'Running · 1');
+      setText(navAct, finished ? '0 active' : '1 active');
+
+      // Detail
+      setHTML(dbd, bHTML);
+      setText(dsteps, 'Steps (' + current + '/5)');
+      setText(dr, 'Step ' + current + '/5 · ' + done + ' completed · ' + Math.round(done / 5 * 100) + '%');
+      setText(leg[0], String(done)); setText(leg[1], String(runningN)); setText(leg[2], waiting ? '1' : '0'); setText(leg[3], String(moods.filter(function (m) { return m === 'idle'; }).length));
+      stations.forEach(function (st, i) {
+        var m = moods[i];
+        if (st.bot) st.bot.set(m, u, i * 1.3);
+        else st.el.querySelector('.rel').style.boxShadow = m === 'working' ? 'inset 0 0 0 1px rgba(103,232,249,.8), 0 0 30px rgba(103,232,249,.5)' : m === 'done' ? 'inset 0 0 0 1px rgba(52,211,153,.6)' : '';
+        setText(st.cap, MOOD_CAP[m]);
+        st.cap.style.color = m === 'idle' ? 'var(--dim)' : MOOD[m];
+        st.el.style.transform = 'translateY(' + (-bump(u, (STORY[i].filter(function (e) { return e[0] <= u; }).pop() || [0])[0], 0.01, 0.2) * 8).toFixed(1) + 'px)';
+      });
+      var pkt = null;
+      PACKETS.forEach(function (p) { if (u >= p[0] && u < p[1]) pkt = p; });
+      if (pkt) {
+        var pp = eio(P(u, pkt[0], pkt[1])), back2 = pkt[3] < pkt[2];
+        pk.style.left = lerp(SX[pkt[2]], SX[pkt[3]], pp).toFixed(1) + 'px';
+        pk.style.opacity = 1;
+        pk.style.background = back2 ? '#c4b5fd' : '#fff';
+        pk.style.boxShadow = back2 ? '0 0 16px 5px rgba(139,92,246,.9)' : '0 0 16px 5px rgba(20,184,166,.9)';
+      } else pk.style.opacity = 0;
+
+      // Inspector: the QA tester, then the release engineer.
+      var rel = u >= 8.45, sel = rel ? 3 : 2, sm = moods[sel];
+      wbot.set(sm, u, 7);
+      setHTML(wtx, '<b>' + NAMES[sel] + '</b><span class="badge" style="--tone:' + MOOD[sm] + '"><i></i>' + MOOD_CAP[sm] + '</span><span class="tm">' + (sm === 'idle' ? '' : stamp(rel ? (u - 8.6) * 30 : (u - 2.8) * 30)) + '</span>');
+      setText(aid, rel ? 'custom-mobile-release-engineer' : 'custom-game-qa-tester');
+      setText(ast, 'Step ' + (sel + 1) + ' of 5 · ' + (rel ? 'Capacitor Release Engineer' : 'Cross-Platform Game QA'));
+      attn.style.display = sm === 'waiting' ? '' : 'none';
+      cont.style.transform = 'scale(' + (1 - bump(u, 10.0, 0.05, 0.1) * 0.06).toFixed(3) + ')';
+      live.style.display = rel ? 'none' : '';
+      live2.style.display = rel ? '' : 'none';
+      if (rel) REL(u, true); else QA(u, true);
+
+      if (u > 9.1 && u < 10.6) drawCursor({ x: 1500, y: 1020 }, centreOf(cont), u, 9.3, 9.85, 10.0, 10.45);
+      else hideCursor();
+      cap(u, 0.35, 4.4);
+    };
+  });
+
+  /* 9 · Image rail ------------------------------------------------------- */
   var AVATAR = '/assets/cockpit-film/pilot-avatar.webp';
   scene('images', 'Image rail', 4, 0.1, 0.2, function (s) {
     var rig = el('div', 'n', null, s.s3);
@@ -752,7 +1144,7 @@
       '<div class="st" style="margin-top:14px;font:500 13px var(--mono);color:var(--muted)"></div></div>';
     var img = rail.querySelector('img'), gen = rail.querySelector('.gen'), arc = rail.querySelector('.arc'), tm = rail.querySelector('.tm'), scan = rail.querySelector('.scan'), rst = rail.querySelector('.st'), shim = rail.querySelector('.shimmer');
     var hero = el('div', 'n hero-img', '<img alt="" src="' + AVATAR + '">', rig);
-    var cap = makeCap(s.s2, { n: '04', k: 'Image rail', color: '#d062ff', pos: 'tl', h: 'Agents draw|*into the rail.*', b: 'Claude Code and Codex terminals opened in Cockpit get an image tool. The result lands beside the conversation that asked for it, and I approve it there in chat.' });
+    var cap = makeCap(s.s2, { n: '07', k: 'Image rail', color: '#d062ff', pos: 'tl', h: 'Agents draw|*into the rail.*', b: 'Claude Code and Codex terminals opened in Cockpit get an image tool. The result lands beside the conversation that asked for it, and I approve it there in chat.' });
     return function (u) {
       var a = eo5(P(u, -0.2, 1.4)), out = eio(P(u, 9.0, 9.7));
       rig.style.transform = 'translate3d(0px,90px,' + lerp(-400, 0, a).toFixed(1) + 'px) rotateY(' + lerp(16, 4, eio(P(u, 0, 9.6))).toFixed(2) + 'deg) rotateX(' + lerp(10, 3, a).toFixed(2) + 'deg)';
@@ -805,7 +1197,7 @@
     var bars = run.querySelectorAll('.g-bar'), durs = run.querySelectorAll('.g-d'), fin = run.querySelector('.fin');
     var retry = el('span', 'retry', chip('retry 1', '#fbbf24'), run.querySelectorAll('.g-track')[2]);
     retry.style.left = ((4.8 + 6.1) / 25 * 100) + '%';
-    var cap = makeCap(s.s2, { n: '05', k: 'Automations', color: '#fbbf24', pos: 'tl', h: 'Every schedule,|*every scheduler.*', b: 'Task Scheduler, systemd, cron, GitHub Actions and Hermes jobs in one list. Instrumented runs report their real steps and retries, and the page says how much it really knows.' });
+    var cap = makeCap(s.s2, { n: '08', k: 'Automations', color: '#fbbf24', pos: 'tl', h: 'Every schedule,|*every scheduler.*', b: 'Task Scheduler, systemd, cron, GitHub Actions and Hermes jobs in one list. Instrumented runs report their real steps and retries, and the page says how much it really knows.' });
     return function (u) {
       var a = eo5(P(u, -0.2, 1.3)), out = eio(P(u, 8.9, 9.7));
       rig.style.transform = 'translate3d(0px,70px,' + (lerp(-300, 0, a) + out * 500).toFixed(1) + 'px) rotateY(' + lerp(-14, -4, P(u, 0, 9.6)).toFixed(2) + 'deg) rotateX(' + lerp(12, 4, a).toFixed(2) + 'deg)';
@@ -874,7 +1266,7 @@
     var pads = NODES.map(function (n) { var d = el('div', 'ringfloor', null, rig); d.style.boxShadow = '0 0 0 2px rgba(103,232,249,.5), 0 0 40px rgba(103,232,249,.3)'; return d; });
     var cards = NODES.map(function (n) { var c = el('div', 'n0 pn infra', n.h, rig); c._g = c.querySelectorAll('.ga'); c._v = c.querySelectorAll('.gv'); return c; });
     var lens = null;
-    var cap = makeCap(s.s2, { n: '06', k: 'Infrastructure', color: '#67e8f9', pos: 'tl', h: 'Read from|*the source.*', b: 'Machines, containers, services and endpoints, read from the systems that own them. Every check is read-only, and no agent tool can reach it.' });
+    var cap = makeCap(s.s2, { n: '09', k: 'Infrastructure', color: '#67e8f9', pos: 'tl', h: 'Read from|*the source.*', b: 'Machines, containers, services and endpoints, read from the systems that own them. Every check is read-only, and no agent tool can reach it.' });
     return function (u) {
       if (!lens) lens = paths.map(function (p) { return p.getTotalLength(); });
       var a = eio(P(u, -0.3, 1.6)), out = eio(P(u, 6.5, 7.3));
@@ -947,7 +1339,7 @@
     var stat = el('div', 'stat', '<div><b class="sv">0</b>notes</div><div><b>Markdown</b>Obsidian · local git</div>', s.s2);
     stat.style.right = '96px'; stat.style.bottom = '96px';
     var sv = stat.querySelector('.sv');
-    var cap = makeCap(s.s2, { n: '07', k: 'Knowledge', color: '#a78bfa', pos: 'bl', h: 'A vault|*every agent reads.*', b: 'My Obsidian notes, decisions and debugging history as one live graph. Agents read it before they plan, and write back what they learned.' });
+    var cap = makeCap(s.s2, { n: '10', k: 'Knowledge', color: '#a78bfa', pos: 'bl', h: 'A vault|*every agent reads.*', b: 'My Obsidian notes, decisions and debugging history as one live graph. Agents read it before they plan, and write back what they learned.' });
     s.graphLabels = function (proj, u, foc, vis) {
       labels.forEach(function (l, i) {
         var q = proj[i];
@@ -980,6 +1372,7 @@
       ['Workbench', '#4f8cff', '<rect x="0" y="6" width="300" height="108" rx="10" fill="rgba(5,8,15,.8)"/><circle cx="18" cy="24" r="4" fill="#e8845c"/><circle cx="34" cy="24" r="4" fill="#e5e7eb"/><circle cx="50" cy="24" r="4" fill="#f5c542"/><rect x="14" y="44" width="180" height="6" rx="3" fill="#7aa7ff"/><rect x="14" y="60" width="120" height="6" rx="3" fill="#475569"/><rect x="14" y="76" width="150" height="6" rx="3" fill="#34d399"/>'],
       ['Agent workflow', '#22d3ee', '<path d="M10 60 C80 20,120 100,150 60 S240 20,290 60" stroke="url(#mg)" stroke-width="4" fill="none"/><g fill="#eef2f8"><circle cx="10" cy="60" r="7"/><circle cx="80" cy="44" r="7"/><circle cx="150" cy="60" r="7"/><circle cx="220" cy="48" r="7"/><circle cx="290" cy="60" r="7" fill="#34d399"/></g>'],
       ['Agents', '#a78bfa', '<circle cx="60" cy="60" r="34" fill="#e8845c" opacity=".85"/><circle cx="150" cy="60" r="34" fill="#e5e7eb" opacity=".85"/><circle cx="240" cy="60" r="34" fill="#6f8bff" opacity=".85"/>'],
+      ['Teams', '#14b8a6', '<path d="M40 60H260" stroke="rgba(255,255,255,.18)" stroke-width="3"/><g transform="rotate(45 40 60)"><rect x="22" y="42" width="36" height="36" rx="10" fill="#22c55e"/></g><g transform="rotate(45 113 60)"><rect x="95" y="42" width="36" height="36" rx="10" fill="#22c55e"/></g><g transform="rotate(45 186 60)"><rect x="168" y="42" width="36" height="36" rx="10" fill="#14b8a6"/></g><g transform="rotate(45 260 60)"><rect x="242" y="42" width="36" height="36" rx="10" fill="#8b93f5"/></g><circle cx="150" cy="60" r="7" fill="#fff"/>'],
       ['Image rail', '#d062ff', '<image href="' + AVATAR + '" x="90" y="0" width="120" height="120"/>'],
       ['Automations', '#fbbf24', '<rect x="0" y="16" width="120" height="12" rx="6" fill="#4f8cff"/><rect x="120" y="44" width="40" height="12" rx="6" fill="#67e8f9"/><rect x="160" y="72" width="110" height="12" rx="6" fill="#a78bfa"/><rect x="270" y="100" width="30" height="12" rx="6" fill="#34d399"/>'],
       ['Infrastructure', '#67e8f9', '<path d="M40 90 L150 30 L260 90 Z" stroke="#67e8f9" stroke-width="3" fill="none" stroke-dasharray="8 8"/><g fill="#0b1020" stroke="#67e8f9" stroke-width="3"><circle cx="40" cy="90" r="14"/><circle cx="150" cy="30" r="14"/><circle cx="260" cy="90" r="14"/></g>'],
@@ -1016,6 +1409,13 @@
   });
 
   var DUR = CLOCK;
+  /* The film first ran 93.6 s. Run a goal, Teams and Goal overview went in
+     after Agents (bar 19), so every absolute time written for the scenes
+     after them moves by those 12 bars. L() does that move; times before the
+     insertion are untouched. */
+  var INS_AT = 19 * BAR - 0.6, INS = 12 * BAR;
+  function L(t) { return t >= INS_AT ? t + INS : t; }
+  var CURSOR_SCENES = ['workflow', 'goal', 'overview'];
   SCENES.forEach(function (s) { s.draw = s.build(s); });
 
   /* ---------------------------------------------------------------- canvas */
@@ -1064,25 +1464,25 @@
   })();
   /* How far the field has flowed toward the camera by time t. Bursts at the
      cuts are integrals of eased windows, so the flow stays a function of t. */
-  var BURSTS = [[5.6, 7.6, 2600], [11.6, 12.6, 700], [21.0, 22.2, 900], [38.0, 38.9, 450], [45.2, 46.0, 450], [54.8, 55.6, 450], [64.4, 65.2, 450], [71.4, 72.6, 800], [83.4, 84.6, 600], [87.2, 89.0, 2400]];
+  var BURSTS = [[5.6, 7.6, 2600], [11.6, 12.6, 700], [21.0, 22.2, 900], [38.0, 38.9, 450], [45.2, 46.0, 450], [54.8, 55.6, 450], [64.4, 65.2, 450], [71.4, 72.6, 800], [83.4, 84.6, 600], [87.2, 89.0, 2400]].map(function (b) { return [L(b[0]), L(b[1]), b[2]]; }).concat([[45.2, 46.0, 450], [54.8, 55.6, 450], [62.0, 62.8, 500]]);
   function flow(t) {
     var d = 38 * t;
     for (var i = 0; i < BURSTS.length; i++) d += BURSTS[i][2] * eio(P(t, BURSTS[i][0], BURSTS[i][1]));
     return d;
   }
   function logoW(t) {
-    return Math.max(eio(P(t, 6.6, 8.6)) * (1 - eio(P(t, 11.3, 12.3))), eio(P(t, 87.3, 88.9)));
+    return Math.max(eio(P(t, 6.6, 8.6)) * (1 - eio(P(t, 11.3, 12.3))), eio(P(t, L(87.3), L(88.9))));
   }
   function fieldAmt(t) {
     var a = 0.55 + 0.45 * P(t, 0, 1.5);
-    if (t > 12.6 && t < 84) a *= 0.55;
+    if (t > 12.6 && t < L(84)) a *= 0.55;
     return a;
   }
 
   function drawParticles(t) {
     var f0 = flow(t), dz = f0 - flow(t - 0.045), w = logoW(t), fa = fieldAmt(t);
-    var outro = t > 80, ly0 = outro ? OUTRO_LOGO_Y : TITLE_LOGO_Y, lsc = outro ? OUTRO_LOGO_S : 1;
-    var logoAlpha = outro ? 1 - 0.65 * P(t, 89.3, 90.4) : 1 - 0.6 * P(t, 8.4, 9.2);
+    var outro = t > L(80), ly0 = outro ? OUTRO_LOGO_Y : TITLE_LOGO_Y, lsc = outro ? OUTRO_LOGO_S : 1;
+    var logoAlpha = outro ? 1 - 0.65 * P(t, L(89.3), L(90.4)) : 1 - 0.6 * P(t, 8.4, 9.2);
     var streak = dz > 6;
     cx.globalCompositeOperation = 'lighter';
     if (streak) cx.lineCap = 'round';
@@ -1124,7 +1524,7 @@
     g.addColorStop(1, 'rgba(' + rgb + ',0)');
     cx.fillStyle = g; cx.fillRect(x - r, y - r, r * 2, r * 2);
   }
-  var MOODS = [[0, C.blue], [21.6, C.blue], [29.9, C.rose], [33.2, C.emerald], [34.5, C.amber], [35.6, C.emerald], [38.4, C.violet], [45.6, C.magenta], [55.2, C.amber], [64.8, C.cyan], [72, C.violet], [84, C.blue]];
+  var MOODS = [[0, C.blue], [21.6, C.blue], [29.9, C.rose], [33.2, C.emerald], [34.5, C.amber], [35.6, C.emerald], [38.4, C.violet], [45.6, C.magenta], [55.2, C.amber], [64.8, C.cyan], [72, C.violet], [84, C.blue]].map(function (m) { return [L(m[0]), m[1]]; }).concat([[45.6, '20,184,166'], [55.2, C.violet], [62.4, C.cyan]]).sort(function (a, b) { return a[0] - b[0]; });
   function mood(t) { var m = MOODS[0][1]; for (var i = 0; i < MOODS.length; i++) if (t >= MOODS[i][0]) m = MOODS[i][1]; return m; }
   function drawAurora(t) {
     cx.globalCompositeOperation = 'lighter';
@@ -1231,7 +1631,7 @@
 
   /* ------------------------------------------------------------- composite */
 
-  var FLASHES = [[7.2, 0.06, 0.35, 0.9], [12.0, 0.1, 0.3, 0.22], [21.6, 0.1, 0.3, 0.25], [24.6, 0.05, 0.2, 0.1], [35.4, 0.05, 0.3, 0.16], [36.0, 0.05, 0.4, 0.2], [38.4, 0.1, 0.3, 0.18], [45.6, 0.1, 0.3, 0.18], [51.0, 0.05, 0.4, 0.22], [55.2, 0.1, 0.3, 0.16], [64.8, 0.1, 0.3, 0.16], [72.0, 0.1, 0.3, 0.2], [84.0, 0.1, 0.3, 0.16], [88.8, 0.06, 0.45, 0.85]];
+  var FLASHES = [[45.6, 0.1, 0.3, 0.16], [55.2, 0.1, 0.3, 0.16], [62.4, 0.1, 0.3, 0.18]].concat([[7.2, 0.06, 0.35, 0.9], [12.0, 0.1, 0.3, 0.22], [21.6, 0.1, 0.3, 0.25], [24.6, 0.05, 0.2, 0.1], [35.4, 0.05, 0.3, 0.16], [36.0, 0.05, 0.4, 0.2], [38.4, 0.1, 0.3, 0.18], [45.6, 0.1, 0.3, 0.18], [51.0, 0.05, 0.4, 0.22], [55.2, 0.1, 0.3, 0.16], [64.8, 0.1, 0.3, 0.16], [72.0, 0.1, 0.3, 0.2], [84.0, 0.1, 0.3, 0.16], [88.8, 0.06, 0.45, 0.85]].map(function (f) { return [L(f[0]), f[1], f[2], f[3]]; }));
   function render(t) {
     t = clamp(t, 0, DUR - 0.0005);
     drawCanvas(t);
@@ -1239,7 +1639,7 @@
     SCENES.forEach(function (s) {
       var on = t >= s.t0 - s.pre && t < s.t1 + s.post;
       if (on !== s.on) { s.on = on; s.s3.style.display = s.s2.style.display = on ? 'block' : 'none'; }
-      if (on) { alphaMul = 1; s.draw(t - s.t0); if (s.id === 'workflow') anyCursor = true; }
+      if (on) { alphaMul = 1; s.draw(t - s.t0); if (CURSOR_SCENES.indexOf(s.id) >= 0) anyCursor = true; }
     });
     if (!anyCursor) hideCursor();
     var fl = 0;
@@ -1253,7 +1653,8 @@
 
   function m2f(m) { return 440 * Math.pow(2, (m - 69) / 12); }
   var SCORE = [];
-  function ev(t, k, a, d, h) { SCORE.push({ t: t, k: k, a: a || [], d: d || 0, h: !!h }); }
+  var OFF = 0;
+  function ev(t, k, a, d, h) { SCORE.push({ t: t + OFF, k: k, a: a || [], d: d || 0, h: !!h }); }
   var CH = {
     Dm: { pad: [50, 53, 57, 60, 64], root: 38, arp: [62, 65, 69, 72, 74, 72, 69, 65] },
     Bb: { pad: [46, 53, 57, 60, 62], root: 34, arp: [62, 65, 70, 74, 77, 74, 70, 65] },
@@ -1311,6 +1712,33 @@
     groove(18, 'C', { kick: 'half', snare: 'half', hats: true, pad: 1.1, bright: 1600 });
     [69, 72, 74, 77, 81, 84].forEach(function (m, k) { ev(bar(16) + 1.05 + k * 0.14, 'pluck', [m, 0.05, 3000]); ev(bar(16) + 1.05 + k * 0.14, 'tick', [0.04]); });
     ev(bar(16) + 4.6, 'bell', [81, 0.04, 2]);
+    // Run a goal: the groove comes back under the typing, and lifts when the plan lands.
+    var G0 = bar(19);
+    ['Dm', 'Bb', 'F', 'C'].forEach(function (ch, k) { groove(19 + k, ch, { kick: k < 2 ? 'two' : 'four', snare: k > 1, hats: true, arp: k > 1 ? 'pluck' : undefined, bright: 1600 + k * 250 }); });
+    ev(G0 + 1.55, 'tick', [0.1]); ev(G0 + 1.55, 'bell', [81, 0.035, 1.4]); ev(G0 + 1.65, 'whoosh', [0.8, 0.08, 1]);
+    for (i = 0; i < 12; i++) ev(G0 + 2.45 + i * 0.13, 'tick', [0.012]);
+    ev(G0 + 4.62, 'tick', [0.1]); ev(G0 + 4.62, 'riser', [1.1]);
+    [74, 77, 81, 84, 86].forEach(function (m, k) { ev(G0 + 5.8 + k * 0.12, 'bell', [m, 0.035, 1.6]); });
+    ev(G0 + 8.45, 'tick', [0.12]); ev(G0 + 8.45, 'bell', [86, 0.04, 1.8]); ev(G0 + 8.9, 'whoosh', [0.9, 0.08, 1]);
+    // Teams: the carousel turns, then Feature Squad hands off step by step.
+    var T0 = bar(23);
+    ['Bb', 'F', 'C'].forEach(function (ch, k) { groove(23 + k, ch, { kick: 'four', snare: true, hats: true, arp: 'pluck', bright: 2100 + k * 200 }); });
+    ev(T0, 'whoosh', [1.6, 0.07, -1]);
+    [[2.55, 74], [2.95, 77], [3.4, 81], [3.8, 84], [4.9, 86], [5.35, 89]].forEach(function (b) { ev(T0 + b[0], 'pluck', [b[1], 0.055, 3400]); });
+    ev(T0 + 4.2, 'pad', [[49, 56, 61], 1.4, 1000, 0.6], 0.6);
+    ev(T0 + 5.8, 'bell', [93, 0.03, 2]);
+    // Goal overview: the run plays out. Violet for the send-back, amber for the pause.
+    var V0 = bar(26);
+    ['Dm', 'Bb', 'F', 'C', 'Dm'].forEach(function (ch, k) { groove(26 + k, ch, { kick: k === 0 ? 'two' : 'four', snare: k > 0, hats: true, ticks: k === 2, arp: k > 0 ? 'bell' : undefined, bright: 1800 + k * 120 }); });
+    ev(V0 + 2.6, 'pluck', [77, 0.05, 3000]); ev(V0 + 2.8, 'pluck', [81, 0.05, 3000]);
+    ev(V0 + 5.4, 'snare', [0.1]); ev(V0 + 5.4, 'pad', [[50, 53, 58], 1.3, 900, 0.6], 0.7); ev(V0 + 5.45, 'whoosh', [0.5, 0.08, -1]);
+    ev(V0 + 7.0, 'pluck', [77, 0.05, 3000]); ev(V0 + 8.2, 'bell', [84, 0.04, 1.6]);
+    ev(V0 + 9.0, 'pad', [[52, 59, 64], 1.2, 1300, 0.8], 0.9); ev(V0 + 9.0, 'bell', [88, 0.03, 1.4]);
+    ev(V0 + 10.0, 'tick', [0.12]); ev(V0 + 10.05, 'crash', [0.07, 2]);
+    [86, 89, 93].forEach(function (m, k) { ev(V0 + 10.4 + k * 0.17, 'bell', [m, 0.04, 2]); });
+    ev(V0 + 11.2, 'riser', [0.8]);
+    // Everything from here on was written against the 93.6-second cut.
+    OFF = INS;
     // Image rail
     ['Dm', 'Bb', 'F', 'C'].forEach(function (ch, k) { groove(19 + k, ch, { kick: 'two', snare: k > 1, hats: true, arp: 'bell', bright: 1700 + k * 200 }); });
     var I0 = bar(19);
@@ -1497,7 +1925,7 @@
      scheduled against it. An AudioContext can sit suspended, or report
      "running" while its clock never moves (no output device), and the film
      must play either way; the audio joins at whatever second it has reached.
-     Over 94 seconds the two clocks drift by milliseconds, not frames. */
+     Over two minutes the two clocks drift by milliseconds, not frames. */
   var au = { c: null, chain: null, S: null, on: false, synced: false, base: 0, idx: 0 };
   function audioStart(t) {
     if (!AC) return false;

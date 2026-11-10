@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cockpit · Kim Julongbayan</title>
-<meta name="description" content="Cockpit is Kim Julongbayan's agent development control plane: Claude Code, Codex, OpenCode and Hermes in one window, with an agent workflow, an image rail, automations, infrastructure and a knowledge vault around them.">
+<meta name="description" content="Cockpit is Kim Julongbayan's agent development control plane: Claude Code, Codex, OpenCode and Hermes in one window, with agent teams that run goals, an agent workflow, an image rail, automations, infrastructure and a knowledge vault around them.">
 <meta name="theme-color" content="#05080f">
 <link rel="icon" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -272,6 +272,172 @@ a { color: inherit; }
 .stat div { font: 400 12.5px var(--ui); color: var(--muted); }
 .stat b { display: block; font: 600 26px var(--display); color: var(--text); letter-spacing: -.02em; }
 
+/* Crew bots (Cockpit's own sprite: a gem with a face and a state badge) */
+.botw { display: inline-block; flex: none; }
+.botw svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.bot .halo { fill: var(--hue); opacity: 0; }
+.bot .gem { fill: var(--hue); }
+.bot .shine { fill: none; stroke: #fff; stroke-width: 1.6; stroke-linecap: round; opacity: .28; }
+.bot .face { fill: #0b1220; stroke: #0b1220; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.bot .face path { fill: none; }
+.bot .bdg > circle { fill: #0b1220; stroke: var(--hue); stroke-width: 1.4; }
+.bot .gl { fill: none; stroke: #e6edf7; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
+.bot .gl .f { fill: #e6edf7; stroke: none; }
+.ico { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Agents page */
+.apage { padding: 26px 30px; }
+.ap-head { display: flex; align-items: flex-start; gap: 16px; }
+.ap-head h3 { margin: 0; font: 600 34px var(--display); letter-spacing: -.025em; }
+.ap-head .sub { margin-top: 6px; color: var(--muted); font-size: 15.5px; }
+.ap-acts { margin-left: auto; display: flex; gap: 10px; }
+.ap-acts .btn, .compo .btn { height: 38px; font-size: 14.5px; }
+.btn .ico { width: 15px; height: 15px; }
+.ap-tabs { display: flex; gap: 4px; margin: 22px -30px 0; padding: 0 22px; border-bottom: 1px solid var(--line-soft); }
+.ap-tabs span { display: flex; align-items: center; gap: 7px; height: 44px; padding: 0 12px; font: 500 15px var(--ui); color: var(--muted); box-shadow: inset 0 -2px 0 transparent; }
+.ap-tabs span.on { color: var(--text); box-shadow: inset 0 -2px 0 var(--blue); }
+.ap-tabs em { font: 500 11.5px var(--mono); font-style: normal; color: var(--dim); padding: 2px 7px; border-radius: 6px; background: rgba(255,255,255,.06); }
+.metrics6 { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
+.mt { display: flex; align-items: center; gap: 12px; height: 76px; padding: 0 16px; border-radius: 14px; background: rgba(255,255,255,.035); box-shadow: inset 0 0 0 1px var(--line-soft); }
+.mt .mi { width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center; color: var(--tone); background: color-mix(in srgb, var(--tone) 16%, transparent); flex: none; }
+.mt .mi .ico { width: 18px; height: 18px; }
+.mt b { display: block; font: 600 28px/1 var(--display); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.mt span.l { display: block; margin-top: 5px; font-size: 13px; color: var(--muted); white-space: nowrap; }
+.mt span.l em { font-style: normal; color: var(--dim); margin-left: 6px; }
+.mt.alert { box-shadow: inset 0 0 0 1px rgba(251,191,36,.6), 0 0 40px rgba(251,191,36,.18); background: rgba(251,191,36,.08); }
+.ap-ghost { margin-top: 22px; }
+.ap-cols { display: grid; grid-template-columns: 260px 1fr 250px; gap: 14px; margin-top: 14px; height: 330px; }
+.ap-cols div { border-radius: 14px; background: rgba(255,255,255,.025); box-shadow: inset 0 0 0 1px var(--line-soft); }
+
+/* Run a goal composer */
+.compo { display: flex; flex-direction: column; height: 860px; }
+.cp-head { display: flex; align-items: center; gap: 14px; padding: 22px 24px 18px; }
+.cp-head .mk { width: 46px; height: 46px; border-radius: 13px; display: grid; place-items: center; color: #5eead4; background: rgba(20,184,166,.18); box-shadow: inset 0 0 0 1px rgba(20,184,166,.45); }
+.cp-head .mk .ico { width: 22px; height: 22px; }
+.cp-head b { display: block; font: 600 22px var(--display); }
+.cp-head small { display: block; margin-top: 3px; font-size: 14px; color: var(--muted); }
+.cp-head .x { margin-left: auto; color: var(--dim); font-size: 22px; }
+.cp-phases { display: flex; gap: 22px; padding: 0 24px 16px; border-bottom: 1px solid var(--line-soft); font: 500 13.5px var(--ui); color: var(--dim); }
+.cp-phases span { display: flex; align-items: center; gap: 8px; }
+.cp-phases i { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font: 600 11px var(--mono); font-style: normal; background: rgba(255,255,255,.06); }
+.cp-phases span.on { color: var(--text); }
+.cp-phases span.on i { background: #14b8a6; color: #04110f; }
+.cp-body { position: relative; flex: 1; padding: 0 24px; overflow: hidden; }
+.cp-scroll { padding-top: 18px; }
+.lbl2 { font: 500 13px var(--ui); color: var(--muted); margin-bottom: 8px; }
+.cp-goal { min-height: 78px; font-size: 16.5px; }
+.cp-row { display: flex; align-items: center; gap: 14px; margin-top: 14px; }
+.cp-row .lbl2 { margin: 0; width: 64px; }
+.sel { flex: 1; display: flex; align-items: center; height: 40px; padding: 0 14px; border-radius: 10px; font-size: 15px; box-shadow: inset 0 0 0 1px var(--line); background: rgba(255,255,255,.03); }
+.sel i { margin-left: auto; font-style: normal; color: var(--dim); }
+.cp-foot { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
+.cp-foot .hint { font-size: 13px; color: var(--dim); }
+.cp-foot .btn { margin-left: auto; }
+.cp-prop { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line-soft); }
+.crew { display: flex; justify-content: space-between; padding: 6px 8px 14px; }
+.crew .cm { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; width: 100px; text-align: center; }
+.crew .cm b { font: 600 12.5px var(--ui); color: var(--text-2); line-height: 1.2; }
+.crew .cm small { font: 400 11.5px var(--mono); color: var(--dim); }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.steps li { display: grid; grid-template-columns: 26px 1fr auto; align-items: center; gap: 4px 10px; padding: 10px 12px; border-radius: 11px; background: rgba(255,255,255,.03); box-shadow: inset 0 0 0 1px var(--line-soft); }
+.steps .num, .tc-roster .num { width: 24px; height: 24px; border-radius: 7px; display: grid; place-items: center; font: 600 12px var(--mono); color: var(--muted); background: rgba(255,255,255,.06); }
+.steps b { font: 600 15px var(--ui); }
+.steps small { grid-column: 2 / 4; font: 400 12.5px var(--mono); color: var(--dim); }
+.steps small.loop { color: #c4b5fd; }
+.steps small.pause { color: #fcd34d; }
+.cp-end { display: flex; justify-content: flex-end; gap: 10px; padding: 16px 24px; border-top: 1px solid var(--line-soft); }
+.cp-end .run { background: linear-gradient(135deg, #14b8a6, #4f8cff); }
+
+/* Team cards */
+.tcard { width: 440px; padding: 20px 20px 18px; border-radius: 18px; }
+.tcard::before { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: radial-gradient(90% 60% at 100% 0%, color-mix(in srgb, var(--acc) 20%, transparent), transparent 70%); }
+.tc-head { position: relative; display: flex; align-items: center; gap: 12px; }
+.tc-mark { width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center; flex: none; color: var(--acc); background: color-mix(in srgb, var(--acc) 18%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--acc) 45%, transparent); }
+.tc-mark .ico { width: 19px; height: 19px; }
+.tc-head > span:nth-child(2) { flex: 1; min-width: 0; }
+.tc-head b { display: block; font: 600 19px var(--ui); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tc-head small { display: block; margin-top: 3px; font: 400 11.5px var(--mono); color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tc-st { margin-left: auto; display: flex; align-items: center; gap: 7px; height: 26px; padding: 0 10px; border-radius: 8px; font: 500 12.5px var(--ui); color: var(--tone); background: color-mix(in srgb, var(--tone) 14%, transparent); white-space: nowrap; }
+.tc-st i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.tc-roster { position: relative; list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 4px; }
+.tc-roster li { display: flex; align-items: center; gap: 10px; height: 38px; padding: 0 8px; border-radius: 10px; }
+.tc-roster .nm { font: 500 14.5px var(--ui); color: var(--text-2); white-space: nowrap; }
+.tc-roster .rel { width: 28px; height: 28px; border-radius: 9px; display: grid; place-items: center; color: var(--cyan); background: rgba(103,232,249,.1); }
+.tag { font: 500 11px var(--mono); color: var(--violet); padding: 2px 7px; border-radius: 6px; background: rgba(167,139,250,.12); white-space: nowrap; }
+.tag.pz { color: var(--amber); background: rgba(251,191,36,.12); }
+.tc-acts { position: relative; display: flex; gap: 8px; margin-top: 14px; }
+.tc-acts .btn { height: 34px; padding: 0 14px; font-size: 13.5px; }
+
+/* Goal workspace */
+.gw-col { padding: 18px; display: flex; flex-direction: column; }
+.gw-h { display: flex; align-items: center; gap: 10px; font: 600 18px var(--ui); }
+.gw-h em { font: 500 11.5px var(--mono); font-style: normal; color: var(--dim); padding: 2px 7px; border-radius: 6px; background: rgba(255,255,255,.06); }
+.gw-search { display: flex; align-items: center; gap: 8px; height: 36px; margin: 14px 0 10px; padding: 0 12px; border-radius: 10px; font-size: 13.5px; color: var(--dim); box-shadow: inset 0 0 0 1px var(--line); }
+.gw-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.gw-chips span { height: 28px; padding: 0 10px; border-radius: 8px; display: flex; align-items: center; gap: 6px; font: 500 12.5px var(--ui); color: var(--muted); box-shadow: inset 0 0 0 1px var(--line-soft); }
+.gw-chips span.on { color: #fff; background: rgba(79,140,255,.16); box-shadow: inset 0 0 0 1px rgba(79,140,255,.45); }
+.gw-chips em { font: 500 11px var(--mono); font-style: normal; color: var(--dim); }
+.gw-grp { margin: 16px 2px 8px; font: 500 12px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+.gcard { position: relative; padding: 13px 14px; border-radius: 13px; background: rgba(255,255,255,.03); box-shadow: inset 0 0 0 1px var(--line-soft); margin-bottom: 8px; }
+.gcard.pick { background: rgba(79,140,255,.1); box-shadow: inset 0 0 0 1px rgba(79,140,255,.5); }
+.gcard .top { display: flex; align-items: center; justify-content: space-between; font: 400 12px var(--mono); color: var(--dim); }
+.gcard b { display: block; margin: 8px 0 6px; font: 600 15px var(--ui); }
+.gcard .ln { display: block; font: 400 12.5px var(--mono); color: var(--muted); margin-top: 3px; }
+.gcard .ft { display: flex; align-items: center; gap: 10px; margin-top: 10px; font: 500 12px var(--mono); color: var(--muted); }
+.gcard .cr { display: flex; gap: 2px; margin-top: 10px; }
+.badge { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 9px; border-radius: 7px; font: 500 12px var(--ui); color: var(--tone); background: color-mix(in srgb, var(--tone) 15%, transparent); white-space: nowrap; }
+.badge i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.segs { flex: 1; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 4px; }
+.segs i { height: 6px; border-radius: 4px; background: rgba(255,255,255,.08); }
+.segs.big i { height: 10px; border-radius: 6px; }
+.gd-head { display: flex; align-items: center; gap: 14px; }
+.gd-head .mk { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; color: hsl(278 72% 70%); background: hsla(278,72%,62%,.16); box-shadow: inset 0 0 0 1px hsla(278,72%,62%,.45); }
+.gd-head h4 { margin: 0; font: 600 24px var(--display); letter-spacing: -.02em; }
+.gd-meta { display: flex; align-items: center; gap: 14px; margin-top: 6px; font: 400 12.5px var(--mono); color: var(--muted); }
+.gd-meta span { display: flex; align-items: center; gap: 6px; }
+.gd-meta .ico { width: 13px; height: 13px; }
+.gd-acts { margin-left: auto; display: flex; gap: 8px; }
+.gd-acts .btn { height: 34px; padding: 0 14px; font-size: 13.5px; }
+.gd-tabs { display: flex; gap: 2px; margin: 16px -18px 0; padding: 0 12px; border-bottom: 1px solid var(--line-soft); }
+.gd-tabs span { height: 40px; padding: 0 11px; display: flex; align-items: center; font: 500 13.5px var(--ui); color: var(--muted); }
+.gd-tabs span.on { color: var(--text); box-shadow: inset 0 -2px 0 var(--blue); }
+.gpanel { margin-top: 14px; padding: 16px 18px; border-radius: 14px; background: rgba(255,255,255,.03); box-shadow: inset 0 0 0 1px var(--line-soft); }
+.gpanel .ph { display: flex; align-items: center; gap: 10px; height: auto; padding: 0; font: 600 15px var(--ui); }
+.gpanel .ph .r { margin-left: auto; font: 500 12.5px var(--mono); color: var(--muted); }
+.legend { display: flex; gap: 18px; margin-top: 12px; font-size: 12.5px; color: var(--muted); }
+.legend span { display: flex; align-items: center; gap: 6px; }
+.legend i { width: 8px; height: 8px; border-radius: 3px; }
+.legend b { color: var(--text); font: 600 12.5px var(--mono); }
+.vt { display: flex; gap: 4px; margin-left: auto; }
+.vt span { height: 28px; padding: 0 10px; border-radius: 8px; display: flex; align-items: center; font: 500 12.5px var(--ui); color: var(--muted); box-shadow: inset 0 0 0 1px var(--line-soft); }
+.vt span.on { color: #fff; background: rgba(255,255,255,.08); box-shadow: inset 0 0 0 1px var(--line); }
+.pipe { position: relative; height: 196px; margin-top: 12px; }
+.pipe .link { position: absolute; top: 46px; height: 3px; border-radius: 3px; background: rgba(255,255,255,.1); }
+.pipe .pk { position: absolute; top: 40px; width: 15px; height: 15px; margin-left: -7px; border-radius: 50%; }
+.pipe .stn { position: absolute; top: 4px; width: 140px; margin-left: -70px; display: flex; flex-direction: column; align-items: center; gap: 7px; text-align: center; }
+.pipe .stn b { font: 600 13.5px var(--ui); line-height: 1.25; }
+.pipe .stn small { font: 500 12px var(--mono); }
+.pipe .stn .rel { width: 60px; height: 60px; border-radius: 18px; display: grid; place-items: center; color: var(--cyan); background: rgba(103,232,249,.08); box-shadow: inset 0 0 0 1px rgba(103,232,249,.3); }
+.pipe .stn .rel .ico { width: 24px; height: 24px; }
+.gw-sub { margin: 4px 0 0; font-size: 12.5px; color: var(--dim); }
+.ins-top { display: flex; align-items: center; justify-content: space-between; font: 600 16px var(--ui); }
+.ins-top span { color: var(--dim); font-weight: 400; }
+.ins-who { display: flex; align-items: center; gap: 12px; margin-top: 16px; }
+.ins-who b { display: block; font: 600 16px var(--ui); margin-bottom: 5px; }
+.ins-who .tm { margin-left: 8px; font: 500 12px var(--mono); color: var(--muted); }
+.attn { margin-top: 14px; padding: 13px 14px; border-radius: 12px; background: rgba(251,191,36,.1); box-shadow: inset 0 0 0 1px rgba(251,191,36,.5); font-size: 13.5px; line-height: 1.45; color: #fde68a; }
+.attn b { display: block; color: #fcd34d; margin-bottom: 2px; }
+.attn .btn { margin-top: 10px; height: 32px; padding: 0 14px; font-size: 13px; background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #1a1205; box-shadow: none; }
+.live { margin-top: 14px; flex: 1; border-radius: 12px; padding: 12px 14px; background: rgba(3,6,12,.6); box-shadow: inset 0 0 0 1px var(--line-soft); overflow: hidden; }
+.live .lh { display: flex; align-items: center; gap: 8px; font: 500 12px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--dim); margin-bottom: 8px; }
+.live .lh i { width: 7px; height: 7px; border-radius: 50%; background: #14b8a6; }
+.live .term-inner { font-size: 13px; line-height: 22px; white-space: pre-wrap; }
+.live .tl { min-height: 22px; }
+.live .cur { height: 15px; width: 8px; }
+.dl { margin-top: 12px; display: grid; grid-template-columns: 80px 1fr; gap: 7px 10px; font-size: 12.5px; }
+.dl dt { color: var(--dim); }
+.dl dd { margin: 0; font-family: var(--mono); color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
 /* Outro ring */
 .mini { width: 340px; height: 210px; padding: 20px; border-radius: 18px; }
 .mini .t { display: flex; align-items: center; gap: 10px; font: 600 18px var(--ui); }
@@ -287,19 +453,19 @@ a { color: inherit; }
 </head>
 <body>
 <main>
-  <section class="film" aria-label="Cockpit, a 93-second film">
+  <section class="film" aria-label="Cockpit, a two-minute film">
     <div class="film-frame" id="film-frame">
       <div class="stage" id="film-stage" aria-hidden="true"></div>
-      <button type="button" class="film-start" id="film-start" aria-label="Play the Cockpit film with sound, 1 minute 33 seconds">
+      <button type="button" class="film-start" id="film-start" aria-label="Play the Cockpit film with sound, 2 minutes 2 seconds">
         <span class="ring"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.4-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5Z"/></svg></span>
-        <span class="label"><b>Watch Cockpit</b><em>1:33 · with sound</em></span>
+        <span class="label"><b>Watch Cockpit</b><em>2:02 · with sound</em></span>
       </button>
       <div class="film-controls" id="film-controls">
         <button type="button" id="film-play" aria-label="Pause"></button>
-        <div class="film-track" id="film-track" role="slider" aria-label="Film position" tabindex="0" aria-valuemin="0" aria-valuemax="93" aria-valuenow="0">
+        <div class="film-track" id="film-track" role="slider" aria-label="Film position" tabindex="0" aria-valuemin="0" aria-valuemax="122" aria-valuenow="0">
           <div class="rail"><div class="fill" id="film-fill"></div></div>
         </div>
-        <span class="film-time" id="film-time">0:00 / 1:33</span>
+        <span class="film-time" id="film-time">0:00 / 2:02</span>
         <button type="button" id="film-sound" aria-label="Mute"></button>
         <button type="button" id="film-full" aria-label="Full screen"></button>
       </div>
@@ -311,14 +477,17 @@ a { color: inherit; }
       <p class="kicker">Personal project · 2026</p>
       <h1><span>Cockpit</span></h1>
       <p class="lede">My agent development control plane: every coding agent I use in one window, with the work around them made visible.</p>
-      <p>It runs locally on DeepSeek Harness. Claude Code, Codex, OpenCode and Hermes run as real terminals in the project I pick, each with its own login, skills and MCP servers. Around them sit an agent workflow, an image rail, automations, infrastructure and my knowledge vault.</p>
+      <p>It runs locally on DeepSeek Harness. Claude Code, Codex, OpenCode and Hermes run as real terminals in the project I pick, each with its own login, skills and MCP servers. Around them sit agents that work in teams toward a goal I set, an agent workflow, an image rail, automations, infrastructure and my knowledge vault.</p>
       <p>I designed and built it with AI: ChatGPT for planning and images, Claude Code for building, Codex and DeepSeek for review. The film above is hand-written HTML, CSS and canvas, with a score synthesised in the browser.</p>
       <a class="back" href="/">kimlj.dev →</a>
     </div>
     <ol>
       <li><b>Workbench</b><span>Real, persistent terminals for every coding agent, side by side in one project. Nothing about the agents is reimplemented.</span></li>
       <li><b>Agent workflow</b><span>One prompt runs plan, build, test and an independent review. Findings go back for at most two automatic fixes, then validation, my approval and a checkpoint.</span></li>
-      <li><b>Agents</b><span>Roles are profiles with their own instructions and permissions, so any runtime can fill one, and a specialist is suggested when the task fits.</span></li>
+      <li><b>Agents</b><span>Roles are profiles with their own instructions, permissions and output file. There are 38 so far, 18 built in and 20 of my own, and a specialist is suggested when the task fits.</span></li>
+      <li><b>Run a goal</b><span>I describe the outcome and Codex proposes a team from the agents I have: who runs, in what order, where work can go back and where it pauses for me. Nothing runs until I approve the plan.</span></li>
+      <li><b>Teams</b><span>Eleven saved teams, from Feature Squad to WordWarz Game Studio. Each agent writes a file for the next one, and Git Publisher and Deploy Watcher push the result and check the deploy.</span></li>
+      <li><b>Goal overview</b><span>Every goal with its progress, each agent's step, repository, branch and runtime, and the output it recorded. A goal waiting on me says so, with Continue one click away.</span></li>
       <li><b>Image rail</b><span>Claude Code and Codex terminals get an image tool. Results land in the rail beside the conversation, and I approve or revise them in chat.</span></li>
       <li><b>Automations</b><span>Jobs from Task Scheduler, systemd, cron, GitHub Actions and Hermes in one list, with instrumented runs reporting their real steps and retries.</span></li>
       <li><b>Infrastructure</b><span>Machines, containers, services and endpoints, read from the systems that own them with read-only checks.</span></li>
