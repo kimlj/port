@@ -2783,8 +2783,9 @@ body {
     <!-- ── Cockpit ──────────────────────────────────────────────────────
          Cockpit runs on Kim's own machine, so there is nothing live to show
          here; the panel points at the film on /cockpit instead. The figures
-         are facts about the product (dsh-workbench docs and source) and the
-         Vault count was taken on 19 Oct 2026.
+         are facts about the product (dsh-workbench docs and source). The
+         Vault count was taken on 19 Oct 2026; the team and agent counts were
+         read from ~/.dsh/cockpit on 9 Nov 2026, the same figures the film uses.
     -->
     <section class="panel" id="panel-cockpit" role="tabpanel" aria-labelledby="tab-cockpit">
       <div class="panel-head">
@@ -2794,9 +2795,10 @@ body {
       <p class="panel-sub">My agent development control plane: every coding agent in one window, with agent teams that run goals, an agent workflow, an image rail, automations, infrastructure and my knowledge vault around them. Built with AI on DeepSeek Harness.</p>
       <div class="metrics">
         <div class="metric" data-series="1"><span class="metric-value">4</span><span class="metric-label">Coding agents</span><span class="metric-note">Claude Code, Codex, OpenCode, Hermes</span></div>
+        <div class="metric" data-series="2"><span class="metric-value">11</span><span class="metric-label">Agent teams</span><span class="metric-note">38 agents · 9 Nov 2026</span></div>
         <div class="metric" data-series="3"><span class="metric-value">7</span><span class="metric-label">Workflow stages</span><span class="metric-note">plan to checkpoint</span></div>
         <div class="metric" data-series="4"><span class="metric-value">5</span><span class="metric-label">Schedulers watched</span><span class="metric-note">Task Scheduler to GitHub Actions</span></div>
-        <div class="metric" data-series="2"><span class="metric-value">316</span><span class="metric-label">Vault notes</span><span class="metric-note">read by every agent · 19 Oct 2026</span></div>
+        <div class="metric" data-series="1"><span class="metric-value">316</span><span class="metric-label">Vault notes</span><span class="metric-note">read by every agent · 19 Oct 2026</span></div>
       </div>
       <a class="cockpit-film" href="/cockpit" aria-label="Watch the Cockpit film, 2 minutes 2 seconds, with sound">
         <img src="/assets/cockpit-film/poster.webp" alt="" width="1280" height="720" loading="lazy" decoding="async">
