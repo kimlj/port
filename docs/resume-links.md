@@ -135,3 +135,4 @@ letter points at.
 | 2026-11-11 | Freelance AI Automation Specialist, employer unnamed, OnlineJobs.ph, updated Nov 10 2026, 20 hours/week | `/r/freelanceaiautomationnov10-d6f3e5fd.pdf` | `Kim_Julongbayan_Resume_FreelanceAIAutomationNov10.pdf` |
 | 2026-11-12 | Full-Stack TypeScript Developer, Rainer Flor, photography platform (OnlineJobs.ph) | `/r/rainerflor-28599f1d.pdf` | `Kim_Julongbayan_Resume_RainerFlor.pdf` |
 | 2026-11-12 | AI Creative Specialist, MOD BIKES, Julian (OnlineJobs.ph) | `/r/modbikes-df92d0b5.pdf` | `Kim_Julongbayan_Resume_MODBikes.pdf` |
+| 2026-11-12 | AI Security Engineer / Web Pentester, Jozef S. (OnlineJobs.ph) | `/r/jozefsecurity-3bc4ca05.pdf` | `Kim_Julongbayan_Resume_JozefSecurity.pdf` |
