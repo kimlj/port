@@ -133,3 +133,4 @@ letter points at.
 | 2026-11-11 | Claude Fable Automation Specialist, The Oak and Clay Group (OnlineJobs.ph) | `/r/oakandclay-a592840c.pdf` | `Kim_Julongbayan_Resume_OakAndClay.pdf` |
 | 2026-11-11 | AI Automation & Integration Specialist, Villa Vision Builders (OnlineJobs.ph) | `/r/villavisionbuilders-1148062e.pdf` | `Kim_Julongbayan_Resume_VillaVisionBuilders.pdf` |
 | 2026-11-11 | Freelance AI Automation Specialist, employer unnamed, OnlineJobs.ph, updated Nov 10 2026, 20 hours/week | `/r/freelanceaiautomationnov10-d6f3e5fd.pdf` | `Kim_Julongbayan_Resume_FreelanceAIAutomationNov10.pdf` |
+| 2026-11-12 | Full-Stack TypeScript Developer, Rainer Flor, photography platform (OnlineJobs.ph) | `/r/rainerflor-28599f1d.pdf` | `Kim_Julongbayan_Resume_RainerFlor.pdf` |
