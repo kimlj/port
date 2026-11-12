@@ -136,3 +136,4 @@ letter points at.
 | 2026-11-12 | Full-Stack TypeScript Developer, Rainer Flor, photography platform (OnlineJobs.ph) | `/r/rainerflor-28599f1d.pdf` | `Kim_Julongbayan_Resume_RainerFlor.pdf` |
 | 2026-11-12 | AI Creative Specialist, MOD BIKES, Julian (OnlineJobs.ph) | `/r/modbikes-df92d0b5.pdf` | `Kim_Julongbayan_Resume_MODBikes.pdf` |
 | 2026-11-12 | AI Security Engineer / Web Pentester, Jozef S. (OnlineJobs.ph) | `/r/jozefsecurity-3bc4ca05.pdf` | `Kim_Julongbayan_Resume_JozefSecurity.pdf` |
+| 2026-11-12 | Technical SEO Developer, AlphaHire listing (OnlineJobs.ph, employer not disclosed) | `/r/alphahireseo-b4633cab.pdf` | `Kim_Julongbayan_Resume_AlphaHireSEO.pdf` |
