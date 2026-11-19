@@ -138,3 +138,4 @@ letter points at.
 | 2026-11-12 | AI Security Engineer / Web Pentester, Jozef S. (OnlineJobs.ph) | `/r/jozefsecurity-3bc4ca05.pdf` | `Kim_Julongbayan_Resume_JozefSecurity.pdf` |
 | 2026-11-12 | Technical SEO Developer, AlphaHire listing (OnlineJobs.ph, employer not disclosed) | `/r/alphahireseo-b4633cab.pdf` | `Kim_Julongbayan_Resume_AlphaHireSEO.pdf` |
 | 2026-11-16 | AI Engineer + Full Stack Dev (Create the Future), Josh Sanchez, listing 1744811 (OnlineJobs.ph) | `/r/joshsanchez-cbc21824.pdf` | `Kim_Julongbayan_Resume_JoshSanchez.pdf` |
+| 2026-11-19 | AI Automation Engineer and Systems Manager (n8n), 365 Power Washing LLC (onlinejobs.ph) | `/r/365powerwashing-b69f999a.pdf` | `Kim_Julongbayan_Resume_365PowerWashing.pdf` |
