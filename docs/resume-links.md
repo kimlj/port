@@ -142,3 +142,4 @@ letter points at.
 | 2026-11-19 | AI Systems & Workflow Builder, Snappath.ai, OnlineJobs.ph, updated Nov 18 2026, 20 hours/week, $800-1200/month | `/r/snappath-45ced46d.pdf` | `Kim_Julongbayan_Resume_Snappath.pdf` |
 | 2026-11-19 | AI Specialist - Claude, Grok, Muse and AI Agents, Araya 4.0, $6-$10/hour (OnlineJobs.ph, updated Nov 18, 2026) | `/r/araya-9db0a493.pdf` | `Kim_Julongbayan_Resume_Araya.pdf` |
 | 2026-11-19 | AI Automation Developer - Lead Generation & Data Integration, unnamed West Texas equipment rental company, $4/hour, fixed-price project (OnlineJobs.ph, updated Nov 18, 2026) | `/r/westtexasrental-22d3f164.pdf` | `Kim_Julongbayan_Resume_WestTexasRental.pdf` |
+| 2026-11-19 | Founding AI SEO Strategist, Bloomview Growth, OnlineJobs.ph, updated Nov 18 2026, $2,000/month, 40h | `/r/bloomview-2926b1ca.pdf` | `Kim_Julongbayan_Resume_Bloomview.pdf` |
