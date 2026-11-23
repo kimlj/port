@@ -144,3 +144,4 @@ letter points at.
 | 2026-11-19 | AI Automation Developer - Lead Generation & Data Integration, unnamed West Texas equipment rental company, $4/hour, fixed-price project (OnlineJobs.ph, updated Nov 18, 2026) | `/r/westtexasrental-22d3f164.pdf` | `Kim_Julongbayan_Resume_WestTexasRental.pdf` |
 | 2026-11-19 | Founding AI SEO Strategist, Bloomview Growth, OnlineJobs.ph, updated Nov 18 2026, $2,000/month, 40h | `/r/bloomview-2926b1ca.pdf` | `Kim_Julongbayan_Resume_Bloomview.pdf` |
 | 2026-11-23 | AI DevOps Manager (UK Hours), Demand Generation Capital (DGC), $1,000-$2,000/month, full time (OnlineJobs.ph, updated Nov 22, 2026) | `/r/dgc-23e17a36.pdf` | `Kim_Julongbayan_Resume_DGC.pdf` |
+| 2026-11-23 | AI-Powered Web Designer & Frontend Developer, unnamed performance marketing company, $800-$1,500/month, 40 h/week (OnlineJobs.ph, updated Nov 20, 2026) | `/r/perfmarketingweb-5e30958f.pdf` | `Kim_Julongbayan_Resume_PerfMarketingWeb.pdf` |
