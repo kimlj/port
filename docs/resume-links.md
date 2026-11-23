@@ -143,3 +143,4 @@ letter points at.
 | 2026-11-19 | AI Specialist - Claude, Grok, Muse and AI Agents, Araya 4.0, $6-$10/hour (OnlineJobs.ph, updated Nov 18, 2026) | `/r/araya-9db0a493.pdf` | `Kim_Julongbayan_Resume_Araya.pdf` |
 | 2026-11-19 | AI Automation Developer - Lead Generation & Data Integration, unnamed West Texas equipment rental company, $4/hour, fixed-price project (OnlineJobs.ph, updated Nov 18, 2026) | `/r/westtexasrental-22d3f164.pdf` | `Kim_Julongbayan_Resume_WestTexasRental.pdf` |
 | 2026-11-19 | Founding AI SEO Strategist, Bloomview Growth, OnlineJobs.ph, updated Nov 18 2026, $2,000/month, 40h | `/r/bloomview-2926b1ca.pdf` | `Kim_Julongbayan_Resume_Bloomview.pdf` |
+| 2026-11-23 | AI DevOps Manager (UK Hours), Demand Generation Capital (DGC), $1,000-$2,000/month, full time (OnlineJobs.ph, updated Nov 22, 2026) | `/r/dgc-23e17a36.pdf` | `Kim_Julongbayan_Resume_DGC.pdf` |
