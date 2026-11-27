@@ -147,3 +147,4 @@ letter points at.
 | 2026-11-23 | AI-Powered Web Designer & Frontend Developer, unnamed performance marketing company, $800-$1,500/month, 40 h/week (OnlineJobs.ph, updated Nov 20, 2026) | `/r/perfmarketingweb-5e30958f.pdf` | `Kim_Julongbayan_Resume_PerfMarketingWeb.pdf` |
 | 2026-11-27 | AI Lead Generation, CRM & Sales Automation Specialist, Iron Clad Solutions, $650-950/month, part time 25h (OnlineJobs.ph, updated Nov 25, 2026) | `/r/ironclad-03f90d29.pdf` | `Kim_Julongbayan_Resume_IronClad.pdf` |
 | 2026-11-27 | Technical Customer Support Specialist (AI SaaS Platform), unnamed AI voice automation company (onlinejobs.ph) | `/r/voiceaisupport-217bdecd.pdf` | `Kim_Julongbayan_Resume_VoiceAISupport.pdf` |
+| 2026-11-27 | Software Developer (Visual Basic & Microsoft Access), unnamed employer (onlinejobs.ph) | `/r/vbaccessdev-09b58da7.pdf` | `Kim_Julongbayan_Resume_VBAccessDev.pdf` |
